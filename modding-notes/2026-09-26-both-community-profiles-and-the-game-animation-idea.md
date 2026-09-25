@@ -120,3 +120,8 @@ game-animation handover, body yaw) has to be done once per *game tick*, not once
 eyes disagree. jbusfield's own framework has a comment about exactly this for another game
 (`input.lua`: body yaw "needs to be calculated for both eyes") `[inferred-static 2026-09-26]`.
 Every live test therefore runs at least twice: once in Native Stereo, once in AFW.
+
+**Narrowed the same night (Tefa):** *"i am only interested in a working profile for AFW and Native stereo. no one
+really uses the other 2."* **Supported: Native Stereo and AFW. Not supported: Synchronized Sequential and AFR.**
+This saves testing, not design: AFW also draws one eye per frame (then warps the other), so the once-per-game-tick
+rule above still applies `[inferred-static 2026-09-26]`.
