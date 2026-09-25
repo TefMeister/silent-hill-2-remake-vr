@@ -265,6 +265,11 @@ Recorded in `ai-game-control-profiles/profiles/silent-hill-2-remake.json`.
 
 ### 8h. The AFW decision
 
+> **Superseded 2026-09-26 (Tefa): we build ON the UEVR nightly AFW build** (`v1.0-beta.6`). The text below
+> is the 2026-09-19 decision, kept for the record. Still true: we redistribute nothing of AFW, so players
+> fetch that build themselves. See `modding-notes/2026-09-26-both-community-profiles-and-the-game-animation-idea.md`.
+
+
 **AFW is OPTIONAL, not a dependency** (Tefa, 2026-09-19). The archive is binaries only — no source —
 so depending on it would force every user to fetch a third-party build, which is the opposite of the
 project's stated aim. Scanned for licence/DRM strings: **none found** `[inferred-static 2026-09-19]`.
@@ -304,3 +309,22 @@ corroborated live once: UEVR injected and initialised `[verified-live 2026-09-19
 ⚠️ **The real risk is the future, not the present.** SH2R is publicly reported to have shipped with
 Denuvo; **this build has none.** So a later session that suddenly cannot inject should
 **check the Steam build ID before blaming its own code** — a patch may have re-added it.
+
+## 9. ⭐ The game's own interaction animations: nobody has tried it (2026-09-26, static)
+
+Both community profiles were read for one question: do they use the game's own push, pull, lever and
+crawl animations as first-person arms? **No.** Their animation lists (34 and 37 entries) hold only
+combat, struggles, faces and the save point `[measured 2026-09-26]`. jbusfield treats pushing as a
+cutscene and switches roomscale off (`main.lua:946-960`); CharlotteLiu **replaces** the interactions
+with hand-built physical grabs per object type (`unlock_door.lua`, 5,487 lines: latches, keys, sliding
+doors, drawers, the pushable wardrobe, a cart, levers) `[inferred-static 2026-09-26]`.
+
+So Tefa's idea is new, and only the game can say whether it works. The mechanism it needs, copying the
+game's pose onto the VR arms while an animation plays, already exists in both profiles for fights
+(§8e). The open question is whether the interaction animations look right from James's eyes, since they
+were made for a camera behind him. First test, `[FLAT]`: head-bone camera, full body visible, trigger a
+wardrobe push, a lever and a crawl gap, and look. Details:
+`modding-notes/2026-09-26-both-community-profiles-and-the-game-animation-idea.md`.
+
+The jbusfield archive Tefa supplied is the same version §8e studied (49,718 Lua lines, identical)
+`[measured 2026-09-26]`.
