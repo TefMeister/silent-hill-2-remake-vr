@@ -101,3 +101,22 @@ build themselves; we redistribute nothing of it) is noted in the dossier, not de
 - The AFW build's contents were listed, not examined.
 - Nothing from either profile is copied into this repo. Names of the game's own objects and animations are
   facts about the game, recorded so they can be checked live.
+
+## Addendum, same night: one profile for every rendering method
+
+Tefa, 2026-09-26: *"if we can build on both native stereo and AFW at the same time, that would be great!"*
+They remembered the AFW build's in-game menu offering AFW, native stereo and AFR.
+
+**Confirmed from the build itself** (strings in `UEVRBackend.dll` of `UEVR-nightly_AFW_v1.0-beta.6`)
+`[inferred-static 2026-09-26]`: a **Rendering Method** setting with **Native Stereo**, **Synchronized
+Sequential**, **Alternating/AFR** and **Alternate Frame Warping**, plus a "Native Stereo Fix". The build
+also says *"Using DX11, AFW only supports DX12, fallback to AFR"*; this game runs on DX12, so AFW is
+available here.
+
+**So building on the AFW build costs nothing in choice: native stereo is in the same build.** The design
+rule that follows: **our profile must work in every rendering method, and never assume one.** The trap
+is the sequential modes, where one game frame draws only one eye. Anything we do once per frame (IK, the
+game-animation handover, body yaw) has to be done once per *game tick*, not once per *eye*, or the two
+eyes disagree. jbusfield's own framework has a comment about exactly this for another game
+(`input.lua`: body yaw "needs to be calculated for both eyes") `[inferred-static 2026-09-26]`.
+Every live test therefore runs at least twice: once in Native Stereo, once in AFW.

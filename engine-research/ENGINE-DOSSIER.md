@@ -268,6 +268,9 @@ Recorded in `ai-game-control-profiles/profiles/silent-hill-2-remake.json`.
 > **Superseded 2026-09-26 (Tefa): we build ON the UEVR nightly AFW build** (`v1.0-beta.6`). The text below
 > is the 2026-09-19 decision, kept for the record. Still true: we redistribute nothing of AFW, so players
 > fetch that build themselves. See `modding-notes/2026-09-26-both-community-profiles-and-the-game-animation-idea.md`.
+> **The AFW build also offers Native Stereo, Synchronized Sequential and AFR** in its Rendering Method menu
+> `[inferred-static 2026-09-26, strings]`, so the rule is: **our profile works in every rendering method**,
+> and per-frame work runs once per game tick, not once per eye. Test in Native Stereo AND AFW.
 
 
 **AFW is OPTIONAL, not a dependency** (Tefa, 2026-09-19). The archive is binaries only — no source —
