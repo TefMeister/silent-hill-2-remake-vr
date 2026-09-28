@@ -1,0 +1,9 @@
+23:19:32 perf probe loaded
+23:19:41 [start] n=272 avg=27.2fps low1%=11.7fps worst=1935.4ms over72=272 (100.0%)
+23:19:51 [start] n=374 avg=37.3fps low1%=33.8fps worst=42.5ms over72=374 (100.0%)
+23:20:01 [start] n=372 avg=37.2fps low1%=30.8fps worst=42.9ms over72=372 (100.0%)
+23:20:11 [start] n=373 avg=37.2fps low1%=33.7fps worst=44.3ms over72=373 (100.0%)
+23:20:21 [start] n=373 avg=37.2fps low1%=33.8fps worst=29.8ms over72=373 (100.0%)
+23:20:31 [start] n=373 avg=37.2fps low1%=33.4fps worst=31.3ms over72=373 (100.0%)
+23:20:41 [start] n=372 avg=37.2fps low1%=33.4fps worst=38.7ms over72=372 (100.0%)
+23:20:51 [start] n=373 avg=37.2fps low1%=33.3fps worst=30.5ms over72=373 (100.0%)

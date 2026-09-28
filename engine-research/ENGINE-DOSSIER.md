@@ -419,3 +419,32 @@ stock Unreal 5.1, so standard Unreal knowledge applies.
 level / screen percentage → Lumen settings → shadows → volumetric fog grid → the camera effects (cheap
 each, but free wins and better comfort). One change at a time, frame time before and after, headset
 connected, UEVR on OpenXR. Then the keepers are set by our C++ plugin, not left as a config file.
+
+## 14. First headset baseline, and the Ultra+ licence (2026-09-28, `/lm`, home PC)
+
+**Baseline:** Blue Creek Apartments, Tefa's settings (everything max except ray tracing, motion blur
+and lens flares off, resolution scale 100%, DLSS quality level 3), UEVR Native Stereo, **on OpenVR**
+(see below): **37.2 fps average, slowest 1% ~33 fps, every frame over the 72 fps budget** `[measured
+2026-09-28, n=1, 70 s]`; GPU 99% busy, ~256 W, 67 °C, no thermal throttling. ⚠️ **37.2 is exactly half
+of ~74**, which is what a runtime's half-rate reprojection lock looks like, so the true unlocked rate
+lies somewhere between 37 and 72 `[hypothesis]`. The GPU being fully busy says it genuinely could not
+hold 72 here. Recorder: `dev-archive/probes/archive/sh2_perf.lua` (UEVR Lua: per-tick frame times,
+10 s summaries, plus a command file for changing console settings live); log in
+`dev-archive/recon/2026-09-28-performance-switches/sh2_perf_log.txt`.
+
+**⚠️ OpenXR did not take.** The injector writes `Frontend_RequestedRuntime` into the profile's
+`config.txt` on every attach from its OWN saved choice (`OpenXRRadio` / `OpenVRRadio` in
+`%LOCALAPPDATA%\praydog\UEVRInjector_Path_<hash>\1.0.0.0\user.config`, one folder per injector
+location), so editing `config.txt` alone is overwritten `[verified-live 2026-09-28, n=1]`. Fix next
+time: set `OpenXRRadio=True`, `OpenVRRadio=False` in that file (the one for
+`tools/UEVR-nightly-AFW-beta.6`), with the injector closed.
+
+**Ultra+ (the "Ultra Team" graphics mod, v5.0.4) — ⚠️ read its licence before learning from it.**
+It is UE4SS + Lua + a pak, and its `LICENSE.txt` is proprietary: no modifying, reverse engineering or
+derivative works, and it names *"CVar manipulation … integration into … third-party modifications
+(including … game mods)"* as forbidden, *"regardless of whether … functionally reimplemented or
+recreated by reference."* So: **players may use it alongside our mod for themselves (personal use is
+allowed), but we must not build our settings from it.** Our tuning comes from Unreal's own documented
+settings, measured ourselves in the headset (§13). Its settings list was read only as far as the
+main config's option names; no values or code were taken. Whether it runs alongside UEVR is untested.
+It was only unpacked into a scratch folder, never installed.
