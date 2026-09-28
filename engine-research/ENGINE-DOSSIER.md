@@ -332,3 +332,48 @@ wardrobe push, a lever and a crawl gap, and look. Details:
 
 The jbusfield archive Tefa supplied is the same version §8e studied (49,718 Lua lines, identical)
 `[measured 2026-09-26]`.
+
+## 10. ✅ The bone names are the game's own — checked live (2026-09-28, `/lm`, home PC)
+
+A one-shot UEVR Lua probe (`dev-archive/probes/archive/sh2_bone_dump.lua`, now retired) read James's
+real skeleton from the running game, first street scene, no weapon held. Full output:
+`dev-archive/recon/2026-09-28-live-bone-dump/sh2_bone_dump.txt`. All `[verified-live 2026-09-28, n=1]`:
+
+- **Mesh:** `JamesSunderland_2022_08_29`, **388 bones**, on `Pawn.Mesh` (`CharacterMesh0`) of
+  `SHCharacterPlay_BP_C`.
+- **Every name in §8e exists, with the parent chain §8e assumed:** `spine_05_bn → clavicle_01_{r,l}_bn →
+  upperarm → lowerarm → hand_{r,l}_bn`; `neck_02_bn → head_bn`; sockets `hand_{l,r}_socket` are real
+  bones under the hands.
+- ⭐ **The reader predicted, from CharlotteLiu's saved pickers, that `upperarm_r_bn` would be index 56 and
+  `upperarm_l_bn` 126. Both are.** So the shipping skeleton is the one both community profiles knew,
+  not a stale one. A genuine prediction, made before the dump was read.
+- **New and useful:** `ik_hand_root / ik_hand_l / ik_hand_r` (Epic's IK-target bones, under `Root`),
+  `parent_cam` and `eye_l / eye_r` under `head_bn` (candidate head-camera anchors), the coat's
+  sleeve rig (`{r,l}_wrist_Offset → {r,l}_sleeve_master → six sleeve bones`, plus `{r,l}_jacket_sleeve`)
+  and many `*_corrective_*` helper bones.
+- **Object graph confirmed:** `Mesh.AnimScriptInstance` = `CH_JamesAnimBP_C`; `WeaponManageCmbSubcomp`
+  lives under the pawn's `Combat` component; `Items`, `CharMoveComp` (the `Movement` field),
+  `View` and `CameraOverlapHandler` all resolve.
+- **Not settled by this run:** `EquippedWeapon` was nil (nothing held yet), so "weapons attach to the
+  bone `hand_r_bn`" is still only from the profiles; `Movement.PushableComponent` was nil (nothing
+  pushable nearby, or a different path) `[hypothesis]` which.
+
+## 11. Reader findings folded 2026-09-28 (static)
+
+From inbox drops `2026-09-28-reader-charlotteliu-settings-vs-code.md` and
+`2026-09-28-reader-code-shape-proposal.md` (full text in git history):
+
+- **CharlotteLiu's mod agrees with jbusfield on every bone name** `[measured 2026-09-28, their files]`;
+  `ik_parameters.json` is byte-identical. It built on jbusfield's config. Flashlight rides `hand_l_bn`.
+  It runs **Native Stereo** (native-stereo fix, near plane 0.01); jbusfield's carries AFW settings:
+  one known-good starting config per supported mode `[reported]`.
+- **Interaction blueprints to watch for the game-animation test:** `Pushable_Base_ABP_C`,
+  `PushNClimbDesiredSpot_BP_C`, plus the switch, light-switch and item-base blueprints; classes
+  `SHItem`, `SHItemWeaponRanged/Melee`, `SHDoorAttachment`, `SHSlidingDoor`, `SHAnimMontagePlayer`.
+- **All of its code is its own** (no licence text anywhere): 87 Lua files, 94,159 lines, plus
+  `SH2.dll` (weapon put-away block, ammo reads/writes) `[inferred-static, strings only]`. Learn from its
+  data and names only; reimplement everything else.
+- **Code shape proposal (not yet accepted):** the per-frame arm path only in C++, once per game tick,
+  never per eye; `dev-archive/plugin/src/{game,arms,body,bridge,util}`, one `settings` table backed by
+  `profile/data/settings.json`, one `game_names.hpp`, probes built only behind a switch, Lua as small
+  event glue; 800/1,500-line limits, aim under 400 `[hypothesis]` until a first build.

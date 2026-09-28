@@ -1,0 +1,51 @@
+{
+  "_what": "Every SH2 bone, socket and object name the two community profiles use. Source: their config and Lua text, NOT the game. Tick each one off against the live bone dump / object walk. Written by the background reader 2026-09-28.",
+  "_status_key": "unverified = seen only in their files; set to verified / wrong / missing after the live check",
+  "profiles_agree_on_all_bone_names": true,
+  "bones": {
+    "arm_chain": ["clavicle_01_l_bn", "clavicle_01_r_bn", "upperarm_l_bn", "upperarm_r_bn", "lowerarm_l_bn", "lowerarm_r_bn", "hand_l_bn", "hand_r_bn"],
+    "spine_and_head": ["spine_05_bn", "neck_02_bn", "head_bn", "Root"],
+    "forearm_twist": ["lowerarm_twist_01_l_bn", "lowerarm_twist_01_r_bn", "lowerarm_twist_02_l_bn", "lowerarm_twist_02_r_bn"],
+    "coat_and_wrist_helpers_no_bn_suffix": ["r_sleeve_master", "r_wrist_Offset", "l_wrist_Offset"],
+    "finger_roots": ["index_01_l_meta_bn", "index_01_r_meta_bn", "middle_01_l_meta_bn", "middle_01_r_meta_bn", "ring_01_l_meta_bn", "ring_01_r_meta_bn", "pinky_01_l_meta_bn", "pinky_01_r_meta_bn"],
+    "fingers_pattern": "{thumb,index,middle,ring,pinky}_0{1,2,3}_{l,r}_bn"
+  },
+  "bone_index_prediction": {
+    "_why": "CharlotteLiu's saved upper-arm picker positions 57 and 127 (1-based, skeleton order). Probe prints 0-based.",
+    "upperarm_r_bn": 56,
+    "upperarm_l_bn": 126
+  },
+  "sockets": ["hand_l_socket", "hand_r_socket", "MuzzleSocket"],
+  "attachments": {
+    "weapon_parent_bone": "hand_r_bn",
+    "flashlight_parent_bone": "hand_l_bn"
+  },
+  "object_graph": [
+    "Pawn.Mesh",
+    "Pawn.Mesh.AnimScriptInstance.WeaponManageCmbSubcomp.EquippedWeapon",
+    "Pawn.Items.EquipmentActors[]",
+    "Pawn.Items.ItemExecutive.ItemContext.Mesh",
+    "Pawn.Movement.PushableComponent",
+    "Pawn.CameraOverlapHandler",
+    "Pawn.View",
+    "Pawn.Combat",
+    "Pawn.Animation"
+  ],
+  "classes": [
+    "/Script/SHProto.SHFlashlight", "/Script/SHProto.SHItem", "/Script/SHProto.SHItemWeaponRanged",
+    "/Script/SHProto.SHItemWeaponMelee", "/Script/SHProto.SHRangedCmbSubcomp", "/Script/SHProto.SHWeaponManageCmbSubcomp",
+    "/Script/SHProto.SHAnimCombatSubcomp", "/Script/SHProto.SHAnimMontagePlayer", "/Script/SHProto.SHDoorAttachment",
+    "/Script/SHProto.SHSlidingDoor", "/Script/SHProto.SHCharacterStatics", "/Script/SHProto.AnimNotify_UnequipWeapon",
+    "/Script/SHProto.AnimNotify_MeleeAttackCheck"
+  ],
+  "interaction_blueprints": [
+    "/Game/Game/Gameplay/Interactions/PushableObjects/Pushable_Base_ABP.Pushable_Base_ABP_C",
+    "/Game/Game/Gameplay/Interactions/PushableObjects/PushNClimbDesiredSpot_BP.PushNClimbDesiredSpot_BP_C",
+    "/Game/Game/Gameplay/Interactions/Others/Switches/InteractionSwitch_Base_BP.InteractionSwitch_Base_BP_C",
+    "/Game/Game/Gameplay/Interactions/Others/LightSwitch/PrisonLightSwitch_BP.PrisonLightSwitch_BP_C",
+    "/Game/Game/Gameplay/Interactions/Items/ItemBase_BP.ItemBase_BP_C",
+    "InteractiveDrawer_Base_ABP_C (path elided in their file)"
+  ],
+  "weapon_name_prefixes": ["WeaponPistol", "WeaponShotgun", "WeaponRifle"],
+  "status": "unverified"
+}
