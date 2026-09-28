@@ -387,3 +387,35 @@ which failed (`Hmd Not Found`), and the OpenXR fallback then logged `Could not l
 `[measured 2026-09-28, UEVR log]`. So nothing VR loaded that night. ⚠️ Whether the loader copy fixes
 that is **not checked**: the next attach must show `Requested runtime: openxr_loader.dll` and a
 created OpenXR session in UEVR's log before anything else is tested.
+
+## 13. Performance: which switches the game has (2026-09-28, static)
+
+Read from the shipping executable with `dev-archive/tools/list_cvars.py` (3,143 setting names found;
+filtered list in `dev-archive/recon/2026-09-28-performance-switches/cvars-found.json`). ⚠️ All
+`[inferred-static 2026-09-28]`: a name being in the program does **not** prove the game honours it
+(shipping builds can lock a setting, and the game's own menu may overwrite it). Only a live
+before-and-after in the headset settles each one. **No Silent Hill-specific settings exist**; it is all
+stock Unreal 5.1, so standard Unreal knowledge applies.
+
+| What | Settings present | Menu already covers it? | VR verdict to test |
+| --- | --- | --- | --- |
+| Motion blur | `r.MotionBlurQuality`, `r.DefaultFeature.MotionBlur` | yes (off tonight) | off; sickness risk |
+| Depth of field | `r.DepthOfFieldQuality`, `r.DOF.*` | no | off; eyes focus themselves |
+| Film grain | `r.FilmGrain`, `r.Tonemapper.GrainQuantization` | no | off |
+| Colour fringing | `r.SceneColorFringeQuality` | no | off |
+| Lens flares | `r.LensFlareQuality`, `r.DefaultFeature.LensFlare` | yes (on tonight) | off |
+| Vignette | inside `r.Tonemapper.Quality` (no own switch) | no | test the tonemapper level; it also carries grain |
+| Panini (flat-screen lens) | `r.Upscale.Panini.*` | yes (off) | off; wrong in VR |
+| Lumen lighting | `r.DynamicGlobalIlluminationMethod`, `r.Lumen.DiffuseIndirect.Allow`, `r.Lumen.Reflections.Allow`, `r.Lumen.ScreenProbeGather.DownsampleFactor`, `…RadianceCache`, `r.Lumen.HardwareRayTracing`, `r.ReflectionMethod` | only ray tracing on/off | turn DOWN, not off: likely the single biggest cost; off wrecks the look |
+| Volumetric fog | `r.VolumetricFog`, `.GridPixelSize`, `.GridSizeZ` | no | KEEP; try coarser grid only. The fog is Silent Hill |
+| Shadows | `r.Shadow.Virtual.Enable`, `.DistanceScale`, `.MaxResolution`, `.CSM.MaxCascades`, `r.ContactShadows`, `r.CapsuleShadows` | quality level | shorter distance first |
+| Reflections / AO | `r.SSR.Quality`, `r.AmbientOcclusionLevels` | yes (both off tonight) | off; per-eye wrong anyway |
+| Bloom | `r.BloomQuality` | no | keep, maybe lower |
+| Resolution / upscaling | `r.ScreenPercentage`, `r.NGX.DLSS.Enable`, `r.FidelityFX.FSR.Enabled`, `r.TemporalAA.Upscaler`, `r.AntiAliasingMethod` | yes (DLSS) | keep DLSS; tune percentage per eye |
+| Distance detail | `r.ViewDistanceScale`, `r.StaticMeshLODDistanceScale`, `r.Streaming.PoolSize`, `r.Nanite` | partly | small drops only |
+| Translucency | `r.SeparateTranslucency*` | yes | test |
+
+**Order to measure (biggest likely win first):** rendering method (Native Stereo vs AFW) → DLSS
+level / screen percentage → Lumen settings → shadows → volumetric fog grid → the camera effects (cheap
+each, but free wins and better comfort). One change at a time, frame time before and after, headset
+connected, UEVR on OpenXR. Then the keepers are set by our C++ plugin, not left as a config file.

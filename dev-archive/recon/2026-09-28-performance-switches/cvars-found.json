@@ -1,0 +1,120 @@
+{
+ "motion blur": [
+  "r.DefaultFeature.MotionBlur",
+  "r.FastVRam.MotionBlur",
+  "r.MeshParticle.MinDetailModeForMotionBlur",
+  "r.MotionBlur.AllowExternalVelocityFlatten",
+  "r.MotionBlur.Amount",
+  "r.MotionBlur.Directions",
+  "r.MotionBlur.HalfResGather",
+  "r.MotionBlur.HalfResInput",
+  "r.MotionBlur.Max",
+  "r.MotionBlur.Scale",
+  "r.MotionBlur.TargetFPS",
+  "r.MotionBlur2ndScale",
+  "r.MotionBlurDebug",
+  "r.MotionBlurQuality",
+  "r.MotionBlurScatter",
+  "r.MotionBlurSeparable",
+  "r.Streamline.DLSSG.AdjustMotionBlurTimeScale"
+ ],
+ "depth of field": [
+  "r.Atmosphere.DepthOfFieldDepthBlurRadiusScale",
+  "r.DOF.Gather.AccumulatorQuality",
+  "r.DOF.Gather.EnableBokehSettings",
+  "r.DOF.Gather.PostfilterMethod",
+  "r.DOF.Gather.RingCount",
+  "r.DOF.Kernel.MaxBackgroundRadius",
+  "r.DOF.Kernel.MaxForegroundRadius",
+  "r.DOF.Recombine.EnableBokehSettings",
+  "r.DOF.Recombine.MinFullresBlurRadius",
+  "r.DOF.Recombine.Quality",
+  "r.DOF.RefBufferSizeIsViewSize",
+  "r.DOF.Scatter.BackgroundCompositing",
+  "r.DOF.Scatter.EnableBokehSettings",
+  "r.DOF.Scatter.ForegroundCompositing",
+  "r.DOF.Scatter.MaxSpriteRatio",
+  "r.DOF.Scatter.MinCocRadius",
+  "r.DOF.Scatter.NeighborCompareMaxColor",
+  "r.DOF.TemporalAAQuality",
+  "r.DepthOfField.MaxSize",
+  "r.DepthOfField.NearBlurSizeThreshold",
+  "r.DepthOfFieldQuality",
+  "r.FastVRam.DOFPostfilter",
+  "r.FastVRam.DOFReduce",
+  "r.FastVRam.DOFSetup",
+  "r.HairStrands.DOFDepth"
+ ],
+ "film grain": [
+  "r.FidelityFX.FSR.Post.FilmGrain",
+  "r.FilmGrain",
+  "r.FilmGrain.CacheTextureConstants",
+  "r.FilmGrain.SequenceLength",
+  "r.Tonemapper.GrainQuantization"
+ ],
+ "colour fringing": [
+  "r.FidelityFX.FSR.Post.ExperimentalChromaticAberration",
+  "r.SceneColorFringe.Max",
+  "r.SceneColorFringeQuality"
+ ],
+ "lens flares": [
+  "r.DefaultFeature.LensFlare",
+  "r.LensFlareQuality"
+ ],
+ "vignette": [],
+ "bloom": [
+  "r.Bloom.ApplyLocalExposure",
+  "r.Bloom.AsyncCompute",
+  "r.Bloom.CacheKernel",
+  "r.Bloom.ScreenPercentage",
+  "r.BloomQuality"
+ ],
+ "lumen (lighting)": [
+  "r.DynamicGlobalIlluminationMethod",
+  "r.Lumen.DiffuseIndirect.Allow",
+  "r.Lumen.HardwareRayTracing",
+  "r.Lumen.Reflections.Allow",
+  "r.Lumen.ScreenProbeGather.DownsampleFactor",
+  "r.Lumen.ScreenProbeGather.RadianceCache",
+  "r.ReflectionMethod"
+ ],
+ "volumetric fog": [
+  "r.VolumetricCloud",
+  "r.VolumetricFog",
+  "r.VolumetricFog.GridPixelSize",
+  "r.VolumetricFog.GridSizeZ"
+ ],
+ "shadows": [
+  "r.Shadow.CSM.MaxCascades",
+  "r.Shadow.DistanceScale",
+  "r.Shadow.MaxResolution",
+  "r.Shadow.Virtual.Enable"
+ ],
+ "screen-space reflections / AO": [
+  "r.AmbientOcclusionLevels",
+  "r.SSR.Quality"
+ ],
+ "resolution / upscaling": [
+  "r.AntiAliasingMethod",
+  "r.FidelityFX.FSR.Enabled",
+  "r.NGX.DLSS.Enable",
+  "r.NGX.DLSS.EnableAlphaUpscaling",
+  "r.ScreenPercentage",
+  "r.TemporalAA.Upscaler"
+ ],
+ "translucency / particles": [
+  "r.SeparateTranslucency",
+  "r.SeparateTranslucencyProxy",
+  "r.SeparateTranslucencyScreenPercentage",
+  "r.SeparateTranslucencyUpsampleMode"
+ ],
+ "view distance": [
+  "r.StaticMeshLODDistanceScale",
+  "r.ViewDistanceScale"
+ ],
+ "panini (flat-screen lens)": [
+  "r.Upscale.Panini.D",
+  "r.Upscale.Panini.S",
+  "r.Upscale.Panini.ScreenFit"
+ ]
+}
