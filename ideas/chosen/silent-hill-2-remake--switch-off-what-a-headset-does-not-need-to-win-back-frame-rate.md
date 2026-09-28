@@ -40,3 +40,5 @@ Verbatim record: [`inbox/2026-09-28e-sh2-drop-what-vr-does-not-need.md`](../inbo
 _Other categories appear as they arrive — gameplay, weapons, visuals, audio, UI, level design. Nothing is missing; none of them have been needed yet._
 
 **To add one:** `[sh2] your idea` — anywhere, any time.
+
+Chosen by Tefa: 2026-09-28

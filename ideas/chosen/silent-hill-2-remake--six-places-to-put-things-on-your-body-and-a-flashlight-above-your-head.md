@@ -45,3 +45,5 @@ physically do.
 _Other categories appear as they arrive — gameplay, weapons, visuals, audio, UI, level design, performance. Nothing is missing; none of them have been needed yet._
 
 **To add one:** `[sh2] your idea` — anywhere, any time.
+
+Chosen by Tefa: 2026-09-28

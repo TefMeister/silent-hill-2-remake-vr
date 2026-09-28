@@ -57,3 +57,5 @@ Verbatim record: [`inbox/2026-09-11d-sh2-fewer-stronger-enemies-and-a-real-pyram
 **Level design**; Pyramid Head is also **Bosses**. Kept in one place so the design stays readable.
 
 ---
+
+Chosen by Tefa: 2026-09-28

@@ -36,3 +36,5 @@ is what keeps a mod ours to release.
   distributed, and what depending on it would mean for releasing a mod under the usual
   redistribute-nothing rules. **`[not judged]` — do not plan around this until a `/gr` pass has
   actually looked.** The rest of the idea stands on plain UEVR regardless, which is the safe reading.
+
+Chosen by Tefa: 2026-09-28
