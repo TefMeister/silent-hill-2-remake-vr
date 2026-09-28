@@ -479,3 +479,24 @@ the `sh2_perf.lua` recorder; raw log `dev-archive/recon/2026-09-28-performance-s
   headset** — Lumen reflections off, coarser fog and 60% resolution may look noticeably worse. That
   judgement is Tefa's and comes before any of this goes into the plugin.
 - `r.ViewDistanceScale 0.7` bought nothing in this indoor room; retest outdoors.
+
+### 15b. Walking, the fog, and the flashlight (2026-09-29, Tefa in the headset, same tuned set)
+
+All `[measured 2026-09-29, n=1 each]`, Tefa's own movement and flashlight presses, raw log as above:
+
+- **Walking indoors (Blue Creek): 51–64 fps, slowest 1% 38–50.** Standing still in one view had read 72.
+- **Outside in the fog: pinned at the 72 cap, slowest 1% ~66**, flashlight on or off (daylight: it casts
+  no shadows, Tefa). ⭐ Tefa: *"outside the graphics look.... simple. fog had no 'foggyness' to it"* — most
+  likely our coarser fog grid (s3) `[hypothesis]`. **There is headroom outside to spend on the fog.**
+- **Dark room: ~55 fps with the flashlight on, ~60 with it off**, so the flashlight costs ~1.3 ms there;
+  the room itself is the larger cost. Three local-light shadow settings changed nothing measurable
+  (`r.Shadow.Virtual.ResolutionLodBiasLocal` 1 and 2, `r.Shadow.Virtual.SMRT.RayCountLocal 2` +
+  `SamplesPerRayLocal 1`), nor did `r.VolumetricFog.InjectShadowedLightsSeparately 0` — all ~55.
+- **The tuned set survives a save load** in these tests: re-applying it in the dark room changed nothing.
+  An earlier drop (72 → 61 before the walk) stays unexplained `[hypothesis]`: a menu, or the game
+  re-applying its settings.
+- **Tefa's direction (2026-09-29):** *"i want my 72fps above all, then graphics, the parts that matter,
+  tuned up as much as possible."* → Design for the plugin: **settings per place** (fog detail back up
+  outside, cheaper lighting inside), plus a **frame-rate governor** that raises detail while there is
+  room and lowers it the moment it slips under 72. Proved possible tonight: every change here was made
+  live, mid-game, through console commands.
