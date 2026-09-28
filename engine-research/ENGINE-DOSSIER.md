@@ -500,3 +500,13 @@ All `[measured 2026-09-29, n=1 each]`, Tefa's own movement and flashlight presse
   outside, cheaper lighting inside), plus a **frame-rate governor** that raises detail while there is
   room and lowers it the moment it slips under 72. Proved possible tonight: every change here was made
   live, mid-game, through console commands.
+
+### 15c. Object detail does not matter here (2026-09-29, dark room, Tefa's idea)
+
+Tefa's idea: keep objects at a simpler detail level always, so full detail never pops in. Tested
+cumulatively, ~20 s each, standing still, flashlight on `[measured 2026-09-29, n=1 each]`:
+`r.ViewDistanceScale` back to 1 (Tefa: never lower draw distance, it makes things pop) → 69.0 fps;
+`r.Nanite.MaxPixelsPerEdge 2` → 69.1; `4` → 69.2; `r.ForceLOD 1` → 69.0; `r.SkeletalMeshLODBias 1` → 69.2.
+**No change at all:** geometry is not what limits this game (Nanite already scales it); the cost is
+lighting and pixels. ⚠️ This view read ~69 while the earlier dark-room view read ~55, so where James looks
+matters a lot; a fixed test spot per room is needed for comparisons across sessions.
