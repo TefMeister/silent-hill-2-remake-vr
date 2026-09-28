@@ -377,3 +377,13 @@ From inbox drops `2026-09-28-reader-charlotteliu-settings-vs-code.md` and
   never per eye; `dev-archive/plugin/src/{game,arms,body,bridge,util}`, one `settings` table backed by
   `profile/data/settings.json`, one `game_names.hpp`, probes built only behind a switch, Lua as small
   event glue; 800/1,500-line limits, aim under 400 `[hypothesis]` until a first build.
+
+## 12. ⭐ UEVR runs on OpenXR only (Tefa, 2026-09-28)
+
+**Rule: for Silent Hill 2, UEVR uses the OpenXR runtime, never OpenVR.** The profile's `config.txt`
+now says `Frontend_RequestedRuntime=openxr_loader.dll` (backup beside it), and UEVR's
+`openxr_loader.dll` was copied into the `UnrealVRMod` folder. On 2026-09-28 the default asked for OpenVR,
+which failed (`Hmd Not Found`), and the OpenXR fallback then logged `Could not load openxr_loader.dll`
+`[measured 2026-09-28, UEVR log]`. So nothing VR loaded that night. ⚠️ Whether the loader copy fixes
+that is **not checked**: the next attach must show `Requested runtime: openxr_loader.dll` and a
+created OpenXR session in UEVR's log before anything else is tested.
