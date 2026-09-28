@@ -448,3 +448,34 @@ allowed), but we must not build our settings from it.** Our tuning comes from Un
 settings, measured ourselves in the headset (§13). Its settings list was read only as far as the
 main config's option names; no values or code were taken. Whether it runs alongside UEVR is untested.
 It was only unpacked into a scratch folder, never installed.
+
+## 15. ⭐ First tuning pass in the headset, OpenXR (2026-09-28, `/lm`, home PC)
+
+Same spot (Blue Creek Apartments), Tefa's max settings, UEVR Native Stereo, **OpenXR** (fixed by Tefa
+in the injector), Quest 3 via Virtual Desktop, render size **2688×2880 per eye**. Each step is added ON TOP
+of the ones before, held ~30 s; figures are the steady 10 s windows `[measured 2026-09-28, n=1 run
+each]`. GPU stayed at 67–70 °C, no throttling. Driver: `dev-archive/tools/sh2_tune_steps.py` +
+the `sh2_perf.lua` recorder; raw log `dev-archive/recon/2026-09-28-performance-switches/sh2_perf_log-run2-openxr.txt`.
+
+| Step (cumulative) | avg fps | slowest 1% | gain |
+| --- | --- | --- | --- |
+| s0 max settings (no ray tracing) | 47.9 | 43.4 | — |
+| s1 camera effects off (DOF, grain, fringe, blur, flares) | 49.3 | 44.8 | +1.4 |
+| s2 shadows: distance 0.6, max resolution 1024 | 56.8 | 51.0 | **+7.5** |
+| s3 fog grid coarser (pixel size 16, depth 64) | 60.2 | 53.7 | +3.4 |
+| s4 Lumen screen-probe downsample 32 | 62.2 | 56.5 | +2.0 |
+| s5 Lumen reflections off | 65.2 | 59.2 | +3.0 |
+| s6 screen-space reflections + ambient occlusion off | 68.5 | 61.0 | +3.3 |
+| s7 view distance 0.7 | 67.9 | 60.6 | 0 (noise) |
+| s9 `r.ScreenPercentage 75` | 62.0 | 55.5 | **−6**: it overrides DLSS's own lower internal size |
+| s10 `r.ScreenPercentage 60` | 72.0 (at the cap) | 66.4 | +4 over s7 |
+
+- **Biggest single win: shadows.** Then fog grid, Lumen reflections, SSR/AO, Lumen downsample.
+- **Resolution is the other big lever**, but `r.ScreenPercentage` fights DLSS: 75 was slower than DLSS's
+  own setting. UEVR's `OpenXR_ResolutionScale` did NOT change live through `set_mod_value` (needs a
+  runtime reinitialise) `[verified-live 2026-09-28, n=1]`. The per-eye size is set by Virtual Desktop's
+  resolution choice; that is the cleaner place to lower it.
+- **Not yet solid 72:** the slowest 1% was still ~66. ⚠️ **Nothing here has been judged by eye in the
+  headset** — Lumen reflections off, coarser fog and 60% resolution may look noticeably worse. That
+  judgement is Tefa's and comes before any of this goes into the plugin.
+- `r.ViewDistanceScale 0.7` bought nothing in this indoor room; retest outdoors.

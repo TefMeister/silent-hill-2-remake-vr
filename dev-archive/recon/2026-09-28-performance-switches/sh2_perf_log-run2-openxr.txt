@@ -1,0 +1,92 @@
+23:34:34 perf probe loaded
+23:34:43 [start] n=379 avg=37.9fps low1%=18.3fps worst=1642.7ms over72=379 (100.0%)
+23:34:53 [start] n=482 avg=48.1fps low1%=43.6fps worst=23.6ms over72=482 (100.0%)
+23:35:03 [start] n=474 avg=47.3fps low1%=43.0fps worst=24.1ms over72=474 (100.0%)
+23:35:13 [start] n=474 avg=47.4fps low1%=43.7fps worst=23.8ms over72=474 (100.0%)
+23:35:23 [start] n=475 avg=47.4fps low1%=43.3fps worst=24.4ms over72=475 (100.0%)
+23:35:33 [start] n=475 avg=47.5fps low1%=43.8fps worst=25.4ms over72=475 (100.0%)
+23:35:36 [start] n=160 avg=47.5fps low1%=43.5fps worst=24.3ms over72=160 (100.0%)
+23:35:36 LABEL s0 baseline max
+23:35:43 [s0 baseline max] n=316 avg=47.6fps low1%=43.6fps worst=23.5ms over72=316 (100.0%)
+23:35:53 [s0 baseline max] n=480 avg=47.9fps low1%=43.1fps worst=24.1ms over72=480 (100.0%)
+23:36:03 [s0 baseline max] n=480 avg=47.9fps low1%=43.4fps worst=26.1ms over72=480 (100.0%)
+23:36:09 [s0 baseline max] n=267 avg=47.9fps low1%=43.7fps worst=23.2ms over72=267 (100.0%)
+23:36:09 LABEL s1 camera effects off
+23:36:09 CMD r.DepthOfFieldQuality 0
+23:36:09 CMD r.FilmGrain 0
+23:36:09 CMD r.SceneColorFringeQuality 0
+23:36:09 CMD r.Tonemapper.GrainQuantization 0
+23:36:09 CMD r.MotionBlurQuality 0
+23:36:09 CMD r.LensFlareQuality 0
+23:36:13 [s1 camera effects off] n=214 avg=48.3fps low1%=44.8fps worst=116.1ms over72=212 (99.1%)
+23:36:23 [s1 camera effects off] n=493 avg=49.2fps low1%=44.8fps worst=23.2ms over72=493 (100.0%)
+23:36:33 [s1 camera effects off] n=493 avg=49.3fps low1%=44.5fps worst=26.5ms over72=493 (100.0%)
+23:36:41 [s1 camera effects off] n=396 avg=49.5fps low1%=45.2fps worst=25.2ms over72=396 (100.0%)
+23:36:41 LABEL s2 shorter shadows
+23:36:41 CMD r.Shadow.DistanceScale 0.6
+23:36:41 CMD r.Shadow.MaxResolution 1024
+23:36:43 [s2 shorter shadows] n=112 avg=56.1fps low1%=52.1fps worst=57.4ms over72=110 (98.2%)
+23:36:53 [s2 shorter shadows] n=569 avg=56.9fps low1%=51.1fps worst=20.3ms over72=568 (99.8%)
+23:37:03 [s2 shorter shadows] n=566 avg=56.6fps low1%=50.7fps worst=21.1ms over72=566 (100.0%)
+23:37:13 [s2 shorter shadows] n=569 avg=56.9fps low1%=51.0fps worst=20.8ms over72=569 (100.0%)
+23:37:13 [s2 shorter shadows] n=13 avg=57.5fps low1%=55.2fps worst=19.1ms over72=13 (100.0%)
+23:37:13 LABEL s3 coarser fog grid
+23:37:13 CMD r.VolumetricFog.GridPixelSize 16
+23:37:13 CMD r.VolumetricFog.GridSizeZ 64
+23:37:23 [s3 coarser fog grid] n=591 avg=60.4fps low1%=53.7fps worst=19.5ms over72=591 (100.0%)
+23:37:33 [s3 coarser fog grid] n=601 avg=60.1fps low1%=53.6fps worst=22.7ms over72=601 (100.0%)
+23:37:43 [s3 coarser fog grid] n=603 avg=60.3fps low1%=54.6fps worst=18.8ms over72=603 (100.0%)
+23:37:46 [s3 coarser fog grid] n=155 avg=60.0fps low1%=52.9fps worst=19.2ms over72=155 (100.0%)
+23:37:46 LABEL s4 lumen gather downsample 32
+23:37:46 CMD r.Lumen.ScreenProbeGather.DownsampleFactor 32
+23:37:53 [s4 lumen gather downsample 32] n=464 avg=62.5fps low1%=55.8fps worst=18.4ms over72=463 (99.8%)
+23:38:03 [s4 lumen gather downsample 32] n=621 avg=62.1fps low1%=56.5fps worst=18.4ms over72=621 (100.0%)
+23:38:13 [s4 lumen gather downsample 32] n=622 avg=62.2fps low1%=56.5fps worst=18.7ms over72=622 (100.0%)
+23:38:18 [s4 lumen gather downsample 32] n=304 avg=62.1fps low1%=52.9fps worst=21.1ms over72=303 (99.7%)
+23:38:18 LABEL s5 lumen reflections off
+23:38:18 CMD r.Lumen.Reflections.Allow 0
+23:38:23 [s5 lumen reflections off] n=333 avg=65.2fps low1%=59.3fps worst=18.0ms over72=327 (98.2%)
+23:38:33 [s5 lumen reflections off] n=653 avg=65.2fps low1%=58.7fps worst=17.7ms over72=649 (99.4%)
+23:38:43 [s5 lumen reflections off] n=654 avg=65.3fps low1%=59.2fps worst=20.3ms over72=648 (99.1%)
+23:38:50 [s5 lumen reflections off] n=471 avg=65.2fps low1%=57.4fps worst=19.7ms over72=461 (97.9%)
+23:38:50 LABEL s6 ssr + ao off
+23:38:50 CMD r.SSR.Quality 0
+23:38:50 CMD r.AmbientOcclusionLevels 0
+23:38:53 [s6 ssr + ao off] n=191 avg=68.7fps low1%=58.9fps worst=17.6ms over72=163 (85.3%)
+23:39:03 [s6 ssr + ao off] n=689 avg=68.9fps low1%=61.5fps worst=17.2ms over72=581 (84.3%)
+23:39:13 [s6 ssr + ao off] n=685 avg=68.4fps low1%=61.0fps worst=17.6ms over72=600 (87.6%)
+23:39:22 [s6 ssr + ao off] n=640 avg=68.1fps low1%=60.8fps worst=23.3ms over72=576 (90.0%)
+23:39:22 LABEL s7 view distance 0.7
+23:39:22 CMD r.ViewDistanceScale 0.7
+23:39:23 [s7 view distance 0.7] n=41 avg=67.6fps low1%=62.8fps worst=41.0ms over72=33 (80.5%)
+23:39:33 [s7 view distance 0.7] n=679 avg=67.8fps low1%=60.9fps worst=17.7ms over72=616 (90.7%)
+23:39:43 [s7 view distance 0.7] n=680 avg=67.9fps low1%=60.6fps worst=18.9ms over72=616 (90.6%)
+23:39:53 [s7 view distance 0.7] n=680 avg=67.9fps low1%=60.3fps worst=17.5ms over72=609 (89.6%)
+23:39:55 [s7 view distance 0.7] n=104 avg=67.3fps low1%=59.1fps worst=19.2ms over72=90 (86.5%)
+23:39:55 LABEL end
+23:40:03 [end] n=575 avg=67.9fps low1%=60.3fps worst=17.4ms over72=513 (89.2%)
+23:40:13 [end] n=679 avg=67.8fps low1%=61.2fps worst=20.3ms over72=604 (89.0%)
+23:40:23 [end] n=679 avg=67.9fps low1%=59.9fps worst=18.0ms over72=614 (90.4%)
+23:40:33 [end] n=680 avg=68.0fps low1%=60.7fps worst=19.3ms over72=608 (89.4%)
+23:40:35 [end] n=117 avg=67.7fps low1%=61.2fps worst=16.5ms over72=102 (87.2%)
+23:40:35 LABEL s8 uevr resolution 0.85
+23:40:35 MOD OpenXR_ResolutionScale 0.850000
+23:40:43 [s8 uevr resolution 0.85] n=562 avg=67.9fps low1%=60.7fps worst=18.1ms over72=523 (93.1%)
+23:40:53 [s8 uevr resolution 0.85] n=687 avg=68.6fps low1%=62.1fps worst=17.3ms over72=594 (86.5%)
+23:41:03 [s8 uevr resolution 0.85] n=684 avg=68.4fps low1%=62.4fps worst=17.7ms over72=604 (88.3%)
+23:41:13 [s8 uevr resolution 0.85] n=693 avg=69.3fps low1%=62.0fps worst=19.2ms over72=570 (82.3%)
+23:41:22 [s8 uevr resolution 0.85] n=621 avg=68.3fps low1%=61.7fps worst=17.7ms over72=572 (92.1%)
+23:41:22 LABEL s9 screen percentage 75
+23:41:22 CMD r.ScreenPercentage 75
+23:41:23 [s9 screen percentage 75] n=55 avg=60.4fps low1%=50.6fps worst=30.3ms over72=55 (100.0%)
+23:41:33 [s9 screen percentage 75] n=623 avg=62.2fps low1%=55.6fps worst=18.4ms over72=621 (99.7%)
+23:41:43 [s9 screen percentage 75] n=621 avg=62.0fps low1%=55.7fps worst=18.5ms over72=619 (99.7%)
+23:41:53 [s9 screen percentage 75] n=620 avg=62.0fps low1%=55.4fps worst=21.8ms over72=616 (99.4%)
+23:41:56 [s9 screen percentage 75] n=146 avg=61.9fps low1%=55.3fps worst=18.3ms over72=145 (99.3%)
+23:41:56 LABEL s10 screen percentage 60
+23:41:56 CMD r.ScreenPercentage 60
+23:42:03 [s10 screen percentage 60] n=546 avg=71.4fps low1%=62.6fps worst=42.4ms over72=281 (51.5%)
+23:42:13 [s10 screen percentage 60] n=720 avg=72.0fps low1%=65.9fps worst=17.6ms over72=361 (50.1%)
+23:42:23 [s10 screen percentage 60] n=720 avg=72.0fps low1%=66.4fps worst=15.8ms over72=369 (51.2%)
+23:42:33 [s10 screen percentage 60] n=720 avg=72.0fps low1%=65.6fps worst=17.3ms over72=352 (48.9%)
+23:42:43 [s10 screen percentage 60] n=720 avg=72.0fps low1%=66.4fps worst=15.4ms over72=373 (51.8%)
