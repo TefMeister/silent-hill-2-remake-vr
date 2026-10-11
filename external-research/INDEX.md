@@ -1,6 +1,8 @@
 # Research index
 
-**Last `/gr` pass: 2026-10-04 (estate sweep) — FULL.** First pass: folder bootstrapped; one topic answering the board's "study existing tweak guides and tools" row (licences checked; new settings to measure: variable-rate shading, shadow denoiser, Lumen reflection filters).
+**Last `/gr` pass: 2026-10-11 (estate sweep) — CHECK-IN.** Inbox empty. Re-checked the other VR mod on WATCHING.md: no change since the row was last updated. Nothing new.
+
+_Previous: **Last `/gr` pass: 2026-10-04 (estate sweep) — FULL.** First pass: folder bootstrapped; one topic answering the board's "study existing tweak guides and tools" row (licences checked; new settings to measure: variable-rate shading, shadow denoiser, Lumen reflection filters)._
 
 Every research topic gathered for this project, newest first. Each row links to a self-contained
 write-up in `topics/`. Status tags:
