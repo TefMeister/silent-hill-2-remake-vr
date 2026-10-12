@@ -414,6 +414,8 @@ stock Unreal 5.1, so standard Unreal knowledge applies.
 | Resolution / upscaling | `r.ScreenPercentage`, `r.NGX.DLSS.Enable`, `r.FidelityFX.FSR.Enabled`, `r.TemporalAA.Upscaler`, `r.AntiAliasingMethod` | yes (DLSS) | keep DLSS; tune percentage per eye |
 | Distance detail | `r.ViewDistanceScale`, `r.StaticMeshLODDistanceScale`, `r.Streaming.PoolSize`, `r.Nanite` | partly | small drops only |
 | Translucency | `r.SeparateTranslucency*` | yes | test |
+| Variable-rate shading | `r.Vrs.Enable` (`/gr` 2026-10-04 `[reported]`, from a public tweak tool) | no | likely a cheap VR win at the lens edges `[hypothesis]` |
+| Shadow / reflection denoising | `r.Shadow.Denoiser`, `r.Lumen.Reflections.BilateralFilter`, `r.Lumen.Reflections.ScreenSpaceReconstruction`, `r.Lumen.Reflections.Temporal` (same source `[reported]`) | no | test with the Lumen step |
 
 **Order to measure (biggest likely win first):** rendering method (Native Stereo vs AFW) → DLSS
 level / screen percentage → Lumen settings → shadows → volumetric fog grid → the camera effects (cheap
@@ -510,3 +512,21 @@ cumulatively, ~20 s each, standing still, flashlight on `[measured 2026-09-29, n
 **No change at all:** geometry is not what limits this game (Nanite already scales it); the cost is
 lighting and pixels. ⚠️ This view read ~69 while the earlier dark-room view read ~55, so where James looks
 matters a lot; a fixed test spot per room is needed for comparisons across sessions.
+
+### 13b. Public tweak tools studied (`/gr`, 2026-10-04; folded 2026-10-12)
+The two public tools carry no licence (read only, nothing taken); Ultra+ stays out (§14); PCGamingWiki and Nexus
+were unreadable to the fetch, so unread, not empty. Guides name volumetric fog and dark-interior shadows as the
+biggest costs `[reported]`, matching §15/§15b. FSR frame generation (`r.FidelityFX.FI.Enabled`) is not usable in VR.
+Five new settings went into the §13 table. Source: `external-research/topics/2026-10-04-what-public-tweak-tools-switch-and-what-they-claim.md`.
+
+## 16. ⭐ What the native plugin owns (2026-10-12, `/pd`, design decision)
+**The C++ plugin owns everything per frame; Lua owns nothing per frame** (only development probes behind a switch).
+Per game tick: the game keeps animating James's real mesh untouched; a separate arms mesh (poseable, made once,
+everything but the arms hidden once) copies that finished pose with one `CopyPoseFromSkeletalComponent` call; our
+C++ two-bone IK puts the hands on the controllers (`get_grip_pose`); a per-arm blend weight eases to 0 during the
+game's own interaction animations and back to 1 after. So the game's animation graph keeps running and IK sits on
+top, with no engine hook `[inferred-static 2026-10-12]`. Fallback: hook the real mesh's post-animation step.
+UEVR plugin API 2.39 offers what this needs: `on_post_engine_tick`, `get_grip_pose`, `call_function` /
+`process_event`, `hook_ptr` (pre/post on any UFunction) `[reported, API.h 2026-10-12]`. The 2026-09-28 code-shape
+proposal is accepted (§11). Open: re-attaching a held weapon to the arms mesh; one-frame lag. Note:
+`modding-notes/2026-10-12-pd-what-the-native-plugin-owns.md`.
