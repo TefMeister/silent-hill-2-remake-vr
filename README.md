@@ -1,7 +1,7 @@
 # Silent Hill 2 (2024 remake) — working toward VR
 
-Notes and tooling for playing Bloober Team's **Silent Hill 2** remake in a VR headset, as a
-self-contained UEVR profile that depends on nobody else's mod being installed.
+Notes and tooling for playing Bloober Team's **Silent Hill 2** remake in a VR headset, with UEVR and
+our own native plugin, depending on nobody else's mod being installed.
 
 ## What is here
 
@@ -14,11 +14,14 @@ Other folders (`modding-notes/`, `external-research/`, `mod/`) appear as they ar
 
 ## Status
 
-**Day one. Nothing built, nothing run, the game has never been launched for this project.**
+**It runs in stereo in a headset; the VR arms are being designed.**
 
-The plan exists and the route is chosen; that is all. See
+The game ran with UEVR in stereo on 2026-09-19, and the graphics were tuned in the headset on
+2026-09-29 (indoors it looks really good; the outdoor fog still looks flat). On 2026-10-12 the plan
+for the VR arms was settled: the game keeps animating James, the arms copy that pose each frame, and
+your hands steer them on top, in our own C++ plugin. See
 [`engine-research/ENGINE-DOSSIER.md`](engine-research/ENGINE-DOSSIER.md) for what is known versus
-what is merely assumed — and note how much of it is currently assumed.
+what is still assumed.
 
 ## Why this game, and why it is different from everything else here
 
