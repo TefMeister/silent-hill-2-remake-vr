@@ -22,4 +22,18 @@ constexpr int HANDS_TYPE_FOREARMS = 2;        // main.lua HandsType: None 1, For
 constexpr const wchar_t* LEFT_SOURCE = L"Left";    // controllers.lua sourceNames: the MotionSource of each controller
 constexpr const wchar_t* RIGHT_SOURCE = L"Right";
 
+// ---- the IK arms (ik.lua's locals; the names there are kept) ----
+constexpr double IK_MIN_SWING_DEG = 0.02;              // IK_MIN_SWING_DEG
+constexpr double IK_MIN_TWIST_DEG = 0.02;              // IK_MIN_TWIST_DEG
+constexpr double IK_ALIGN_SWING_DEADBAND_DEG = 0.0;    // ALIGN_SWING_DEADBAND_DEG (0.6 only while a scope is active)
+constexpr double FOREARM_TWIST_MAX_DEG = 100.0;        // FOREARM_TWIST_MAX_DEG_DEFAULT
+constexpr double IK_POLE_MIN_LEN = 0.15;               // the pole projection too short to trust (the non-aggressive path)
+constexpr double IK_CTRL_POLE_MIN_LEN = 0.25;          // upProjLen > 0.25 before the controller's up steers the elbow
+constexpr double IK_OUTWARD_FRACTION = 0.35;           // outwardDist = upperLen * 0.35
+constexpr double IK_POLE_SMOOTH_ALPHA_BASE = 0.72;     // POLE_SMOOTH_ALPHA_BASE
+constexpr double IK_POLE_SMOOTH_ALPHA_NEAR = 0.90;     // POLE_SMOOTH_ALPHA_NEAR
+constexpr double IK_POLE_SMOOTH_NEAR_LEN = 0.30;       // POLE_SMOOTH_NEAR_LEN
+constexpr double IK_DIR_SMOOTH_ALPHA = 0.2;            // nlerpSmoothDir alpha for the arm directions (smoothing > 0 only)
+constexpr double IK_POLE_DIR_SMOOTH_ALPHA = 0.4;       // and for the pole
+
 } // namespace sh2vr::settings

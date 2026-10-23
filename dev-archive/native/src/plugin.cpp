@@ -7,7 +7,8 @@
 //
 // Ported so far:
 //   animation.cpp  animation.lua: bone transforms on a PoseableMeshComponent (a library)
-//   hands.cpp      hands.lua: the two hand meshes, made from hands_parameters.json and hung on the controllers
+//   hands.cpp      hands.lua: the forearm hands (Hands Type 2), made from hands_parameters.json, hung on the controllers
+//   ik.cpp         ik.lua: the IK arms (Hands Type 3, the one in use): a poseable body copy with a two-bone solver per arm
 // Shared doors: ue.cpp (the game's functions by name), params.cpp (the pack's saved parameter files).
 #include <windows.h>
 
@@ -15,6 +16,7 @@
 
 #include "common.h"
 #include "hands.h"
+#include "ik.h"
 #include "params.h"
 #include "settings.h"
 #include "uevr/Plugin.hpp"
@@ -25,11 +27,12 @@ namespace {
 class SH2Plugin : public uevr::Plugin {
 public:
     void on_initialize() override {
-        LOGI("%s loaded: hands, API %d.%d.%d", TAG, UEVR_PLUGIN_VERSION_MAJOR, UEVR_PLUGIN_VERSION_MINOR, UEVR_PLUGIN_VERSION_PATCH);
+        LOGI("%s loaded: hands + IK arms, API %d.%d.%d", TAG, UEVR_PLUGIN_VERSION_MAJOR, UEVR_PLUGIN_VERSION_MINOR, UEVR_PLUGIN_VERSION_PATCH);
         params::load_all();
     }
 
     void on_pre_engine_tick(API::UGameEngine*, float delta) override {
+        ik::tick(delta);
         hands::tick(delta);
         heartbeat(delta);
     }
@@ -46,8 +49,8 @@ private:
         params::watch();
         const auto* vr = API::get()->param()->vr;
         const bool hmd = vr != nullptr && vr->is_hmd_active();
-        LOGI("%s alive: frame %u, %.1f ms avg, headset %s, pawn %s, hands %s", TAG, m_frames, avg_ms, hmd ? "on" : "off",
-             API::get()->get_local_pawn(0) != nullptr ? "yes" : "none", hands::exists() ? "made" : "not yet");
+        LOGI("%s alive: frame %u, %.1f ms avg, headset %s, pawn %s, hands %s, arms %s", TAG, m_frames, avg_ms, hmd ? "on" : "off",
+             API::get()->get_local_pawn(0) != nullptr ? "yes" : "none", hands::exists() ? "made" : "not yet", ik::exists() ? "made" : "not yet");
     }
 
     uint32_t m_frames = 0, m_frames_at_beat = 0;

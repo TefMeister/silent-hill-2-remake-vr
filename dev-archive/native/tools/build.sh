@@ -12,8 +12,8 @@ PROFILE="$APPDATA/UnrealVRMod/SHProto-Win64-Shipping"
 MODPROFILE="$HERE/../../mod/UnrealVRMod/SHProto-Win64-Shipping"
 BACKUPS="/d/SH2 builds"
 BUILD="$HERE/build"
-PORTED=(hands)
-PATCHED=(scripts/libs/hands.lua)
+PORTED=(hands ik)
+PATCHED=(scripts/libs/hands.lua scripts/libs/ik.lua scripts/sh2vr_bridge.lua)
 
 undo() {
     local dir="$1"
@@ -40,7 +40,8 @@ BK="$BACKUPS/_backup-$(date +%Y-%m-%d-%H%M)-before-sh2vr-deploy"
 mkdir -p "$BK/files/plugins"
 : > "$BK/ADDED.txt"
 if [ -f "$PROFILE/plugins/sh2vr.dll" ]; then cp -p "$PROFILE/plugins/sh2vr.dll" "$BK/files/plugins/"; else echo "plugins/sh2vr.dll" >> "$BK/ADDED.txt"; fi
-cp "$DLL" "$PROFILE/plugins/sh2vr.dll" && echo "installed plugins/sh2vr.dll"
+tasklist 2>/dev/null | grep -qi "SHProto-Win64-Shipping" && { echo "the game is running: close it first, the plugin file is locked"; exit 1; }
+cp "$DLL" "$PROFILE/plugins/sh2vr.dll" && cmp -s "$DLL" "$PROFILE/plugins/sh2vr.dll" && echo "installed plugins/sh2vr.dll" || { echo "INSTALL FAILED: the copy does not match"; exit 1; }
 for f in "${PATCHED[@]}"; do
     if cmp -s "$MODPROFILE/$f" "$PROFILE/$f"; then echo "same    $f"; continue; fi
     mkdir -p "$BK/files/$(dirname "$f")"; [ -f "$PROFILE/$f" ] && cp -p "$PROFILE/$f" "$BK/files/$f"

@@ -39,6 +39,12 @@ struct Arg {
     Arg(Vec3 x) : kind(VEC3), v(x) {}
     Arg(Rot x) : kind(ROT), r(x) {}
     Arg(Transform x) : kind(TRANSFORM), t(x) {}
+    // an out-parameter: the game writes it and the value comes back into the caller's variable
+    Arg(Vec3* x) : kind(VEC3), v(*x), out(x) {}
+    Arg(Rot* x) : kind(ROT), r(*x), out(x) {}
+    Arg(Transform* x) : kind(TRANSFORM), t(*x), out(x) {}
+    Arg(float* x) : kind(FLOAT), f(*x), out(x) {}
+    void* out = nullptr;
 };
 #pragma warning(pop)
 

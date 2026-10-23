@@ -88,14 +88,18 @@ bool call(API::UObject* obj, std::wstring_view fn, std::initializer_list<Arg> ar
     std::vector<uint8_t> buf((size_t)std::max<int32_t>(size, 1), 0);
 
     API::FProperty* ret_prop = nullptr;
+    struct OutSlot { API::FProperty* prop; void* out; };
+    OutSlot outs[8]{};
+    int n_out = 0;
     size_t i = 0;
     for (auto* fld = f->get_child_properties(); fld != nullptr; fld = fld->get_next()) {
         auto* p = (API::FProperty*)fld;
         if (!p->is_param()) continue;
         if (p->is_return_param()) { ret_prop = p; continue; }
-        if (p->is_out_param() && !p->is_reference_param()) continue;   // written by the function; not read back yet
         if (i >= args.size()) { ++i; continue; }   // a trailing parameter not given stays zero, as UEVR's Lua binding does
-        if (!put(buf.data(), p, *(args.begin() + i))) return refuse(fn, "an argument does not match its parameter");
+        const Arg& a = *(args.begin() + i);
+        if (!put(buf.data(), p, a)) return refuse(fn, "an argument does not match its parameter");
+        if (a.out != nullptr && n_out < 8) outs[n_out++] = {p, a.out};   // read back after the call, whatever the flags say
         ++i;
     }
     if (i < args.size()) return refuse(fn, "more arguments than parameters");
@@ -104,6 +108,7 @@ bool call(API::UObject* obj, std::wstring_view fn, std::initializer_list<Arg> ar
         if (size_of(ret_prop) != ret_size) return refuse(fn, "the return value is a different size than asked for");
     }
     obj->process_event(f, buf.data());
+    for (int k = 0; k < n_out; ++k) std::memcpy(outs[k].out, buf.data() + outs[k].prop->get_offset(), size_of(outs[k].prop));
     if (ret != nullptr) {
         std::memcpy(ret, buf.data() + ret_prop->get_offset(), ret_size);
         if (class_of(ret_prop) == L"BoolProperty") {   // a bool return may be a bit in a byte

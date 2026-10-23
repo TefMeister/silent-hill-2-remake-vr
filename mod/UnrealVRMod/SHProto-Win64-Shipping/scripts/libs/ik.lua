@@ -2522,6 +2522,9 @@ function M.setAutoCreateArms(val)
 end
 
 local function tryAutoCreateArms()
+	-- sh2vr (2026-10-24): when the C++ plugin has taken the IK arms over, scripts/sh2vr_ported.lua sets
+	-- SH2VR_PORTED.ik = true and this module stops making its own.
+	if SH2VR_PORTED ~= nil and SH2VR_PORTED.ik == true then return end
 	if autoCreateArms and not M.exists()then
 		--see if the defaults params file exists
 		local paramsFile = "hands_parameters"
