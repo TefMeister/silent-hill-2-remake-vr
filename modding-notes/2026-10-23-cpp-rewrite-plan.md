@@ -29,9 +29,11 @@ Biggest Lua files: `uevr_utils.lua` 4,326, `main.lua` 4,123, `hands_config.lua` 
 
 ## Decisions
 
-1. **Start from praydog's SH2R-UEVR source, not from a blank plugin.** It is MIT, already a UEVR C++ plugin with
-   CMake, the API headers, the hooks for weapon aim and melee, and it is the "build on someone else's VR mod"
-   shape Tefa chose. Our plugin replaces `sh2r.dll`; credit stays.
+1. ~~Start from praydog's SH2R-UEVR source.~~ **Amended the same evening:** his SH2R-UEVR repo has **no licence
+   file** (UEVR itself is MIT, this plugin is not marked), so its source is not copied without his word. The
+   skeleton was built fresh against UEVR's API headers (`2026-10-23b-sh2vr-skeleton-pass-1.md`); `sh2r.dll` keeps
+   running beside ours, credited, exactly as jbusfield's pack ships it. If Tefa gets praydog's OK, his aim and
+   melee hooks can be folded in later.
 2. **Hybrid during the port, like Visceral RE8.** The Lua pack keeps running; each module ported gets a stand-down
    switch in the Lua (a `PORTED` list in the build script removes that script from the profile), so one module at
    a time is swapped and tested in the headset. Never a big-bang swap.
