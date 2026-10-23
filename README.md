@@ -101,6 +101,7 @@ Shout outs
 
 
 jbusfield - the VR first-person mod this is built on: https://github.com/jbusfield/SH2_UEVR
+Pande4360, gwizdek, markmon, Rusty Gere, lobotomy - ideas and code inside jbusfield's scripts, credited there
 LukasBlaster7 - manual reloads
 VynnGfx - Optimized Tweaks BASE: https://www.nexusmods.com/silenthill2/mods/42
 praydog - UEVR and the Silent Hill 2 UEVR plugin: https://github.com/praydog/UEVR
