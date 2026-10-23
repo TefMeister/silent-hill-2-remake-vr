@@ -13,6 +13,21 @@ int g_shots_performed = 0;          // counted by the hook on SHItemWeaponRanged
 int g_shots_at_probe = 0;
 float g_report_in = -1.0f;          // seconds until the after-probe report, < 0 = none pending
 bool g_installed = false;
+bool g_force_ready = false;         // F10: answer "yes" to the game's own "is the gun ready to fire?" while the gun is lowered
+int g_force_ready_calls = 0;
+
+// SHItemWeaponRanged::IsFireReady(): the game's gate before a shot; with the gun lowered it says no. The params
+// struct holds only ReturnValue (offset 0), so the answer is written there and the game's own check is skipped.
+bool on_is_fire_ready_pre(API::UFunction*, API::UObject*, void* params, void* result) {
+    if (!g_force_ready) return true;
+    ++g_force_ready_calls;
+    if (params != nullptr) *static_cast<uint8_t*>(params) = 1;
+    if (result != nullptr) *static_cast<uint8_t*>(result) = 1;
+    return false;
+}
+void on_is_fire_ready_post(API::UFunction*, API::UObject*, void* params, void*) {
+    if (g_force_ready && params != nullptr) *static_cast<uint8_t*>(params) = 1;
+}
 
 // SHItemWeaponRanged::OnFirePerformed(FVector ShootEndWorldLoc): the game calls it for every real shot
 bool on_fire_performed_pre(API::UFunction*, API::UObject* weapon, void*, void*) {
@@ -66,12 +81,19 @@ void install() {
     auto* fn = cls != nullptr ? cls->find_function(L"OnFirePerformed") : nullptr;
     if (fn == nullptr) { LOGW("%s fire: SHItemWeaponRanged.OnFirePerformed not found, shots cannot be counted", TAG); g_installed = true; return; }
     const bool ok = fn->hook_ptr(on_fire_performed_pre, on_fire_performed_post);
-    LOGI("%s fire: hook on OnFirePerformed %s; probe key F9", TAG, ok ? "set" : "FAILED");
+    auto* ready = cls->find_function(L"IsFireReady");
+    const bool ok2 = ready != nullptr && ready->hook_ptr(on_is_fire_ready_pre, on_is_fire_ready_post);
+    LOGI("%s fire: hook on OnFirePerformed %s, on IsFireReady %s; probe key F9, force-ready toggle F10", TAG, ok ? "set" : "FAILED", ok2 ? "set" : "FAILED");
     g_installed = true;
 }
 
 void on_message(UINT msg, WPARAM wparam) {
-    if (msg == WM_KEYDOWN && wparam == settings::FIRE_PROBE_KEY) probe();
+    if (msg != WM_KEYDOWN) return;
+    if (wparam == settings::FIRE_PROBE_KEY) probe();
+    if (wparam == settings::FIRE_FORCE_READY_KEY) {
+        g_force_ready = !g_force_ready;
+        LOGI("%s fire: force-ready %s (the game asked %d times while it was on)", TAG, g_force_ready ? "ON" : "OFF", g_force_ready_calls);
+    }
 }
 
 void tick(float delta) {
