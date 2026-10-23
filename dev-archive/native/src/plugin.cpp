@@ -9,6 +9,7 @@
 //   animation.cpp  animation.lua: bone transforms on a PoseableMeshComponent (a library)
 //   hands.cpp      hands.lua: the forearm hands (Hands Type 2), made from hands_parameters.json, hung on the controllers
 //   ik.cpp         ik.lua: the IK arms (Hands Type 3, the one in use): a poseable body copy with a two-bone solver per arm
+//   fire.cpp       new: shooting without the aim stance (probe first)
 // Shared doors: ue.cpp (the game's functions by name), params.cpp (the pack's saved parameter files).
 #include <windows.h>
 
@@ -16,6 +17,7 @@
 
 #include "bridge.h"
 #include "common.h"
+#include "fire.h"
 #include "hands.h"
 #include "ik.h"
 #include "params.h"
@@ -34,7 +36,11 @@ public:
 
     void on_custom_event(const char* name, const char* data) override { bridge::on_custom_event(name, data); }
 
+    bool on_message(HWND, UINT msg, WPARAM wparam, LPARAM) override { fire::on_message(msg, wparam); return true; }
+
     void on_pre_engine_tick(API::UGameEngine*, float delta) override {
+        if (API::get()->get_local_pawn(0) != nullptr) fire::install();   // the weapon class is loaded by then
+        fire::tick(delta);
         ik::tick(delta);
         hands::tick(delta);
         heartbeat(delta);

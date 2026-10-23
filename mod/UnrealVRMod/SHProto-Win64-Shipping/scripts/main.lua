@@ -217,6 +217,12 @@ local configDefinition = {
 						widgetType = "text",
 						label = "    Shoot - weapon trigger (auto-aims only while firing)"
 					},
+					{
+						widgetType = "checkbox",
+						id = "always_aim",
+						label = "    Always aim while a gun is out (no grip needed, like Visceral RE2)",
+						initialValue = true,
+					},
 				{ widgetType = "end_group"},
 			{ widgetType = "end_rect", additionalSize = 12, rounding = 5 }, { widgetType = "unindent", width = 20 },
 			{ widgetType = "new_line" },
@@ -3545,10 +3551,26 @@ uevrUtils.registerOnPreInputGetStateCallback(function(retval, user_index, state)
 				and rifleReload ~= nil
 				and rifleReload.isClipEmpty ~= nil
 				and rifleReload.isClipEmpty()
+			-- sh2vr (2026-10-24, Tefa): with "always_aim" on, the aim input is held the whole time a gun is out, so no
+			-- grip press is ever needed (the Visceral RE2 way); every block above still wins.
+			local gunOut = uevrUtils.getValid(status.currentEquippedWeapon) ~= nil and status.currentEquippedWeapon.RegisteredFirePoint ~= nil
+			-- Running (Tefa 2026-10-24): the game will not sprint while aiming, so the aim lets go while the sprint
+			-- button is held (the remap above turned the stick press into LB), for a few frames after it (toggled
+			-- sprint needs a moment to start) and for as long as the game says it is sprinting. The trigger still
+			-- forces the aim, which ends the sprint: Tefa accepted dropping back to a walk on a shot.
+			local sprintRequested = uevrUtils.isButtonPressed(state, XINPUT_GAMEPAD_LEFT_SHOULDER)
+			if sprintRequested then status.sprintGraceFrames = 20 end
+			if (status.sprintGraceFrames or 0) > 0 then status.sprintGraceFrames = status.sprintGraceFrames - 1 end
+			local sprinting = false
+			local movement = uevrUtils.getValid(pawn, {"Movement"})
+			if movement ~= nil then
+				pcall(function() sprinting = movement:IsSprinting() == true end)
+			end
+			local alwaysAim = configui.getValue("always_aim") ~= false and gunOut and not (sprintRequested or sprinting or (status.sprintGraceFrames or 0) > 0)
 			if blockEmptyAim or blockShotgunPump or blockShotgunEmpty or blockRifleBolt or blockRifleEmpty then
 				state.Gamepad.bLeftTrigger = 0
 				state.Gamepad.bRightTrigger = 0
-			elseif rightTriggerPressed or rightGripPressed then
+			elseif rightTriggerPressed or rightGripPressed or alwaysAim then
 				local holdingShell = (shotgunReload ~= nil
 						and shotgunReload.isHoldingShell ~= nil
 						and shotgunReload.isHoldingShell())

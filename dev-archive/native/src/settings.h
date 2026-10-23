@@ -37,4 +37,8 @@ constexpr double IK_DIR_SMOOTH_ALPHA = 0.2;            // nlerpSmoothDir alpha f
 constexpr double IK_POLE_DIR_SMOOTH_ALPHA = 0.4;       // and for the pole
 constexpr float IK_TELL_LUA_S = 1.0f;                  // how often the plugin names its arm mesh to the Lua pack
 
+// ---- shooting without the aim stance (fire.cpp) ----
+constexpr unsigned FIRE_PROBE_KEY = 0x78;   // VK_F9: the probe key, sent to the game window from the session
+constexpr float FIRE_PROBE_REPORT_S = 1.0f; // how long after the probe the shot count is reported
+
 } // namespace sh2vr::settings

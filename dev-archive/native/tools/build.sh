@@ -13,7 +13,7 @@ MODPROFILE="$HERE/../../mod/UnrealVRMod/SHProto-Win64-Shipping"
 BACKUPS="/d/SH2 builds"
 BUILD="$HERE/build"
 PORTED=(hands ik)
-PATCHED=(scripts/libs/hands.lua scripts/libs/ik.lua scripts/sh2vr_bridge.lua)
+PATCHED=(scripts/libs/hands.lua scripts/libs/ik.lua scripts/sh2vr_bridge.lua scripts/main.lua)
 
 undo() {
     local dir="$1"
