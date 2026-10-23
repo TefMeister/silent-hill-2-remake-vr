@@ -14,6 +14,7 @@
 
 #include <memory>
 
+#include "bridge.h"
 #include "common.h"
 #include "hands.h"
 #include "ik.h"
@@ -30,6 +31,8 @@ public:
         LOGI("%s loaded: hands + IK arms, API %d.%d.%d", TAG, UEVR_PLUGIN_VERSION_MAJOR, UEVR_PLUGIN_VERSION_MINOR, UEVR_PLUGIN_VERSION_PATCH);
         params::load_all();
     }
+
+    void on_custom_event(const char* name, const char* data) override { bridge::on_custom_event(name, data); }
 
     void on_pre_engine_tick(API::UGameEngine*, float delta) override {
         ik::tick(delta);

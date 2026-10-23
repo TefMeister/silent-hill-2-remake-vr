@@ -83,3 +83,23 @@ Tefa's notes from the same look, for the board: weapons must cast shadows under 
 fix the player's shadow if at all possible, with the head showing and the hands looking right. `main.lua` already
 says why the shadow is hard: *"These hide the arms but not the shadows and flashlight is still blocked even with
 arms hidden"* (the IK-arms mesh-created callback).
+
+## IK arms in the headset (2026-10-24 00:15 and 00:30, Tefa)
+
+First build (`b4fa1ad`): arms made (388 bones, two solvers, nothing refused), *"arms look right moving front and
+back, but the elbows are very stiff, again not sure if they were better before. for now, they function well"*
+`[verified-live 2026-10-24, n=1, Tefa]`. Three things were missing, all one cause: the Lua pack could no longer
+reach the arm mesh (`ik.getCurrentMesh()` was empty), so the weapon never attached (aim by head only, no gun in
+hand) and the menu hide never fired. Also my first Lua→C++ channel (UEVR mod values with made-up keys) carries
+nothing: UEVR only stores keys it knows.
+
+Second build (`bridge.cpp`, `sh2vr_bridge.lua`): the Lua sends `dispatch_custom_event("sh2vr_flags", ...)` every
+200 ms (hidden / animating per arm) and the plugin names its mesh back with `dispatch_lua_event("sh2vr_ik_mesh")`;
+`ik.lua`'s `getCurrentMesh()` / `exists()` resolve that name with `find_uobject`. Result `[verified-live 2026-10-24,
+n=1, Tefa]`: gun in the right hand, bullets go where it points, arms and gun vanish in the pause menu and return,
+gun sounds fine. Still open: **the crosshair follows the head**, not the gun (`main.lua` custom target callback
+reads `status.currentEquippedWeapon.RootComponent` + `RegisteredFirePoint`; `reticuleTargetMethod` 6). Tefa:
+*"honestly don't worry about the crosshair for the moment"*.
+
+The recorded Menu-o-matiC route `routes/silent-hill-2/launch_to_gameplay.json` drove the game from launch to the
+loaded save by itself on its first replay (three checkpoints matched).

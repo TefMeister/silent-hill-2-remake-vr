@@ -11,6 +11,7 @@
 #include <string>
 #include <vector>
 
+#include "bridge.h"
 #include "controllers.h"
 #include "ikmath.h"
 #include "params.h"
@@ -109,6 +110,7 @@ struct Rig {
     std::string root_bone;
     bool was_animating = false;
     bool hidden = false;
+    float since_told = settings::IK_TELL_LUA_S;   // so the first tick tells the Lua at once
 };
 Rig* g_rig = nullptr;
 float g_since_try = settings::HANDS_RETRY_S;
@@ -120,15 +122,6 @@ void destroy_rig(Rig* rig) {
     if (ue::alive(rig->mesh)) ue::call(rig->mesh, L"K2_DestroyComponent", {rig->mesh});
     if (ue::alive(rig->actor)) ue::call(rig->actor, L"K2_DestroyActor", {});
     delete rig;
-}
-
-// ---- the Lua's shared flags, published by scripts/sh2vr_bridge.lua through UEVR's mod values --------------------
-bool flag(const char* key) {
-    char buf[8]{};
-    const auto* vr = API::get()->param()->vr;
-    if (vr == nullptr) return false;
-    vr->get_mod_value(key, buf, sizeof buf);
-    return buf[0] == '1';
 }
 
 Vec3 vec3_of(const json::Value* v, Vec3 d) { return (v && v->kind == json::Value::ARR && v->arr.size() >= 3) ? Vec3{v->arr[0].n, v->arr[1].n, v->arr[2].n} : d; }
@@ -626,9 +619,11 @@ void tick(float delta) {
         return;
     }
     Rig& rig = *g_rig;
+    rig.since_told += delta;
+    if (rig.since_told >= settings::IK_TELL_LUA_S) { rig.since_told = 0.0f; bridge::tell_lua("sh2vr_ik_mesh", narrow(rig.mesh->get_full_name())); }
 
     // the Lua's 200 ms hide check: the UI / montage modules answer is_hands_hidden; the bridge script publishes it
-    const bool hidden = flag("sh2vr_hands_hidden");
+    const bool hidden = bridge::hands_hidden();
     if (hidden != rig.hidden) { rig.hidden = hidden; ue::call(rig.mesh, L"SetVisibility", {!hidden, true}); }
 
     // tickFn, coupling 1: the mesh rides at the pawn's capsule height
@@ -637,7 +632,7 @@ void tick(float delta) {
         if (auto* h = ue::prop<float>(*r, L"CapsuleHalfHeight")) half = *h;
         if (auto* p = ue::prop<Vec3>(rig.mesh, L"RelativeLocation")) p->z = rig.mesh_loc_off.z + (rig.mesh_loc_off.z + half);
     }
-    const bool animating = flag("sh2vr_anim_left") || flag("sh2vr_anim_right");
+    const bool animating = bridge::anim_left() || bridge::anim_right();
     bool did_animate = false;
     if (animating && ue::alive(rig.animation_mesh)) {   // animateFromMesh
         did_animate = ue::call(rig.mesh, L"CopyPoseFromSkeletalComponent", {rig.animation_mesh});
@@ -653,6 +648,6 @@ void tick(float delta) {
 
 bool exists() { return g_rig != nullptr; }
 API::UObject* mesh() { return g_rig != nullptr ? g_rig->mesh : nullptr; }
-void destroy() { destroy_rig(g_rig); g_rig = nullptr; }
+void destroy() { destroy_rig(g_rig); g_rig = nullptr; bridge::tell_lua("sh2vr_ik_mesh", ""); }
 
 } // namespace sh2vr::ik

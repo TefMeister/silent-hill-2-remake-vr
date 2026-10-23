@@ -46,11 +46,27 @@ function M.hide(isHidden)
     end
 end
 
+-- sh2vr (2026-10-24): with the IK arms ported, the plugin names its arm mesh (SH2VR_IK_MESH_NAME, set by
+-- scripts/sh2vr_bridge.lua) and the pack's other modules reach it through these two as before.
+local sh2vrMesh = nil
+local sh2vrMeshName = nil
+local function sh2vrCurrentMesh()
+	if SH2VR_PORTED == nil or SH2VR_PORTED.ik ~= true then return nil end
+	if SH2VR_IK_MESH_NAME == nil then sh2vrMesh = nil; sh2vrMeshName = nil; return nil end
+	if sh2vrMesh == nil or sh2vrMeshName ~= SH2VR_IK_MESH_NAME or uevrUtils.validate_object(sh2vrMesh) == nil then
+		sh2vrMeshName = SH2VR_IK_MESH_NAME
+		sh2vrMesh = uevr.api:find_uobject(SH2VR_IK_MESH_NAME)
+	end
+	return sh2vrMesh
+end
+
 function M.exists()
+	if SH2VR_PORTED ~= nil and SH2VR_PORTED.ik == true then return sh2vrCurrentMesh() ~= nil end
 	return #_rigInstances > 0
 end
 
 function M.getCurrentMesh(index)
+	if SH2VR_PORTED ~= nil and SH2VR_PORTED.ik == true then return sh2vrCurrentMesh() end
     if #_rigInstances > 0 then
        local meshes =  _rigInstances[#_rigInstances].meshList
 	   if #meshes > 0 then
