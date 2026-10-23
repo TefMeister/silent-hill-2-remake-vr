@@ -16,8 +16,7 @@ Step 1 of the rewrite plan (`2026-10-23-cpp-rewrite-plan.md`). Fable.
 | `include/uevr/` | UEVR's plugin API headers, taken from PureDark's UEVR fork (the AFW build in use), API 2.39.0 |
 | `tools/build.sh` | build, check the two entry points, `--deploy` with backup and `--undo`; `PORTED` list for the Lua files each module replaces |
 
-**Not built from praydog's SH2R-UEVR source.** His repo has no licence file (checked 2026-10-23), so copying it
-needs his word first; `sh2r.dll` keeps running beside ours as a separate plugin, as it does in jbusfield's pack.
+**Not built from praydog's SH2R-UEVR source.** His repo has no licence file (checked 2026-10-23), so it was not copied at first (Tefa the same evening: use it; Tefa will ask praydog); `sh2r.dll` keeps running beside ours as a separate plugin, as it does in jbusfield's pack.
 The plan's decision 1 is amended to that.
 
 ## Proof it works `[verified-live 2026-10-23, n=1]`
