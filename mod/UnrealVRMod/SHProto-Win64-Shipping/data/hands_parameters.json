@@ -1,0 +1,3840 @@
+{
+    "animations": {
+        "Shared": {
+            "poses": {
+                "grip_left_weapon": [
+                    [
+                        "left_grip_weapon",
+                        "on"
+                    ],
+                    [
+                        "left_trigger_weapon",
+                        "off"
+                    ]
+                ],
+                "grip_left_weapon_board": [
+                    [
+                        "left_grip_weapon_board",
+                        "on"
+                    ],
+                    [
+                        "left_trigger_weapon_board",
+                        "off"
+                    ]
+                ],
+                "grip_left_weapon_chainsaw": [
+                    [
+                        "left_grip_weapon_chainsaw",
+                        "on"
+                    ],
+                    [
+                        "left_trigger_weapon_chainsaw",
+                        "off"
+                    ]
+                ],
+                "grip_left_weapon_flashlight": [
+                    [
+                        "left_grip_weapon_flashlight",
+                        "on"
+                    ],
+                    [
+                        "left_trigger_weapon_flashlight",
+                        "off"
+                    ]
+                ],
+                "grip_left_weapon_generic": [
+                    [
+                        "left_grip_weapon_generic",
+                        "on"
+                    ],
+                    [
+                        "left_trigger_weapon_generic",
+                        "off"
+                    ]
+                ],
+                "grip_left_weapon_paper": [
+                    [
+                        "left_grip_weapon_paper",
+                        "on"
+                    ],
+                    [
+                        "left_trigger_weapon_paper",
+                        "off"
+                    ]
+                ],
+                "grip_left_weapon_pipe": [
+                    [
+                        "left_grip_weapon_pipe",
+                        "on"
+                    ],
+                    [
+                        "left_trigger_weapon_pipe",
+                        "off"
+                    ]
+                ],
+                "grip_left_weapon_pistol": [
+                    [
+                        "left_grip_weapon_pistol",
+                        "on"
+                    ],
+                    [
+                        "left_trigger_weapon_pistol",
+                        "off"
+                    ]
+                ],
+                "grip_left_weapon_rifle": [
+                    [
+                        "left_grip_weapon_rifle",
+                        "on"
+                    ],
+                    [
+                        "left_trigger_weapon_rifle",
+                        "off"
+                    ]
+                ],
+                "grip_left_weapon_rifle_offhand": [
+                    [
+                        "left_grip_weapon_rifle_offhand",
+                        "on"
+                    ],
+                    [
+                        "left_trigger_weapon_rifle_offhand",
+                        "off"
+                    ]
+                ],
+                "grip_left_weapon_shotgun": [
+                    [
+                        "left_grip_weapon_shotgun",
+                        "on"
+                    ],
+                    [
+                        "left_trigger_weapon_shotgun",
+                        "off"
+                    ]
+                ],
+                "grip_right_weapon": [
+                    [
+                        "right_grip_weapon",
+                        "on"
+                    ],
+                    [
+                        "right_trigger_weapon",
+                        "off"
+                    ]
+                ],
+                "grip_right_weapon_board": [
+                    [
+                        "right_grip_weapon_board",
+                        "on"
+                    ],
+                    [
+                        "right_trigger_weapon_board",
+                        "off"
+                    ]
+                ],
+                "grip_right_weapon_chainsaw": [
+                    [
+                        "right_grip_weapon_chainsaw",
+                        "on"
+                    ],
+                    [
+                        "right_trigger_weapon_chainsaw",
+                        "off"
+                    ]
+                ],
+                "grip_right_weapon_flashlight": [
+                    [
+                        "right_grip_weapon_flashlight",
+                        "on"
+                    ],
+                    [
+                        "right_trigger_weapon_flashlight",
+                        "off"
+                    ]
+                ],
+                "grip_right_weapon_generic": [
+                    [
+                        "right_grip_weapon_generic",
+                        "on"
+                    ],
+                    [
+                        "right_trigger_weapon_generic",
+                        "off"
+                    ]
+                ],
+                "grip_right_weapon_paper": [
+                    [
+                        "right_grip_weapon_paper",
+                        "on"
+                    ],
+                    [
+                        "right_trigger_weapon_paper",
+                        "off"
+                    ]
+                ],
+                "grip_right_weapon_pipe": [
+                    [
+                        "right_grip_weapon_pipe",
+                        "on"
+                    ],
+                    [
+                        "right_trigger_weapon_pipe",
+                        "off"
+                    ]
+                ],
+                "grip_right_weapon_pistol": [
+                    [
+                        "right_grip_weapon_pistol",
+                        "on"
+                    ],
+                    [
+                        "right_trigger_weapon_pistol",
+                        "off"
+                    ]
+                ],
+                "grip_right_weapon_rifle": [
+                    [
+                        "right_grip_weapon_rifle",
+                        "on"
+                    ],
+                    [
+                        "right_trigger_weapon_rifle",
+                        "off"
+                    ]
+                ],
+                "grip_right_weapon_rifle_offhand": [
+                    [
+                        "right_grip_weapon_rifle_offhand",
+                        "on"
+                    ],
+                    [
+                        "right_trigger_weapon_rifle_offhand",
+                        "off"
+                    ]
+                ],
+                "grip_right_weapon_shotgun": [
+                    [
+                        "right_grip_weapon_shotgun",
+                        "on"
+                    ],
+                    [
+                        "right_trigger_weapon_shotgun",
+                        "off"
+                    ]
+                ],
+                "open_left": [
+                    [
+                        "left_grip",
+                        "off"
+                    ],
+                    [
+                        "left_trigger",
+                        "off"
+                    ],
+                    [
+                        "left_thumb",
+                        "off"
+                    ]
+                ],
+                "open_right": [
+                    [
+                        "right_grip",
+                        "off"
+                    ],
+                    [
+                        "right_trigger",
+                        "off"
+                    ],
+                    [
+                        "right_thumb",
+                        "off"
+                    ]
+                ]
+            },
+            "positions": {
+                "left_grip": {
+                    "off": {
+                        "middle_01_l_bn": [
+                            -10.1574,
+                            26.6366,
+                            -6.5257
+                        ],
+                        "middle_02_l_bn": [
+                            -2.9682,
+                            26.7802,
+                            -0.5054
+                        ],
+                        "middle_03_l_bn": [
+                            -2.6312,
+                            24.4206,
+                            -0.8558
+                        ],
+                        "pinky_01_l_bn": [
+                            -8.3916,
+                            9.9269,
+                            -2.8104
+                        ],
+                        "pinky_02_l_bn": [
+                            -6.6167,
+                            22.2214,
+                            -1.2652
+                        ],
+                        "pinky_03_l_bn": [
+                            -6.6179,
+                            21.6341,
+                            -0.8094
+                        ],
+                        "ring_01_l_bn": [
+                            -5.9325,
+                            22.6548,
+                            -5.626
+                        ],
+                        "ring_02_l_bn": [
+                            -3.2513,
+                            23.9063,
+                            -0.5848
+                        ],
+                        "ring_03_l_bn": [
+                            -2.8287,
+                            20.9165,
+                            -0.5721
+                        ],
+                        "thumb_01_l_bn": [
+                            32.4799,
+                            33.7499,
+                            112.7296
+                        ],
+                        "thumb_02_l_bn": [
+                            -21.8013,
+                            25.3876,
+                            9.4063
+                        ],
+                        "thumb_03_l_bn": [
+                            1.8738,
+                            9.8777,
+                            -0.4694
+                        ]
+                    },
+                    "on": {
+                        "middle_01_l_bn": [
+                            -5.6761,
+                            78.7499,
+                            -6.3485
+                        ],
+                        "middle_02_l_bn": [
+                            -2.922,
+                            96.691,
+                            -0.4965
+                        ],
+                        "middle_03_l_bn": [
+                            -2.6241,
+                            86.6707,
+                            -0.7966
+                        ],
+                        "pinky_01_l_bn": [
+                            -8.2138,
+                            70.026,
+                            -2.81
+                        ],
+                        "pinky_02_l_bn": [
+                            -6.475,
+                            83.7266,
+                            -1.2227
+                        ],
+                        "pinky_03_l_bn": [
+                            -6.4911,
+                            92.174,
+                            -0.7944
+                        ],
+                        "ring_01_l_bn": [
+                            -2.556,
+                            79.1036,
+                            -5.5617
+                        ],
+                        "ring_02_l_bn": [
+                            -3.1283,
+                            85.995,
+                            -0.5545
+                        ],
+                        "ring_03_l_bn": [
+                            -2.7073,
+                            87.5037,
+                            -0.538
+                        ],
+                        "thumb_01_l_bn": [
+                            37.1249,
+                            32.6249,
+                            95.5029
+                        ],
+                        "thumb_02_l_bn": [
+                            -3.306,
+                            52.9609,
+                            41.6249
+                        ],
+                        "thumb_03_l_bn": [
+                            0.0,
+                            43.8749,
+                            0.0
+                        ]
+                    }
+                },
+                "left_grip_weapon": {
+                    "off": {
+                        "middle_01_l_bn": [
+                            1.4824,
+                            1.4178,
+                            -4.0836
+                        ],
+                        "middle_02_l_bn": [
+                            0.0,
+                            21.1973,
+                            0.0
+                        ],
+                        "middle_03_l_bn": [
+                            0.0,
+                            9.8146,
+                            0.0
+                        ],
+                        "pinky_01_l_bn": [
+                            -18.5372,
+                            -3.3042,
+                            -13.1826
+                        ],
+                        "pinky_02_l_bn": [
+                            0.0,
+                            13.7801,
+                            0.0
+                        ],
+                        "pinky_03_l_bn": [
+                            0.0,
+                            12.0103,
+                            0.0
+                        ],
+                        "ring_01_l_bn": [
+                            -1.4432,
+                            0.3122,
+                            -9.6689
+                        ],
+                        "ring_02_l_bn": [
+                            0.0,
+                            33.9027,
+                            0.0
+                        ],
+                        "ring_03_l_bn": [
+                            0.0,
+                            1.827,
+                            0.0
+                        ],
+                        "thumb_01_l_bn": [
+                            59.3,
+                            0.4529,
+                            74.1282
+                        ],
+                        "thumb_02_l_bn": [
+                            -10.056,
+                            23.7111,
+                            -9.3475
+                        ],
+                        "thumb_03_l_bn": [
+                            0.0,
+                            3.0264,
+                            0.0
+                        ]
+                    },
+                    "on": {
+                        "middle_01_l_bn": [
+                            1.4824,
+                            1.4178,
+                            -4.0836
+                        ],
+                        "middle_02_l_bn": [
+                            0.0,
+                            21.1973,
+                            0.0
+                        ],
+                        "middle_03_l_bn": [
+                            0.0,
+                            9.8146,
+                            0.0
+                        ],
+                        "pinky_01_l_bn": [
+                            -18.5372,
+                            -3.3042,
+                            -13.1826
+                        ],
+                        "pinky_02_l_bn": [
+                            0.0,
+                            13.7801,
+                            0.0
+                        ],
+                        "pinky_03_l_bn": [
+                            0.0,
+                            12.0103,
+                            0.0
+                        ],
+                        "ring_01_l_bn": [
+                            -1.4432,
+                            0.3122,
+                            -9.6689
+                        ],
+                        "ring_02_l_bn": [
+                            0.0,
+                            33.9027,
+                            0.0
+                        ],
+                        "ring_03_l_bn": [
+                            0.0,
+                            1.827,
+                            0.0
+                        ],
+                        "thumb_01_l_bn": [
+                            59.3,
+                            0.4529,
+                            74.1282
+                        ],
+                        "thumb_02_l_bn": [
+                            -10.056,
+                            23.7111,
+                            -9.3475
+                        ],
+                        "thumb_03_l_bn": [
+                            0.0,
+                            3.0264,
+                            0.0
+                        ]
+                    }
+                },
+                "left_grip_weapon_board": {
+                    "on": {
+                        "middle_01_l_bn": [
+                            -3.793,
+                            37.6473,
+                            -7.6921
+                        ],
+                        "middle_02_l_bn": [
+                            -1.0412,
+                            38.6593,
+                            -2.701
+                        ],
+                        "middle_03_l_bn": [
+                            -3.7621,
+                            20.6344,
+                            -1.4265
+                        ],
+                        "pinky_01_l_bn": [
+                            6.3858,
+                            33.1228,
+                            4.2301
+                        ],
+                        "pinky_02_l_bn": [
+                            0.4399,
+                            30.275,
+                            -5.8645
+                        ],
+                        "pinky_03_l_bn": [
+                            -4.7007,
+                            28.4783,
+                            -4.7153
+                        ],
+                        "ring_01_l_bn": [
+                            2.3754,
+                            40.4297,
+                            -14.756
+                        ],
+                        "ring_02_l_bn": [
+                            -2.6275,
+                            41.9318,
+                            -1.4292
+                        ],
+                        "ring_03_l_bn": [
+                            -1.4272,
+                            14.5161,
+                            -1.7832
+                        ],
+                        "thumb_01_l_bn": [
+                            38.6516,
+                            11.2982,
+                            84.6161
+                        ],
+                        "thumb_02_l_bn": [
+                            -7.6824,
+                            15.8009,
+                            -8.2439
+                        ],
+                        "thumb_03_l_bn": [
+                            -2.2603,
+                            14.9961,
+                            -0.2164
+                        ]
+                    }
+                },
+                "left_grip_weapon_flashlight": {
+                    "off": {
+                        "middle_01_l_bn": [
+                            4.42,
+                            61.0158,
+                            2.5504
+                        ],
+                        "middle_02_l_bn": [
+                            2.2125,
+                            69.521,
+                            -0.0883
+                        ],
+                        "middle_03_l_bn": [
+                            4.0247,
+                            60.359,
+                            -9.4107
+                        ],
+                        "pinky_01_l_bn": [
+                            3.5339,
+                            56.2038,
+                            -1.423
+                        ],
+                        "pinky_02_l_bn": [
+                            0.3179,
+                            46.3479,
+                            1.6169
+                        ],
+                        "pinky_03_l_bn": [
+                            -12.8937,
+                            65.2099,
+                            7.3435
+                        ],
+                        "ring_01_l_bn": [
+                            6.439,
+                            62.747,
+                            -5.6575
+                        ],
+                        "ring_02_l_bn": [
+                            -0.8702,
+                            63.054,
+                            0.0
+                        ],
+                        "ring_03_l_bn": [
+                            0.7164,
+                            61.728,
+                            -0.6188
+                        ],
+                        "thumb_01_l_bn": [
+                            31.7959,
+                            39.3409,
+                            84.0719
+                        ],
+                        "thumb_02_l_bn": [
+                            -3.05,
+                            32.874,
+                            48.8558
+                        ],
+                        "thumb_03_l_bn": [
+                            -2.6941,
+                            51.198,
+                            7.545
+                        ]
+                    },
+                    "on": {
+                        "middle_01_l_bn": [
+                            4.42,
+                            61.0158,
+                            2.5504
+                        ],
+                        "middle_02_l_bn": [
+                            2.2125,
+                            69.521,
+                            -0.0883
+                        ],
+                        "middle_03_l_bn": [
+                            4.0247,
+                            60.359,
+                            -9.4107
+                        ],
+                        "pinky_01_l_bn": [
+                            3.5339,
+                            56.2038,
+                            -1.423
+                        ],
+                        "pinky_02_l_bn": [
+                            0.3179,
+                            46.3479,
+                            1.6169
+                        ],
+                        "pinky_03_l_bn": [
+                            -12.8937,
+                            65.2099,
+                            7.3435
+                        ],
+                        "ring_01_l_bn": [
+                            6.439,
+                            62.747,
+                            -5.6575
+                        ],
+                        "ring_02_l_bn": [
+                            -0.8702,
+                            63.054,
+                            0.0
+                        ],
+                        "ring_03_l_bn": [
+                            0.7164,
+                            61.728,
+                            -0.6188
+                        ],
+                        "thumb_01_l_bn": [
+                            31.7959,
+                            39.3409,
+                            84.0719
+                        ],
+                        "thumb_02_l_bn": [
+                            -3.05,
+                            32.874,
+                            48.8558
+                        ],
+                        "thumb_03_l_bn": [
+                            -2.6941,
+                            51.198,
+                            7.545
+                        ]
+                    }
+                },
+                "left_grip_weapon_rifle_offhand": {
+                    "off": {
+                        "middle_01_l_bn": [
+                            -0.3069,
+                            67.776,
+                            -6.7344
+                        ],
+                        "middle_02_l_bn": [
+                            -2.4661,
+                            38.25,
+                            -1.1491
+                        ],
+                        "middle_03_l_bn": [
+                            -4.8865,
+                            42.9259,
+                            -2.3404
+                        ],
+                        "pinky_01_l_bn": [
+                            -9.0355,
+                            73.068,
+                            -17.3072
+                        ],
+                        "pinky_02_l_bn": [
+                            -16.2095,
+                            47.0926,
+                            -6.5561
+                        ],
+                        "pinky_03_l_bn": [
+                            -5.5592,
+                            6.1659,
+                            -0.649
+                        ],
+                        "ring_01_l_bn": [
+                            0.9251,
+                            68.6249,
+                            -9.5264
+                        ],
+                        "ring_02_l_bn": [
+                            -5.9328,
+                            47.4538,
+                            -2.4218
+                        ],
+                        "ring_03_l_bn": [
+                            -3.2902,
+                            24.5391,
+                            -0.673
+                        ],
+                        "thumb_01_l_bn": [
+                            46.9249,
+                            0.4528,
+                            105.6278
+                        ],
+                        "thumb_02_l_bn": [
+                            -10.056,
+                            -4.4142,
+                            -9.3475
+                        ],
+                        "thumb_03_l_bn": [
+                            0.0,
+                            3.0264,
+                            0.0
+                        ]
+                    },
+                    "on": {
+                        "middle_01_l_bn": [
+                            -0.3069,
+                            67.776,
+                            -6.7344
+                        ],
+                        "middle_02_l_bn": [
+                            -2.4661,
+                            38.25,
+                            -1.1491
+                        ],
+                        "middle_03_l_bn": [
+                            -4.8865,
+                            42.9259,
+                            -2.3404
+                        ],
+                        "pinky_01_l_bn": [
+                            -9.0355,
+                            73.068,
+                            -17.3072
+                        ],
+                        "pinky_02_l_bn": [
+                            -16.2095,
+                            47.0926,
+                            -6.5561
+                        ],
+                        "pinky_03_l_bn": [
+                            -5.5592,
+                            6.1659,
+                            -0.649
+                        ],
+                        "ring_01_l_bn": [
+                            0.9251,
+                            68.6249,
+                            -9.5264
+                        ],
+                        "ring_02_l_bn": [
+                            -5.9328,
+                            47.4538,
+                            -2.4218
+                        ],
+                        "ring_03_l_bn": [
+                            -3.2902,
+                            24.5391,
+                            -0.673
+                        ],
+                        "thumb_01_l_bn": [
+                            46.9249,
+                            0.4528,
+                            105.6278
+                        ],
+                        "thumb_02_l_bn": [
+                            -10.056,
+                            -4.4142,
+                            -9.3475
+                        ],
+                        "thumb_03_l_bn": [
+                            0.0,
+                            3.0264,
+                            0.0
+                        ]
+                    }
+                },
+                "left_thumb": {
+                    "off": {
+                        "thumb_01_l_bn": [
+                            37.748,
+                            27.7474,
+                            112.1224
+                        ],
+                        "thumb_02_l_bn": [
+                            -21.1633,
+                            22.9626,
+                            9.6806
+                        ],
+                        "thumb_03_l_bn": [
+                            3.219,
+                            20.9829,
+                            -0.5821
+                        ]
+                    },
+                    "on": {
+                        "thumb_01_l_bn": [
+                            37.1249,
+                            32.6249,
+                            95.5029
+                        ],
+                        "thumb_02_l_bn": [
+                            -3.306,
+                            52.9609,
+                            41.625
+                        ],
+                        "thumb_03_l_bn": [
+                            0.0,
+                            43.875,
+                            0.0
+                        ]
+                    }
+                },
+                "left_trigger": {
+                    "off": {
+                        "index_01_l_bn": [
+                            -9.507,
+                            27.3749,
+                            -5.2882
+                        ],
+                        "index_02_l_bn": [
+                            -0.5188,
+                            28.4246,
+                            0.095
+                        ],
+                        "index_03_l_bn": [
+                            2.7499,
+                            24.7907,
+                            -0.0653
+                        ]
+                    },
+                    "on": {
+                        "index_01_l_bn": [
+                            -2.2501,
+                            67.109,
+                            -12.375
+                        ],
+                        "index_02_l_bn": [
+                            -0.9102,
+                            109.179,
+                            0.0833
+                        ],
+                        "index_03_l_bn": [
+                            -1.1866,
+                            51.75,
+                            -0.248
+                        ]
+                    }
+                },
+                "left_trigger_weapon": {
+                    "off": {
+                        "index_01_l_bn": [
+                            6.6366,
+                            -0.2994,
+                            -2.5883
+                        ],
+                        "index_02_l_bn": [
+                            0.0,
+                            19.43,
+                            0.0
+                        ],
+                        "index_03_l_bn": [
+                            0.0,
+                            16.3046,
+                            0.0
+                        ]
+                    },
+                    "on": {
+                        "index_01_l_bn": [
+                            6.6366,
+                            -0.2994,
+                            -2.5883
+                        ],
+                        "index_02_l_bn": [
+                            0.0,
+                            19.43,
+                            0.0
+                        ],
+                        "index_03_l_bn": [
+                            0.0,
+                            16.3046,
+                            0.0
+                        ]
+                    }
+                },
+                "left_trigger_weapon_flashlight": {
+                    "off": {
+                        "index_01_l_bn": [
+                            7.794,
+                            57.8129,
+                            -1.1645
+                        ],
+                        "index_02_l_bn": [
+                            5.043,
+                            51.7369,
+                            -6.1007
+                        ],
+                        "index_03_l_bn": [
+                            -2.1148,
+                            76.527,
+                            2.8845
+                        ]
+                    },
+                    "on": {
+                        "index_01_l_bn": [
+                            7.794,
+                            57.8129,
+                            -1.1645
+                        ],
+                        "index_02_l_bn": [
+                            5.043,
+                            51.7369,
+                            -6.1007
+                        ],
+                        "index_03_l_bn": [
+                            -2.1148,
+                            76.527,
+                            2.8845
+                        ]
+                    }
+                },
+                "left_trigger_weapon_rifle_offhand": {
+                    "off": {
+                        "index_01_l_bn": [
+                            7.4134,
+                            61.116,
+                            -0.1264
+                        ],
+                        "index_02_l_bn": [
+                            6.1841,
+                            22.29,
+                            3.2042
+                        ],
+                        "index_03_l_bn": [
+                            3.6391,
+                            54.5929,
+                            0.7095
+                        ]
+                    },
+                    "on": {
+                        "index_01_l_bn": [
+                            7.4134,
+                            61.116,
+                            -0.1264
+                        ],
+                        "index_02_l_bn": [
+                            6.1841,
+                            22.29,
+                            3.2042
+                        ],
+                        "index_03_l_bn": [
+                            3.6391,
+                            54.5929,
+                            0.7095
+                        ]
+                    }
+                },
+                "right_grip": {
+                    "off": {
+                        "middle_01_r_bn": [
+                            -10.928,
+                            18.1487,
+                            -0.7006
+                        ],
+                        "middle_02_r_bn": [
+                            -2.7703,
+                            19.5571,
+                            -0.4421
+                        ],
+                        "middle_03_r_bn": [
+                            -2.7323,
+                            19.765,
+                            -0.538
+                        ],
+                        "pinky_01_r_bn": [
+                            -11.4344,
+                            5.3526,
+                            2.7791
+                        ],
+                        "pinky_02_r_bn": [
+                            -7.4727,
+                            31.9601,
+                            -2.4453
+                        ],
+                        "pinky_03_r_bn": [
+                            -7.7393,
+                            32.3746,
+                            -1.6784
+                        ],
+                        "ring_01_r_bn": [
+                            -8.3888,
+                            18.1011,
+                            -2.0913
+                        ],
+                        "ring_02_r_bn": [
+                            -3.5082,
+                            25.8047,
+                            -0.6352
+                        ],
+                        "ring_03_r_bn": [
+                            -3.2419,
+                            23.8035,
+                            -0.6656
+                        ],
+                        "thumb_01_r_bn": [
+                            32.4799,
+                            33.75,
+                            99.0905
+                        ],
+                        "thumb_02_r_bn": [
+                            -15.9841,
+                            11.735,
+                            12.947
+                        ],
+                        "thumb_03_r_bn": [
+                            -2.201,
+                            11.323,
+                            -0.1691
+                        ]
+                    },
+                    "on": {
+                        "middle_01_r_bn": [
+                            -5.6761,
+                            78.7499,
+                            -0.8267
+                        ],
+                        "middle_02_r_bn": [
+                            -2.7914,
+                            96.691,
+                            -0.4445
+                        ],
+                        "middle_03_r_bn": [
+                            -2.7403,
+                            86.6707,
+                            -0.5721
+                        ],
+                        "pinky_01_r_bn": [
+                            -11.1369,
+                            70.026,
+                            2.7091
+                        ],
+                        "pinky_02_r_bn": [
+                            -7.0589,
+                            83.7266,
+                            -2.2257
+                        ],
+                        "pinky_03_r_bn": [
+                            -7.2941,
+                            92.174,
+                            -1.5207
+                        ],
+                        "ring_01_r_bn": [
+                            -2.556,
+                            79.1036,
+                            -1.9042
+                        ],
+                        "ring_02_r_bn": [
+                            -3.3179,
+                            85.995,
+                            -0.5775
+                        ],
+                        "ring_03_r_bn": [
+                            -3.0549,
+                            87.5037,
+                            -0.5986
+                        ],
+                        "thumb_01_r_bn": [
+                            37.125,
+                            32.625,
+                            95.5029
+                        ],
+                        "thumb_02_r_bn": [
+                            -3.306,
+                            52.9609,
+                            41.625
+                        ],
+                        "thumb_03_r_bn": [
+                            0.0,
+                            43.875,
+                            0.0
+                        ]
+                    }
+                },
+                "right_grip_weapon": {
+                    "off": {
+                        "middle_01_r_bn": [
+                            2.0712,
+                            1.4183,
+                            -4.0691
+                        ],
+                        "middle_02_r_bn": [
+                            0.0,
+                            21.1973,
+                            0.0
+                        ],
+                        "middle_03_r_bn": [
+                            0.0,
+                            9.8146,
+                            0.0
+                        ],
+                        "pinky_01_r_bn": [
+                            -18.5372,
+                            -3.3042,
+                            -13.1826
+                        ],
+                        "pinky_02_r_bn": [
+                            0.0,
+                            13.7801,
+                            0.0
+                        ],
+                        "pinky_03_r_bn": [
+                            0.0,
+                            12.0103,
+                            0.0
+                        ],
+                        "ring_01_r_bn": [
+                            -1.4432,
+                            0.3122,
+                            -9.6689
+                        ],
+                        "ring_02_r_bn": [
+                            0.0,
+                            33.9027,
+                            0.0
+                        ],
+                        "ring_03_r_bn": [
+                            0.0,
+                            1.827,
+                            0.0
+                        ],
+                        "thumb_01_r_bn": [
+                            59.3,
+                            0.4529,
+                            74.1282
+                        ],
+                        "thumb_02_r_bn": [
+                            -10.056,
+                            23.7111,
+                            -9.3475
+                        ],
+                        "thumb_03_r_bn": [
+                            0.0,
+                            3.0264,
+                            0.0
+                        ]
+                    },
+                    "on": {
+                        "middle_01_r_bn": [
+                            2.0712,
+                            1.4183,
+                            -4.0691
+                        ],
+                        "middle_02_r_bn": [
+                            0.0,
+                            21.1973,
+                            0.0
+                        ],
+                        "middle_03_r_bn": [
+                            0.0,
+                            9.8146,
+                            0.0
+                        ],
+                        "pinky_01_r_bn": [
+                            -18.5372,
+                            -3.3042,
+                            -13.1826
+                        ],
+                        "pinky_02_r_bn": [
+                            0.0,
+                            13.7801,
+                            0.0
+                        ],
+                        "pinky_03_r_bn": [
+                            0.0,
+                            12.0103,
+                            0.0
+                        ],
+                        "ring_01_r_bn": [
+                            -1.4432,
+                            0.3122,
+                            -9.6689
+                        ],
+                        "ring_02_r_bn": [
+                            0.0,
+                            33.9027,
+                            0.0
+                        ],
+                        "ring_03_r_bn": [
+                            0.0,
+                            1.827,
+                            0.0
+                        ],
+                        "thumb_01_r_bn": [
+                            59.3,
+                            0.4529,
+                            74.1282
+                        ],
+                        "thumb_02_r_bn": [
+                            -10.056,
+                            23.7111,
+                            -9.3475
+                        ],
+                        "thumb_03_r_bn": [
+                            0.0,
+                            3.0264,
+                            0.0
+                        ]
+                    }
+                },
+                "right_grip_weapon_board": {
+                    "off": {
+                        "middle_01_r_bn": [
+                            4.42,
+                            61.0159,
+                            2.5504
+                        ],
+                        "middle_02_r_bn": [
+                            2.2125,
+                            53.2239,
+                            -0.0883
+                        ],
+                        "middle_03_r_bn": [
+                            4.0247,
+                            39.2981,
+                            -9.4107
+                        ],
+                        "pinky_01_r_bn": [
+                            3.5339,
+                            56.2039,
+                            -4.6561
+                        ],
+                        "pinky_02_r_bn": [
+                            2.4739,
+                            21.9433,
+                            6.6012
+                        ],
+                        "pinky_03_r_bn": [
+                            -12.8937,
+                            43.3137,
+                            7.3435
+                        ],
+                        "ring_01_r_bn": [
+                            6.439,
+                            62.747,
+                            -5.6575
+                        ],
+                        "ring_02_r_bn": [
+                            1.2856,
+                            43.8213,
+                            1.8882
+                        ],
+                        "ring_03_r_bn": [
+                            0.7164,
+                            38.0153,
+                            -0.6188
+                        ],
+                        "thumb_01_r_bn": [
+                            20.999,
+                            52.875,
+                            127.147
+                        ],
+                        "thumb_02_r_bn": [
+                            -7.8201,
+                            17.1399,
+                            22.5
+                        ],
+                        "thumb_03_r_bn": [
+                            -10.5053,
+                            40.5,
+                            8.3603
+                        ]
+                    },
+                    "on": {
+                        "middle_01_r_bn": [
+                            4.42,
+                            61.0159,
+                            2.5504
+                        ],
+                        "middle_02_r_bn": [
+                            2.2125,
+                            53.2239,
+                            -0.0883
+                        ],
+                        "middle_03_r_bn": [
+                            4.0247,
+                            39.2981,
+                            -9.4107
+                        ],
+                        "pinky_01_r_bn": [
+                            3.5339,
+                            56.2039,
+                            -4.6561
+                        ],
+                        "pinky_02_r_bn": [
+                            2.4739,
+                            21.9433,
+                            6.6012
+                        ],
+                        "pinky_03_r_bn": [
+                            -12.8937,
+                            43.3137,
+                            7.3435
+                        ],
+                        "ring_01_r_bn": [
+                            6.439,
+                            62.747,
+                            -5.6575
+                        ],
+                        "ring_02_r_bn": [
+                            1.2856,
+                            43.8213,
+                            1.8882
+                        ],
+                        "ring_03_r_bn": [
+                            0.7164,
+                            38.0153,
+                            -0.6188
+                        ],
+                        "thumb_01_r_bn": [
+                            20.999,
+                            52.875,
+                            127.147
+                        ],
+                        "thumb_02_r_bn": [
+                            -7.8201,
+                            17.1399,
+                            22.5
+                        ],
+                        "thumb_03_r_bn": [
+                            -10.5053,
+                            40.5,
+                            8.3603
+                        ]
+                    }
+                },
+                "right_grip_weapon_chainsaw": {
+                    "off": {
+                        "middle_01_r_bn": [
+                            15.6339,
+                            83.25,
+                            -11.2251
+                        ],
+                        "middle_02_r_bn": [
+                            -3.0884,
+                            74.021,
+                            -2.5888
+                        ],
+                        "middle_03_r_bn": [
+                            -4.0602,
+                            70.875,
+                            -5.405
+                        ],
+                        "pinky_01_r_bn": [
+                            14.0347,
+                            80.9619,
+                            -19.1824
+                        ],
+                        "pinky_02_r_bn": [
+                            -22.0605,
+                            50.625,
+                            -16.9749
+                        ],
+                        "pinky_03_r_bn": [
+                            -11.3279,
+                            40.2755,
+                            -2.8697
+                        ],
+                        "ring_01_r_bn": [
+                            17.9829,
+                            90.8249,
+                            -10.922
+                        ],
+                        "ring_02_r_bn": [
+                            -8.3098,
+                            60.4729,
+                            -6.7152
+                        ],
+                        "ring_03_r_bn": [
+                            -7.5056,
+                            62.088,
+                            -4.5765
+                        ],
+                        "thumb_01_r_bn": [
+                            48.263,
+                            34.0802,
+                            131.0937
+                        ],
+                        "thumb_02_r_bn": [
+                            -34.8751,
+                            10.3769,
+                            -20.3251
+                        ],
+                        "thumb_03_r_bn": [
+                            -0.0367,
+                            2.9704,
+                            -0.0011
+                        ]
+                    },
+                    "on": {
+                        "middle_01_r_bn": [
+                            15.6338,
+                            83.25,
+                            -11.2251
+                        ],
+                        "middle_02_r_bn": [
+                            -3.0884,
+                            74.021,
+                            -2.5888
+                        ],
+                        "middle_03_r_bn": [
+                            -4.0603,
+                            70.875,
+                            -5.4051
+                        ],
+                        "pinky_01_r_bn": [
+                            14.0347,
+                            80.9618,
+                            -19.1824
+                        ],
+                        "pinky_02_r_bn": [
+                            -22.0605,
+                            50.625,
+                            -16.9749
+                        ],
+                        "pinky_03_r_bn": [
+                            -11.3279,
+                            40.2755,
+                            -2.8697
+                        ],
+                        "ring_01_r_bn": [
+                            17.9829,
+                            90.8248,
+                            -10.922
+                        ],
+                        "ring_02_r_bn": [
+                            -8.3099,
+                            60.4729,
+                            -6.7152
+                        ],
+                        "ring_03_r_bn": [
+                            -7.5056,
+                            62.088,
+                            -4.5765
+                        ],
+                        "thumb_01_r_bn": [
+                            48.263,
+                            34.0802,
+                            131.0937
+                        ],
+                        "thumb_02_r_bn": [
+                            -34.8751,
+                            10.3768,
+                            -20.3251
+                        ],
+                        "thumb_03_r_bn": [
+                            -0.0367,
+                            2.9704,
+                            -0.0011
+                        ]
+                    }
+                },
+                "right_grip_weapon_generic": {
+                    "off": {
+                        "middle_01_r_bn": [
+                            -10.9281,
+                            18.1487,
+                            -0.7007
+                        ],
+                        "middle_02_r_bn": [
+                            -2.7703,
+                            19.5571,
+                            -0.4421
+                        ],
+                        "middle_03_r_bn": [
+                            -2.7324,
+                            19.7649,
+                            -0.538
+                        ],
+                        "pinky_01_r_bn": [
+                            -11.4344,
+                            5.3526,
+                            2.779
+                        ],
+                        "pinky_02_r_bn": [
+                            -7.4728,
+                            31.9601,
+                            -2.4454
+                        ],
+                        "pinky_03_r_bn": [
+                            -7.7393,
+                            32.3745,
+                            -1.6785
+                        ],
+                        "ring_01_r_bn": [
+                            -8.3888,
+                            18.1011,
+                            -2.0914
+                        ],
+                        "ring_02_r_bn": [
+                            -3.5082,
+                            25.8047,
+                            -0.6353
+                        ],
+                        "ring_03_r_bn": [
+                            -3.2419,
+                            23.8034,
+                            -0.6657
+                        ],
+                        "thumb_01_r_bn": [
+                            37.748,
+                            23.7663,
+                            99.0904
+                        ],
+                        "thumb_02_r_bn": [
+                            -15.9841,
+                            11.7349,
+                            12.9469
+                        ],
+                        "thumb_03_r_bn": [
+                            -2.201,
+                            20.9829,
+                            -0.5821
+                        ]
+                    },
+                    "on": {
+                        "middle_01_r_bn": [
+                            -10.9281,
+                            18.1487,
+                            -0.7007
+                        ],
+                        "middle_02_r_bn": [
+                            -2.7703,
+                            19.5571,
+                            -0.4421
+                        ],
+                        "middle_03_r_bn": [
+                            -2.7324,
+                            19.7649,
+                            -0.538
+                        ],
+                        "pinky_01_r_bn": [
+                            -11.4344,
+                            5.3526,
+                            2.779
+                        ],
+                        "pinky_02_r_bn": [
+                            -7.4728,
+                            31.9601,
+                            -2.4454
+                        ],
+                        "pinky_03_r_bn": [
+                            -7.7393,
+                            32.3745,
+                            -1.6785
+                        ],
+                        "ring_01_r_bn": [
+                            -8.3888,
+                            18.1011,
+                            -2.0914
+                        ],
+                        "ring_02_r_bn": [
+                            -3.5082,
+                            25.8047,
+                            -0.6353
+                        ],
+                        "ring_03_r_bn": [
+                            -3.2419,
+                            23.8034,
+                            -0.6657
+                        ],
+                        "thumb_01_r_bn": [
+                            37.748,
+                            23.7663,
+                            99.0904
+                        ],
+                        "thumb_02_r_bn": [
+                            -15.9841,
+                            11.7349,
+                            12.9469
+                        ],
+                        "thumb_03_r_bn": [
+                            -2.201,
+                            20.9829,
+                            -0.5821
+                        ]
+                    }
+                },
+                "right_grip_weapon_paper": {
+                    "off": {
+                        "middle_01_r_bn": [
+                            4.8119,
+                            39.923,
+                            -25.4229
+                        ],
+                        "middle_02_r_bn": [
+                            -1.4051,
+                            45.6012,
+                            1.5642
+                        ],
+                        "middle_03_r_bn": [
+                            -0.8543,
+                            25.5895,
+                            -0.187
+                        ],
+                        "pinky_01_r_bn": [
+                            0.0,
+                            55.125,
+                            -40.7067
+                        ],
+                        "pinky_02_r_bn": [
+                            -15.7265,
+                            34.2765,
+                            -0.1589
+                        ],
+                        "pinky_03_r_bn": [
+                            -20.4427,
+                            52.0164,
+                            -5.7968
+                        ],
+                        "ring_01_r_bn": [
+                            11.329,
+                            35.416,
+                            -33.515
+                        ],
+                        "ring_02_r_bn": [
+                            -15.0477,
+                            58.9169,
+                            -14.7534
+                        ],
+                        "ring_03_r_bn": [
+                            -4.0792,
+                            43.0046,
+                            -2.0928
+                        ],
+                        "thumb_01_r_bn": [
+                            42.8154,
+                            -11.5396,
+                            83.4385
+                        ],
+                        "thumb_02_r_bn": [
+                            -2.3418,
+                            9.4462,
+                            -12.7204
+                        ],
+                        "thumb_03_r_bn": [
+                            -2.5258,
+                            19.8584,
+                            -3.0207
+                        ]
+                    },
+                    "on": {
+                        "middle_01_r_bn": [
+                            4.8119,
+                            39.923,
+                            -25.4229
+                        ],
+                        "middle_02_r_bn": [
+                            -1.4051,
+                            45.6012,
+                            1.5642
+                        ],
+                        "middle_03_r_bn": [
+                            -0.8543,
+                            25.5895,
+                            -0.187
+                        ],
+                        "pinky_01_r_bn": [
+                            0.0,
+                            55.125,
+                            -40.7067
+                        ],
+                        "pinky_02_r_bn": [
+                            -15.7265,
+                            34.2765,
+                            -0.1589
+                        ],
+                        "pinky_03_r_bn": [
+                            -20.4427,
+                            52.0164,
+                            -5.7968
+                        ],
+                        "ring_01_r_bn": [
+                            11.329,
+                            35.416,
+                            -33.515
+                        ],
+                        "ring_02_r_bn": [
+                            -15.0477,
+                            58.9169,
+                            -14.7534
+                        ],
+                        "ring_03_r_bn": [
+                            -4.0792,
+                            43.0046,
+                            -2.0928
+                        ],
+                        "thumb_01_r_bn": [
+                            42.8154,
+                            -11.5396,
+                            83.4385
+                        ],
+                        "thumb_02_r_bn": [
+                            -2.3418,
+                            9.4462,
+                            -12.7204
+                        ],
+                        "thumb_03_r_bn": [
+                            -2.5258,
+                            19.8584,
+                            -3.0207
+                        ]
+                    }
+                },
+                "right_grip_weapon_pipe": {
+                    "off": {
+                        "middle_01_r_bn": [
+                            -3.3751,
+                            67.295,
+                            6.8055
+                        ],
+                        "middle_02_r_bn": [
+                            2.4323,
+                            60.9963,
+                            1.7268
+                        ],
+                        "middle_03_r_bn": [
+                            8.1527,
+                            58.5211,
+                            -11.2501
+                        ],
+                        "pinky_01_r_bn": [
+                            -4.5,
+                            62.977,
+                            -10.223
+                        ],
+                        "pinky_02_r_bn": [
+                            -11.2501,
+                            40.256,
+                            5.076
+                        ],
+                        "pinky_03_r_bn": [
+                            -5.625,
+                            52.817,
+                            5.5079
+                        ],
+                        "ring_01_r_bn": [
+                            1.735,
+                            65.25,
+                            -7.288
+                        ],
+                        "ring_02_r_bn": [
+                            -9.138,
+                            62.0909,
+                            1.851
+                        ],
+                        "ring_03_r_bn": [
+                            -2.1259,
+                            40.5,
+                            -0.1513
+                        ],
+                        "thumb_01_r_bn": [
+                            22.5,
+                            49.081,
+                            127.8782
+                        ],
+                        "thumb_02_r_bn": [
+                            -5.4982,
+                            22.0453,
+                            -4.7354
+                        ],
+                        "thumb_03_r_bn": [
+                            -14.1174,
+                            50.115,
+                            16.2204
+                        ]
+                    },
+                    "on": {
+                        "middle_01_r_bn": [
+                            -3.375,
+                            67.2949,
+                            6.8055
+                        ],
+                        "middle_02_r_bn": [
+                            2.4323,
+                            60.9962,
+                            1.7267
+                        ],
+                        "middle_03_r_bn": [
+                            8.1527,
+                            58.521,
+                            -11.25
+                        ],
+                        "pinky_01_r_bn": [
+                            -4.5,
+                            62.977,
+                            -10.223
+                        ],
+                        "pinky_02_r_bn": [
+                            -11.2502,
+                            40.256,
+                            5.076
+                        ],
+                        "pinky_03_r_bn": [
+                            -5.6252,
+                            52.817,
+                            5.5079
+                        ],
+                        "ring_01_r_bn": [
+                            1.735,
+                            65.2499,
+                            -7.2881
+                        ],
+                        "ring_02_r_bn": [
+                            -9.138,
+                            62.0909,
+                            1.8509
+                        ],
+                        "ring_03_r_bn": [
+                            -2.126,
+                            40.4999,
+                            -0.1513
+                        ],
+                        "thumb_01_r_bn": [
+                            21.3749,
+                            40.4999,
+                            127.8781
+                        ],
+                        "thumb_02_r_bn": [
+                            -5.4982,
+                            2.2499,
+                            -4.7355
+                        ],
+                        "thumb_03_r_bn": [
+                            -14.1175,
+                            68.1149,
+                            16.2203
+                        ]
+                    }
+                },
+                "right_grip_weapon_pistol": {
+                    "off": {
+                        "middle_01_r_bn": [
+                            -14.1631,
+                            49.34,
+                            6.2222
+                        ],
+                        "middle_02_r_bn": [
+                            10.0509,
+                            80.3759,
+                            4.609
+                        ],
+                        "middle_03_r_bn": [
+                            1.1268,
+                            40.6599,
+                            0.9267
+                        ],
+                        "pinky_01_r_bn": [
+                            -17.8011,
+                            46.012,
+                            -3.0577
+                        ],
+                        "pinky_02_r_bn": [
+                            4.9099,
+                            64.6228,
+                            13.1695
+                        ],
+                        "pinky_03_r_bn": [
+                            1.3859,
+                            48.1173,
+                            0.0943
+                        ],
+                        "ring_01_r_bn": [
+                            -11.421,
+                            56.1619,
+                            -4.8249
+                        ],
+                        "ring_02_r_bn": [
+                            7.269,
+                            69.443,
+                            7.5275
+                        ],
+                        "ring_03_r_bn": [
+                            -0.5981,
+                            46.1269,
+                            -4.7316
+                        ],
+                        "thumb_01_r_bn": [
+                            6.853,
+                            50.951,
+                            151.1999
+                        ],
+                        "thumb_02_r_bn": [
+                            -12.8389,
+                            15.5329,
+                            -26.1793
+                        ],
+                        "thumb_03_r_bn": [
+                            -32.571,
+                            52.5369,
+                            15.4251
+                        ]
+                    },
+                    "on": {
+                        "middle_01_r_bn": [
+                            -14.1632,
+                            49.34,
+                            6.2221
+                        ],
+                        "middle_02_r_bn": [
+                            10.0509,
+                            80.3759,
+                            4.609
+                        ],
+                        "middle_03_r_bn": [
+                            1.1267,
+                            40.6599,
+                            0.9266
+                        ],
+                        "pinky_01_r_bn": [
+                            -17.8011,
+                            46.012,
+                            -3.0577
+                        ],
+                        "pinky_02_r_bn": [
+                            4.9099,
+                            64.6228,
+                            13.1695
+                        ],
+                        "pinky_03_r_bn": [
+                            1.3859,
+                            48.1172,
+                            0.0943
+                        ],
+                        "ring_01_r_bn": [
+                            -11.421,
+                            56.1618,
+                            -4.825
+                        ],
+                        "ring_02_r_bn": [
+                            7.269,
+                            69.443,
+                            7.5275
+                        ],
+                        "ring_03_r_bn": [
+                            -0.5982,
+                            46.1268,
+                            -4.7316
+                        ],
+                        "thumb_01_r_bn": [
+                            6.853,
+                            50.951,
+                            151.1999
+                        ],
+                        "thumb_02_r_bn": [
+                            -12.8389,
+                            15.5328,
+                            -26.1794
+                        ],
+                        "thumb_03_r_bn": [
+                            -32.571,
+                            52.5368,
+                            15.4251
+                        ]
+                    }
+                },
+                "right_grip_weapon_rifle": {
+                    "off": {
+                        "middle_01_r_bn": [
+                            -6.6028,
+                            50.6483,
+                            -1.3143
+                        ],
+                        "middle_02_r_bn": [
+                            3.0213,
+                            73.1249,
+                            0.5169
+                        ],
+                        "middle_03_r_bn": [
+                            0.3928,
+                            55.125,
+                            -0.6647
+                        ],
+                        "pinky_01_r_bn": [
+                            -4.5,
+                            66.375,
+                            0.1451
+                        ],
+                        "pinky_02_r_bn": [
+                            4.5,
+                            51.75,
+                            -2.1817
+                        ],
+                        "pinky_03_r_bn": [
+                            1.4894,
+                            38.6245,
+                            -10.6879
+                        ],
+                        "ring_01_r_bn": [
+                            -0.8659,
+                            59.3482,
+                            -2.6632
+                        ],
+                        "ring_02_r_bn": [
+                            3.4337,
+                            71.6993,
+                            -11.3923
+                        ],
+                        "ring_03_r_bn": [
+                            -3.2235,
+                            36.9943,
+                            1.1901
+                        ],
+                        "thumb_01_r_bn": [
+                            42.2649,
+                            20.4829,
+                            110.2499
+                        ],
+                        "thumb_02_r_bn": [
+                            -10.6196,
+                            19.114,
+                            -8.057
+                        ],
+                        "thumb_03_r_bn": [
+                            -4.8085,
+                            26.3677,
+                            -2.6406
+                        ]
+                    },
+                    "on": {
+                        "middle_01_r_bn": [
+                            -6.6028,
+                            50.6483,
+                            -1.3143
+                        ],
+                        "middle_02_r_bn": [
+                            3.0213,
+                            73.1249,
+                            0.5169
+                        ],
+                        "middle_03_r_bn": [
+                            0.3928,
+                            55.125,
+                            -0.6647
+                        ],
+                        "pinky_01_r_bn": [
+                            -4.5001,
+                            66.375,
+                            0.1451
+                        ],
+                        "pinky_02_r_bn": [
+                            4.5,
+                            51.75,
+                            -2.1817
+                        ],
+                        "pinky_03_r_bn": [
+                            1.4894,
+                            38.6245,
+                            -10.6879
+                        ],
+                        "ring_01_r_bn": [
+                            -0.8659,
+                            59.3482,
+                            -2.6632
+                        ],
+                        "ring_02_r_bn": [
+                            3.4337,
+                            71.6993,
+                            -11.3923
+                        ],
+                        "ring_03_r_bn": [
+                            -3.2235,
+                            36.9943,
+                            1.1901
+                        ],
+                        "thumb_01_r_bn": [
+                            42.2649,
+                            20.4829,
+                            110.25
+                        ],
+                        "thumb_02_r_bn": [
+                            -10.6196,
+                            19.114,
+                            -8.057
+                        ],
+                        "thumb_03_r_bn": [
+                            -4.8085,
+                            26.3677,
+                            -2.6406
+                        ]
+                    }
+                },
+                "right_grip_weapon_shotgun": {
+                    "off": {
+                        "middle_01_r_bn": [
+                            5.625,
+                            75.375,
+                            -19.5527
+                        ],
+                        "middle_02_r_bn": [
+                            -0.7664,
+                            77.625,
+                            -5.8593
+                        ],
+                        "middle_03_r_bn": [
+                            -3.3353,
+                            33.5027,
+                            -2.685
+                        ],
+                        "pinky_01_r_bn": [
+                            7.3741,
+                            78.75,
+                            -27.831
+                        ],
+                        "pinky_02_r_bn": [
+                            -14.3132,
+                            53.6489,
+                            4.8344
+                        ],
+                        "pinky_03_r_bn": [
+                            -5.7527,
+                            30.9209,
+                            -4.3681
+                        ],
+                        "ring_01_r_bn": [
+                            10.1939,
+                            82.125,
+                            -17.9299
+                        ],
+                        "ring_02_r_bn": [
+                            0.1295,
+                            62.56,
+                            -1.504
+                        ],
+                        "ring_03_r_bn": [
+                            -2.741,
+                            38.25,
+                            -3.5456
+                        ],
+                        "thumb_01_r_bn": [
+                            37.125,
+                            49.5999,
+                            143.6488
+                        ],
+                        "thumb_02_r_bn": [
+                            -8.79,
+                            42.75,
+                            27.3269
+                        ],
+                        "thumb_03_r_bn": [
+                            2.0676,
+                            31.5,
+                            -0.304
+                        ]
+                    },
+                    "on": {
+                        "middle_01_r_bn": [
+                            5.625,
+                            75.375,
+                            -19.5527
+                        ],
+                        "middle_02_r_bn": [
+                            -0.7664,
+                            77.6249,
+                            -5.8593
+                        ],
+                        "middle_03_r_bn": [
+                            -3.3353,
+                            33.5027,
+                            -2.685
+                        ],
+                        "pinky_01_r_bn": [
+                            7.3741,
+                            78.7499,
+                            -27.831
+                        ],
+                        "pinky_02_r_bn": [
+                            -14.3132,
+                            53.6489,
+                            4.8344
+                        ],
+                        "pinky_03_r_bn": [
+                            -5.7527,
+                            30.9209,
+                            -4.3681
+                        ],
+                        "ring_01_r_bn": [
+                            10.1939,
+                            82.1249,
+                            -17.9299
+                        ],
+                        "ring_02_r_bn": [
+                            0.1295,
+                            62.56,
+                            -1.504
+                        ],
+                        "ring_03_r_bn": [
+                            -2.741,
+                            38.2499,
+                            -3.5456
+                        ],
+                        "thumb_01_r_bn": [
+                            37.125,
+                            49.5999,
+                            143.6488
+                        ],
+                        "thumb_02_r_bn": [
+                            -8.79,
+                            42.7499,
+                            27.3269
+                        ],
+                        "thumb_03_r_bn": [
+                            2.0676,
+                            31.4999,
+                            -0.304
+                        ]
+                    }
+                },
+                "right_thumb": {
+                    "off": {
+                        "thumb_01_r_bn": [
+                            37.748,
+                            23.7663,
+                            99.0904
+                        ],
+                        "thumb_02_r_bn": [
+                            -15.9842,
+                            11.7349,
+                            12.9469
+                        ],
+                        "thumb_03_r_bn": [
+                            -2.201,
+                            20.9829,
+                            -0.5821
+                        ]
+                    },
+                    "on": {
+                        "thumb_01_r_bn": [
+                            37.1249,
+                            32.6249,
+                            95.5029
+                        ],
+                        "thumb_02_r_bn": [
+                            -3.306,
+                            52.9609,
+                            41.6249
+                        ],
+                        "thumb_03_r_bn": [
+                            0.0,
+                            43.8749,
+                            0.0
+                        ]
+                    }
+                },
+                "right_trigger": {
+                    "off": {
+                        "index_01_r_bn": [
+                            -9.507,
+                            14.5724,
+                            1.3178
+                        ],
+                        "index_02_r_bn": [
+                            -2.7553,
+                            14.4848,
+                            -0.4486
+                        ],
+                        "index_03_r_bn": [
+                            2.75,
+                            14.2943,
+                            -0.423
+                        ]
+                    },
+                    "on": {
+                        "index_01_r_bn": [
+                            -2.2501,
+                            67.109,
+                            -12.3752
+                        ],
+                        "index_02_r_bn": [
+                            -2.4297,
+                            109.179,
+                            -0.3825
+                        ],
+                        "index_03_r_bn": [
+                            -2.4517,
+                            51.7499,
+                            -0.3778
+                        ]
+                    }
+                },
+                "right_trigger_weapon": {
+                    "off": {
+                        "index_01_r_bn": [
+                            6.6366,
+                            -0.2994,
+                            -2.5883
+                        ],
+                        "index_02_r_bn": [
+                            0.0,
+                            19.4301,
+                            0.0
+                        ],
+                        "index_03_r_bn": [
+                            0.0,
+                            16.3046,
+                            0.0
+                        ]
+                    },
+                    "on": {
+                        "index_01_r_bn": [
+                            6.6366,
+                            -0.2994,
+                            -2.5883
+                        ],
+                        "index_02_r_bn": [
+                            0.0,
+                            19.4301,
+                            0.0
+                        ],
+                        "index_03_r_bn": [
+                            0.0,
+                            16.3046,
+                            0.0
+                        ]
+                    }
+                },
+                "right_trigger_weapon_board": {
+                    "off": {
+                        "index_01_r_bn": [
+                            7.794,
+                            57.8129,
+                            -1.1645
+                        ],
+                        "index_02_r_bn": [
+                            5.043,
+                            34.875,
+                            -6.1007
+                        ],
+                        "index_03_r_bn": [
+                            -2.1148,
+                            53.478,
+                            2.8845
+                        ]
+                    },
+                    "on": {
+                        "index_01_r_bn": [
+                            7.794,
+                            57.8129,
+                            -1.1645
+                        ],
+                        "index_02_r_bn": [
+                            5.043,
+                            34.875,
+                            -6.1007
+                        ],
+                        "index_03_r_bn": [
+                            -2.1148,
+                            53.478,
+                            2.8845
+                        ]
+                    }
+                },
+                "right_trigger_weapon_chainsaw": {
+                    "off": {
+                        "index_01_r_bn": [
+                            11.25,
+                            43.875,
+                            -23.6251
+                        ],
+                        "index_02_r_bn": [
+                            7.1479,
+                            62.9999,
+                            5.7985
+                        ],
+                        "index_03_r_bn": [
+                            6.9257,
+                            60.5624,
+                            3.3742
+                        ]
+                    },
+                    "on": {
+                        "index_01_r_bn": [
+                            11.25,
+                            43.8749,
+                            -23.625
+                        ],
+                        "index_02_r_bn": [
+                            7.1479,
+                            76.383,
+                            5.7985
+                        ],
+                        "index_03_r_bn": [
+                            6.9257,
+                            60.5624,
+                            3.3742
+                        ]
+                    }
+                },
+                "right_trigger_weapon_generic": {
+                    "off": {
+                        "index_01_r_bn": [
+                            -9.507,
+                            14.5724,
+                            1.3178
+                        ],
+                        "index_02_r_bn": [
+                            -2.7554,
+                            14.4848,
+                            -0.4486
+                        ],
+                        "index_03_r_bn": [
+                            2.7499,
+                            14.2943,
+                            -0.4231
+                        ]
+                    },
+                    "on": {
+                        "index_01_r_bn": [
+                            -9.507,
+                            14.5724,
+                            1.3178
+                        ],
+                        "index_02_r_bn": [
+                            -2.7554,
+                            14.4848,
+                            -0.4486
+                        ],
+                        "index_03_r_bn": [
+                            2.75,
+                            14.2943,
+                            -0.4231
+                        ]
+                    }
+                },
+                "right_trigger_weapon_paper": {
+                    "off": {
+                        "index_01_r_bn": [
+                            17.9999,
+                            25.19,
+                            -19.2106
+                        ],
+                        "index_02_r_bn": [
+                            5.3427,
+                            38.1484,
+                            -0.2073
+                        ],
+                        "index_03_r_bn": [
+                            -2.211,
+                            23.642,
+                            3.2186
+                        ]
+                    },
+                    "on": {
+                        "index_01_r_bn": [
+                            17.9999,
+                            25.19,
+                            -19.2106
+                        ],
+                        "index_02_r_bn": [
+                            5.3427,
+                            38.1484,
+                            -0.2073
+                        ],
+                        "index_03_r_bn": [
+                            -2.211,
+                            23.642,
+                            3.2186
+                        ]
+                    }
+                },
+                "right_trigger_weapon_pipe": {
+                    "off": {
+                        "index_01_r_bn": [
+                            -2.6671,
+                            55.088,
+                            6.7807
+                        ],
+                        "index_02_r_bn": [
+                            8.5491,
+                            72.9169,
+                            -4.3101
+                        ],
+                        "index_03_r_bn": [
+                            -0.2581,
+                            24.75,
+                            2.5047
+                        ]
+                    },
+                    "on": {
+                        "index_01_r_bn": [
+                            -2.6671,
+                            55.088,
+                            6.7807
+                        ],
+                        "index_02_r_bn": [
+                            8.5491,
+                            72.9169,
+                            -4.3101
+                        ],
+                        "index_03_r_bn": [
+                            -0.2581,
+                            24.75,
+                            2.5047
+                        ]
+                    }
+                },
+                "right_trigger_weapon_pistol": {
+                    "off": {
+                        "index_01_r_bn": [
+                            -9.7176,
+                            5.427,
+                            -14.664
+                        ],
+                        "index_02_r_bn": [
+                            3.5032,
+                            45.228,
+                            5.3042
+                        ],
+                        "index_03_r_bn": [
+                            2.2502,
+                            47.3367,
+                            -0.0477
+                        ]
+                    },
+                    "on": {
+                        "index_01_r_bn": [
+                            -9.7176,
+                            5.427,
+                            -14.664
+                        ],
+                        "index_02_r_bn": [
+                            3.5032,
+                            53.909,
+                            5.3042
+                        ],
+                        "index_03_r_bn": [
+                            2.2502,
+                            71.2687,
+                            -0.0477
+                        ]
+                    }
+                },
+                "right_trigger_weapon_rifle": {
+                    "off": {
+                        "index_01_r_bn": [
+                            -30.3751,
+                            2.5488,
+                            -7.0918
+                        ],
+                        "index_02_r_bn": [
+                            -1.1252,
+                            19.125,
+                            0.0
+                        ],
+                        "index_03_r_bn": [
+                            3.2237,
+                            29.2499,
+                            -3.8527
+                        ]
+                    },
+                    "on": {
+                        "index_01_r_bn": [
+                            -30.3751,
+                            2.5488,
+                            -7.0918
+                        ],
+                        "index_02_r_bn": [
+                            -1.1252,
+                            19.1249,
+                            0.0
+                        ],
+                        "index_03_r_bn": [
+                            3.2237,
+                            45.0,
+                            -3.8527
+                        ]
+                    }
+                },
+                "right_trigger_weapon_shotgun": {
+                    "off": {
+                        "index_01_r_bn": [
+                            -24.7501,
+                            4.4999,
+                            -7.9261
+                        ],
+                        "index_02_r_bn": [
+                            2.5174,
+                            6.598,
+                            -0.8789
+                        ],
+                        "index_03_r_bn": [
+                            1.1992,
+                            14.489,
+                            -0.5799
+                        ]
+                    },
+                    "on": {
+                        "index_01_r_bn": [
+                            -24.7501,
+                            4.4998,
+                            -7.9261
+                        ],
+                        "index_02_r_bn": [
+                            2.5174,
+                            6.598,
+                            -0.8789
+                        ],
+                        "index_03_r_bn": [
+                            1.1992,
+                            48.2389,
+                            -0.58
+                        ]
+                    }
+                }
+            }
+        }
+    },
+    "attachments": {
+        "board": {
+            "label": "Board"
+        },
+        "chainsaw": {
+            "label": "Chainsaw"
+        },
+        "flashlight": {
+            "label": "Flashlight"
+        },
+        "generic": {
+            "label": "Generic"
+        },
+        "paper": {
+            "label": "Paper"
+        },
+        "pipe": {
+            "label": "Pipe"
+        },
+        "pistol": {
+            "label": "Pistol"
+        },
+        "rifle": {
+            "label": "Rifle"
+        },
+        "rifle_offhand": {
+            "label": "Rifle Offhand"
+        },
+        "shotgun": {
+            "label": "Shotgun"
+        }
+    },
+    "profiles": {
+        "Main": {
+            "Arms": {
+                "FOV": "",
+                "IgnoreRelativeOffset": false,
+                "InitialTransform": {
+                    "left_hand": {
+                        "hand_l_bn": {
+                            "location": [
+                                26.925102233893995,
+                                1.7765552911441773e-05,
+                                -9.295035852119327e-09
+                            ],
+                            "rotation": [
+                                -5.785588379724885,
+                                10.770095869043402,
+                                1.4943292334751448
+                            ]
+                        },
+                        "hand_l_socket": {
+                            "location": [
+                                4.800623893737793,
+                                -1.329787015900365,
+                                2.1185550689733645
+                            ],
+                            "rotation": [
+                                -10.90711948219661,
+                                78.07468586090968,
+                                -82.58567515680856
+                            ]
+                        },
+                        "index_01_l_bn": {
+                            "location": [
+                                6.347973346710205,
+                                1.8870341591537e-05,
+                                2.392633177805692e-06
+                            ],
+                            "rotation": [
+                                6.636690357201641,
+                                -0.29933668926029133,
+                                -2.5882785664613803
+                            ]
+                        },
+                        "index_01_l_meta_bn": {
+                            "location": [
+                                2.501929998405103,
+                                -0.2890426218509674,
+                                2.050041913989844
+                            ],
+                            "rotation": [
+                                18.336152434606046,
+                                -16.43888266455781,
+                                3.3055425501441715
+                            ]
+                        },
+                        "index_02_l_bn": {
+                            "location": [
+                                3.9541373252868652,
+                                -2.595370460767299e-06,
+                                2.91178330371622e-05
+                            ],
+                            "rotation": [
+                                0.0,
+                                19.430096417478875,
+                                0.0
+                            ]
+                        },
+                        "index_03_l_bn": {
+                            "location": [
+                                2.645850896842603,
+                                -2.195393608417362e-05,
+                                -1.326142592006363e-05
+                            ],
+                            "rotation": [
+                                5.845809003960253e-15,
+                                16.30462369443187,
+                                4.050451517808192e-15
+                            ]
+                        },
+                        "index_l_be": {
+                            "location": [
+                                2.160407066334301,
+                                1.4639663277193904e-06,
+                                -4.172300577920396e-06
+                            ],
+                            "rotation": [
+                                6.361109362927032e-15,
+                                -2.444374231526462e-06,
+                                -1.3569002763205504e-22
+                            ]
+                        },
+                        "l_a_sleeve": {
+                            "location": [
+                                -7.275957614183426e-12,
+                                4.443718910217285,
+                                -0.919315516945062
+                            ],
+                            "rotation": [
+                                -3.714388101951462e-15,
+                                -1.3730327114226783e-14,
+                                22.85495385994902
+                            ]
+                        },
+                        "l_b_sleeve": {
+                            "location": [
+                                -1.4551915228366852e-11,
+                                2.4352290630413336,
+                                5.777662754060657
+                            ],
+                            "rotation": [
+                                -3.714388101951462e-15,
+                                -1.3730327114226783e-14,
+                                22.85495385994902
+                            ]
+                        },
+                        "l_c_sleeve": {
+                            "location": [
+                                -7.275957614183426e-12,
+                                -3.035506248474121,
+                                2.2331056594885013
+                            ],
+                            "rotation": [
+                                -3.714388101951462e-15,
+                                -1.3730327114226783e-14,
+                                22.85495385994902
+                            ]
+                        },
+                        "l_d_sleeve": {
+                            "location": [
+                                -7.275957614183426e-12,
+                                -1.6628082990573603,
+                                -3.945068359373181
+                            ],
+                            "rotation": [
+                                -3.714388101951462e-15,
+                                -1.3730327114226783e-14,
+                                22.85495385994902
+                            ]
+                        },
+                        "l_jacket_sleeve": {
+                            "location": [
+                                26.925102233879443,
+                                1.06148945633322e-07,
+                                -1.8189894035458565e-12
+                            ],
+                            "rotation": [
+                                -5.785588379724885,
+                                10.770095869043402,
+                                1.4943292334751448
+                            ]
+                        },
+                        "l_jacket_sleeve_B": {
+                            "location": [
+                                0.9708506464958191,
+                                4.910478591926221,
+                                0.8918956518209598
+                            ],
+                            "rotation": [
+                                13.80494583462571,
+                                149.60656536529197,
+                                179.50917705346222
+                            ]
+                        },
+                        "l_jacket_sleeve_BL": {
+                            "location": [
+                                1.3930562734603882,
+                                3.378770589835767,
+                                -2.4998838901501585
+                            ],
+                            "rotation": [
+                                9.66623834086928,
+                                105.51020151288846,
+                                170.08471080866846
+                            ]
+                        },
+                        "l_jacket_sleeve_BR": {
+                            "location": [
+                                0.638782799240289,
+                                4.430793285377149,
+                                4.27709102630979
+                            ],
+                            "rotation": [
+                                -8.196417516369653,
+                                -82.47614068593158,
+                                11.157237917258636
+                            ]
+                        },
+                        "l_jacket_sleeve_F": {
+                            "location": [
+                                0.6433066129684448,
+                                -3.6460118293762207,
+                                1.0470907688213629
+                            ],
+                            "rotation": [
+                                -9.786277145204473,
+                                -73.78881316511118,
+                                9.796862442487841
+                            ]
+                        },
+                        "l_jacket_sleeve_FL": {
+                            "location": [
+                                1.055228352546692,
+                                -3.446828842141258,
+                                -2.5367858409772452
+                            ],
+                            "rotation": [
+                                -9.372099634199836,
+                                -76.17177246139889,
+                                10.193469782608188
+                            ]
+                        },
+                        "l_jacket_sleeve_FR": {
+                            "location": [
+                                0.3986420631481451,
+                                -1.3897653818130493,
+                                4.977609157564075
+                            ],
+                            "rotation": [
+                                -9.777997420163723,
+                                -73.83744700938611,
+                                9.805125216394702
+                            ]
+                        },
+                        "l_jacket_sleeve_L": {
+                            "location": [
+                                1.4116448163986206,
+                                0.20950068533420563,
+                                -4.6018853187542845
+                            ],
+                            "rotation": [
+                                9.6501182297285,
+                                105.41673547276277,
+                                170.06903006659545
+                            ]
+                        },
+                        "l_jacket_sleeve_R": {
+                            "location": [
+                                0.3147231340408325,
+                                1.6803874969482422,
+                                6.054164886476428
+                            ],
+                            "rotation": [
+                                -9.372099634199836,
+                                -76.17177246139889,
+                                10.193469782608188
+                            ]
+                        },
+                        "l_sleeve_master": {
+                            "location": [
+                                -5.558664270211011e-06,
+                                9.83782229013741e-07,
+                                2.885231879190542e-06
+                            ],
+                            "rotation": [
+                                0.0,
+                                -1.2722218725854064e-14,
+                                0.0
+                            ]
+                        },
+                        "l_wrist_Offset": {
+                            "location": [
+                                26.925106048583984,
+                                -1.3003154890611768e-06,
+                                1.188382157124579e-07
+                            ],
+                            "rotation": [
+                                6.361109362927032e-15,
+                                -1.7655625192200634e-31,
+                                -3.180554681463516e-15
+                            ]
+                        },
+                        "lowerarm_twist_01_l_bn_Offset": {
+                            "location": [
+                                7.999999046318408,
+                                0.0,
+                                0.0
+                            ],
+                            "rotation": [
+                                6.361109362927032e-15,
+                                -1.7655625192200634e-31,
+                                -3.180554681463516e-15
+                            ]
+                        },
+                        "lowerarm_twist_02_l_bn": {
+                            "location": [
+                                20.336000442497607,
+                                -7.275957614183426e-12,
+                                -3.637978807091713e-12
+                            ],
+                            "rotation": [
+                                6.361109362927032e-15,
+                                -1.7655625192200634e-31,
+                                -3.180554681463516e-15
+                            ]
+                        },
+                        "lowerarm_twist_02_l_bn_Offset": {
+                            "location": [
+                                17.00000190735591,
+                                -2.1827872842550278e-11,
+                                0.0
+                            ],
+                            "rotation": [
+                                6.361109362927032e-15,
+                                -1.7655625192200634e-31,
+                                -3.180554681463516e-15
+                            ]
+                        },
+                        "middle_01_l_bn": {
+                            "location": [
+                                6.5330047607494635,
+                                -1.3225529983174056e-05,
+                                -9.017481716000475e-06
+                            ],
+                            "rotation": [
+                                1.4824053527465757,
+                                1.4178783551623775,
+                                -4.083556261321009
+                            ]
+                        },
+                        "middle_01_l_meta_bn": {
+                            "location": [
+                                2.6617164611889166,
+                                -0.3539207875728607,
+                                0.7085025310516357
+                            ],
+                            "rotation": [
+                                11.079319891738708,
+                                -17.09181624342912,
+                                -4.77772239290353
+                            ]
+                        },
+                        "middle_02_l_bn": {
+                            "location": [
+                                4.288477420814161,
+                                -1.8424470908939838e-06,
+                                2.520555062801577e-05
+                            ],
+                            "rotation": [
+                                -6.252586644199558e-15,
+                                21.197317369164125,
+                                -1.1699882836572732e-15
+                            ]
+                        },
+                        "middle_03_l_bn": {
+                            "location": [
+                                3.297452211376367,
+                                -7.924383680801839e-06,
+                                -1.843945119617274e-05
+                            ],
+                            "rotation": [
+                                -2.720777673022304e-16,
+                                9.814629809405538,
+                                3.1688959860366703e-15
+                            ]
+                        },
+                        "middle_l_be": {
+                            "location": [
+                                2.715425729740673,
+                                -4.84134943690151e-06,
+                                -3.869263309752569e-06
+                            ],
+                            "rotation": [
+                                6.361109152883894e-15,
+                                -2.5225338485949512e-06,
+                                -9.541664184419304e-15
+                            ]
+                        },
+                        "pinky_01_l_bn": {
+                            "location": [
+                                5.930593013756152,
+                                1.7437065253034234e-05,
+                                1.3748343917541206e-05
+                            ],
+                            "rotation": [
+                                -18.537162605382505,
+                                -3.3041111268818724,
+                                -13.182554563981263
+                            ]
+                        },
+                        "pinky_01_l_meta_bn": {
+                            "location": [
+                                2.735830783847632,
+                                -0.40693822503089905,
+                                -1.7164080142974854
+                            ],
+                            "rotation": [
+                                -1.4823765078193507,
+                                -8.202680238975194,
+                                -13.791305417580071
+                            ]
+                        },
+                        "pinky_02_l_bn": {
+                            "location": [
+                                3.1530981063806394,
+                                -7.414746505673975e-06,
+                                -4.063473170390353e-06
+                            ],
+                            "rotation": [
+                                3.8155375413945054e-16,
+                                13.780111261094094,
+                                -3.157585282218293e-15
+                            ]
+                        },
+                        "pinky_03_l_bn": {
+                            "location": [
+                                2.247286796573462,
+                                -4.8038302338682115e-05,
+                                2.173997927457094e-06
+                            ],
+                            "rotation": [
+                                1.798037708452807e-14,
+                                12.010327315950247,
+                                1.1485765258712838e-14
+                            ]
+                        },
+                        "pinky_l_be": {
+                            "location": [
+                                2.320336341865186,
+                                2.0297738956287503e-06,
+                                -2.8309623303357512e-05
+                            ],
+                            "rotation": [
+                                1.8309753371452e-22,
+                                2.638713550749341e-06,
+                                -7.951386703658789e-15
+                            ]
+                        },
+                        "ring_01_l_bn": {
+                            "location": [
+                                6.267329692840576,
+                                2.468896855134517e-05,
+                                2.4675700842635706e-06
+                            ],
+                            "rotation": [
+                                -1.4431089680312537,
+                                0.3122980894300741,
+                                -9.66882728721241
+                            ]
+                        },
+                        "ring_01_l_meta_bn": {
+                            "location": [
+                                2.7851881980895996,
+                                -0.4073965251300251,
+                                -0.5895383358019899
+                            ],
+                            "rotation": [
+                                5.31813612804277,
+                                -14.445236649442021,
+                                -3.29711304460085
+                            ]
+                        },
+                        "ring_02_l_bn": {
+                            "location": [
+                                4.087523937225342,
+                                8.581257134210318e-06,
+                                -3.5034190659644082e-06
+                            ],
+                            "rotation": [
+                                1.3560454504941838e-14,
+                                33.902755232763795,
+                                -8.542605643937099e-16
+                            ]
+                        },
+                        "ring_03_l_bn": {
+                            "location": [
+                                2.9200685024225095,
+                                -1.1614734830800444e-05,
+                                -2.904944631154649e-05
+                            ],
+                            "rotation": [
+                                -5.070773060670505e-17,
+                                1.8270159376023187,
+                                3.180150437925258e-15
+                            ]
+                        },
+                        "ring_l_be": {
+                            "location": [
+                                2.5667200088537356,
+                                4.898931365460157e-06,
+                                -5.5591317504877225e-06
+                            ],
+                            "rotation": [
+                                6.3611093629270335e-15,
+                                -1.3241718894150476e-31,
+                                -2.3854160110976376e-15
+                            ]
+                        },
+                        "thumb_01_l_bn": {
+                            "location": [
+                                1.6786335706747195,
+                                0.6548343300819397,
+                                2.441615104675293
+                            ],
+                            "rotation": [
+                                59.30005908663217,
+                                0.4529392959593406,
+                                74.12827630171843
+                            ]
+                        },
+                        "thumb_02_l_bn": {
+                            "location": [
+                                4.092035770419898,
+                                -3.524730709614232e-05,
+                                6.508926162496209e-07
+                            ],
+                            "rotation": [
+                                -10.055909377584635,
+                                23.71119739411173,
+                                -9.347415579674868
+                            ]
+                        },
+                        "thumb_03_l_bn": {
+                            "location": [
+                                3.4038374423980713,
+                                -1.699558924883604e-05,
+                                -1.5586421795887873e-05
+                            ],
+                            "rotation": [
+                                6.526872678472655e-15,
+                                3.026441110503727,
+                                -6.190909278389009e-15
+                            ]
+                        },
+                        "thumb_l_be": {
+                            "location": [
+                                3.3912246227264404,
+                                -4.1962615796364844e-05,
+                                1.5105459169717506e-05
+                            ],
+                            "rotation": [
+                                -3.1805546814631724e-15,
+                                -2.2860236773023806e-15,
+                                1.723860637353226e-11
+                            ]
+                        }
+                    },
+                    "right_hand": {
+                        "hand_r_bn": {
+                            "location": [
+                                -26.9249572753979,
+                                5.852722097188234e-05,
+                                -5.2061868700548075e-05
+                            ],
+                            "rotation": [
+                                -5.785588264465323,
+                                10.77009582519536,
+                                1.4943292140960567
+                            ]
+                        },
+                        "hand_r_socket": {
+                            "location": [
+                                -4.800633907312658,
+                                1.329781413078308,
+                                -2.118549823760077
+                            ],
+                            "rotation": [
+                                -10.907119482196622,
+                                78.07468586090974,
+                                -82.5856751568086
+                            ]
+                        },
+                        "index_01_r_bn": {
+                            "location": [
+                                -6.348006725314917,
+                                -0.00011451302998466417,
+                                1.1973481377935968e-05
+                            ],
+                            "rotation": [
+                                6.636686884302413,
+                                -0.2993394385207113,
+                                -2.58827893051332
+                            ]
+                        },
+                        "index_01_r_meta_bn": {
+                            "location": [
+                                -2.502019166940954,
+                                0.2888972759246826,
+                                -2.0500249862661803
+                            ],
+                            "rotation": [
+                                18.336172671219003,
+                                -16.43897073738183,
+                                3.3055571834717417
+                            ]
+                        },
+                        "index_02_r_bn": {
+                            "location": [
+                                -3.954101324077783,
+                                0.00023975146905286238,
+                                -5.324774610926397e-05
+                            ],
+                            "rotation": [
+                                -1.7543230516112649e-06,
+                                19.430177826448492,
+                                -5.131990040067006e-06
+                            ]
+                        },
+                        "index_03_r_bn": {
+                            "location": [
+                                -2.645807981498365,
+                                3.248261782573536e-05,
+                                -6.427831976907328e-06
+                            ],
+                            "rotation": [
+                                1.5056233118210983e-05,
+                                16.30462804357935,
+                                6.200022666442942e-05
+                            ]
+                        },
+                        "index_r_be": {
+                            "location": [
+                                -2.160445451740088,
+                                6.221228250069544e-05,
+                                5.630368468700908e-05
+                            ],
+                            "rotation": [
+                                -7.55381772945699e-15,
+                                2.1667528641623577e-14,
+                                1.909095936855885e-06
+                            ]
+                        },
+                        "lowerarm_twist_01_r_bn_Offset": {
+                            "location": [
+                                -8.000000953681592,
+                                -7.275957614183426e-12,
+                                -9.094947017729282e-13
+                            ],
+                            "rotation": [
+                                -4.969616689786747e-16,
+                                2.609048762138042e-15,
+                                1.3914926731402894e-15
+                            ]
+                        },
+                        "lowerarm_twist_02_r_bn": {
+                            "location": [
+                                -20.33600044250852,
+                                -7.275957614183426e-12,
+                                -1.1368683772161603e-12
+                            ],
+                            "rotation": [
+                                2.6835930124848434e-15,
+                                2.5842006786891084e-15,
+                                -3.975693351829397e-16
+                            ]
+                        },
+                        "lowerarm_twist_02_r_bn_Offset": {
+                            "location": [
+                                -16.999998092655005,
+                                0.0,
+                                -6.821210263296962e-13
+                            ],
+                            "rotation": [
+                                -4.969616689786747e-16,
+                                2.609048762138042e-15,
+                                1.3914926731402894e-15
+                            ]
+                        },
+                        "middle_01_r_bn": {
+                            "location": [
+                                -6.532649517055688,
+                                0.00012172937567811459,
+                                -0.06714789569332424
+                            ],
+                            "rotation": [
+                                2.0712523802952525,
+                                1.418355344264762,
+                                -4.069001805027919
+                            ]
+                        },
+                        "middle_01_r_meta_bn": {
+                            "location": [
+                                -2.661820888515649,
+                                0.353776752948761,
+                                -0.7085013389582855
+                            ],
+                            "rotation": [
+                                10.492331362367912,
+                                -17.041949646454995,
+                                -4.768359693480765
+                            ]
+                        },
+                        "middle_02_r_bn": {
+                            "location": [
+                                -4.2884602546691895,
+                                0.00011202383757336065,
+                                -4.5421944378176704e-05
+                            ],
+                            "rotation": [
+                                1.55983673990736e-13,
+                                21.197317369164132,
+                                3.8334384150081085e-05
+                            ]
+                        },
+                        "middle_03_r_bn": {
+                            "location": [
+                                -3.297518491737719,
+                                -3.869640931952745e-05,
+                                5.041240024183935e-05
+                            ],
+                            "rotation": [
+                                4.674721720462167e-06,
+                                9.81463151069505,
+                                3.435502233890919e-05
+                            ]
+                        },
+                        "middle_r_be": {
+                            "location": [
+                                -2.7154064178503177,
+                                -2.0578998373821378e-05,
+                                -1.2729192803817568e-05
+                            ],
+                            "rotation": [
+                                -5.168401321099773e-15,
+                                -1.9878467702386505e-15,
+                                2.0913098628729163e-06
+                            ]
+                        },
+                        "pinky_01_r_bn": {
+                            "location": [
+                                -5.9306416511462885,
+                                2.8364382160361856e-05,
+                                -9.236544428858906e-06
+                            ],
+                            "rotation": [
+                                -18.53716115915656,
+                                -3.3041148531946924,
+                                -13.182548842877363
+                            ]
+                        },
+                        "pinky_01_r_meta_bn": {
+                            "location": [
+                                -2.7358639240246703,
+                                0.40691047906148015,
+                                1.7164161205296296
+                            ],
+                            "rotation": [
+                                -1.4823755294447247,
+                                -8.202677760367363,
+                                -13.79130721947393
+                            ]
+                        },
+                        "pinky_02_r_bn": {
+                            "location": [
+                                -3.153033971782861,
+                                -2.3979737306945026e-06,
+                                1.4103621651884168e-05
+                            ],
+                            "rotation": [
+                                -1.0959635635646683e-05,
+                                13.780108718267545,
+                                3.173412317183003e-05
+                            ]
+                        },
+                        "pinky_03_r_bn": {
+                            "location": [
+                                -2.247309923173816,
+                                5.147173214936629e-05,
+                                -4.931469447910786e-06
+                            ],
+                            "rotation": [
+                                8.823816761167452e-15,
+                                12.010327315950253,
+                                7.324433276948723e-15
+                            ]
+                        },
+                        "pinky_r_be": {
+                            "location": [
+                                -2.3204100132024905,
+                                -2.0083454728592187e-05,
+                                3.8270081859081984e-05
+                            ],
+                            "rotation": [
+                                1.4218187292366645e-22,
+                                -6.361109362927035e-15,
+                                2.5613209196714546e-06
+                            ]
+                        },
+                        "r_a_sleeve": {
+                            "location": [
+                                -6.544269854202867e-05,
+                                -4.443682670600538,
+                                0.9193459153184449
+                            ],
+                            "rotation": [
+                                -3.8616545008762856e-15,
+                                1.04467165367385e-15,
+                                22.854953859949028
+                            ]
+                        },
+                        "r_b_sleeve": {
+                            "location": [
+                                -5.5791973863961175e-05,
+                                -2.435248851783399,
+                                -5.77763700485275
+                            ],
+                            "rotation": [
+                                -3.8616545008762856e-15,
+                                1.04467165367385e-15,
+                                22.854953859949028
+                            ]
+                        },
+                        "r_c_sleeve": {
+                            "location": [
+                                -2.1859072148799896e-05,
+                                3.0355095863342285,
+                                -2.233095169067383
+                            ],
+                            "rotation": [
+                                -3.8616545008762856e-15,
+                                1.04467165367385e-15,
+                                22.854953859949028
+                            ]
+                        },
+                        "r_d_sleeve": {
+                            "location": [
+                                -5.19849345437251e-05,
+                                1.6627978086471558,
+                                3.9450836181640625
+                            ],
+                            "rotation": [
+                                -3.8616545008762856e-15,
+                                1.04467165367385e-15,
+                                22.854953859949028
+                            ]
+                        },
+                        "r_jacket_sleeve": {
+                            "location": [
+                                -26.92495346069336,
+                                8.618341234978288e-05,
+                                -5.2170002163620666e-05
+                            ],
+                            "rotation": [
+                                -5.785588379724883,
+                                10.770095869043413,
+                                1.4943292334751483
+                            ]
+                        },
+                        "r_jacket_sleeve_B": {
+                            "location": [
+                                -1.075469970704944,
+                                -4.893392562866211,
+                                -0.8600162863742753
+                            ],
+                            "rotation": [
+                                -0.4766445179182246,
+                                59.72368616463313,
+                                -13.805433251164207
+                            ]
+                        },
+                        "r_jacket_sleeve_BL": {
+                            "location": [
+                                -0.6958302855473448,
+                                -4.302408218376513,
+                                -4.222244262695085
+                            ],
+                            "rotation": [
+                                -10.435702117169622,
+                                -69.82667901136236,
+                                -170.89899287474537
+                            ]
+                        },
+                        "r_jacket_sleeve_BR": {
+                            "location": [
+                                -1.4773943424243043,
+                                -3.339456558227539,
+                                2.5351047515866867
+                            ],
+                            "rotation": [
+                                9.070042300746703,
+                                102.14914420956208,
+                                -10.462553065638561
+                            ]
+                        },
+                        "r_jacket_sleeve_F": {
+                            "location": [
+                                -0.6824387311989994,
+                                3.4373490810394287,
+                                -1.966657757760231
+                            ],
+                            "rotation": [
+                                -8.942039126892146,
+                                -78.54894277824383,
+                                -169.42816820056115
+                            ]
+                        },
+                        "r_jacket_sleeve_FL": {
+                            "location": [
+                                -0.4743360877073428,
+                                1.2947007417678833,
+                                -5.308166027070229
+                            ],
+                            "rotation": [
+                                -8.95095998496723,
+                                -78.50054071961037,
+                                -169.43569489091198
+                            ]
+                        },
+                        "r_jacket_sleeve_FR": {
+                            "location": [
+                                -1.0957703590429446,
+                                3.5305678844451904,
+                                2.5792245864863617
+                            ],
+                            "rotation": [
+                                -9.372099634199852,
+                                -76.17177246139899,
+                                -169.8065302173918
+                            ]
+                        },
+                        "r_jacket_sleeve_L": {
+                            "location": [
+                                -0.47965916991051927,
+                                -1.8937859535217285,
+                                -6.184525012969743
+                            ],
+                            "rotation": [
+                                -9.372099634199852,
+                                -76.17177246139899,
+                                -169.8065302173918
+                            ]
+                        },
+                        "r_jacket_sleeve_R": {
+                            "location": [
+                                -1.4022320509011479,
+                                -0.28016602993011475,
+                                4.347702503203209
+                            ],
+                            "rotation": [
+                                9.087018011468814,
+                                102.24230279963022,
+                                -10.447854307034198
+                            ]
+                        },
+                        "r_sleeve_master": {
+                            "location": [
+                                -1.964950206456706e-05,
+                                -0.00015289731527445838,
+                                7.139258354982303e-05
+                            ],
+                            "rotation": [
+                                -1.1927080055488194e-15,
+                                2.8823776800763134e-15,
+                                -1.3914926731402894e-15
+                            ]
+                        },
+                        "r_wrist_Offset": {
+                            "location": [
+                                -26.924953460696997,
+                                8.447132131550461e-05,
+                                -5.200168084229517e-05
+                            ],
+                            "rotation": [
+                                -4.969616689786747e-16,
+                                2.609048762138042e-15,
+                                1.3914926731402894e-15
+                            ]
+                        },
+                        "ring_01_r_bn": {
+                            "location": [
+                                -6.267347812656226,
+                                1.6990990843623877e-05,
+                                -4.9149321057484485e-08
+                            ],
+                            "rotation": [
+                                -1.4431089287658598,
+                                0.3122948105026282,
+                                -9.668825544191037
+                            ]
+                        },
+                        "ring_01_r_meta_bn": {
+                            "location": [
+                                -2.785280227655676,
+                                0.4072207808494568,
+                                0.5895361900343232
+                            ],
+                            "rotation": [
+                                5.014560376855344,
+                                -14.427770671350968,
+                                -3.2955175359993985
+                            ]
+                        },
+                        "ring_02_r_bn": {
+                            "location": [
+                                -4.087551116936083,
+                                -9.702751412987709e-06,
+                                1.267717107111821e-05
+                            ],
+                            "rotation": [
+                                4.688371123020267e-14,
+                                33.90275523276386,
+                                -2.7329291170119086e-06
+                            ]
+                        },
+                        "ring_03_r_bn": {
+                            "location": [
+                                -2.9201154709007824,
+                                2.001910615945235e-05,
+                                4.160413664067164e-05
+                            ],
+                            "rotation": [
+                                4.533877872553697e-15,
+                                1.82707334658083,
+                                3.9834282807724354e-14
+                            ]
+                        },
+                        "ring_r_be": {
+                            "location": [
+                                -2.566711664196191,
+                                7.507907866965979e-06,
+                                2.944765583379194e-06
+                            ],
+                            "rotation": [
+                                2.7829853462805787e-15,
+                                7.355032700884385e-15,
+                                -4.7708320221952775e-15
+                            ]
+                        },
+                        "rl_b_sleeve": {
+                            "location": [
+                                -5.5791973863961175e-05,
+                                -2.435248851783399,
+                                -5.77763700485275
+                            ],
+                            "rotation": [
+                                -3.8616545008762856e-15,
+                                1.04467165367385e-15,
+                                22.854953859949028
+                            ]
+                        },
+                        "rl_d_sleeve": {
+                            "location": [
+                                -5.19849345437251e-05,
+                                1.6627978086471558,
+                                3.9450836181640625
+                            ],
+                            "rotation": [
+                                -3.8616545008762856e-15,
+                                1.04467165367385e-15,
+                                22.854953859949028
+                            ]
+                        },
+                        "thumb_01_r_bn": {
+                            "location": [
+                                -1.6787019968032837,
+                                -0.6548283696247381,
+                                -2.441596031188965
+                            ],
+                            "rotation": [
+                                59.300059086632274,
+                                0.45293929595928517,
+                                74.1282763017185
+                            ]
+                        },
+                        "thumb_02_r_bn": {
+                            "location": [
+                                -4.092014789581299,
+                                0.00010277538967784494,
+                                -5.9728932683356106e-05
+                            ],
+                            "rotation": [
+                                -10.05590937758464,
+                                23.711197394111753,
+                                -9.347415579674884
+                            ]
+                        },
+                        "thumb_03_r_bn": {
+                            "location": [
+                                -3.4038777351415774,
+                                -1.9454189896350726e-05,
+                                5.207658250583336e-05
+                            ],
+                            "rotation": [
+                                5.854945878305366e-15,
+                                3.026441110503721,
+                                1.9244654635334323e-14
+                            ]
+                        },
+                        "thumb_r_be": {
+                            "location": [
+                                -3.391216993335547,
+                                4.350668677943759e-05,
+                                -1.6264282749034464e-05
+                            ],
+                            "rotation": [
+                                1.272221872585407e-14,
+                                1.914575995842237e-27,
+                                1.724496748289519e-11
+                            ]
+                        }
+                    }
+                },
+                "Left": {
+                    "AnimationID": "left_arms",
+                    "Location": [
+                        21.600000381469727,
+                        -32.29999923706055,
+                        10.800000190734863
+                    ],
+                    "Name": "lowerarm_l_bn",
+                    "OptimizeAnimationsRootBone": "clavicle_01_l_bn",
+                    "Rotation": [
+                        -15.0,
+                        120.0,
+                        0.0
+                    ],
+                    "Scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "UseDefaultPose": true
+                },
+                "Mesh": "Pawn.Mesh",
+                "Offset": {
+                    "Pitch": 0.0,
+                    "Roll": 0.0,
+                    "X": 0,
+                    "Y": 0,
+                    "Yaw": 0.0,
+                    "Z": 0
+                },
+                "OptimizeAnimations": true,
+                "Right": {
+                    "AnimationID": "right_arms",
+                    "Location": [
+                        -20.0,
+                        -28.0,
+                        0.0
+                    ],
+                    "Name": "lowerarm_r_bn",
+                    "OptimizeAnimationsRootBone": "clavicle_01_r_bn",
+                    "Rotation": [
+                        0.0,
+                        -120.0,
+                        180.0
+                    ],
+                    "Scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "UseDefaultPose": true
+                }
+            }
+        }
+    }
+}

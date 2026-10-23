@@ -1,0 +1,3505 @@
+{
+    "uevr_gunstock_Flashlight_BP_C_Light_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_Flashlight_BP_C_Light_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_Flashlight_BP_C_Light_use_default": true,
+    "uevr_gunstock_Flashlight_BP_C_Light_use_default_offhand_location_offset": true,
+    "uevr_gunstock_Flashlight_BP_C_Mesh_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_Flashlight_BP_C_Mesh_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_Flashlight_BP_C_Mesh_use_default": true,
+    "uevr_gunstock_Flashlight_BP_C_Mesh_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP10_WsaFW_KeyToAp212_01_A_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP10_WsaFW_KeyToAp212_01_A_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP10_WsaFW_KeyToAp212_01_A_Inspect_use_default": true,
+    "uevr_gunstock_ItemBase_BP10_WsaFW_KeyToAp212_01_A_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP10_WsaFW_KeyToAp212_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP10_WsaFW_KeyToAp212_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP10_WsaFW_KeyToAp212_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP10_WsaFW_KeyToAp212_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP11_KeyWSChuteYard_01_A_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP11_KeyWSChuteYard_01_A_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP11_KeyWSChuteYard_01_A_Inspect_use_default": true,
+    "uevr_gunstock_ItemBase_BP11_KeyWSChuteYard_01_A_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP11_KeyWSChuteYard_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP11_KeyWSChuteYard_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP11_KeyWSChuteYard_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP11_KeyWSChuteYard_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP2_MusicBoxKey_02_A_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP2_MusicBoxKey_02_A_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP2_MusicBoxKey_02_A_Inspect_use_default": true,
+    "uevr_gunstock_ItemBase_BP2_MusicBoxKey_02_A_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP2_SecretairPuzzleCoinC_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP2_SecretairPuzzleCoinC_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP2_SecretairPuzzleCoinC_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP2_SecretairPuzzleCoinC_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP3_NoteA5_CleanupNote1_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP3_NoteA5_CleanupNote1_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP3_NoteA5_CleanupNote1_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP3_NoteA5_CleanupNote1_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP3_NoteA5_CleanupNote2_Key_01_B_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP3_NoteA5_CleanupNote2_Key_01_B_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP3_NoteA5_CleanupNote2_Key_01_B_use_default": true,
+    "uevr_gunstock_ItemBase_BP3_NoteA5_CleanupNote2_Key_01_B_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP3_NoteA5_CleanupNote3_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP3_NoteA5_CleanupNote3_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP3_NoteA5_CleanupNote3_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP3_NoteA5_CleanupNote3_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP3_SecretairPuzzleCoinA_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP3_SecretairPuzzleCoinA_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP3_SecretairPuzzleCoinA_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP3_SecretairPuzzleCoinA_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP4_Gempuzzle_Gem_01_B_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP4_Gempuzzle_Gem_01_B_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP4_Gempuzzle_Gem_01_B_use_default": true,
+    "uevr_gunstock_ItemBase_BP4_Gempuzzle_Gem_01_B_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP5_Gempuzzle_Gem_01_C_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP5_Gempuzzle_Gem_01_C_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP5_Gempuzzle_Gem_01_C_use_default": true,
+    "uevr_gunstock_ItemBase_BP5_Gempuzzle_Gem_01_C_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP5_KeyWSSecFloorHallway_01_A_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP5_KeyWSSecFloorHallway_01_A_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP5_KeyWSSecFloorHallway_01_A_Inspect_use_default": true,
+    "uevr_gunstock_ItemBase_BP5_KeyWSSecFloorHallway_01_A_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP6_KeyBig_01_Rusty_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP6_KeyBig_01_Rusty_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP6_KeyBig_01_Rusty_Inspect_use_default": true,
+    "uevr_gunstock_ItemBase_BP6_KeyBig_01_Rusty_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP6_KeyBig_01_Rusty_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP6_KeyBig_01_Rusty_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP6_KeyBig_01_Rusty_use_default": true,
+    "uevr_gunstock_ItemBase_BP6_KeyBig_01_Rusty_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP6_KeyVenusBar_01_A_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP6_KeyVenusBar_01_A_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP6_KeyVenusBar_01_A_Inspect_use_default": true,
+    "uevr_gunstock_ItemBase_BP6_KeyVenusBar_01_A_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP7_ValveStaircaseMechanismValve_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP7_ValveStaircaseMechanismValve_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP7_ValveStaircaseMechanismValve_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP7_ValveStaircaseMechanismValve_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_AngelHeadFlashlight_01_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_AngelHeadFlashlight_01_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_AngelHeadFlashlight_01_use_default": true,
+    "uevr_gunstock_ItemBase_BP_AngelHeadFlashlight_01_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_1FWestWing_01_A_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_1FWestWing_01_A_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_1FWestWing_01_A_Inspect_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_1FWestWing_01_A_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_1FWestWing_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_1FWestWing_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_1FWestWing_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_1FWestWing_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_A_Key_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_A_Key_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_A_Key_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_A_Key_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_AppleRed_01_HC_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_AppleRed_01_HC_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_AppleRed_01_HC_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_AppleRed_01_HC_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_BirdPuzzleFemale_01_A_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_BirdPuzzleFemale_01_A_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_BirdPuzzleFemale_01_A_Inspect_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_BirdPuzzleFemale_01_A_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_BirdPuzzleFemale_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_BirdPuzzleFemale_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_BirdPuzzleFemale_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_BirdPuzzleFemale_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_BirdPuzzleFemale_01_B_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_BirdPuzzleFemale_01_B_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_BirdPuzzleFemale_01_B_Inspect_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_BirdPuzzleFemale_01_B_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_BirdPuzzleFemale_01_B_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_BirdPuzzleFemale_01_B_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_BirdPuzzleFemale_01_B_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_BirdPuzzleFemale_01_B_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_BirdPuzzleMale_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_BirdPuzzleMale_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_BirdPuzzleMale_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_BirdPuzzleMale_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_BlueCreekApt306_01_A_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_BlueCreekApt306_01_A_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_BlueCreekApt306_01_A_Inspect_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_BlueCreekApt306_01_A_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_BlueCreekApt306_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_BlueCreekApt306_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_BlueCreekApt306_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_BlueCreekApt306_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_BoltCutter_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_BoltCutter_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_BoltCutter_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_BoltCutter_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_BookCrimsonCeremony_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_BookCrimsonCeremony_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_BookCrimsonCeremony_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_BookCrimsonCeremony_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_BrokenMirrorShard_07_B_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_BrokenMirrorShard_07_B_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_BrokenMirrorShard_07_B_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_BrokenMirrorShard_07_B_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_CanOpener_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_CanOpener_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_CanOpener_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_CanOpener_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_CannedJuice_01_INV_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_CannedJuice_01_INV_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_CannedJuice_01_INV_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_CannedJuice_01_INV_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_CellBlockDKey_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_CellBlockDKey_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_CellBlockDKey_Inspect_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_CellBlockDKey_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_Chainsaw_02_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_Chainsaw_02_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_Chainsaw_02_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_Chainsaw_02_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_ChannelingStone_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_ChannelingStone_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_ChannelingStone_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_ChannelingStone_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_CityOWLetterNote_A5_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_CityOWLetterNote_A5_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_CityOWLetterNote_A5_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_CityOWLetterNote_A5_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_CleanerSprayBottle_01_A_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_CleanerSprayBottle_01_A_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_CleanerSprayBottle_01_A_Inspect_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_CleanerSprayBottle_01_A_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_CleanerSprayBottle_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_CleanerSprayBottle_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_CleanerSprayBottle_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_CleanerSprayBottle_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_ClockPuzzle_01_A_Hours_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_ClockPuzzle_01_A_Hours_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_ClockPuzzle_01_A_Hours_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_ClockPuzzle_01_A_Hours_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_CollectibleCard_04_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_CollectibleCard_04_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_CollectibleCard_04_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_CollectibleCard_04_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_CollectibleCard_06_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_CollectibleCard_06_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_CollectibleCard_06_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_CollectibleCard_06_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_CollectibleCard_07_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_CollectibleCard_07_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_CollectibleCard_07_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_CollectibleCard_07_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_CollectibleCard_08_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_CollectibleCard_08_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_CollectibleCard_08_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_CollectibleCard_08_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_CollectibleCard_11_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_CollectibleCard_11_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_CollectibleCard_11_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_CollectibleCard_11_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_CollectibleCard_14_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_CollectibleCard_14_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_CollectibleCard_14_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_CollectibleCard_14_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_CollectibleCard_16_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_CollectibleCard_16_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_CollectibleCard_16_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_CollectibleCard_16_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_DirectorsOfficeKey_01_A_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_DirectorsOfficeKey_01_A_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_DirectorsOfficeKey_01_A_Inspect_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_DirectorsOfficeKey_01_A_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_DirectorsOfficeKey_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_DirectorsOfficeKey_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_DirectorsOfficeKey_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_DirectorsOfficeKey_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_Disgust_bathroom_key_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_Disgust_bathroom_key_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_Disgust_bathroom_key_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_Disgust_bathroom_key_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_DogKey_01_B_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_DogKey_01_B_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_DogKey_01_B_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_DogKey_01_B_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_EastCityGrandMarket_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_EastCityGrandMarket_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_EastCityGrandMarket_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_EastCityGrandMarket_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_EastCityOldMap_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_EastCityOldMap_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_EastCityOldMap_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_EastCityOldMap_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_EmptyFuelContainer_01_HC_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_EmptyFuelContainer_01_HC_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_EmptyFuelContainer_01_HC_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_EmptyFuelContainer_01_HC_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_FireplaceKey_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_FireplaceKey_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_FireplaceKey_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_FireplaceKey_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_Gempuzzle_Gem_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_Gempuzzle_Gem_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_Gempuzzle_Gem_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_Gempuzzle_Gem_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_GlueForVinyl_01_A_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_GlueForVinyl_01_A_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_GlueForVinyl_01_A_Inspect_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_GlueForVinyl_01_A_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_GlueForVinyl_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_GlueForVinyl_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_GlueForVinyl_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_GlueForVinyl_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_GunNote_A5_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_GunNote_A5_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_GunNote_A5_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_GunNote_A5_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_GunRoomKey_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_GunRoomKey_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_GunRoomKey_Inspect_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_GunRoomKey_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_HandgunAmmoClosed_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_HandgunAmmoClosed_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_HandgunAmmoClosed_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_HandgunAmmoClosed_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_HandkerchiefMarry_01_A_Inspect_SkelMesh_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_HandkerchiefMarry_01_A_Inspect_SkelMesh_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_HandkerchiefMarry_01_A_Inspect_SkelMesh_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_HandkerchiefMarry_01_A_Inspect_SkelMesh_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_HandkerchiefMarry_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_HandkerchiefMarry_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_HandkerchiefMarry_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_HandkerchiefMarry_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_HealthDrink_01_B_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_HealthDrink_01_B_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_HealthDrink_01_B_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_HealthDrink_01_B_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_HotelRoomKey_102_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_HotelRoomKey_102_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_HotelRoomKey_102_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_HotelRoomKey_102_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_HotelRoomKey_202_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_HotelRoomKey_202_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_HotelRoomKey_202_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_HotelRoomKey_202_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_KeySecFloorApt_01_A_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_KeySecFloorApt_01_A_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_KeySecFloorApt_01_A_Inspect_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_KeySecFloorApt_01_A_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_KeySecFloorApt_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_KeySecFloorApt_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_KeySecFloorApt_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_KeySecFloorApt_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_KeyStairCase_A_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_KeyStairCase_A_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_KeyStairCase_A_Inspect_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_KeyStairCase_A_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_KeyStairCase_A_Posed_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_KeyStairCase_A_Posed_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_KeyStairCase_A_Posed_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_KeyStairCase_A_Posed_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_L2Room_01_A_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_L2Room_01_A_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_L2Room_01_A_Inspect_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_L2Room_01_A_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_L2Room_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_L2Room_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_L2Room_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_L2Room_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_LV_Polaroid_Normal_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_LV_Polaroid_Normal_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_LV_Polaroid_Normal_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_LV_Polaroid_Normal_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_LV_Polaroid_Normal_02_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_LV_Polaroid_Normal_02_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_LV_Polaroid_Normal_02_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_LV_Polaroid_Normal_02_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_LV_Polaroid_Normal_03_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_LV_Polaroid_Normal_03_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_LV_Polaroid_Normal_03_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_LV_Polaroid_Normal_03_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_LabyrinthHandcuffsKey_01_B_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_LabyrinthHandcuffsKey_01_B_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_LabyrinthHandcuffsKey_01_B_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_LabyrinthHandcuffsKey_01_B_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_LampBulb_Hotel_01_HC_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_LampBulb_Hotel_01_HC_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_LampBulb_Hotel_01_HC_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_LampBulb_Hotel_01_HC_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_Lighter_02_A_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_Lighter_02_A_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_Lighter_02_A_Inspect_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_Lighter_02_A_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_LobotomyHammer_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_LobotomyHammer_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_LobotomyHammer_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_LobotomyHammer_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_LobotomyOrbitoclast_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_LobotomyOrbitoclast_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_LobotomyOrbitoclast_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_LobotomyOrbitoclast_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_MannequinHandBandA_01_A_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_MannequinHandBandA_01_A_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_MannequinHandBandA_01_A_Inspect_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_MannequinHandBandA_01_A_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_MannequinHandBandA_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_MannequinHandBandA_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_MannequinHandBandA_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_MannequinHandBandA_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_MannequinHandBandB_01_A_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_MannequinHandBandB_01_A_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_MannequinHandBandB_01_A_Inspect_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_MannequinHandBandB_01_A_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_MannequinHandBandB_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_MannequinHandBandB_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_MannequinHandBandB_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_MannequinHandBandB_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_Map_Skeletal_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_Map_Skeletal_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_Map_Skeletal_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_Map_Skeletal_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_Matchbox_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_Matchbox_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_Matchbox_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_Matchbox_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_MedicalHose_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_MedicalHose_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_MedicalHose_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_MedicalHose_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_MusicBoxFinalFigurineA_02_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_MusicBoxFinalFigurineA_02_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_MusicBoxFinalFigurineA_02_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_MusicBoxFinalFigurineA_02_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_MusicBoxFinalFigurineB_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_MusicBoxFinalFigurineB_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_MusicBoxFinalFigurineB_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_MusicBoxFinalFigurineB_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA4_FlowerShopNote_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA4_FlowerShopNote_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA4_FlowerShopNote_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA4_FlowerShopNote_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA4_HosOW_LobotomyNote_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA4_HosOW_LobotomyNote_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA4_HosOW_LobotomyNote_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA4_HosOW_LobotomyNote_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA4_SkeletalNote_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA4_SkeletalNote_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA4_SkeletalNote_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA4_SkeletalNote_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_AssaulterShowerNote_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_AssaulterShowerNote_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_AssaulterShowerNote_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_AssaulterShowerNote_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_BackRoomNote_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_BackRoomNote_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_BackRoomNote_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_BackRoomNote_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_BigJaysNote_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_BigJaysNote_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_BigJaysNote_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_BigJaysNote_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_BlockageNote_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_BlockageNote_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_BlockageNote_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_BlockageNote_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_CodeLocationNote_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_CodeLocationNote_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_CodeLocationNote_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_CodeLocationNote_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_GroovyMusicNote_01_A1_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_GroovyMusicNote_01_A1_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_GroovyMusicNote_01_A1_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_GroovyMusicNote_01_A1_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_HeadNursesNote_02_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_HeadNursesNote_02_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_HeadNursesNote_02_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_HeadNursesNote_02_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_HosFW_PatientFileNote_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_HosFW_PatientFileNote_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_HosFW_PatientFileNote_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_HosFW_PatientFileNote_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_HosFW_PatientFileNote_02_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_HosFW_PatientFileNote_02_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_HosFW_PatientFileNote_02_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_HosFW_PatientFileNote_02_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_HosFW_PatientFileNote_03_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_HosFW_PatientFileNote_03_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_HosFW_PatientFileNote_03_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_HosFW_PatientFileNote_03_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_HosFW_RooftopDiaryPageNote_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_HosFW_RooftopDiaryPageNote_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_HosFW_RooftopDiaryPageNote_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_HosFW_RooftopDiaryPageNote_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_HosOW_DirectorNote1_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_HosOW_DirectorNote1_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_HosOW_DirectorNote1_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_HosOW_DirectorNote1_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_HosOW_DirectorNote2_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_HosOW_DirectorNote2_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_HosOW_DirectorNote2_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_HosOW_DirectorNote2_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_HosOW_DirectorNote3_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_HosOW_DirectorNote3_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_HosOW_DirectorNote3_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_HosOW_DirectorNote3_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_HosOW_DirectorNote4_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_HosOW_DirectorNote4_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_HosOW_DirectorNote4_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_HosOW_DirectorNote4_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_HosOW_ElectroshockNote1_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_HosOW_ElectroshockNote1_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_HosOW_ElectroshockNote1_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_HosOW_ElectroshockNote1_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_HosOW_ElectroshockNote2_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_HosOW_ElectroshockNote2_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_HosOW_ElectroshockNote2_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_HosOW_ElectroshockNote2_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_HosOW_EvaluationNote_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_HosOW_EvaluationNote_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_HosOW_EvaluationNote_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_HosOW_EvaluationNote_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_KeyLockerNote_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_KeyLockerNote_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_KeyLockerNote_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_KeyLockerNote_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_LhFW_CleanUpNote_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_LhFW_CleanUpNote_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_LhFW_CleanUpNote_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_LhFW_CleanUpNote_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_LostMemories_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_LostMemories_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_LostMemories_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_LostMemories_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_MartinStreetNote_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_MartinStreetNote_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_MartinStreetNote_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_MartinStreetNote_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_MotorHomeNote_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_MotorHomeNote_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_MotorHomeNote_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_MotorHomeNote_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_NeelysBarNote_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_NeelysBarNote_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_NeelysBarNote_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_NeelysBarNote_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_PatientNo22Note_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_PatientNo22Note_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_PatientNo22Note_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_PatientNo22Note_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_PatientNo48Note_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_PatientNo48Note_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_PatientNo48Note_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_PatientNo48Note_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_PhotoMurdererNote_01_A1_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_PhotoMurdererNote_01_A1_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_PhotoMurdererNote_01_A1_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_PhotoMurdererNote_01_A1_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_PriOW_AssaulterCellNote_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_PriOW_AssaulterCellNote_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_PriOW_AssaulterCellNote_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_PriOW_AssaulterCellNote_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_PriOW_BoarDiseaseNote_03_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_PriOW_BoarDiseaseNote_03_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_PriOW_BoarDiseaseNote_03_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_PriOW_BoarDiseaseNote_03_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_PriOW_GuardStalkerNote_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_PriOW_GuardStalkerNote_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_PriOW_GuardStalkerNote_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_PriOW_GuardStalkerNote_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_PriOW_PrisonerOnGuardsNote_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_PriOW_PrisonerOnGuardsNote_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_PriOW_PrisonerOnGuardsNote_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_PriOW_PrisonerOnGuardsNote_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_PriOW_RifleHintNote_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_PriOW_RifleHintNote_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_PriOW_RifleHintNote_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_PriOW_RifleHintNote_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_PrioOW_IsolationCellNote_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_PrioOW_IsolationCellNote_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_PrioOW_IsolationCellNote_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_PrioOW_IsolationCellNote_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_PrioOW_KidnapperStoryNote_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_PrioOW_KidnapperStoryNote_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_PrioOW_KidnapperStoryNote_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_PrioOW_KidnapperStoryNote_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_SanderStreetNote_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_SanderStreetNote_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_SanderStreetNote_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_SanderStreetNote_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_SaulApt_Lobby_Note_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_SaulApt_Lobby_Note_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_SaulApt_Lobby_Note_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_SaulApt_Lobby_Note_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_SaulSt_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_SaulSt_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_SaulSt_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_SaulSt_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_SaulSt_01_B_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_SaulSt_01_B_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_SaulSt_01_B_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_SaulSt_01_B_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_SaulSt_01_C_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_SaulSt_01_C_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_SaulSt_01_C_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_SaulSt_01_C_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_SecurityGuardNote_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_SecurityGuardNote_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_SecurityGuardNote_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_SecurityGuardNote_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_TenantsNote_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_TenantsNote_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_TenantsNote_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_TenantsNote_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_XrayNote_01_A1_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_XrayNote_01_A1_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_XrayNote_01_A1_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_NoteA5_XrayNote_01_A1_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_Note_A5_TwoSided_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_Note_A5_TwoSided_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_Note_A5_TwoSided_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_Note_A5_TwoSided_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_PockerMapFoldedLakeviewHotelOW_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_PockerMapFoldedLakeviewHotelOW_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_PockerMapFoldedLakeviewHotelOW_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_PockerMapFoldedLakeviewHotelOW_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_PockerMapFoldedPlaceholder_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_PockerMapFoldedPlaceholder_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_PockerMapFoldedPlaceholder_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_PockerMapFoldedPlaceholder_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_PriOW_BlockAKey_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_PriOW_BlockAKey_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_PriOW_BlockAKey_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_PriOW_BlockAKey_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_PrisonerWardrobe_Ball_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_PrisonerWardrobe_Ball_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_PrisonerWardrobe_Ball_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_PrisonerWardrobe_Ball_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_PuzzleBookAngel_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_PuzzleBookAngel_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_PuzzleBookAngel_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_PuzzleBookAngel_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_PuzzleBookBull_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_PuzzleBookBull_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_PuzzleBookBull_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_PuzzleBookBull_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_PuzzleBookEagle_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_PuzzleBookEagle_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_PuzzleBookEagle_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_PuzzleBookEagle_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_PuzzleBookLion_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_PuzzleBookLion_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_PuzzleBookLion_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_PuzzleBookLion_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_RedPaint_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_RedPaint_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_RedPaint_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_RedPaint_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_RingCopper_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_RingCopper_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_RingCopper_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_RingCopper_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_RootComponent_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_RootComponent_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_RootComponent_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_RootComponent_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_RottenApple_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_RottenApple_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_RottenApple_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_RottenApple_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_RustColored_Egg_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_RustColored_Egg_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_RustColored_Egg_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_RustColored_Egg_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_SafePuzzleDoorButton_06_B_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_SafePuzzleDoorButton_06_B_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_SafePuzzleDoorButton_06_B_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_SafePuzzleDoorButton_06_B_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_Scarlet_Egg_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_Scarlet_Egg_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_Scarlet_Egg_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_Scarlet_Egg_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_Shiv_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_Shiv_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_Shiv_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_Shiv_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_ShotgunAmmo_01_B_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_ShotgunAmmo_01_B_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_ShotgunAmmo_01_B_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_ShotgunAmmo_01_B_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_SinisterNote_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_SinisterNote_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_SinisterNote_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_SinisterNote_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_SniperRifleAmmo_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_SniperRifleAmmo_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_SniperRifleAmmo_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_SniperRifleAmmo_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_SpiralWritingKey_01_A_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_SpiralWritingKey_01_A_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_SpiralWritingKey_01_A_Inspect_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_SpiralWritingKey_01_A_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_SpiralWritingKey_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_SpiralWritingKey_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_SpiralWritingKey_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_SpiralWritingKey_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_StrangeNote_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_StrangeNote_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_StrangeNote_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_StrangeNote_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_SunriseWingKey_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_SunriseWingKey_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_SunriseWingKey_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_SunriseWingKey_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_Syringe_03_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_Syringe_03_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_Syringe_03_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_Syringe_03_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_TexansFlyer_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_TexansFlyer_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_TexansFlyer_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_TexansFlyer_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_ValveHandle_01_B_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_ValveHandle_01_B_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_ValveHandle_01_B_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_ValveHandle_01_B_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_Vinyl_02_A_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_Vinyl_02_A_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_Vinyl_02_A_Inspect_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_Vinyl_02_A_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_Vinyl_02_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_Vinyl_02_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_Vinyl_02_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_Vinyl_02_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_Weight_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_Weight_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_Weight_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_Weight_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_Weight_03_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_Weight_03_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_Weight_03_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_Weight_03_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_Weight_05_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_Weight_05_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_Weight_05_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_Weight_05_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_WestCity_MotelNote_Normal_A5_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_WestCity_MotelNote_Normal_A5_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_WestCity_MotelNote_Normal_A5_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_WestCity_MotelNote_Normal_A5_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_WestCity_ReceptionNote_A5_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_WestCity_ReceptionNote_A5_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_WestCity_ReceptionNote_A5_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_WestCity_ReceptionNote_A5_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_WireCutters_01_Smaller_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_WireCutters_01_Smaller_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_WireCutters_01_Smaller_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_WireCutters_01_Smaller_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_Wrench_06_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_Wrench_06_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_Wrench_06_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_Wrench_06_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_WsaFW_KeyToStaircase_01_A_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_WsaFW_KeyToStaircase_01_A_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_WsaFW_KeyToStaircase_01_A_Inspect_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_WsaFW_KeyToStaircase_01_A_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_WsaFW_KeyToStaircase_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_WsaFW_KeyToStaircase_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_WsaFW_KeyToStaircase_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_WsaFW_KeyToStaircase_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_XrayQuest_01_A_Dirty_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_XrayQuest_01_A_Dirty_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_XrayQuest_01_A_Dirty_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_XrayQuest_01_A_Dirty_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_XrayQuest_04_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_XrayQuest_04_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_XrayQuest_04_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_XrayQuest_04_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_C_Xray_SkeletalNote_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_Xray_SkeletalNote_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_C_Xray_SkeletalNote_use_default": true,
+    "uevr_gunstock_ItemBase_BP_C_Xray_SkeletalNote_use_default_offhand_location_offset": true,
+    "uevr_gunstock_ItemBase_BP_NoteA5_ReceptionistMemo_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_NoteA5_ReceptionistMemo_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_ItemBase_BP_NoteA5_ReceptionistMemo_01_A_use_default": true,
+    "uevr_gunstock_ItemBase_BP_NoteA5_ReceptionistMemo_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_2FStorage_01_B_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_2FStorage_01_B_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_2FStorage_01_B_Inspect_use_default": true,
+    "uevr_gunstock_SHItemBase_2FStorage_01_B_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_2FStorage_01_B_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_2FStorage_01_B_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_2FStorage_01_B_use_default": true,
+    "uevr_gunstock_SHItemBase_2FStorage_01_B_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_3FCorridorKey_01_A_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_3FCorridorKey_01_A_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_3FCorridorKey_01_A_Inspect_use_default": true,
+    "uevr_gunstock_SHItemBase_3FCorridorKey_01_A_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_A_Key_01_A_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_A_Key_01_A_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_A_Key_01_A_Inspect_use_default": true,
+    "uevr_gunstock_SHItemBase_A_Key_01_A_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_AngelasKnife_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_AngelasKnife_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_AngelasKnife_01_A_use_default": true,
+    "uevr_gunstock_SHItemBase_AngelasKnife_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_BirdPuzzleFemale_01_C_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_BirdPuzzleFemale_01_C_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_BirdPuzzleFemale_01_C_Inspect_use_default": true,
+    "uevr_gunstock_SHItemBase_BirdPuzzleFemale_01_C_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_BirdPuzzleFemale_01_C_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_BirdPuzzleFemale_01_C_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_BirdPuzzleFemale_01_C_use_default": true,
+    "uevr_gunstock_SHItemBase_BirdPuzzleFemale_01_C_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_BirdPuzzleKey_01_A_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_BirdPuzzleKey_01_A_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_BirdPuzzleKey_01_A_Inspect_use_default": true,
+    "uevr_gunstock_SHItemBase_BirdPuzzleKey_01_A_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_BirdPuzzleKey_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_BirdPuzzleKey_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_BirdPuzzleKey_01_A_use_default": true,
+    "uevr_gunstock_SHItemBase_BirdPuzzleKey_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_CashRegisterCoin_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_CashRegisterCoin_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_CashRegisterCoin_01_A_use_default": true,
+    "uevr_gunstock_SHItemBase_CashRegisterCoin_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_ClockPuzzle_01_A_Minutes_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_ClockPuzzle_01_A_Minutes_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_ClockPuzzle_01_A_Minutes_use_default": true,
+    "uevr_gunstock_SHItemBase_ClockPuzzle_01_A_Minutes_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_ClockPuzzle_01_A_Seconds_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_ClockPuzzle_01_A_Seconds_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_ClockPuzzle_01_A_Seconds_use_default": true,
+    "uevr_gunstock_SHItemBase_ClockPuzzle_01_A_Seconds_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_CollectibleCard_06_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_CollectibleCard_06_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_CollectibleCard_06_A_use_default": true,
+    "uevr_gunstock_SHItemBase_CollectibleCard_06_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_CollectibleCard_08_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_CollectibleCard_08_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_CollectibleCard_08_A_use_default": true,
+    "uevr_gunstock_SHItemBase_CollectibleCard_08_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_CollectibleCard_16_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_CollectibleCard_16_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_CollectibleCard_16_A_use_default": true,
+    "uevr_gunstock_SHItemBase_CollectibleCard_16_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_CollectibleCard_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_CollectibleCard_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_CollectibleCard_use_default": true,
+    "uevr_gunstock_SHItemBase_CollectibleCard_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_Disgust_bathroom_key_01_A_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_Disgust_bathroom_key_01_A_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_Disgust_bathroom_key_01_A_Inspect_use_default": true,
+    "uevr_gunstock_SHItemBase_Disgust_bathroom_key_01_A_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_DrainKey_01_A_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_DrainKey_01_A_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_DrainKey_01_A_Inspect_use_default": true,
+    "uevr_gunstock_SHItemBase_DrainKey_01_A_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_DrainKey_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_DrainKey_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_DrainKey_01_A_use_default": true,
+    "uevr_gunstock_SHItemBase_DrainKey_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_EcFW_Phone_Note_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_EcFW_Phone_Note_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_EcFW_Phone_Note_01_A_use_default": true,
+    "uevr_gunstock_SHItemBase_EcFW_Phone_Note_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_ElevatorPanelButton_06_E_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_ElevatorPanelButton_06_E_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_ElevatorPanelButton_06_E_use_default": true,
+    "uevr_gunstock_SHItemBase_ElevatorPanelButton_06_E_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_EmployEleevatorKey_01_A_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_EmployEleevatorKey_01_A_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_EmployEleevatorKey_01_A_Inspect_use_default": true,
+    "uevr_gunstock_SHItemBase_EmployEleevatorKey_01_A_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_EmptyFuelContainer_02_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_EmptyFuelContainer_02_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_EmptyFuelContainer_02_A_use_default": true,
+    "uevr_gunstock_SHItemBase_EmptyFuelContainer_02_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_FireplaceKey_01_A_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_FireplaceKey_01_A_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_FireplaceKey_01_A_Inspect_use_default": true,
+    "uevr_gunstock_SHItemBase_FireplaceKey_01_A_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_Gallows_Lever_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_Gallows_Lever_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_Gallows_Lever_01_A_use_default": true,
+    "uevr_gunstock_SHItemBase_Gallows_Lever_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_Gempuzzle_Gem_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_Gempuzzle_Gem_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_Gempuzzle_Gem_01_A_use_default": true,
+    "uevr_gunstock_SHItemBase_Gempuzzle_Gem_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_GlueForVinyl_01_A_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_GlueForVinyl_01_A_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_GlueForVinyl_01_A_Inspect_use_default": true,
+    "uevr_gunstock_SHItemBase_GlueForVinyl_01_A_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_GlueForVinyl_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_GlueForVinyl_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_GlueForVinyl_01_A_use_default": true,
+    "uevr_gunstock_SHItemBase_GlueForVinyl_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_HP_Basement_01_A_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_HP_Basement_01_A_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_HP_Basement_01_A_Inspect_use_default": true,
+    "uevr_gunstock_SHItemBase_HP_Basement_01_A_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_HP_Basement_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_HP_Basement_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_HP_Basement_01_A_use_default": true,
+    "uevr_gunstock_SHItemBase_HP_Basement_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_HandgunAmmoClosed_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_HandgunAmmoClosed_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_HandgunAmmoClosed_01_A_use_default": true,
+    "uevr_gunstock_SHItemBase_HandgunAmmoClosed_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_Handgun_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_Handgun_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_Handgun_01_A_use_default": true,
+    "uevr_gunstock_SHItemBase_Handgun_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_HandkerchiefMarry_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_HandkerchiefMarry_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_HandkerchiefMarry_01_A_use_default": true,
+    "uevr_gunstock_SHItemBase_HandkerchiefMarry_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_HealthDrink_01_B_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_HealthDrink_01_B_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_HealthDrink_01_B_use_default": true,
+    "uevr_gunstock_SHItemBase_HealthDrink_01_B_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_HotelRoomKey_102_A_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_HotelRoomKey_102_A_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_HotelRoomKey_102_A_Inspect_use_default": true,
+    "uevr_gunstock_SHItemBase_HotelRoomKey_102_A_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_HotelRoomKey_107_A_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_HotelRoomKey_107_A_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_HotelRoomKey_107_A_Inspect_use_default": true,
+    "uevr_gunstock_SHItemBase_HotelRoomKey_107_A_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_JacksInnKey_01_A_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_JacksInnKey_01_A_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_JacksInnKey_01_A_Inspect_use_default": true,
+    "uevr_gunstock_SHItemBase_JacksInnKey_01_A_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_JacksInnKey_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_JacksInnKey_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_JacksInnKey_01_A_use_default": true,
+    "uevr_gunstock_SHItemBase_JacksInnKey_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_JukeBoxButton02_03_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_JukeBoxButton02_03_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_JukeBoxButton02_03_A_use_default": true,
+    "uevr_gunstock_SHItemBase_JukeBoxButton02_03_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_KeyLockerRoom_A_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_KeyLockerRoom_A_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_KeyLockerRoom_A_Inspect_use_default": true,
+    "uevr_gunstock_SHItemBase_KeyLockerRoom_A_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_KeyWSChuteYard_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_KeyWSChuteYard_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_KeyWSChuteYard_01_A_use_default": true,
+    "uevr_gunstock_SHItemBase_KeyWSChuteYard_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_LabyrinthHandcuffsKey_01_B_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_LabyrinthHandcuffsKey_01_B_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_LabyrinthHandcuffsKey_01_B_Inspect_use_default": true,
+    "uevr_gunstock_SHItemBase_LabyrinthHandcuffsKey_01_B_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_LampBulbRed_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_LampBulbRed_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_LampBulbRed_01_A_use_default": true,
+    "uevr_gunstock_SHItemBase_LampBulbRed_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_LapisEye_Key_01_A_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_LapisEye_Key_01_A_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_LapisEye_Key_01_A_Inspect_use_default": true,
+    "uevr_gunstock_SHItemBase_LapisEye_Key_01_A_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_LapisEye_Key_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_LapisEye_Key_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_LapisEye_Key_01_A_use_default": true,
+    "uevr_gunstock_SHItemBase_LapisEye_Key_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_LhOW_BasementStaircaseKey_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_LhOW_BasementStaircaseKey_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_LhOW_BasementStaircaseKey_Inspect_use_default": true,
+    "uevr_gunstock_SHItemBase_LhOW_BasementStaircaseKey_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_Lighter_01_A_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_Lighter_01_A_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_Lighter_01_A_Inspect_use_default": true,
+    "uevr_gunstock_SHItemBase_Lighter_01_A_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_Lighter_Gasoline_01_A_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_Lighter_Gasoline_01_A_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_Lighter_Gasoline_01_A_Inspect_use_default": true,
+    "uevr_gunstock_SHItemBase_Lighter_Gasoline_01_A_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_MannequinHandBandC_01_A_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_MannequinHandBandC_01_A_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_MannequinHandBandC_01_A_Inspect_use_default": true,
+    "uevr_gunstock_SHItemBase_MannequinHandBandC_01_A_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_MannequinHandBandC_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_MannequinHandBandC_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_MannequinHandBandC_01_A_use_default": true,
+    "uevr_gunstock_SHItemBase_MannequinHandBandC_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_Map_Skeletal_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_Map_Skeletal_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_Map_Skeletal_use_default": true,
+    "uevr_gunstock_SHItemBase_Map_Skeletal_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_Matchbox_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_Matchbox_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_Matchbox_01_A_use_default": true,
+    "uevr_gunstock_SHItemBase_Matchbox_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_MedicalHose_01_B_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_MedicalHose_01_B_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_MedicalHose_01_B_Inspect_use_default": true,
+    "uevr_gunstock_SHItemBase_MedicalHose_01_B_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_MusicBoxFinalFigurineC_Inspect_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_MusicBoxFinalFigurineC_Inspect_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_MusicBoxFinalFigurineC_Inspect_01_A_use_default": true,
+    "uevr_gunstock_SHItemBase_MusicBoxFinalFigurineC_Inspect_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_NeeleysBarKey_01_A_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_NeeleysBarKey_01_A_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_NeeleysBarKey_01_A_Inspect_use_default": true,
+    "uevr_gunstock_SHItemBase_NeeleysBarKey_01_A_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_NeeleysBarKey_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_NeeleysBarKey_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_NeeleysBarKey_01_A_use_default": true,
+    "uevr_gunstock_SHItemBase_NeeleysBarKey_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_NoteA5_BigJaysNote_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_NoteA5_BigJaysNote_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_NoteA5_BigJaysNote_01_A_use_default": true,
+    "uevr_gunstock_SHItemBase_NoteA5_BigJaysNote_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_NoteA5_FearBookNote_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_NoteA5_FearBookNote_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_NoteA5_FearBookNote_01_A_use_default": true,
+    "uevr_gunstock_SHItemBase_NoteA5_FearBookNote_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_NoteA5_HosFW_AggroPatientNote_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_NoteA5_HosFW_AggroPatientNote_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_NoteA5_HosFW_AggroPatientNote_01_A_use_default": true,
+    "uevr_gunstock_SHItemBase_NoteA5_HosFW_AggroPatientNote_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_NoteA5_HosFW_PatientFileNote_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_NoteA5_HosFW_PatientFileNote_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_NoteA5_HosFW_PatientFileNote_01_A_use_default": true,
+    "uevr_gunstock_SHItemBase_NoteA5_HosFW_PatientFileNote_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_NoteA5_HosFW_RooftopDiaryPageNote_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_NoteA5_HosFW_RooftopDiaryPageNote_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_NoteA5_HosFW_RooftopDiaryPageNote_01_A_use_default": true,
+    "uevr_gunstock_SHItemBase_NoteA5_HosFW_RooftopDiaryPageNote_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_NoteA5_KeypadNote_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_NoteA5_KeypadNote_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_NoteA5_KeypadNote_01_A_use_default": true,
+    "uevr_gunstock_SHItemBase_NoteA5_KeypadNote_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_NoteA5_MartinStreetNote_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_NoteA5_MartinStreetNote_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_NoteA5_MartinStreetNote_01_A_use_default": true,
+    "uevr_gunstock_SHItemBase_NoteA5_MartinStreetNote_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_NoteA5_NeelysBarNote_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_NoteA5_NeelysBarNote_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_NoteA5_NeelysBarNote_01_A_use_default": true,
+    "uevr_gunstock_SHItemBase_NoteA5_NeelysBarNote_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_NoteA5_PriOW_RifleHintNote_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_NoteA5_PriOW_RifleHintNote_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_NoteA5_PriOW_RifleHintNote_01_A_use_default": true,
+    "uevr_gunstock_SHItemBase_NoteA5_PriOW_RifleHintNote_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_NoteA5_SaulSt_01_C_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_NoteA5_SaulSt_01_C_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_NoteA5_SaulSt_01_C_use_default": true,
+    "uevr_gunstock_SHItemBase_NoteA5_SaulSt_01_C_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_NoteA5_TenantsNote_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_NoteA5_TenantsNote_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_NoteA5_TenantsNote_01_A_use_default": true,
+    "uevr_gunstock_SHItemBase_NoteA5_TenantsNote_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_NoteA5_XrayNote_01_A1_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_NoteA5_XrayNote_01_A1_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_NoteA5_XrayNote_01_A1_use_default": true,
+    "uevr_gunstock_SHItemBase_NoteA5_XrayNote_01_A1_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_Note_A5_TwoSided_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_Note_A5_TwoSided_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_Note_A5_TwoSided_use_default": true,
+    "uevr_gunstock_SHItemBase_Note_A5_TwoSided_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_OldBronzeKey_01_A_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_OldBronzeKey_01_A_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_OldBronzeKey_01_A_Inspect_use_default": true,
+    "uevr_gunstock_SHItemBase_OldBronzeKey_01_A_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_OldBronzeKey_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_OldBronzeKey_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_OldBronzeKey_01_A_use_default": true,
+    "uevr_gunstock_SHItemBase_OldBronzeKey_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_PockerMapFoldedLakeviewHotelOW_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_PockerMapFoldedLakeviewHotelOW_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_PockerMapFoldedLakeviewHotelOW_use_default": true,
+    "uevr_gunstock_SHItemBase_PockerMapFoldedLakeviewHotelOW_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_PockerMapFoldedPlaceholder_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_PockerMapFoldedPlaceholder_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_PockerMapFoldedPlaceholder_use_default": true,
+    "uevr_gunstock_SHItemBase_PockerMapFoldedPlaceholder_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_PocketMap_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_PocketMap_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_PocketMap_01_A_use_default": true,
+    "uevr_gunstock_SHItemBase_PocketMap_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_PocketMap_01_B_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_PocketMap_01_B_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_PocketMap_01_B_use_default": true,
+    "uevr_gunstock_SHItemBase_PocketMap_01_B_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_PriOW_BlockAKey_01_A_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_PriOW_BlockAKey_01_A_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_PriOW_BlockAKey_01_A_Inspect_use_default": true,
+    "uevr_gunstock_SHItemBase_PriOW_BlockAKey_01_A_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_RedPaintOPEN_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_RedPaintOPEN_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_RedPaintOPEN_01_A_use_default": true,
+    "uevr_gunstock_SHItemBase_RedPaintOPEN_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_RingLead_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_RingLead_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_RingLead_01_A_use_default": true,
+    "uevr_gunstock_SHItemBase_RingLead_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_RooftopKey_01_A_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_RooftopKey_01_A_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_RooftopKey_01_A_Inspect_use_default": true,
+    "uevr_gunstock_SHItemBase_RooftopKey_01_A_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_RooftopKey_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_RooftopKey_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_RooftopKey_01_A_use_default": true,
+    "uevr_gunstock_SHItemBase_RooftopKey_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_SecretairPuzzleCoinB_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_SecretairPuzzleCoinB_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_SecretairPuzzleCoinB_01_A_use_default": true,
+    "uevr_gunstock_SHItemBase_SecretairPuzzleCoinB_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_Sniper_Rifle_01_Skeletal_offhand_location_offset": [
+        2.4000000953674316,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_Sniper_Rifle_01_Skeletal_rotation": [
+        -16.700000762939453,
+        20.399999618530273,
+        -6.800000190734863
+    ],
+    "uevr_gunstock_SHItemBase_Sniper_Rifle_01_Skeletal_use_default": false,
+    "uevr_gunstock_SHItemBase_Sniper_Rifle_01_Skeletal_use_default_offhand_location_offset": false,
+    "uevr_gunstock_SHItemBase_SunriseWingKey_01_A_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_SunriseWingKey_01_A_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_SunriseWingKey_01_A_Inspect_use_default": true,
+    "uevr_gunstock_SHItemBase_SunriseWingKey_01_A_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_Syringe_02_A_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_Syringe_02_A_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_Syringe_02_A_Inspect_use_default": true,
+    "uevr_gunstock_SHItemBase_Syringe_02_A_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_Syringe_02_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_Syringe_02_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_Syringe_02_A_use_default": true,
+    "uevr_gunstock_SHItemBase_Syringe_02_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_Syringe_03_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_Syringe_03_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_Syringe_03_A_use_default": true,
+    "uevr_gunstock_SHItemBase_Syringe_03_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_VideoTapeItem_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_VideoTapeItem_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_VideoTapeItem_01_A_use_default": true,
+    "uevr_gunstock_SHItemBase_VideoTapeItem_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_Vinyl_01_A_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_Vinyl_01_A_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_Vinyl_01_A_Inspect_use_default": true,
+    "uevr_gunstock_SHItemBase_Vinyl_01_A_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_Vinyl_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_Vinyl_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_Vinyl_01_A_use_default": true,
+    "uevr_gunstock_SHItemBase_Vinyl_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_Vinyl_02_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_Vinyl_02_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_Vinyl_02_A_use_default": true,
+    "uevr_gunstock_SHItemBase_Vinyl_02_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_Vinyl_04_A_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_Vinyl_04_A_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_Vinyl_04_A_Inspect_use_default": true,
+    "uevr_gunstock_SHItemBase_Vinyl_04_A_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_Vinyl_04_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_Vinyl_04_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_Vinyl_04_A_use_default": true,
+    "uevr_gunstock_SHItemBase_Vinyl_04_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_Weight_02_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_Weight_02_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_Weight_02_A_use_default": true,
+    "uevr_gunstock_SHItemBase_Weight_02_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_Weight_04_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_Weight_04_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_Weight_04_A_use_default": true,
+    "uevr_gunstock_SHItemBase_Weight_04_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_WestCity_ReceptionNote_A5_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_WestCity_ReceptionNote_A5_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_WestCity_ReceptionNote_A5_A_use_default": true,
+    "uevr_gunstock_SHItemBase_WestCity_ReceptionNote_A5_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_WickBox_01_A_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_WickBox_01_A_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_WickBox_01_A_Inspect_use_default": true,
+    "uevr_gunstock_SHItemBase_WickBox_01_A_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_WoodsideAptKey_02_B_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_WoodsideAptKey_02_B_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_WoodsideAptKey_02_B_Inspect_use_default": true,
+    "uevr_gunstock_SHItemBase_WoodsideAptKey_02_B_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_WoodsideAptKey_02_B_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_WoodsideAptKey_02_B_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_WoodsideAptKey_02_B_use_default": true,
+    "uevr_gunstock_SHItemBase_WoodsideAptKey_02_B_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_WsaFW_KeyApartmentJM_01_A_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_WsaFW_KeyApartmentJM_01_A_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_WsaFW_KeyApartmentJM_01_A_Inspect_use_default": true,
+    "uevr_gunstock_SHItemBase_WsaFW_KeyApartmentJM_01_A_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_WsaFW_KeyApartmentJM_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_WsaFW_KeyApartmentJM_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_WsaFW_KeyApartmentJM_01_A_use_default": true,
+    "uevr_gunstock_SHItemBase_WsaFW_KeyApartmentJM_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_WsaFW_KeyToAp212_01_A_Inspect_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_WsaFW_KeyToAp212_01_A_Inspect_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_WsaFW_KeyToAp212_01_A_Inspect_use_default": true,
+    "uevr_gunstock_SHItemBase_WsaFW_KeyToAp212_01_A_Inspect_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_WsaFW_KeyToAp212_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_WsaFW_KeyToAp212_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_WsaFW_KeyToAp212_01_A_use_default": true,
+    "uevr_gunstock_SHItemBase_WsaFW_KeyToAp212_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_WsaFW_KeyToStaircase_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_WsaFW_KeyToStaircase_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_WsaFW_KeyToStaircase_01_A_use_default": true,
+    "uevr_gunstock_SHItemBase_WsaFW_KeyToStaircase_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_XrayQuest_01_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_XrayQuest_01_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_XrayQuest_01_A_use_default": true,
+    "uevr_gunstock_SHItemBase_XrayQuest_01_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_SHItemBase_shotgun_05_A_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_shotgun_05_A_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_SHItemBase_shotgun_05_A_use_default": true,
+    "uevr_gunstock_SHItemBase_shotgun_05_A_use_default_offhand_location_offset": true,
+    "uevr_gunstock_WeaponChainsaw_BP_C_Chainsaw_Skeletal_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_WeaponChainsaw_BP_C_Chainsaw_Skeletal_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_WeaponChainsaw_BP_C_Chainsaw_Skeletal_use_default": true,
+    "uevr_gunstock_WeaponChainsaw_BP_C_Chainsaw_Skeletal_use_default_offhand_location_offset": true,
+    "uevr_gunstock_WeaponIronPipe_BP_C_JamesPipe_01_A_Rig_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_WeaponIronPipe_BP_C_JamesPipe_01_A_Rig_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_WeaponIronPipe_BP_C_JamesPipe_01_A_Rig_use_default": true,
+    "uevr_gunstock_WeaponIronPipe_BP_C_JamesPipe_01_A_Rig_use_default_offhand_location_offset": true,
+    "uevr_gunstock_WeaponPistol_BP_C_Handgun_02_A_Rig_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_WeaponPistol_BP_C_Handgun_02_A_Rig_rotation": [
+        -17.0,
+        20.0,
+        1.2000000476837158
+    ],
+    "uevr_gunstock_WeaponPistol_BP_C_Handgun_02_A_Rig_use_default": false,
+    "uevr_gunstock_WeaponPistol_BP_C_Handgun_02_A_Rig_use_default_offhand_location_offset": true,
+    "uevr_gunstock_WeaponPistol_BP_C_RootComponent_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_WeaponPistol_BP_C_RootComponent_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_WeaponPistol_BP_C_RootComponent_use_default": true,
+    "uevr_gunstock_WeaponPistol_BP_C_RootComponent_use_default_offhand_location_offset": true,
+    "uevr_gunstock_WeaponShotgun_Alt_D_BP_C_shotgun_05_A_rig_offhand_location_offset": [
+        -19.700000762939453,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_WeaponShotgun_Alt_D_BP_C_shotgun_05_A_rig_rotation": [
+        -16.799999237060547,
+        20.299999237060547,
+        -8.300000190734863
+    ],
+    "uevr_gunstock_WeaponShotgun_Alt_D_BP_C_shotgun_05_A_rig_use_default": false,
+    "uevr_gunstock_WeaponShotgun_Alt_D_BP_C_shotgun_05_A_rig_use_default_offhand_location_offset": false,
+    "uevr_gunstock_WeaponWoodenPlank_BP_C_RootComponent_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_WeaponWoodenPlank_BP_C_RootComponent_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_WeaponWoodenPlank_BP_C_RootComponent_use_default": true,
+    "uevr_gunstock_WeaponWoodenPlank_BP_C_RootComponent_use_default_offhand_location_offset": true,
+    "uevr_gunstock_WeaponWoodenPlank_BP_C_WoodenPlankWithNails_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_WeaponWoodenPlank_BP_C_WoodenPlankWithNails_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_WeaponWoodenPlank_BP_C_WoodenPlankWithNails_use_default": true,
+    "uevr_gunstock_WeaponWoodenPlank_BP_C_WoodenPlankWithNails_use_default_offhand_location_offset": true,
+    "uevr_gunstock_default_offhand_location_offset": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_default_rotation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "uevr_gunstock_disable_configuration": true
+}

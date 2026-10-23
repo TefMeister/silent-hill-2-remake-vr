@@ -1,0 +1,119 @@
+{
+    "_profileLabels": {
+        "default": "Default"
+    },
+    "_profileState": {
+        "currentEditingProfile": "default"
+    },
+    "default": {
+        "animation_location_offset": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "animation_mesh": "",
+        "animation_rotation_offset": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "hide_body": true,
+        "left_shoulder_bone_name": "clavicle_01_l_bn",
+        "mesh": "Pawn.Mesh",
+        "mesh_location_offset": [
+            -13.287,
+            0.0,
+            -18.1721
+        ],
+        "mesh_rotation_offset": [
+            0.0,
+            -90.0,
+            0.0
+        ],
+        "parent_type": 1,
+        "right_shoulder_bone_name": "clavicle_01_r_bn",
+        "shoulder_width_scale": 1.7400000095367432,
+        "show_debug_meshes": false,
+        "solvers": {
+            "3548867c-5055-4363-ba62-48da44984854": {
+                "active": true,
+                "allow_stretch": false,
+                "allow_wrist_affects_elbow": false,
+                "end_bone": "hand_r_bn",
+                "end_bone_offset": [
+                    -5.725,
+                    7.3769,
+                    0.4778
+                ],
+                "end_bone_rotation": [
+                    8.0,
+                    140.0,
+                    -180.0
+                ],
+                "end_control_type": 1,
+                "joint_bone": "lowerarm_r_bn",
+                "label": "Right",
+                "max_stretch_scale": 0.0,
+                "smoothing": 0.0,
+                "solver_type": 1,
+                "sort_order": 1,
+                "start_bone": "upperarm_r_bn",
+                "start_stretch_ratio": 0.0,
+                "twist_bones": [
+                    {
+                        "bone": "r_sleeve_master",
+                        "pitch": 0.25699999928474426,
+                        "roll": 0.48500001430511475,
+                        "yaw": 0.0
+                    },
+                    {
+                        "bone": "r_wrist_Offset",
+                        "pitch": 0.0,
+                        "roll": 0.0,
+                        "yaw": 0.0
+                    }
+                ],
+                "wrist_bone": "",
+                "wrist_twist_influence": 0.35,
+                "wrist_twist_max": 75.0
+            },
+            "3a786073-494e-40a7-964f-6fbd2f1d44e1": {
+                "active": true,
+                "allow_stretch": false,
+                "allow_wrist_affects_elbow": true,
+                "end_bone": "hand_l_bn",
+                "end_bone_offset": [
+                    -7.7141,
+                    -10.0053,
+                    4.0928
+                ],
+                "end_bone_rotation": [
+                    -22.0,
+                    50.0,
+                    0.0
+                ],
+                "end_control_type": 0,
+                "joint_bone": "lowerarm_l_bn",
+                "label": "Left",
+                "max_stretch_scale": 0.0,
+                "smoothing": 0,
+                "solver_type": 1,
+                "sort_order": 2,
+                "start_bone": "upperarm_l_bn",
+                "start_stretch_ratio": 0.0,
+                "twist_bones": [
+                    {
+                        "bone": "l_wrist_Offset",
+                        "pitch": 0.27300000190734863,
+                        "roll": 0.48500001430511475,
+                        "yaw": 0.0
+                    }
+                ],
+                "wrist_bone": "",
+                "wrist_twist_influence": 0.3499999940395355,
+                "wrist_twist_max": 75.0
+            }
+        },
+        "spine_bone_name": "spine_05_bn"
+    }
+}

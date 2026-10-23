@@ -1,0 +1,110 @@
+{
+    "accessories": {
+        "SHItemBase_Sniper_Rifle_01_Skeletal": {
+            "d4958de4-4233-4b06-a880-986a4c2986c8": {
+                "label": "Offhand Grip",
+                "markers": [
+                    {
+                        "activation_distance": 12.399999618530273,
+                        "activation_hand": 2,
+                        "attach_type": 0,
+                        "end_time": 0.0,
+                        "grip_animation": "rifle_offhand",
+                        "grip_priority": 1,
+                        "location": [
+                            -5.800000190734863,
+                            0.4000000059604645,
+                            -0.10000000149011612
+                        ],
+                        "rotation": [
+                            -25.899999618530273,
+                            120.19999694824219,
+                            -63.900001525878906
+                        ],
+                        "socket_name": "",
+                        "start_time": 0.0
+                    }
+                ]
+            },
+            "a7c2e91f-4b18-4d55-9e01-boltlock0001": {
+                "label": "Bolt / Ferrolho (manual)",
+                "markers": [
+                    {
+                        "activation_distance": 16.0,
+                        "activation_hand": 1,
+                        "attach_type": 0,
+                        "end_time": 0.0,
+                        "grip_animation": "rifle_offhand",
+                        "grip_priority": 2,
+                        "location": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "rotation": [
+                            0.0,
+                            0.0,
+                            90.0
+                        ],
+                        "socket_name": "bone_lock",
+                        "start_time": 0.0
+                    }
+                ]
+            }
+        },
+		"WeaponPistol_BP_C_Handgun_02_A_Rig": {
+            "1a9b2071-0db3-4120-b428-ec06075c3c95": {
+                "label": "Pistol slide rack (manual reload)",
+                "markers": [
+                    {
+                        "activation_distance": 0.0,
+                        "activation_hand": 1,
+                        "attach_type": 0,
+                        "end_time": 0.0,
+                        "grip_animation": "rifle_offhand",
+                        "grip_priority": 1,
+                        "location": [
+                            0,
+                            0,
+                            0
+                        ],
+                        "rotation": [
+                            0,
+                            0,
+                            90.0
+                        ],
+                        "socket_name": "slide_joint",
+                        "start_time": 0.0
+                    }
+                ]
+            }
+        },
+        "WeaponShotgun_Alt_D_BP_C_shotgun_05_A_rig": {
+            "39a84ebe-48be-41eb-a830-38913571dc5e": {
+                "label": "Shotgun pump (left grip)",
+                "markers": [
+                    {
+                        "activation_distance": 13.300000190734863,
+                        "activation_hand": 1,
+                        "attach_type": 0,
+                        "end_time": 0.0,
+                        "grip_animation": "rifle_offhand",
+                        "grip_priority": 1,
+                        "location": [
+                            6.900000095367432,
+                            1.7000000476837158,
+                            5.599999904632568
+                        ],
+                        "rotation": [
+                            32.29999923706055,
+                            21.700000762939453,
+                            -140.10000610351563
+                        ],
+                        "socket_name": "bone_forearm",
+                        "start_time": 0.0
+                    }
+                ]
+            }
+        }
+    }
+}

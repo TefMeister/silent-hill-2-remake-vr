@@ -1,0 +1,27 @@
+{
+    "_profileLabels": {
+        "default": "Default"
+    },
+    "_profileState": {
+        "currentEditingProfile": "default"
+    },
+    "default": {
+        "armsAnimationMeshName": "Pawn.Mesh",
+        "armsMeshFOVFixID": "",
+        "armsMeshName": "Pawn.Mesh",
+        "bodyMeshFOVFixID": "",
+        "bodyMeshName": "Pawn.Mesh",
+        "hideAnimationArms": false,
+        "hidePawnArmsBones": true,
+        "hidePawnArmsMesh": false,
+        "hidePawnBodyMesh": false,
+        "hideSettingsHiddenInGame": false,
+        "hideSettingsHiddenInGamePropagate": false,
+        "hideSettingsRenderInDepthPass": false,
+        "hideSettingsRenderInMainPass": true,
+        "hideSettingsVisibility": false,
+        "hideSettingsVisibilityPropagate": false,
+        "pawnUpperArmLeft": "upperarm_l_bn",
+        "pawnUpperArmRight": "upperarm_r_bn"
+    }
+}

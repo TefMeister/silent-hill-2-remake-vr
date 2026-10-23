@@ -1,0 +1,26 @@
+{
+    "currentReticuleID": "bc323e9f-18c5-4627-bc78-5d9361382f77",
+    "reticuleList": [
+        {
+            "class": "WidgetBlueprintGeneratedClass /Game/Game/UI/GameplayHUD/Crosshairs/CrosshairContainer_WidgetBP.CrosshairContainer_WidgetBP_C",
+            "id": "bc323e9f-18c5-4627-bc78-5d9361382f77",
+            "label": "New Widget",
+            "options": {
+                "collisionChannel": 0,
+                "ignorePawn": true,
+                "position_2d": [
+                    0.0,
+                    0.0
+                ],
+                "removeFromViewport": true,
+                "scale_2d": [
+                    1.0,
+                    1.0
+                ],
+                "twoSided": true
+            },
+            "type": "Widget"
+        }
+    ],
+    "reticuleTargetMethod": 6
+}

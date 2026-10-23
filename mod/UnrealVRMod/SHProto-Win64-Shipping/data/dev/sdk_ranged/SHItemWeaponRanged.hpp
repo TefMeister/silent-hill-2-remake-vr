@@ -1,0 +1,84 @@
+// Auto-generated. Class /Script/SHProto.SHItemWeaponRanged
+#pragma once
+#include <cstdint>
+
+// Class: Class /Script/SHProto.SHItemWeaponRanged
+// Size: 0xC38
+struct SHItemWeaponRanged /* : SHItemWeapon */ {
+    float                        RequiredCameraBlendAlpha; // +0x690 (FloatProperty)
+    FDataTableRowHandle          WeaponAmmoItem; // +0x698 (StructProperty) /*struct DataTableRowHandle*/
+    int32_t                      WeaponClipSize; // +0x6A8 (IntProperty)
+    int32_t                      ReloadAmmoAddedPerNotify; // +0x6AC (IntProperty)
+    bool                         bUseCustomInitalAmmoInWeapon; // +0x6B0 (BoolProperty) /*bit mask=0xFF size=1*/
+    int32_t                      CustomInitalAmmoInWeapon; // +0x6B4 (IntProperty)
+    TSubclassOf<USHFirearmBaseDamage> damageClass; // +0x6B8 (ClassProperty) /*TSubclassOf<SHFirearmBaseDamage>*/
+    UCurveFloat*                 DamageFalloffCurve; // +0x6C0 (ObjectProperty) /*-> CurveFloat*/
+    float                        FocusGainSpeed; // +0x6C8 (FloatProperty)
+    float                        WeaponFocusAfterShoot; // +0x6CC (FloatProperty)
+    bool                         bResetFocusOnViewRotation; // +0x6D0 (BoolProperty) /*bit mask=0xFF size=1*/
+    float                        ViewRotationToResetFocus; // +0x6D4 (FloatProperty)
+    bool                         bBlockGainFocusOnViewRotation; // +0x6D8 (BoolProperty) /*bit mask=0xFF size=1*/
+    float                        ViewRotationToBlockGainFocus; // +0x6DC (FloatProperty)
+    bool                         bResetFocusOnMovement; // +0x6E0 (BoolProperty) /*bit mask=0xFF size=1*/
+    float                        MovementValueToResetFocus; // +0x6E4 (FloatProperty)
+    bool                         bBlockGainFocusOnMovement; // +0x6E8 (BoolProperty) /*bit mask=0xFF size=1*/
+    float                        MovementValueToBlockGainFocus; // +0x6EC (FloatProperty)
+    bool                         bLoseFocusOnMovement; // +0x6F0 (BoolProperty) /*bit mask=0xFF size=1*/
+    float                        MovementValueToLoseFocus; // +0x6F4 (FloatProperty)
+    float                        MovementLoseFocusSpeed; // +0x6F8 (FloatProperty)
+    TArray<UCurveVector* >       RecoilCurves; // +0x700 (ArrayProperty) /*inner ObjectProperty*/
+    FVector2D                    SpreadUnfocusedMax; // +0x710 (StructProperty) /*struct Vector2D*/
+    FVector2D                    SpreadUnfocusedMin; // +0x720 (StructProperty) /*struct Vector2D*/
+    FVector2D                    SpreadFocusedMax; // +0x730 (StructProperty) /*struct Vector2D*/
+    FVector2D                    SpreadFocusedMin; // +0x740 (StructProperty) /*struct Vector2D*/
+    int32_t                      NumberOfTracesPerShoot; // +0x750 (IntProperty)
+    bool                         bUseCircleUniformSpread; // +0x754 (BoolProperty) /*bit mask=0xFF size=1*/
+    float                        TraceRadius; // +0x758 (FloatProperty)
+    float                        MaxShootDistance; // +0x75C (FloatProperty)
+    UAnimationAsset*             FireWeaponAnim; // +0x760 (SoftObjectProperty) /*-> AnimationAsset*/
+    UAnimationAsset*             FireNoAmmoWeaponAnim; // +0x790 (SoftObjectProperty) /*-> AnimationAsset*/
+    UAnimationAsset*             ReloadWeaponAnim; // +0x7C0 (SoftObjectProperty) /*-> AnimationAsset*/
+    float                        AutoAimMaxRange; // +0x7F0 (FloatProperty)
+    UCurveFloat*                 AutoAimRangeToStrengthMappingCurve; // +0x7F8 (ObjectProperty) /*-> CurveFloat*/
+    float                        CharacterRotationInputScale; // +0x800 (FloatProperty)
+    float                        CharacterControlRotationInterpSpeed; // +0x804 (FloatProperty)
+    FSHMovementDataStruct        AimMovementData; // +0x808 (StructProperty) /*struct SHMovementDataStruct*/
+    bool                         bUseReloadMovementData; // +0x830 (BoolProperty) /*bit mask=0xFF size=1*/
+    FSHMovementDataStruct        ReloadMovementData; // +0x838 (StructProperty) /*struct SHMovementDataStruct*/
+    FPlayAnimationData           FireAnimData; // +0x860 (StructProperty) /*struct PlayAnimationData*/
+    FPlayAnimationData           FireNoAmmoAnimData; // +0x910 (StructProperty) /*struct PlayAnimationData*/
+    TMap<FSHCameraDataFull, FSHCameraDataFull> ReloadAnimsData; // +0x9C0 (MapProperty) /*key=StructProperty, value=StructProperty*/
+    FSHCameraDataFull            DefaultAimCameraData; // +0xA10 (StructProperty) /*struct SHCameraDataFull*/
+    TMap<FSHCameraFOVBlendData, FSHCameraFOVBlendData> PosesAimCameraData; // +0xAC0 (MapProperty) /*key=StructProperty, value=StructProperty*/
+    FSHCameraFOVBlendData        AimCameraFOVData; // +0xB10 (StructProperty) /*struct SHCameraFOVBlendData*/
+    USHCameraPostProcessConfig*  AimCameraPostProcessConfig; // +0xB38 (SoftObjectProperty) /*-> SHCameraPostProcessConfig*/
+    TSubclassOf<UCameraShakeBase> AimCameraShake; // +0xB68 (ClassProperty) /*TSubclassOf<CameraShakeBase>*/
+    TSubclassOf<UCameraShakeBase> FireCameraShake; // +0xB70 (ClassProperty) /*TSubclassOf<CameraShakeBase>*/
+    UForceFeedbackEffect*        ForceFeedbackOnFire; // +0xB78 (ObjectProperty) /*-> ForceFeedbackEffect*/
+    UForceFeedbackEffect*        ForceFeedbackOnOutOfAmmo; // +0xB80 (ObjectProperty) /*-> ForceFeedbackEffect*/
+    FEffectHandle                LightEffect; // +0xB88 (StructProperty) /*struct EffectHandle*/
+    UCameraShakeBase*            PlayingAimCameraShake; // +0xB90 (ObjectProperty) /*-> CameraShakeBase*/
+    UCameraShakeBase*            PlayingFireCameraShake; // +0xB98 (ObjectProperty) /*-> CameraShakeBase*/
+    UCurveVector*                RecoilCurveToUse; // +0xBA0 (ObjectProperty) /*-> CurveVector*/
+    USceneComponent*             RegisteredFirePoint; // +0xBA8 (ObjectProperty) /*-> SceneComponent*/
+    // Methods (stubs — call via UFunction):
+    // StructProperty TracePerfectForPointingData(BoolProperty bForceRefresh);
+    // void RegisterFirePoint(ObjectProperty InPoint);
+    // void OnShellEjected();
+    // void OnOutOfAmmoPerformed();
+    // void OnFireSpreadPerformed(ArrayProperty ShootsHitLoc);
+    // void OnFirePerformed(StructProperty ShootEndWorldLoc);
+    // BoolProperty IsFireReady();
+    // BoolProperty HasWeaponAmmoInInventory();
+    // BoolProperty HasAnyAmmoInClip();
+    // StructProperty GetStartTraceLoc();
+    // StructProperty GetSpreadShootVector(StructProperty SpreadAngles);
+    // StructProperty GetRandomEndTraceLoc();
+    // StructProperty GetPerfectShootVector();
+    // FloatProperty GetFocusValue();
+    // StructProperty GetEndTraceLoc(FloatProperty ShootAngle, StructProperty SpreadAngles);
+    // StructProperty GetCachedPerfectTraceCachedData();
+    // void DrawAimDetailedDebug(FloatProperty DeltaTime);
+    // BoolProperty CanBeReloaded();
+};
+

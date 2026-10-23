@@ -1,0 +1,157 @@
+{
+    "montagelist": {
+        "Any": {
+            "handsWhenActive": 1,
+            "handsWhenActivePriority": "0",
+            "inputWhenActive": 1,
+            "inputWhenActivePriority": "0",
+            "label": "Any",
+            "leftAccessoryWhenActivePriority": "0",
+            "leftArmWhenActive": 1,
+            "leftArmWhenActivePriority": "0",
+            "motionSicknessCompensationWhenActive": 1,
+            "motionSicknessCompensationWhenActivePriority": "0",
+            "pawnArmBonesWhenActive": 1,
+            "pawnArmBonesWhenActivePriority": "0",
+            "pawnArmsWhenActive": 1,
+            "pawnArmsWhenActivePriority": "0",
+            "pawnBodyWhenActive": 1,
+            "pawnBodyWhenActivePriority": "0",
+            "rightAccessoryWhenActivePriority": "0",
+            "rightArmWhenActive": 1,
+            "rightArmWhenActivePriority": "0"
+        },
+        "HitFace": {
+            "class_name": "AnimMontage /Game/Game/Characters/Humans/JamesSunderland/Animation/Face/Facial_animation/James_facial_additives/Montages/HitFace.HitFace",
+            "label": "Pawn HitFace"
+        },
+        "James_AbstractDaddy_GrabAttack_Montage": {
+            "class_name": "AnimMontage /Game/Game/Characters/Monsters/AbstractDaddy/Animations/Grab/James_AbstractDaddy_GrabAttack_Montage.James_AbstractDaddy_GrabAttack_Montage",
+            "label": "Pawn James_AbstractDaddy_GrabAttack_Montage"
+        },
+        "James_Atck_V2_Hit1": {
+            "class_name": "AnimMontage /Game/Game/Characters/Humans/JamesSunderland/Animation/Combat/Melee/Attacks/Montages/Kuba_Pass/James_Atck_V2_Hit1.James_Atck_V2_Hit1",
+            "label": "Pawn James_Atck_V2_Hit1"
+        },
+        "James_Atck_V2_Hit2": {
+            "class_name": "AnimMontage /Game/Game/Characters/Humans/JamesSunderland/Animation/Combat/Melee/Attacks/Montages/Kuba_Pass/James_Atck_V2_Hit2.James_Atck_V2_Hit2",
+            "label": "Pawn James_Atck_V2_Hit2"
+        },
+        "James_Atck_V2_Hit3": {
+            "class_name": "AnimMontage /Game/Game/Characters/Humans/JamesSunderland/Animation/Combat/Melee/Attacks/Montages/Kuba_Pass/James_Atck_V2_Hit3.James_Atck_V2_Hit3",
+            "label": "Pawn James_Atck_V2_Hit3"
+        },
+        "James_Atck_V3_Hit1": {
+            "class_name": "AnimMontage /Game/Game/Characters/Humans/JamesSunderland/Animation/Combat/Melee/Attacks/Montages/Kuba_Pass/James_Atck_V3_Hit1.James_Atck_V3_Hit1",
+            "label": "Pawn James_Atck_V3_Hit1"
+        },
+        "James_Atck_V3_Hit2": {
+            "class_name": "AnimMontage /Game/Game/Characters/Humans/JamesSunderland/Animation/Combat/Melee/Attacks/Montages/Kuba_Pass/James_Atck_V3_Hit2.James_Atck_V3_Hit2",
+            "label": "Pawn James_Atck_V3_Hit2"
+        },
+        "James_Atck_V3_Hit3": {
+            "class_name": "AnimMontage /Game/Game/Characters/Humans/JamesSunderland/Animation/Combat/Melee/Attacks/Montages/Kuba_Pass/James_Atck_V3_Hit3.James_Atck_V3_Hit3",
+            "label": "Pawn James_Atck_V3_Hit3"
+        },
+        "James_Chainsaw_Atck_Hit1v3": {
+            "class_name": "AnimMontage /Game/Game/Characters/Humans/JamesSunderland/Animation/Combat/Chainsaw/Montages/James_Chainsaw_Atck_Hit1v3.James_Chainsaw_Atck_Hit1v3",
+            "label": "Pawn James_Chainsaw_Atck_Hit1v3"
+        },
+        "James_Chainsaw_GroundAttack_UpDown": {
+            "class_name": "AnimMontage /Game/Game/Characters/Humans/JamesSunderland/Animation/Combat/Chainsaw/Montages/James_Chainsaw_GroundAttack_UpDown.James_Chainsaw_GroundAttack_UpDown",
+            "label": "Pawn James_Chainsaw_GroundAttack_UpDown"
+        },
+        "James_Chainsaw_SprintAttack": {
+            "class_name": "AnimMontage /Game/Game/Characters/Humans/JamesSunderland/Animation/Combat/Chainsaw/Montages/James_Chainsaw_SprintAttack.James_Chainsaw_SprintAttack",
+            "label": "Pawn James_Chainsaw_SprintAttack"
+        },
+        "James_Facial_Death_Front_Gas_Montage": {
+            "class_name": "AnimMontage /Game/Game/Characters/Humans/JamesSunderland/Animation/Face/Facial_animation/James_facial_additives/GenericDeaths/DeathFaceMontages/James_Facial_Death_Front_Gas_Montage.James_Facial_Death_Front_Gas_Montage",
+            "label": "Pawn James_Facial_Death_Front_Gas_Montage"
+        },
+        "James_Facial_GenericDeath_Back": {
+            "class_name": "AnimMontage /Game/Game/Characters/Humans/JamesSunderland/Animation/Face/Facial_animation/James_facial_additives/GenericDeaths/DeathFaceMontages/James_Facial_GenericDeath_Back.James_Facial_GenericDeath_Back",
+            "label": "Pawn James_Facial_GenericDeath_Back"
+        },
+        "James_Facial_GenericDeath_Front_Montage": {
+            "class_name": "AnimMontage /Game/Game/Characters/Humans/JamesSunderland/Animation/Face/Facial_animation/James_facial_additives/GenericDeaths/DeathFaceMontages/James_Facial_GenericDeath_Front_Montage.James_Facial_GenericDeath_Front_Montage",
+            "label": "Pawn James_Facial_GenericDeath_Front_Montage"
+        },
+        "James_Facial_GenericDeath_Right_Montage": {
+            "class_name": "AnimMontage /Game/Game/Characters/Humans/JamesSunderland/Animation/Face/Facial_animation/James_facial_additives/GenericDeaths/DeathFaceMontages/James_Facial_GenericDeath_Right_Montage.James_Facial_GenericDeath_Right_Montage",
+            "label": "Pawn James_Facial_GenericDeath_Right_Montage"
+        },
+        "James_Facial_Generic_Atck_Hit_01_Montage": {
+            "class_name": "AnimMontage /Game/Game/Characters/Humans/JamesSunderland/Animation/Face/Facial_animation/James_facial_additives/melee/James_Facial_Generic_Atck_Hit_01_Montage.James_Facial_Generic_Atck_Hit_01_Montage",
+            "label": "Pawn James_Facial_Generic_Atck_Hit_01_Montage"
+        },
+        "James_Facial_ItemUse_HealthDrink_montage": {
+            "class_name": "AnimMontage /Game/Game/Characters/Humans/JamesSunderland/Animation/Face/Facial_animation/James_facial_additives/ItemUse/montages/James_Facial_ItemUse_HealthDrink_montage.James_Facial_ItemUse_HealthDrink_montage",
+            "label": "Pawn James_Facial_ItemUse_HealthDrink_montage"
+        },
+        "James_Facial_ItemUse_Syringe_MONTAGE": {
+            "class_name": "AnimMontage /Game/Game/Characters/Humans/JamesSunderland/Animation/Face/Facial_animation/James_facial_additives/ItemUse/montages/James_Facial_ItemUse_Syringe_MONTAGE.James_Facial_ItemUse_Syringe_MONTAGE",
+            "label": "Pawn James_Facial_ItemUse_Syringe_MONTAGE"
+        },
+        "James_Facial_ScreamReaction_Handgun_Montage": {
+            "class_name": "AnimMontage /Game/Game/Characters/Humans/JamesSunderland/Animation/Face/Facial_animation/James_facial_additives/locationSpecific/James_Facial_ScreamReaction_Handgun_Montage.James_Facial_ScreamReaction_Handgun_Montage",
+            "label": "Pawn James_Facial_ScreamReaction_Handgun_Montage"
+        },
+        "James_Facial_UnthinkablePath_Event_short_Montage": {
+            "class_name": "AnimMontage /Game/Game/Characters/Humans/JamesSunderland/Animation/Face/Facial_animation/James_facial_additives/locationSpecific/James_Facial_UnthinkablePath_Event_short_Montage.James_Facial_UnthinkablePath_Event_short_Montage",
+            "label": "Pawn James_Facial_UnthinkablePath_Event_short_Montage"
+        },
+        "James_GroundStomp_01_MONTAGE_v2": {
+            "class_name": "AnimMontage /Game/Game/Characters/Humans/JamesSunderland/Animation/Combat/Melee/Attacks/Montages/James_GroundStomp_01_MONTAGE_v2.James_GroundStomp_01_MONTAGE_v2",
+            "label": "Pawn James_GroundStomp_01_MONTAGE_v2"
+        },
+        "James_LF_Grab_QTE_v2": {
+            "class_name": "AnimMontage /Game/Game/Characters/Humans/JamesSunderland/Animation/Combat/SyncedAnimations/James_LF_Grab_QTE_v2.James_LF_Grab_QTE_v2",
+            "label": "Pawn James_LF_Grab_QTE_v2"
+        },
+        "James_LastAttack_3_v2": {
+            "class_name": "AnimMontage /Game/Game/Characters/Humans/JamesSunderland/Animation/Combat/Melee/Attacks/Montages/James_LastAttack_3_v2.James_LastAttack_3_v2",
+            "label": "Pawn James_LastAttack_3_v2"
+        },
+        "James_MQ_Struggle2": {
+            "class_name": "AnimMontage /Game/Game/Characters/Humans/JamesSunderland/Animation/Combat/NoWeapon/Struggle/James_MQ_Struggle2.James_MQ_Struggle2",
+            "label": "Pawn James_MQ_Struggle2"
+        },
+        "James_MariaBoss_Phase3_Struggle_Montage": {
+            "class_name": "AnimMontage /Game/Game/Characters/Humans/JamesSunderland/Animation/Combat/SyncedAnimations/MaryBoss/James_MariaBoss_Phase3_Struggle_Montage.James_MariaBoss_Phase3_Struggle_Montage",
+            "label": "Pawn James_MariaBoss_Phase3_Struggle_Montage"
+        },
+        "James_MariaBoss_Struggle_Montage": {
+            "class_name": "AnimMontage /Game/Game/Characters/Humans/JamesSunderland/Animation/Combat/SyncedAnimations/MaryBoss/James_MariaBoss_Struggle_Montage.James_MariaBoss_Struggle_Montage",
+            "label": "Pawn James_MariaBoss_Struggle_Montage"
+        },
+        "James_NurseOW_Sync_Struggle": {
+            "class_name": "AnimMontage /Game/Game/Characters/Humans/JamesSunderland/Animation/Combat/SyncedAnimations/NurseOW/James_NurseOW_Sync_Struggle.James_NurseOW_Sync_Struggle",
+            "label": "Pawn James_NurseOW_Sync_Struggle"
+        },
+        "James_Rifle_Reload_Montage": {
+            "class_name": "AnimMontage /Game/Game/Characters/Humans/JamesSunderland/Animation/Combat/Rifle/RecoilAndReload/James_Rifle_Reload_Montage.James_Rifle_Reload_Montage",
+            "label": "Pawn James_Rifle_Reload_Montage"
+        },
+        "James_Shotgun_Reload_Montage": {
+            "class_name": "AnimMontage /Game/Game/Characters/Humans/JamesSunderland/Animation/Combat/Shotgun/RecoilAndReload/James_Shotgun_Reload_Montage.James_Shotgun_Reload_Montage",
+            "label": "Pawn James_Shotgun_Reload_Montage"
+        },
+        "James_SideAttacks_GroundAttack_UpDown": {
+            "class_name": "AnimMontage /Game/Game/Characters/Humans/JamesSunderland/Animation/Combat/Melee/Attacks/Montages/James_SideAttacks_GroundAttack_UpDown.James_SideAttacks_GroundAttack_UpDown",
+            "label": "Pawn James_SideAttacks_GroundAttack_UpDown"
+        },
+        "James_Struggle_FleshLip": {
+            "class_name": "AnimMontage /Game/Game/Characters/Monsters/FleshLip/Animations/Attack/ChokeAttack/James_Struggle_FleshLip.James_Struggle_FleshLip",
+            "label": "Pawn James_Struggle_FleshLip"
+        },
+        "Safe_System_James_Part1_Take03_Luke_Neutral_Face_Default_v04_James_Montage": {
+            "class_name": "AnimMontage /Game/Game/Characters/Humans/JamesSunderland/Animation/Interactions/SavePoint/Safe_System_James_Part1_Take03_Luke_Neutral_Face_Default_v04_James_Montage.Safe_System_James_Part1_Take03_Luke_Neutral_Face_Default_v04_James_Montage",
+            "label": "Pawn Safe_System_James_Part1_Take03_Luke_Neutral_Face_Default_v04_James_Montage"
+        },
+        "Safe_System_James_Part2_Take01_Luke_I_Know_What_Is_There_v03_Loop_James_Montage": {
+            "class_name": "AnimMontage /Game/Game/Characters/Humans/JamesSunderland/Animation/Interactions/SavePoint/Safe_System_James_Part2_Take01_Luke_I_Know_What_Is_There_v03_Loop_James_Montage.Safe_System_James_Part2_Take01_Luke_I_Know_What_Is_There_v03_Loop_James_Montage",
+            "label": "Pawn Safe_System_James_Part2_Take01_Luke_I_Know_What_Is_There_v03_Loop_James_Montage"
+        }
+    }
+}

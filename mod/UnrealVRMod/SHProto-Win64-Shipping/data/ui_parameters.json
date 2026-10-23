@@ -1,0 +1,444 @@
+{
+    "character_hidden": {
+        "autoAdjustUIWhenInGameState": 1,
+        "autoAdjustUIWhenInGameStatePriority": "0",
+        "decouplePitchWhenInGameState": 1,
+        "decouplePitchWhenInGameStatePriority": "0",
+        "fadeCameraWhenInGameState": 1,
+        "fadeCameraWhenInGameStatePriority": "0",
+        "handsWhenInGameState": 3,
+        "handsWhenInGameStatePriority": "0",
+        "inputWhenInGameState": 3,
+        "inputWhenInGameStatePriority": "0",
+        "lockedUIWhenInGameState": 2,
+        "lockedUIWhenInGameStatePriority": "0",
+        "remapWhenInGameState": 1,
+        "remapWhenInGameStatePriority": "0",
+        "screen2DWhenInGameState": 1,
+        "screen2DWhenInGameStatePriority": "0"
+    },
+    "cutscene": {
+        "autoAdjustUIWhenInGameState": 1,
+        "autoAdjustUIWhenInGameStatePriority": "0",
+        "decouplePitchWhenInGameState": 1,
+        "decouplePitchWhenInGameStatePriority": "0",
+        "fadeCameraWhenInGameState": 1,
+        "fadeCameraWhenInGameStatePriority": "0",
+        "handsWhenInGameState": 3,
+        "handsWhenInGameStatePriority": "0",
+        "inputWhenInGameState": 3,
+        "inputWhenInGameStatePriority": "0",
+        "lockedUIWhenInGameState": 2,
+        "lockedUIWhenInGameStatePriority": "0",
+        "remapWhenInGameState": 3,
+        "remapWhenInGameStatePriority": "0",
+        "screen2DWhenInGameState": 1,
+        "screen2DWhenInGameStatePriority": "0"
+    },
+    "paused": {
+        "autoAdjustUIWhenInGameState": 3,
+        "autoAdjustUIWhenInGameStatePriority": "0",
+        "decouplePitchWhenInGameState": 1,
+        "decouplePitchWhenInGameStatePriority": "0",
+        "fadeCameraWhenInGameState": 1,
+        "fadeCameraWhenInGameStatePriority": "0",
+        "handsWhenInGameState": 3,
+        "handsWhenInGameStatePriority": "0",
+        "inputWhenInGameState": 1,
+        "inputWhenInGameStatePriority": "0",
+        "lockedUIWhenInGameState": 2,
+        "lockedUIWhenInGameStatePriority": "0",
+        "remapWhenInGameState": 3,
+        "remapWhenInGameStatePriority": "0",
+        "screen2DWhenInGameState": 1,
+        "screen2DWhenInGameStatePriority": "0"
+    },
+    "widgetlist": {
+        "WidgetBlueprintGeneratedClass /Game/Game/Dialogs/UI/SHDialogSubtitlesWidget.SHDialogSubtitlesWidget_C": {
+            "label": "SHDialogSubtitlesWidget_C"
+        },
+        "WidgetBlueprintGeneratedClass /Game/Game/UI/GameplayEndGame/GameplayEndGame_WidgetBP.GameplayEndGame_WidgetBP_C": {
+            "alignment": [
+                0.0,
+                0.0
+            ],
+            "autoAdjustUIWhenActive": 1,
+            "autoAdjustUIWhenActivePriority": "0",
+            "decouplePitchWhenActive": 1,
+            "decouplePitchWhenActivePriority": "0",
+            "fadeCameraWhenActive": 1,
+            "fadeCameraWhenActivePriority": "0",
+            "handsWhenActive": 3,
+            "handsWhenActivePriority": "0",
+            "inputWhenActive": 3,
+            "inputWhenActivePriority": "0",
+            "label": "GameplayEndGame_WidgetBP_C",
+            "lockedUIWhenActive": 2,
+            "lockedUIWhenActivePriority": "0",
+            "remapWhenActive": 3,
+            "remapWhenActivePriority": "0",
+            "scale": [
+                1.0,
+                1.0
+            ],
+            "screen2DWhenActive": 1,
+            "screen2DWhenActivePriority": "0"
+        },
+        "WidgetBlueprintGeneratedClass /Game/Game/UI/GameplayFocus/GameplayFocus_Widget.GameplayFocus_Widget_C": {
+            "label": "GameplayFocus_Widget_C"
+        },
+        "WidgetBlueprintGeneratedClass /Game/Game/UI/GameplayGameOver/GameplayGameOver_Widget.GameplayGameOver_Widget_C": {
+            "autoAdjustUIWhenActive": 1,
+            "autoAdjustUIWhenActivePriority": "0",
+            "decouplePitchWhenActive": 1,
+            "decouplePitchWhenActivePriority": "0",
+            "fadeCameraWhenActive": 1,
+            "fadeCameraWhenActivePriority": "0",
+            "handsWhenActive": 1,
+            "handsWhenActivePriority": "0",
+            "inputWhenActive": 1,
+            "inputWhenActivePriority": "0",
+            "label": "GameplayGameOver_Widget_C",
+            "lockedUIWhenActive": 1,
+            "lockedUIWhenActivePriority": "0",
+            "remapWhenActive": 1,
+            "remapWhenActivePriority": "0",
+            "screen2DWhenActive": 1,
+            "screen2DWhenActivePriority": "0"
+        },
+        "WidgetBlueprintGeneratedClass /Game/Game/UI/GameplayHUD/Crosshairs/CrosshairContainer_WidgetBP.CrosshairContainer_WidgetBP_C": {
+            "label": "CrosshairContainer_WidgetBP_C"
+        },
+        "WidgetBlueprintGeneratedClass /Game/Game/UI/GameplayHUD/Crosshairs/Instances/SHCrosshairWidget_Rifle.SHCrosshairWidget_Rifle_C": {
+            "label": "SHCrosshairWidget_Rifle_C"
+        },
+        "WidgetBlueprintGeneratedClass /Game/Game/UI/GameplayHUD/GameplayHud_Widget.GameplayHud_Widget_C": {
+            "alignment": [
+                0.0,
+                0.0
+            ],
+            "autoAdjustUIWhenActive": 1,
+            "autoAdjustUIWhenActivePriority": "0",
+            "decouplePitchWhenActive": 1,
+            "decouplePitchWhenActivePriority": "0",
+            "fadeCameraWhenActive": 1,
+            "fadeCameraWhenActivePriority": "0",
+            "handsWhenActive": 1,
+            "handsWhenActivePriority": "0",
+            "inputWhenActive": 1,
+            "inputWhenActivePriority": "0",
+            "label": "GameplayHud_Widget_C",
+            "lockedUIWhenActive": 1,
+            "lockedUIWhenActivePriority": "0",
+            "remapWhenActive": 1,
+            "remapWhenActivePriority": "0",
+            "scale": [
+                1.0,
+                1.0
+            ],
+            "screen2DWhenActive": 1,
+            "screen2DWhenActivePriority": "0"
+        },
+        "WidgetBlueprintGeneratedClass /Game/Game/UI/GameplayItemInvestigation/GameplayItemInvestigation_Widget.GameplayItemInvestigation_Widget_C": {
+            "alignment": [
+                0.0,
+                0.0
+            ],
+            "autoAdjustUIWhenActive": 1,
+            "autoAdjustUIWhenActivePriority": "0",
+            "decouplePitchWhenActive": 1,
+            "decouplePitchWhenActivePriority": "0",
+            "fadeCameraWhenActive": 1,
+            "fadeCameraWhenActivePriority": "0",
+            "handsWhenActive": 1,
+            "handsWhenActivePriority": "0",
+            "inputWhenActive": 1,
+            "inputWhenActivePriority": "0",
+            "label": "GameplayItemInvestigation_Widget_C",
+            "lockedUIWhenActive": 1,
+            "lockedUIWhenActivePriority": "0",
+            "remapWhenActive": 1,
+            "remapWhenActivePriority": "0",
+            "scale": [
+                1.0,
+                1.0
+            ],
+            "screen2DWhenActive": 1,
+            "screen2DWhenActivePriority": "0"
+        },
+        "WidgetBlueprintGeneratedClass /Game/Game/UI/GameplayMenu/GameplayMenu_Widget.GameplayMenu_Widget_C": {
+            "autoAdjustUIWhenActive": 1,
+            "autoAdjustUIWhenActivePriority": "0",
+            "decouplePitchWhenActive": 1,
+            "decouplePitchWhenActivePriority": "0",
+            "fadeCameraWhenActive": 1,
+            "fadeCameraWhenActivePriority": "0",
+            "handsWhenActive": 1,
+            "handsWhenActivePriority": "0",
+            "inputWhenActive": 1,
+            "inputWhenActivePriority": "0",
+            "label": "GameplayMenu_Widget_C",
+            "lockedUIWhenActive": 1,
+            "lockedUIWhenActivePriority": "0",
+            "remapWhenActive": 1,
+            "remapWhenActivePriority": "0",
+            "screen2DWhenActive": 1,
+            "screen2DWhenActivePriority": "0"
+        },
+        "WidgetBlueprintGeneratedClass /Game/Game/UI/GameplaySaveMenu/GameplaySaveMenu_Widget.GameplaySaveMenu_Widget_C": {
+            "alignment": [
+                0.0,
+                0.0
+            ],
+            "autoAdjustUIWhenActive": 1,
+            "autoAdjustUIWhenActivePriority": "0",
+            "decouplePitchWhenActive": 1,
+            "decouplePitchWhenActivePriority": "0",
+            "fadeCameraWhenActive": 2,
+            "fadeCameraWhenActivePriority": "0",
+            "handsWhenActive": 1,
+            "handsWhenActivePriority": "0",
+            "inputWhenActive": 1,
+            "inputWhenActivePriority": "0",
+            "label": "GameplaySaveMenu_Widget_C",
+            "lockedUIWhenActive": 2,
+            "lockedUIWhenActivePriority": "0",
+            "remapWhenActive": 1,
+            "remapWhenActivePriority": "0",
+            "scale": [
+                1.0,
+                1.0
+            ],
+            "screen2DWhenActive": 1,
+            "screen2DWhenActivePriority": "0"
+        },
+        "WidgetBlueprintGeneratedClass /Game/Game/UI/GameplaySaveMenu/SH_SaveWidget_PC.SH_SaveWidget_PC_C": {
+            "label": "SH_SaveWidget_PC_C"
+        },
+        "WidgetBlueprintGeneratedClass /Game/Game/UI/GameplaySkip/CutceneSkip_Widget.CutceneSkip_Widget_C": {
+            "label": "CutceneSkip_Widget_C"
+        },
+        "WidgetBlueprintGeneratedClass /Game/Game/UI/Menu/Dialogs/LostPadWidget_BP.LostPadWidget_BP_C": {
+            "label": "LostPadWidget_BP_C"
+        },
+        "WidgetBlueprintGeneratedClass /Game/Game/UI/Menu/GameFlow/LoadingScreenWidget_BP.LoadingScreenWidget_BP_C": {
+            "alignment": [
+                0.0,
+                0.0
+            ],
+            "autoAdjustUIWhenActive": 1,
+            "autoAdjustUIWhenActivePriority": "0",
+            "decouplePitchWhenActive": 1,
+            "decouplePitchWhenActivePriority": "0",
+            "fadeCameraWhenActive": 2,
+            "fadeCameraWhenActivePriority": "0",
+            "handsWhenActive": 1,
+            "handsWhenActivePriority": "0",
+            "inputWhenActive": 1,
+            "inputWhenActivePriority": "0",
+            "label": "LoadingScreenWidget_BP_C",
+            "lockedUIWhenActive": 1,
+            "lockedUIWhenActivePriority": "0",
+            "remapWhenActive": 1,
+            "remapWhenActivePriority": "0",
+            "scale": [
+                1.0,
+                1.0
+            ],
+            "screen2DWhenActive": 1,
+            "screen2DWhenActivePriority": "0"
+        },
+        "WidgetBlueprintGeneratedClass /Game/Game/UI/Menu/GameFlow/StartGameMenuWidget_BP.StartGameMenuWidget_BP_C": {
+            "alignment": [
+                0.0,
+                0.0
+            ],
+            "autoAdjustUIWhenActive": 1,
+            "autoAdjustUIWhenActivePriority": "0",
+            "decouplePitchWhenActive": 1,
+            "decouplePitchWhenActivePriority": "0",
+            "fadeCameraWhenActive": 2,
+            "fadeCameraWhenActivePriority": "0",
+            "handsWhenActive": 1,
+            "handsWhenActivePriority": "0",
+            "inputWhenActive": 1,
+            "inputWhenActivePriority": "0",
+            "label": "StartGameMenuWidget_BP_C",
+            "lockedUIWhenActive": 2,
+            "lockedUIWhenActivePriority": "0",
+            "remapWhenActive": 1,
+            "remapWhenActivePriority": "0",
+            "scale": [
+                1.0,
+                1.0
+            ],
+            "screen2DWhenActive": 1,
+            "screen2DWhenActivePriority": "0"
+        },
+        "WidgetBlueprintGeneratedClass /Game/Game/UI/Menu/GameFlow/UserSelectionWidget_BP.UserSelectionWidget_BP_C": {
+            "alignment": [
+                0.0,
+                0.0
+            ],
+            "autoAdjustUIWhenActive": 1,
+            "autoAdjustUIWhenActivePriority": "0",
+            "decouplePitchWhenActive": 1,
+            "decouplePitchWhenActivePriority": "0",
+            "fadeCameraWhenActive": 2,
+            "fadeCameraWhenActivePriority": "0",
+            "handsWhenActive": 1,
+            "handsWhenActivePriority": "0",
+            "inputWhenActive": 1,
+            "inputWhenActivePriority": "0",
+            "label": "UserSelectionWidget_BP_C",
+            "lockedUIWhenActive": 2,
+            "lockedUIWhenActivePriority": "0",
+            "remapWhenActive": 1,
+            "remapWhenActivePriority": "0",
+            "scale": [
+                1.0,
+                1.0
+            ],
+            "screen2DWhenActive": 1,
+            "screen2DWhenActivePriority": "0"
+        },
+        "WidgetBlueprintGeneratedClass /Game/Game/UI/Menu/InGameMenuWidget_BP.InGameMenuWidget_BP_C": {
+            "autoAdjustUIWhenActive": 1,
+            "autoAdjustUIWhenActivePriority": "0",
+            "decouplePitchWhenActive": 1,
+            "decouplePitchWhenActivePriority": "0",
+            "fadeCameraWhenActive": 1,
+            "fadeCameraWhenActivePriority": "0",
+            "handsWhenActive": 1,
+            "handsWhenActivePriority": "0",
+            "inputWhenActive": 1,
+            "inputWhenActivePriority": "0",
+            "label": "InGameMenuWidget_BP_C",
+            "lockedUIWhenActive": 1,
+            "lockedUIWhenActivePriority": "0",
+            "remapWhenActive": 1,
+            "remapWhenActivePriority": "0",
+            "screen2DWhenActive": 1,
+            "screen2DWhenActivePriority": "0"
+        },
+        "WidgetBlueprintGeneratedClass /Game/Game/UI/Menu/MainMenuWidget_BP.MainMenuWidget_BP_C": {
+            "alignment": [
+                0.0,
+                0.0
+            ],
+            "autoAdjustUIWhenActive": 3,
+            "autoAdjustUIWhenActivePriority": "0",
+            "decouplePitchWhenActive": 1,
+            "decouplePitchWhenActivePriority": "0",
+            "fadeCameraWhenActive": 1,
+            "fadeCameraWhenActivePriority": "0",
+            "handsWhenActive": 1,
+            "handsWhenActivePriority": "0",
+            "inputWhenActive": 3,
+            "inputWhenActivePriority": "0",
+            "label": "MainMenuWidget_BP_C",
+            "lockedUIWhenActive": 2,
+            "lockedUIWhenActivePriority": "0",
+            "remapWhenActive": 1,
+            "remapWhenActivePriority": "0",
+            "scale": [
+                1.0,
+                0.75
+            ],
+            "screen2DWhenActive": 1,
+            "screen2DWhenActivePriority": "0"
+        },
+        "WidgetBlueprintGeneratedClass /Game/Game/UI/Readable/ReadingBase_Widget.ReadingBase_Widget_C": {
+            "alignment": [
+                0.0,
+                0.0
+            ],
+            "autoAdjustUIWhenActive": 1,
+            "autoAdjustUIWhenActivePriority": "0",
+            "decouplePitchWhenActive": 1,
+            "decouplePitchWhenActivePriority": "0",
+            "fadeCameraWhenActive": 1,
+            "fadeCameraWhenActivePriority": "0",
+            "handsWhenActive": 1,
+            "handsWhenActivePriority": "0",
+            "inputWhenActive": 1,
+            "inputWhenActivePriority": "0",
+            "label": "ReadingBase_Widget_C",
+            "lockedUIWhenActive": 1,
+            "lockedUIWhenActivePriority": "0",
+            "remapWhenActive": 3,
+            "remapWhenActivePriority": "0",
+            "scale": [
+                1.0,
+                1.0
+            ],
+            "screen2DWhenActive": 1,
+            "screen2DWhenActivePriority": "0"
+        },
+        "WidgetBlueprintGeneratedClass /Game/Game/UI/Resources/Icons/Interactions/SHInteractionIconWidget_BP.SHInteractionIconWidget_BP_C": {
+            "autoAdjustUIWhenActive": 1,
+            "autoAdjustUIWhenActivePriority": "0",
+            "decouplePitchWhenActive": 1,
+            "decouplePitchWhenActivePriority": "0",
+            "fadeCameraWhenActive": 1,
+            "fadeCameraWhenActivePriority": "0",
+            "handsWhenActive": 1,
+            "handsWhenActivePriority": "0",
+            "inputWhenActive": 1,
+            "inputWhenActivePriority": "0",
+            "label": "SHInteractionIconWidget_BP_C",
+            "lockedUIWhenActive": 1,
+            "lockedUIWhenActivePriority": "0",
+            "remapWhenActive": 1,
+            "remapWhenActivePriority": "0",
+            "screen2DWhenActive": 1,
+            "screen2DWhenActivePriority": "0"
+        },
+        "WidgetBlueprintGeneratedClass /Game/Game/UI/Shared/ControlTips/ControlTip_Widget.ControlTip_Widget_C": {
+            "autoAdjustUIWhenActive": 1,
+            "autoAdjustUIWhenActivePriority": "0",
+            "decouplePitchWhenActive": 1,
+            "decouplePitchWhenActivePriority": "0",
+            "fadeCameraWhenActive": 1,
+            "fadeCameraWhenActivePriority": "0",
+            "handsWhenActive": 1,
+            "handsWhenActivePriority": "0",
+            "inputWhenActive": 1,
+            "inputWhenActivePriority": "0",
+            "label": "ControlTip_Widget_C",
+            "lockedUIWhenActive": 1,
+            "lockedUIWhenActivePriority": "0",
+            "remapWhenActive": 1,
+            "remapWhenActivePriority": "0",
+            "screen2DWhenActive": 1,
+            "screen2DWhenActivePriority": "0"
+        },
+        "WidgetBlueprintGeneratedClass /Game/Game/UI/Shared/ControlTips/ControlTips_Widget.ControlTips_Widget_C": {
+            "alignment": [
+                -0.19,
+                -0.26
+            ],
+            "autoAdjustUIWhenActive": 3,
+            "autoAdjustUIWhenActivePriority": "0",
+            "decouplePitchWhenActive": 1,
+            "decouplePitchWhenActivePriority": "0",
+            "fadeCameraWhenActive": 1,
+            "fadeCameraWhenActivePriority": "0",
+            "handsWhenActive": 1,
+            "handsWhenActivePriority": "0",
+            "inputWhenActive": 1,
+            "inputWhenActivePriority": "0",
+            "label": "ControlTips_Widget_C",
+            "lockedUIWhenActive": 1,
+            "lockedUIWhenActivePriority": "0",
+            "remapWhenActive": 1,
+            "remapWhenActivePriority": "0",
+            "scale": [
+                1.0,
+                1.0
+            ],
+            "screen2DWhenActive": 1,
+            "screen2DWhenActivePriority": "0"
+        }
+    }
+}

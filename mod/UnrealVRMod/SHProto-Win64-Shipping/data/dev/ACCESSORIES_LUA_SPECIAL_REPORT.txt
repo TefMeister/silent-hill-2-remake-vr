@@ -1,0 +1,484 @@
+================================================================================
+RELATÓRIO ESPECIAL — COMO USAR accessories.lua
+(Rack da pistola × Pump da shotgun × receita para outras armas)
+================================================================================
+
+Projeto........: UnrealVRMod / SHProto-Win64-Shipping
+Jogo...........: Silent Hill 2 Remake
+Biblioteca.....: scripts/libs/accessories.lua
+Dados..........: data/accessories_parameters.json
+                 (via libs/config/accessories_config_dev.lua)
+Data...........: 2026-08-02
+
+Este relatório explica o sistema de accessories do UEVR neste projeto e, de
+forma especial, como ele foi usado (ou NÃO usado) em:
+
+  A) Rack manual do slide da PISTOLA
+  B) Pump manual da SHOTGUN
+
+A diferença entre A e B é o ponto mais importante deste documento.
+
+
+--------------------------------------------------------------------------------
+1. O QUE É accessories.lua (EM UMA FRASE)
+--------------------------------------------------------------------------------
+
+É o sistema que decide “qual accessory GUID está ativo na mão esquerda/direita”
+e, quando muda, COLA a mão IK num socket do attachment (arma) agarrado pela
+mão direita — com pose de grip e offset de loc/rot.
+
+Ele NÃO implementa sozinho “puxar o pump” ou “rackear o slide”.
+Ele só resolve: stick / unstick da mão no mesh.
+
+
+--------------------------------------------------------------------------------
+2. VOCABULÁRIO OBRIGATÓRIO
+--------------------------------------------------------------------------------
+
+Attachment
+  Mesh/arma agarrada pela MÃO DIREITA.
+  ID no JSON = string longa tipo:
+    WeaponShotgun_Alt_D_BP_C_shotgun_05_A_rig
+    WeaponPistol_BP_C_Handgun_02_A_Rig
+  Obtido em runtime por:
+    attachments.getCurrentGrippedAttachment(Handed.Right)
+    attachments.getAttachmentIDFromAttachment(att)
+
+Accessory
+  Entrada sob o attachment, identificada por GUID.
+  Ex.: 39a84ebe-48be-41eb-a830-38913571dc5e  (shotgun pump)
+  Tem label + array markers[].
+
+Marker
+  Parâmetros de stick de um accessory:
+    socket_name, location[3], rotation[3]
+    activation_hand, activation_distance
+    grip_animation, grip_priority
+    attach_type, start_time, end_time
+  Primário = markers[1] via accessories.getPrimaryMarkerParams()
+
+activation_hand (enum)
+  1  = None              → proximidade nativa NÃO cola
+  2  = Left Hand Proximity
+  3  = Right Hand Proximity
+  4  = Either Hand Proximity
+  5–7 = … During Montage Only
+  8  = Left Hand Always
+  9  = Right Hand Always
+  10 = Either Hand Always
+
+activation_distance
+  Raio em unidades Unreal até (socket + location offset).
+  Só entra no proximity built-in se activation_hand ∈ {2,3,4} (e dist > 0).
+  Com hand=1 (None), a distância no JSON só serve se O SEU código a ler
+  (caso do shotgun_pump.isLeftNearPump).
+
+grip_priority
+  Prioridade da pose de mão (is_hands_animating_from_mesh). Default 1.
+
+attach_type
+  0 Keep Relative | 1 Keep World | 2 Snap To Target
+
+
+--------------------------------------------------------------------------------
+3. ARQUITETURA INTERNA (COMO O SISTEMA PENSA)
+--------------------------------------------------------------------------------
+
+3.1 Votação por callback
+  Vários listeners registram:
+    uevrUtils.registerUEVRCallback("active_left_accessory", fn)
+    uevrUtils.registerUEVRCallback("active_right_accessory", fn)
+
+  Cada fn pode retornar:
+    (accessoryID, priority)   ou nil
+
+  O framework escolhe o MAIOR priority
+  (empate → último callback executado).
+
+  Prioridades observadas neste projeto:
+    1       = proximity built-in (accessories.lua)
+    2       = shotgun pump (shotgun_pump.lua)
+    ~montage= montage.lua também vota em alguns casos
+    1000000 = preview na UI de accessories (vence quase tudo)
+
+3.2 Poll
+  A cada ~300 ms (+ eventos de montage), checkAccessories:
+    pergunta active_left / active_right
+    se mudou → attachHandToAccessory(hand, id) ou detach
+
+3.3 Attach real (mãos)
+  accessories.attachHandToAccessory → dispara:
+    on_accessory_attach   → hands.attachHandToTarget(...)
+    on_accessory_animation→ hands.setHoldingAttachment(...)
+    on_accessory_detach   → hands.restoreHandSnapshot
+
+  Ou seja: accessories.lua é o “cérebro do stick”;
+  hands.lua é o “músculo da mão”.
+
+3.4 Proximidade nativa (built-in)
+  Função proximityAccessoryForHand(hand):
+    - Precisa attachment na Right
+    - Varre accessories do attachmentID
+    - Só considera markers com activation_hand 2/3/4 (ou Always 8/9/10)
+    - Se dist(controller, socket+loc) <= activation_distance → retorna GUID
+    - Priority = 1
+    - NÃO exige grip do ombro / LB
+
+  Com activation_hand = 1 (None):
+    proximity NUNCA escolhe esse accessory.
+    É exatamente o que queremos para pump/rack “só com grip”.
+
+
+--------------------------------------------------------------------------------
+4. ESTRUTURA DO JSON (accessories_parameters.json)
+--------------------------------------------------------------------------------
+
+{
+  "accessories": {
+    "<attachmentID>": {
+      "<guid>": {
+        "label": "Nome amigável",
+        "markers": [
+          {
+            "activation_hand": 1,
+            "activation_distance": 13.3,
+            "attach_type": 0,
+            "socket_name": "bone_forearm",
+            "location": [x, y, z],
+            "rotation": [pitch, yaw, roll],
+            "grip_animation": "rifle_offhand",
+            "grip_priority": 1,
+            "start_time": 0.0,
+            "end_time": 0.0
+          }
+        ]
+      }
+    }
+  }
+}
+
+Entradas relevantes neste projeto:
+
+  Sniper Offhand
+    activation_hand = 2 (Left Proximity) → auto-stick por distância
+    (exemplo do modo “clássico” do sistema)
+
+  Pistol slide (1a9b2071-…)
+    label: "Pistol slide rack (manual reload)"
+    activation_hand = 1, distance = 0, socket slide_joint
+    → catálogo / defaults; NÃO é ativado pelo votador (ver §5)
+
+  Shotgun pump (39a84ebe-…)
+    label: "Shotgun pump (left grip)"
+    activation_hand = 1, distance ≈ 13.3, socket bone_forearm
+    → ativado pelo callback custom do shotgun_pump.lua (ver §6)
+
+
+--------------------------------------------------------------------------------
+5. PISTOLA — RACK DO SLIDE (USO “PARCIAL” / BYPASS)
+--------------------------------------------------------------------------------
+
+CONCLUSÃO DIRETA:
+  O rack da pistola NÃO usa o resolver active_left_accessory.
+  Ele NÃO cola a mão via checkAccessories / attachHandToAccessory(GUID).
+  O GUID no JSON da pistola quase nunca “liga” pelo poll.
+
+O que a pistola REUTILIZA do ecossistema accessories/hands:
+  Os callbacks de mão:
+    on_accessory_attach
+    on_accessory_detach
+    on_accessory_animation
+
+Fluxo real (main.lua — pistol reload):
+
+  1) Mag reseatado → awaitingRack = true
+  2) Mão esquerda perto de slide_joint
+       (distância: pistol_reload_slide_dist, default ~22)
+  3) Left grip (LEFT_SHOULDER) → slideGripping = true
+  4) attachPistolHandToSlide(mesh):
+       getPistolSlideHandAttachParams()
+         - loc/rot: sliders UI pistol_slide_hand_* (prioridade)
+         - socket / grip_animation / attach_type: pode ler do marker JSON
+           via accessories.getAccessoriesForAttachment + getPrimaryMarkerParams
+       - depois:
+           executeUEVRCallbacks("on_accessory_attach", Left, mesh, socket, …)
+           executeUEVRCallbacks("on_accessory_animation", Left, "rifle_offhand")
+  5) Pull rearward no eixo slide→muzzle
+       travel default 12; commit ≥ ~95%
+       (ou thumbrest direito se pistol_rack_thumbrest)
+  6) Soltar grip → detachPistolHandFromSlide
+       on_accessory_detach + limpa animação
+
+Por que bypass (não votar no active_left_accessory)?
+  - Precisa de sliders live de pose da mão (UI do main)
+  - Lógica de rack acoplada ao estado do reload (awaitingRack, mag, etc.)
+  - Controle frame-a-frame no input callback (prio 10), sem esperar poll 300ms
+  - Comentário no código: “Same path as shotgun two-hand offhand” refere-se
+    aos callbacks de MÃO, não ao pipeline de votação do GUID
+
+JSON da pistola com activation_hand=1 + distance=0:
+  Serve para impedir auto-stick se alguém ativasse o GUID pelo sistema,
+  e como fonte opcional de socket/grip_animation.
+
+
+--------------------------------------------------------------------------------
+6. SHOTGUN — PUMP (USO “COMPLETO” DO RESOLVER)
+--------------------------------------------------------------------------------
+
+CONCLUSÃO DIRETA:
+  O pump da shotgun USA accessories.lua de verdade:
+  registra active_left_accessory, vence a proximidade nativa (prio 2 > 1),
+  e deixa checkAccessories chamar attachHandToAccessory(GUID).
+
+Arquivo: scripts/shotgun_pump.lua
+
+Constantes:
+  ATTACHMENT_ID     = WeaponShotgun_Alt_D_BP_C_shotgun_05_A_rig
+  ACCESSORY_ID      = 39a84ebe-48be-41eb-a830-38913571dc5e
+  ACCESSORY_PRIORITY= 2
+  DEFAULT_DIST      = 13.3
+  PUMP_TRAVEL       = 8.0
+  PUMP_SOCKET       = bone_forearm
+  Soft refs prepare = +0xC38 / +0xC68  (gameplay — FORA do accessories)
+
+Passo a passo do stick:
+
+  A) disableProximityAutoStick()
+       força marker.activation_hand = 1 em runtime
+       (já está 1 no JSON; defesa contra UI gravar proximity de novo)
+
+  B) registerUEVRCallback("active_left_accessory", function()
+       - attachment atual é a shotgun?
+       - leftGripDown? (LB / LEFT_SHOULDER, setado no input prio 12)
+       - stuck OU isLeftNearPump(attachment, marker)?
+           isLeftNearPump usa marker.activation_distance (~13.3)
+           e socket/loc do marker
+       - se sim: return ACCESSORY_ID, 2
+     end)
+
+  C) Poll de accessories (300ms):
+       priority 2 vence proximity (1)
+       → attachHandToAccessory(Left, "39a84ebe-…")
+       → on_accessory_attach no bone_forearm com loc/rot do MARKER JSON
+
+  D) Pull (fora do attach — lógica do módulo):
+       updatePumpPull: eixo muzzle→forearm (rearward)
+       progress = delta / PUMP_TRAVEL
+       unlock se progress >= 0.85 e needsPump
+       reforçado no input callback prio 12 (não depende só do poll)
+
+Separação limpa de responsabilidades:
+
+  accessories.lua  →  “mão grudada no pump?”
+  shotgun_pump.lua →  “precisa bombear? puxou o bastante? libera tiro?”
+
+
+--------------------------------------------------------------------------------
+7. COMPARAÇÃO LADO A LADO
+--------------------------------------------------------------------------------
+
+                        PISTOLA RACK              SHOTGUN PUMP
+---------------------------------------------------------------------------
+Resolver active_*       NÃO                       SIM (prio 2)
+Stick via               on_accessory_* direto     attachHandToAccessory
+Fonte loc/rot           sliders UI main           marker JSON
+Socket                  slide_joint               bone_forearm
+Grip obrigatório        SIM (custom)              SIM (callback)
+Distância grab          pistol_reload_slide_dist  marker ~13.3
+Travel / commit         ~12 / ≥95% (+thumbrest)   8 / ≥85%
+Eixo do pull            slide → muzzle (inv)      muzzle → pump
+Poll 300ms importa?     Não (attach imediato)     Sim (stick) + input reforça
+JSON GUID ativo?        Quase nunca               Sim, é o ID votado
+Gameplay de fire        reload state / clip       needsPump / IsFireReady
+
+
+--------------------------------------------------------------------------------
+8. DOIS MODOS DE USAR accessories.lua (RECEITAS)
+--------------------------------------------------------------------------------
+
+MODO 1 — “Proximidade clássica” (ex.: sniper offhand)
+  JSON: activation_hand = 2, activation_distance = N
+  Sem callback custom.
+  Mão cola só de chegar perto. Bom para offhand estático.
+  RUIM para pump/rack (gruda sem querer, atrapalha mira).
+
+MODO 2 — “Grip-required via votador” ★ RECOMENDADO (padrão shotgun)
+  JSON: activation_hand = 1, activation_distance = raio do SEU teste
+  Callback active_left_accessory:
+    se grip + perto + arma certa → return GUID, priority >= 2
+  Pull / unlock / fire gates no seu módulo.
+  Bom para: pump, bolt, lever, slide se quiser integrar ao sistema.
+
+MODO 3 — “Bypass / attach direto” (padrão pistola)
+  JSON opcional (defaults de socket/anim).
+  Seu código chama on_accessory_attach / detach / animation direto.
+  Bom quando: UI live de pose, estados complexos de reload, timing
+  frame-perfect, ou lógica que não cabe no poll de 300ms.
+
+
+--------------------------------------------------------------------------------
+9. RECEITA PASSO A PASSO — NOVO “GRAB + PULL” (PADRÃO SHOTGUN)
+--------------------------------------------------------------------------------
+
+1. Descubra o attachmentID real da arma
+   MCP / log: attachments.getAttachmentIDFromAttachment(right grip)
+   Tem que bater EXATO com a chave do JSON.
+
+2. Escolha o socket
+   MCP: sockets do skeletal mesh (pump handle, bolt, slide, etc.)
+   Calibre location/rotation na UI de Accessories do UEVR.
+
+3. Crie o accessory no JSON
+   - Novo GUID
+   - label claro ("Xxx pump (left grip)")
+   - activation_hand = 1          ← crítico
+   - activation_distance = raio de grab (ex. 12–16)
+   - socket_name, location, rotation, grip_animation = rifle_offhand
+   - grip_priority = 1 (ou 2 se precisar vencer outra pose)
+
+4. Módulo Lua dedicado (evita estourar 200 locals do main)
+   local accessories = require("libs/accessories")
+   Constantes: ATTACHMENT_ID, ACCESSORY_ID, ACCESSORY_PRIORITY=2
+
+5. No init():
+   a) Forçar activation_hand = 1 no marker (defesa)
+   b) registerUEVRCallback("active_left_accessory", …)
+      return ID, 2 quando: arma certa + left grip + near socket
+   c) Input callback (prio alta) para ler grip e medir pull
+   d) Hooks de gameplay (bloquear fire / prepare / etc.) SEPARADOS
+
+6. NÃO use activation_hand = 2 se o gesto exige grip.
+   Isso reintroduz auto-stick (P1 do relatório do pump).
+
+7. Teste ordem:
+   - sem grip, perto → NÃO cola
+   - grip + perto → cola
+   - soltar grip → solta
+   - pull threshold → commit do gameplay
+   - offhand_grip_weapon / flashlight não deixam mão zumbi
+     (accessories.setDisabled detach Left)
+
+
+--------------------------------------------------------------------------------
+10. GOTCHAS IMPORTANTES (LIÇÕES DESTE PROJETO)
+--------------------------------------------------------------------------------
+
+1. Accessories assume arma na Right; offhand/pump/rack = Left no mesh da Right.
+
+2. activation_hand = 1 sozinho NÃO cola nada.
+   Sem callback (modo 2) ou attach direto (modo 3), o GUID é inerte.
+
+3. Distância no JSON com hand=1 NÃO alimenta proximity built-in.
+   Seu módulo precisa ler activation_distance (como isLeftNearPump).
+
+4. Priority importa:
+   proximity = 1 → seu grip accessory precisa > 1 (pump usa 2).
+   Preview UI = 1e6 → durante edição pode “roubar” a mão.
+
+5. Poll ~300 ms:
+   Stick via votador não é frame-perfect.
+   Meça pull no input callback (pump prio 12) além do accessory.
+
+6. accessories.setDisabled(true) detach a Left.
+   main.lua faz isso com offhand_grip_weapon / lanterna.
+   Se o pump “some”, cheque se accessories foi desabilitado.
+
+7. GUID deve viver sob o attachmentID CORRETO.
+   Se o ID do mesh mudou (outro BP/rig), o callback nunca acha o marker.
+
+8. Pistola e shotgun compartilham o IDIOMA VR (grudar → puxar atrás),
+   mas NÃO a mesma integração com o resolver.
+   Não copie o código da pistola achando que “usa accessories” do mesmo jeito.
+
+9. Soft refs / IsFireReady / RangedReload são gameplay paralelo.
+   Accessories não sabe de needsPump nem de clip.
+
+10. UI de Accessories pode regravar activation_hand = 2 se o usuário
+    editar o marker. Por isso o pump força hand=1 no init.
+
+
+--------------------------------------------------------------------------------
+11. APIs ÚTEIS (REFERÊNCIA RÁPIDA)
+--------------------------------------------------------------------------------
+
+accessories.setDisabled(bool)
+accessories.getAccessoriesForAttachment(attachmentID)
+accessories.getAccessoryParams(accessoryID)
+accessories.getPrimaryMarkerParams(accessoryParams)
+accessories.resolveMarkerParamsForTime(accessoryParams, time)
+accessories.attachHandToAccessory(handed, accessoryID, …)
+accessories.getConfigWidgets / createConfigCallbacks
+
+Callbacks para registrar ou disparar:
+  active_left_accessory / active_right_accessory   (votar GUID)
+  on_accessory_attach / on_accessory_detach        (mão)
+  on_accessory_animation                           (pose)
+  on_accessory_preview_changed                     (UI)
+  is_hands_animating_from_mesh                     (pose priority)
+
+attachments.getCurrentGrippedAttachment(Handed.Right)
+attachments.getAttachmentIDFromAttachment(att)
+
+
+--------------------------------------------------------------------------------
+12. QUANDO ESCOLHER CADA MODO
+--------------------------------------------------------------------------------
+
+Use MODO 2 (shotgun / votador) se:
+  - Quer o attach oficial do sistema (pose JSON, detach limpo)
+  - Gesto é “grudar no accessory da arma” reutilizável
+  - Não precisa de dezenas de sliders de pose no main
+
+Use MODO 3 (pistola / bypass) se:
+  - Pose da mão precisa de UI live no main
+  - Estado acoplado a um fluxo complexo (eject → hip → dock → rack)
+  - Precisa attach/detach no mesmo frame do input
+
+Use MODO 1 (proximidade) se:
+  - Offhand estático sem gesto de “acionar mecanismo”
+  - Auto-stick é desejável
+
+
+--------------------------------------------------------------------------------
+13. CHECKLIST DE VALIDAÇÃO
+--------------------------------------------------------------------------------
+
+[ ] attachmentID no JSON == ID runtime da arma
+[ ] activation_hand = 1 para grip-required
+[ ] Callback retorna (GUID, priority > 1) só com grip + near
+[ ] Sem grip, perto do socket → mão LIVRE
+[ ] Com grip + near → mão COLA + pose grip_animation
+[ ] Soltar grip → detach
+[ ] Pull mede eixo certo e commit no threshold
+[ ] Gameplay (fire/reload) NÃO depende do accessories para a verdade
+[ ] Toggle offhand / flashlight não deixa mão presa
+[ ] Editar marker na UI não reativou proximity (hand=2)
+
+
+--------------------------------------------------------------------------------
+14. CONCLUSÃO
+--------------------------------------------------------------------------------
+
+accessories.lua é a camada de “mão colada no socket da arma”.
+
+Neste projeto usamos DOIS padrões diferentes para o MESMO idioma VR
+(grudar + puxar para trás):
+
+  Shotgun pump  → integração COMPLETA (vota GUID, attach oficial)
+  Pistol rack   → BYPASS (chama on_accessory_* direto; JSON só catalisa)
+
+Para a próxima arma (bolt, lever, outra shotgun), prefira o padrão shotgun:
+  JSON hand=None + callback grip + priority>1 + pull no módulo.
+
+É mais limpo, reutiliza o poll/attach/detach do sistema, e evita misturar
+estado de reload inteiro dentro do main.lua.
+
+
+Relatórios relacionados:
+  data/dev/SHOTGUN_MANUAL_RELOAD_REPORT.txt
+  Videos/SHOTGUN_MANUAL_PUMP_REPORT.md
+
+
+================================================================================
+FIM DO RELATÓRIO ESPECIAL — accessories.lua
+================================================================================
