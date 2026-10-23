@@ -37,9 +37,9 @@ that contains SHProto.exe. Every "game folder" below means this folder.
 
 STEP 2 - UEVR
 
-2.1  Get UEVR. This package is tested with PureDark's AFW build of UEVR (UEVR-nightly AFW v1.0-beta.6), which
-is based on praydog's UEVR:
-https://github.com/praydog/UEVR
+2.1  Get PureDark's AFW build of UEVR, version UEVR_AFW_v1.0-beta.6 (the one this package is tested with). It is
+based on praydog's UEVR:
+https://github.com/PureDark/UEVR/releases/tag/UEVR_AFW_v1.0-beta.6
 
 2.2  Unpack it into its own folder anywhere you like.
 
@@ -104,7 +104,7 @@ jbusfield - the VR first-person mod this is built on: https://github.com/jbusfie
 LukasBlaster7 - manual reloads
 VynnGfx - Optimized Tweaks BASE: https://www.nexusmods.com/silenthill2/mods/42
 praydog - UEVR and the Silent Hill 2 UEVR plugin: https://github.com/praydog/UEVR
-PureDark - the AFW build of UEVR: https://github.com/PureDark
+PureDark - the AFW build of UEVR: https://github.com/PureDark/UEVR
 
 If someone should be credited here and is not, please open an issue on this repo and we will fix it as soon as
 possible. We honour correction and removal requests from rights holders.
