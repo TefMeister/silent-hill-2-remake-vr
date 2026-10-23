@@ -12,6 +12,7 @@
 #include "common.h"
 #include "params.h"
 #include "settings.h"
+#include "ue.h"
 #include "uevr/Plugin.hpp"
 
 using namespace sh2vr;
@@ -34,11 +35,33 @@ public:
         params::watch();
 
         std::string pawn = "none";
-        if (auto* p = API::get()->get_local_pawn(0); p != nullptr) pawn = narrow(p->get_full_name());
+        auto* p = API::get()->get_local_pawn(0);
+        if (p != nullptr) pawn = narrow(p->get_full_name());
         const auto* vr = API::get()->param()->vr;
         const bool hmd = vr != nullptr && vr->is_hmd_active();
         LOGI("%s alive: frame %u, %.1f ms avg, headset %s, pawn %s, params %d", TAG, m_frames, avg_ms, hmd ? "on" : "off", pawn.c_str(), params::loaded_count());
+        probe_calls(p);
     }
+
+private:
+    // Pass 1b: proves ue::call, the function-by-name door every module needs. Three shapes: no arguments with a
+    // struct return, an object argument with a float return (the pawn's distance to itself must be 0), and a bool
+    // argument with nothing returned. Logged once the pawn exists; archived when hands.cpp uses the door for real.
+    void probe_calls(API::UObject* pawn) {
+        if (pawn == nullptr || m_probed) return;
+        m_probed = true;
+        ue::Vec3 loc;
+        ue::Rot rot;
+        float dist = -1.0f;
+        const bool ok_loc = ue::call_ret(pawn, L"K2_GetActorLocation", {}, loc);
+        const bool ok_rot = ue::call_ret(pawn, L"K2_GetActorRotation", {}, rot);
+        const bool ok_dist = ue::call_ret(pawn, L"GetDistanceTo", {pawn}, dist);
+        const bool ok_void = ue::call(pawn, L"SetActorTickEnabled", {true});
+        LOGI("%s probe: location %s (%.1f %.1f %.1f), rotation %s (%.1f %.1f %.1f), distance to self %s (%.3f), void call %s", TAG,
+             ok_loc ? "ok" : "FAILED", loc.x, loc.y, loc.z, ok_rot ? "ok" : "FAILED", rot.pitch, rot.yaw, rot.roll,
+             ok_dist ? "ok" : "FAILED", dist, ok_void ? "ok" : "FAILED");
+    }
+    bool m_probed = false;
 
 private:
     uint32_t m_frames = 0, m_frames_at_beat = 0;
