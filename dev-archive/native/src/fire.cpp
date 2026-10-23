@@ -83,12 +83,12 @@ void install() {
     const bool ok = fn->hook_ptr(on_fire_performed_pre, on_fire_performed_post);
     auto* ready = cls->find_function(L"IsFireReady");
     const bool ok2 = ready != nullptr && ready->hook_ptr(on_is_fire_ready_pre, on_is_fire_ready_post);
-    LOGI("%s fire: hook on OnFirePerformed %s, on IsFireReady %s; probe key F9, force-ready toggle F10", TAG, ok ? "set" : "FAILED", ok2 ? "set" : "FAILED");
+    LOGI("%s fire: hook on OnFirePerformed %s, on IsFireReady %s; probe key F9, force-ready toggle F11", TAG, ok ? "set" : "FAILED", ok2 ? "set" : "FAILED");
     g_installed = true;
 }
 
 void on_message(UINT msg, WPARAM wparam) {
-    if (msg != WM_KEYDOWN) return;
+    if (msg != WM_KEYDOWN && msg != WM_SYSKEYDOWN) return;   // F10 and friends arrive as system keys
     if (wparam == settings::FIRE_PROBE_KEY) probe();
     if (wparam == settings::FIRE_FORCE_READY_KEY) {
         g_force_ready = !g_force_ready;

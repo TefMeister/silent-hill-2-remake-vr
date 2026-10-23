@@ -39,7 +39,7 @@ constexpr float IK_TELL_LUA_S = 1.0f;                  // how often the plugin n
 
 // ---- shooting without the aim stance (fire.cpp) ----
 constexpr unsigned FIRE_PROBE_KEY = 0x78;   // VK_F9: the probe key, sent to the game window from the session
-constexpr unsigned FIRE_FORCE_READY_KEY = 0x79; // VK_F10: toggles answering "ready" to the game's fire-ready check
+constexpr unsigned FIRE_FORCE_READY_KEY = 0x7A; // VK_F11 (F10 is a Windows system key and arrives differently): toggles answering "ready" to the game's fire-ready check
 constexpr float FIRE_PROBE_REPORT_S = 1.0f; // how long after the probe the shot count is reported
 
 } // namespace sh2vr::settings
