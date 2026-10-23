@@ -43,3 +43,19 @@ Port `hands.lua`, `hands_animation.lua`, `attachments.lua`, `accessories.lua`, `
 mesh components, montages) and check each has a C++ API equivalent; then port, add the two files to `PORTED`, and
 a headset check by Tefa decides. `MODEL: FABLE` for the design of how hands and attachments share state; the
 line-for-line part is Opus.
+
+## Pass 1b, the same evening: calling the game's functions by name `[verified-live 2026-10-23, n=1]`
+
+`src/ue.cpp` finds a UFunction on the object's class, lays the arguments out by the function's own parameter
+offsets (bool bit masks, int/float/double, objects, FName, FVector/FRotator/FTransform in UE5 doubles), calls it,
+and copies the return value back; a wrong argument count, kind or return size is refused with one log line.
+Probe on the loaded save (dll 02735712):
+
+```
+[sh2vr] probe: location ok (-54355.0 40897.5 -18145.3), rotation ok (0.0 -1.3 0.0), distance to self ok (0.000), void call ok
+```
+
+Four shapes proven: no arguments + struct return (`K2_GetActorLocation`, `K2_GetActorRotation`), an object
+argument + float return (`GetDistanceTo(self)` = 0.000, so the argument landed), a bool argument + no return
+(`SetActorTickEnabled(true)`). Not yet: out-parameters written back, strings, arrays. GPU peak 74 °C.
+Step 2's design: `2026-10-23c-hands-and-attachments-design.md`.
