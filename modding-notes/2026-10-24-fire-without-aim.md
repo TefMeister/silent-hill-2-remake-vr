@@ -27,17 +27,32 @@ home PC, probe build `sh2vr.dll` (`src/fire.cpp`, F9 probe, F10 force-ready).
 
 - The aim walking speed is the weapon's own `AimMovementData` (pistol: 120 forward/side/back; `WeaponMovementSet`
   unused, `bUseWeaponMovementSet` false). Writing 250 into the live pistol's `AimMovementData` made aim-walking
-  "much faster" (Tefa). `[verified-live 2026-10-24, n=1]` The normal unaimed walk and run numbers are still to be
-  measured (the movement component's `MaxWalkSpeed` read 108 standing and 120 while aim-walking).
+  "much faster" (Tefa). `[verified-live 2026-10-24, n=1]` Measured later the same night: walk ≈ 130, run ≈ 300 (below).
 - Clicking run while aiming does nothing: `ProcessSprintRequestedChangeEvent` on the ranged part was never called
   (hook count 0), so the run input is dropped before the gun part hears it — swallowed by the aim input mode, not
   blocked by `IsSprintBlocked` (false). `[verified-live 2026-10-24, n=1]`
 
+## The F11 test: forcing "ready" is not enough
+
+- With the UFunction `IsFireReady` hooked to answer true (F11 toggle, `fire.cpp`), the probe read "fire ready 1" and
+  `RequestManualFire(weapon)` still fired nothing with the gun lowered (Tefa: "i didn't hear a shot"). So the native
+  fire path checks its own state and never asks the UFunction; Lukas's forced answer only steers readers of the
+  UFunction (his own script, Blueprint callers). `[verified-live 2026-10-24, n=1]`
+- `RequestManualFire`'s UFunction thunk (exe image address 0x1429AB340) unpacks the Object argument and calls the real
+  `SHRangedCmbSubcomp::RequestManualFire` at **0x142A90FE0** (image base 0x140000000); that is the function to read
+  for the gate (ghidrust, offline). `[inferred-static 2026-10-24]`
+- Speeds measured on the movement component (`MaxWalkSpeed` cap / `Velocity`): walking ≈ 130 / 126, running ≈ 300 /
+  282, aim-walking 120 (the pistol's `AimMovementData`). `[measured 2026-10-24]`
+- Housekeeping: F10 never reached the plugin (Windows sends it as a system key; `on_message` now accepts
+  `WM_SYSKEYDOWN` too and the toggle is F11). Turning the headset off closed the game (UEVR/OpenXR session lost),
+  and this launch the game had rewritten its own settings to exclusive fullscreen 1920x1080; put back to a 1280x720
+  window in `GameUserSettings.ini` (backup in the local sh2-backups folder) while the game was closed.
+
 ## Where this leaves the design
 
-Two doors, to be chosen by the F10 test:
-1. **Force "ready" and fire lowered** (the RE2 way proper): if forced `IsFireReady` lets `RequestManualFire` fire a
-   lowered gun, the mod never enters the aim stance; walking and running are untouched.
+Two doors; the F11 test closed the cheap version of door 1, so door 1 now means reading the native gate:
+1. **Fire lowered** (the RE2 way proper): read the native `RequestManualFire` (0x142A90FE0) and the state it checks,
+   then either set that state ourselves or call the step after the gate; the mod never enters the aim stance.
 2. **Stay in the aim stance but take its costs away**: aim speed = walk speed per weapon, and run handled by us
    (the aim state's run drop is in `ProcessSprintRequestedChangeEvent`, blockable; the swallowed run input needs
    another route in: `SHDebug_Character_Movement_ForceSprint`, or driving the movement component directly).
