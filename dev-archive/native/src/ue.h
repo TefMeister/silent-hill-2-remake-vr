@@ -52,4 +52,15 @@ bool call_ret(API::UObject* obj, std::wstring_view fn, std::initializer_list<Arg
 
 std::string name_of(API::UObject* o);   // the object's full name in UTF-8, or "null"
 
+API::UClass* find_class(std::wstring_view path);    // "Class /Script/Engine.Actor"; cached; nullptr if not loaded
+API::UObject* cdo(std::wstring_view class_path);    // a class's default object: where static functions are called
+bool alive(API::UObject* o);                        // still a live object UEVR knows about
+API::FName name(std::wstring_view s);               // an FName from text
+std::wstring str(const API::FName& n);              // and back
+bool is_none(const API::FName& n);                  // the "None" name GetParentBone returns past the root
+
+// a property in place on an object, or nullptr (no write past a missing property)
+template <typename T>
+T* prop(API::UObject* o, std::wstring_view name) { return o != nullptr ? o->get_property_data<T>(name) : nullptr; }
+
 } // namespace sh2vr::ue

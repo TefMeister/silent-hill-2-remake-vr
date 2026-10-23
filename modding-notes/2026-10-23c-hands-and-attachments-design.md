@@ -64,3 +64,22 @@ struct Hand {            // src/hands.h
   through `ue::call` with an object return: supported.
 - The hands profile may spawn the hand mesh from an asset path (`find_instance_of`); `find_uobject` covers it if
   the asset is loaded, otherwise an asset load is needed (UEVR's Lua had the same limit).
+
+## Correction after the first headset look (2026-10-23 23:55, Tefa in the headset)
+
+Tefa saw **two pairs of hands**: the full IK arms and our new elbow-to-fingers pair; with the game out of focus
+(paused) only the elbow pair stayed. The cause: jbusfield's menu setting "Hands Type" (`data/sh2_config.json`
+`hands_type`) is **3 = IK Arms** on Tefa's PC (1 None, 2 Forearms, 3 IK Arms, `main.lua` `HandsType`), so
+`hands.lua` never made hands in Tefa's game; `ik.lua` makes the arms, and hides them on pause, which ours do not yet.
+`[verified-live 2026-10-23, n=1]` for the C++ forearm hands themselves: both made, attached to the controllers,
+90 bones set from the profile, nothing refused, they move with the controllers, the gun sits in the right hand.
+
+Fixed (installed at the next game start): `hands.cpp` makes the forearm hands only when `hands_type` is 2, and
+takes them down if the menu changes away from it. **The arms Tefa uses are `ik.lua` (2,576 lines) with
+`body_yaw.lua` (535), `collision.lua` (662) and `config/ik_config_dev.lua` (1,310 of settings): the core of step 2**,
+before attachments. The `Hand` record stays; it holds the IK arms' mesh when `hands_type` is 3.
+
+Tefa's notes from the same look, for the board: weapons must cast shadows under the flashlight (they do not now);
+fix the player's shadow if at all possible, with the head showing and the hands looking right. `main.lua` already
+says why the shadow is hard: *"These hide the arms but not the shadows and flashlight is still blocked even with
+arms hidden"* (the IK-arms mesh-created callback).

@@ -15,6 +15,7 @@ inline const std::vector<std::string> FILES = {
     "hands_parameters.json", "attachments_parameters.json", "accessories_parameters.json", "ik_parameters.json",
     "input_parameters.json", "montage_parameters.json", "pawn_parameters.json", "reticule_parameters.json",
     "collision_parameters.json", "remap_parameters.json", "ui_parameters.json", "gunstock_parameters.json",
+    "sh2_config.json",   // the pack's own menu choices (hands_type, handedness, light ...)
 };
 
 void load_all();                                // read every file; logs one line per file (keys, or why not)

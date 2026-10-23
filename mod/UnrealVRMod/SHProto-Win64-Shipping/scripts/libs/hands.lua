@@ -1330,6 +1330,9 @@ function M.setAutoCreateFileName(fileName)
 end
 
 local function tryAutoCreateHands()
+	-- sh2vr (2026-10-23): when the C++ plugin has taken the hands over, the deploy writes scripts/sh2vr_ported.lua
+	-- with SH2VR_PORTED.hands = true, and this module stops making its own.
+	if SH2VR_PORTED ~= nil and SH2VR_PORTED.hands == true then return end
 	if autoCreateHands and not M.exists() then
 		--see if the defaults params file exists
 		local paramsFile = autoCreateFileName

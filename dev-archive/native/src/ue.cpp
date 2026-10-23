@@ -2,6 +2,7 @@
 #include "ue.h"
 
 #include <cstring>
+#include <map>
 #include <set>
 #include <string>
 #include <vector>
@@ -93,11 +94,11 @@ bool call(API::UObject* obj, std::wstring_view fn, std::initializer_list<Arg> ar
         if (!p->is_param()) continue;
         if (p->is_return_param()) { ret_prop = p; continue; }
         if (p->is_out_param() && !p->is_reference_param()) continue;   // written by the function; not read back yet
-        if (i >= args.size()) return refuse(fn, "fewer arguments than parameters");
+        if (i >= args.size()) { ++i; continue; }   // a trailing parameter not given stays zero, as UEVR's Lua binding does
         if (!put(buf.data(), p, *(args.begin() + i))) return refuse(fn, "an argument does not match its parameter");
         ++i;
     }
-    if (i != args.size()) return refuse(fn, "more arguments than parameters");
+    if (i < args.size()) return refuse(fn, "more arguments than parameters");
     if (ret != nullptr) {
         if (ret_prop == nullptr) return refuse(fn, "it returns nothing, a return value was asked for");
         if (size_of(ret_prop) != ret_size) return refuse(fn, "the return value is a different size than asked for");
@@ -114,5 +115,25 @@ bool call(API::UObject* obj, std::wstring_view fn, std::initializer_list<Arg> ar
 }
 
 std::string name_of(API::UObject* o) { return o != nullptr ? narrow(o->get_full_name()) : "null"; }
+
+API::UClass* find_class(std::wstring_view path) {
+    static std::map<std::wstring, API::UClass*> cache;
+    auto it = cache.find(std::wstring(path));
+    if (it != cache.end() && it->second != nullptr) return it->second;
+    auto* c = API::get()->find_uobject<API::UClass>(path);
+    cache[std::wstring(path)] = c;
+    return c;
+}
+
+API::UObject* cdo(std::wstring_view class_path) {
+    auto* c = find_class(class_path);
+    return c != nullptr ? c->get_class_default_object() : nullptr;
+}
+
+bool alive(API::UObject* o) { return o != nullptr && API::UObjectHook::exists(o); }
+
+API::FName name(std::wstring_view s) { return API::FName(s); }
+std::wstring str(const API::FName& n) { return n.to_string(); }
+bool is_none(const API::FName& n) { return n.comparison_index == 0 || n.to_string() == L"None"; }
 
 } // namespace sh2vr::ue

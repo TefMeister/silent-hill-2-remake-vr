@@ -3,14 +3,17 @@
 #   bash dev-archive/native/tools/build.sh             build only
 #   bash dev-archive/native/tools/build.sh --deploy    build, back up what it replaces, install
 #   bash dev-archive/native/tools/build.sh --undo DIR  put a --deploy backup back
-# PORTED lists the Lua files already replaced by C++; --deploy moves them out of the profile (the originals stay in
-# mod/UnrealVRMod/...). Empty while the skeleton is the only thing built.
+# PORTED lists the modules the C++ has taken over. The Lua files stay (other Lua modules require them); --deploy
+# writes scripts/sh2vr_ported.lua with SH2VR_PORTED.<module> = true and the Lua module stands down when it sees it.
+# PATCHED lists our edited copies of pack files (mod/UnrealVRMod/...) that --deploy copies into the profile.
 set -euo pipefail
 HERE="$(cd "$(dirname "$0")/.." && pwd)"
 PROFILE="$APPDATA/UnrealVRMod/SHProto-Win64-Shipping"
+MODPROFILE="$HERE/../../mod/UnrealVRMod/SHProto-Win64-Shipping"
 BACKUPS="/d/SH2 builds"
 BUILD="$HERE/build"
-PORTED=()
+PORTED=(hands)
+PATCHED=(scripts/libs/hands.lua)
 
 undo() {
     local dir="$1"
@@ -38,9 +41,19 @@ mkdir -p "$BK/files/plugins"
 : > "$BK/ADDED.txt"
 if [ -f "$PROFILE/plugins/sh2vr.dll" ]; then cp -p "$PROFILE/plugins/sh2vr.dll" "$BK/files/plugins/"; else echo "plugins/sh2vr.dll" >> "$BK/ADDED.txt"; fi
 cp "$DLL" "$PROFILE/plugins/sh2vr.dll" && echo "installed plugins/sh2vr.dll"
-for f in "${PORTED[@]}"; do
-    [ -f "$PROFILE/scripts/$f" ] || continue
-    mkdir -p "$BK/files/scripts"; cp -p "$PROFILE/scripts/$f" "$BK/files/scripts/"; rm "$PROFILE/scripts/$f"; echo "ported, Lua removed: scripts/$f"
+for f in "${PATCHED[@]}"; do
+    if cmp -s "$MODPROFILE/$f" "$PROFILE/$f"; then echo "same    $f"; continue; fi
+    mkdir -p "$BK/files/$(dirname "$f")"; [ -f "$PROFILE/$f" ] && cp -p "$PROFILE/$f" "$BK/files/$f"
+    cp "$MODPROFILE/$f" "$PROFILE/$f" && echo "patched $f"
 done
+FLAG="scripts/sh2vr_ported.lua"
+if [ -f "$PROFILE/$FLAG" ]; then mkdir -p "$BK/files/scripts"; cp -p "$PROFILE/$FLAG" "$BK/files/$FLAG"; else echo "$FLAG" >> "$BK/ADDED.txt"; fi
+{
+    echo "-- written by sh2vr's build.sh --deploy: the modules the C++ plugin has taken over (their Lua stands down)"
+    echo "SH2VR_PORTED = {"
+    for m in "${PORTED[@]}"; do echo "    $m = true,"; done
+    echo "}"
+} > "$PROFILE/$FLAG"
+echo "ported: ${PORTED[*]:-none} (written to $FLAG)"
 echo "deployed; backup in: $BK"
 echo "undo:  bash dev-archive/native/tools/build.sh --undo \"$BK\""
