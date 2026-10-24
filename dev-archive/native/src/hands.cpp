@@ -2,6 +2,7 @@
 #include "hands.h"
 
 #include "animation.h"
+#include "fingers.h"
 #include "params.h"
 #include "settings.h"
 #include "ue.h"
@@ -107,6 +108,7 @@ bool create_side(Side side, API::UObject* skeletal, const json::Value& def, cons
     }
     int bones = 0;
     if (initial != nullptr) if (const auto* b = initial->get(side == LEFT ? "left_hand" : "right_hand")) bones = anim::initialize_bones(h.component, *b);
+    if (side_def != nullptr) if (auto* a = side_def->get("AnimationID"); a != nullptr && a->kind == json::Value::STR) fingers::add(a->s, h.component);   // the finger poses
     LOGI("%s hands: %s hand made on %s, attached %s, joint %s, %d bones set from the profile", TAG, side == LEFT ? "left" : "right",
          ue::name_of(h.controller).c_str(), attached ? "yes" : "NO", joint.c_str(), bones);
     return true;
@@ -176,6 +178,7 @@ void hide(Side side, bool hidden) {   // hideHand
 
 void destroy() {   // destroyHands
     for (auto& h : g_hands) {
+        fingers::remove(h.component);
         if (ue::alive(h.component)) ue::call(h.component, L"K2_DestroyComponent", {h.component});
         h.component = h.controller = nullptr;
     }

@@ -9,6 +9,7 @@
 //   animation.cpp  animation.lua: bone transforms on a PoseableMeshComponent (a library)
 //   hands.cpp      hands.lua: the forearm hands (Hands Type 2), made from hands_parameters.json, hung on the controllers
 //   ik.cpp         ik.lua: the IK arms (Hands Type 3, the one in use): a poseable body copy with a two-bone solver per arm
+//   fingers.cpp    hands_animation.lua + the pose half of animation.lua: finger poses on both kinds of hands
 //   fire.cpp       new: shooting without the aim stance (probe first)
 //   ammo.cpp       new: the rounds in the gun, read and checked at every shot (manual-reload port, step 1)
 //   crosshair.cpp  new: the game's HUD crosshair hidden for good (Tefa 2026-10-24: not used in the game at all)
@@ -20,6 +21,7 @@
 #include "bridge.h"
 #include "common.h"
 #include "crosshair.h"
+#include "fingers.h"
 #include "fire.h"
 #include "hands.h"
 #include "ik.h"
@@ -33,7 +35,7 @@ namespace {
 class SH2Plugin : public uevr::Plugin {
 public:
     void on_initialize() override {
-        LOGI("%s loaded: hands + IK arms + no crosshair, API %d.%d.%d", TAG, UEVR_PLUGIN_VERSION_MAJOR, UEVR_PLUGIN_VERSION_MINOR, UEVR_PLUGIN_VERSION_PATCH);
+        LOGI("%s loaded: hands + IK arms + finger poses + no crosshair, API %d.%d.%d", TAG, UEVR_PLUGIN_VERSION_MAJOR, UEVR_PLUGIN_VERSION_MINOR, UEVR_PLUGIN_VERSION_PATCH);
         params::load_all();
     }
 
@@ -41,12 +43,15 @@ public:
 
     bool on_message(HWND, UINT msg, WPARAM wparam, LPARAM) override { fire::on_message(msg, wparam); return true; }
 
+    void on_xinput_get_state(uint32_t*, uint32_t, XINPUT_STATE* state) override { if (state != nullptr) fingers::on_input(*state); }
+
     void on_pre_engine_tick(API::UGameEngine*, float delta) override {
         if (API::get()->get_local_pawn(0) != nullptr) fire::install();   // the weapon class is loaded by then
         fire::tick(delta);
         crosshair::find(delta);
         ik::tick(delta);
         hands::tick(delta);
+        fingers::tick(delta);
         heartbeat(delta);
     }
 
@@ -64,8 +69,8 @@ private:
         params::watch();
         const auto* vr = API::get()->param()->vr;
         const bool hmd = vr != nullptr && vr->is_hmd_active();
-        LOGI("%s alive: frame %u, %.1f ms avg, headset %s, pawn %s, hands %s, arms %s, crosshair re-hidden %d", TAG, m_frames, avg_ms, hmd ? "on" : "off",
-             API::get()->get_local_pawn(0) != nullptr ? "yes" : "none", hands::exists() ? "made" : "not yet", ik::exists() ? "made" : "not yet", crosshair::shown_again());
+        LOGI("%s alive: frame %u, %.1f ms avg, headset %s, pawn %s, hands %s, arms %s, finger poses on %d hand(s), crosshair re-hidden %d", TAG, m_frames, avg_ms, hmd ? "on" : "off",
+             API::get()->get_local_pawn(0) != nullptr ? "yes" : "none", hands::exists() ? "made" : "not yet", ik::exists() ? "made" : "not yet", fingers::count(), crosshair::shown_again());
     }
 
     uint32_t m_frames = 0, m_frames_at_beat = 0;

@@ -12,6 +12,7 @@
 #include <vector>
 
 #include "bridge.h"
+#include "fingers.h"
 #include "controllers.h"
 #include "ikmath.h"
 #include "params.h"
@@ -119,6 +120,7 @@ bool g_logged_wait = false;
 Transform identity() { return Transform{}; }
 void destroy_rig(Rig* rig) {
     if (rig == nullptr) return;
+    fingers::remove(rig->mesh);
     if (ue::alive(rig->mesh)) ue::call(rig->mesh, L"K2_DestroyComponent", {rig->mesh});
     if (ue::alive(rig->actor)) ue::call(rig->actor, L"K2_DestroyActor", {});
     delete rig;
@@ -523,6 +525,22 @@ void collapse_body(Rig& rig, const json::Value& prof) {   // updateBonesVisibili
     set_bone_scale(rig.mesh, ue::name(wide(rs)), one, CS);
 }
 
+// Rig:initHandAnimations: the first profile of hands_parameters.json, its first mesh entry ("Arms"), both hands'
+// AnimationIDs on our one mesh (the Lua gave the first unused mesh to the first key; there is one mesh here)
+void finger_poses(API::UObject* mesh) {
+    const json::Value* f = params::file("hands_parameters.json");
+    const json::Value* profiles = f != nullptr ? f->get("profiles") : nullptr;
+    if (profiles == nullptr || profiles->kind != json::Value::OBJ || profiles->obj.empty()) return;
+    const json::Value& profile = profiles->obj.begin()->second;
+    if (profile.kind != json::Value::OBJ || profile.obj.empty()) return;
+    const json::Value& arms = profile.obj.begin()->second;
+    for (const char* side : {"Left", "Right"}) {
+        const json::Value* sd = arms.get(side);
+        const json::Value* id = sd != nullptr ? sd->get("AnimationID") : nullptr;
+        if (id != nullptr && id->kind == json::Value::STR) fingers::add(id->s, mesh);
+    }
+}
+
 bool create(API::UObject* pawn) {
     const json::Value* prof = profile();
     if (prof == nullptr) { if (!g_logged_wait) LOGW("%s ik: no profile in ik_parameters.json", TAG); g_logged_wait = true; return false; }
@@ -600,6 +618,7 @@ bool create(API::UObject* pawn) {
     rig->root_bone = narrow(ue::str(bone_name(mesh, 0)));
     g_rig = rig;
     g_logged_wait = false;
+    finger_poses(mesh);
     std::string names;
     for (const auto& s : rig->solvers) names += (names.empty() ? "" : ", ") + s.label + " (" + s.start_bone + " > " + s.joint_bone + " > " + s.end_bone + ", " + std::to_string(s.twist_bones.size()) + " twist bones)";
     LOGI("%s ik: arms made from %s, attached to the pawn root %s, %d bones, solvers: %s", TAG, mesh_name.c_str(), attached ? "yes" : "NO", n, names.c_str());
