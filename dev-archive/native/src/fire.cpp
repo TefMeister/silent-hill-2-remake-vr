@@ -3,6 +3,7 @@
 
 #include <string>
 
+#include "ammo.h"
 #include "settings.h"
 #include "ue.h"
 
@@ -33,9 +34,10 @@ void on_is_fire_ready_post(API::UFunction*, API::UObject*, void* params, void*) 
 bool on_fire_performed_pre(API::UFunction*, API::UObject* weapon, void*, void*) {
     ++g_shots_performed;
     LOGI("%s fire: shot performed #%d by %s", TAG, g_shots_performed, ue::name_of(weapon).c_str());
+    ammo::check(weapon, "shot, before");
     return true;   // let it run
 }
-void on_fire_performed_post(API::UFunction*, API::UObject*, void*, void*) {}
+void on_fire_performed_post(API::UFunction*, API::UObject* weapon, void*, void*) { ammo::check(weapon, "shot, after"); }
 
 API::UObject* combat_of(API::UObject* pawn) {
     auto** c = ue::prop<API::UObject*>(pawn, L"Combat");

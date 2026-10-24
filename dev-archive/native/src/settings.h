@@ -42,4 +42,15 @@ constexpr unsigned FIRE_PROBE_KEY = 0x78;   // VK_F9: the probe key, sent to the
 constexpr unsigned FIRE_FORCE_READY_KEY = 0x7A; // VK_F11 (F10 is a Windows system key and arrives differently): toggles answering "ready" to the game's fire-ready check
 constexpr float FIRE_PROBE_REPORT_S = 1.0f; // how long after the probe the shot count is reported
 
+// ---- no crosshair (crosshair.cpp) ----
+constexpr const wchar_t* CROSSHAIR_WIDGET_CLASS =   // the game's HUD crosshair, as reticule_parameters.json names it
+    L"WidgetBlueprintGeneratedClass /Game/Game/UI/GameplayHUD/Crosshairs/CrosshairContainer_WidgetBP.CrosshairContainer_WidgetBP_C";
+constexpr float CROSSHAIR_FIND_S = 1.0f;       // how often the list of crosshair widgets is refreshed (a new HUD makes new ones)
+constexpr int SLATE_COLLAPSED = 1;             // ESlateVisibility: Visible 0, Collapsed 1, Hidden 2, HitTestInvisible 3, SelfHitTestInvisible 4
+
+// ---- the manual-reload port (ammo.cpp; modding-notes/2026-10-24b-manual-reloads-re8-recipe-design.md) ----
+// LukasBlaster7's "MCP-confirmed" numbers for the game build he had [reported]:
+constexpr size_t CLIP_ROUNDS_OFFSET = 0xBB4;   // the rounds in the gun, an int on the weapon (HasAnyAmmoInClip reads it)
+constexpr const char* RELOAD_GUN_CLASSES[] = {"WeaponPistol_BP_C", "WeaponShotgun_Alt_D_BP_C", "WeaponRifle_BP_C"};
+
 } // namespace sh2vr::settings
