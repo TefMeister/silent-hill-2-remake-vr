@@ -115,6 +115,16 @@ function M.setHoldingAttachment(hand, val)
 	M.updateAnimationState(hand)
 end
 
+-- sh2vr (2026-10-24): what updateAnimationState would use for this hand, for the C++ plugin's finger poses
+-- (sh2vr_bridge.lua sends it): the accessory override when one is set, else the attachment's grip animation.
+function M.getEffectiveAttachment(hand)
+	local attachment = holdingAttachment[hand]
+	if attachment == nil then
+		attachment = attachments.getCurrentGripAnimation(hand)
+	end
+	return attachment
+end
+
 function M.updateAnimationState(hand)
 	if M.exists() then
 		local attachment = holdingAttachment[hand]
