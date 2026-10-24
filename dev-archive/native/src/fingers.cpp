@@ -177,7 +177,11 @@ bool thumb_resting(Hand hand) {   // is_action_active(ThumbrestTouch<side>, that
 
 void add(const std::string& anim_id, API::UObject* component) {
     if (component == nullptr || anim_id.empty()) return;
-    remove(component);
+    // the IK arms register both hands on ONE mesh (first run 2026-10-24: "finger poses on 1 hand(s)", the left was
+    // dropped by a remove-by-component here), so only a handler with the same name is replaced
+    for (size_t i = 0; i < g_handlers.size();) {
+        if (g_handlers[i].id == anim_id) g_handlers.erase(g_handlers.begin() + (ptrdiff_t)i); else ++i;
+    }
     Handler h;
     h.id = anim_id;
     const size_t us = anim_id.rfind('_');

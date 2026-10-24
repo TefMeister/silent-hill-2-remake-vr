@@ -10,7 +10,11 @@
 //   hands.cpp      hands.lua: the forearm hands (Hands Type 2), made from hands_parameters.json, hung on the controllers
 //   ik.cpp         ik.lua: the IK arms (Hands Type 3, the one in use): a poseable body copy with a two-bone solver per arm
 //   fingers.cpp    hands_animation.lua + the pose half of animation.lua: finger poses on both kinds of hands
-//   fire.cpp       new: shooting without the aim stance (probe first)
+//   fire.cpp       new: the right trigger fires a lowered gun through the weapon's own fire (door B)
+//   rack.cpp       new: the pistol slide by hand, the RE8 recipe (LG puts the hand on, LT makes it rackable)
+//   reload.cpp     new: the pistol magazine by hand (right B out, the hip ammo spot, back into the seat)
+//   ghosthand.cpp  new: the Ghost Hand BeG0nE recorder of those gestures
+//   input.cpp      the pad as the plugin last saw it, for the reload modules
 //   ammo.cpp       new: the rounds in the gun, read and checked at every shot (manual-reload port, step 1)
 //   crosshair.cpp  new: the game's HUD crosshair hidden for good (Tefa 2026-10-24: not used in the game at all)
 // Shared doors: ue.cpp (the game's functions by name), params.cpp (the pack's saved parameter files).
@@ -23,6 +27,10 @@
 #include "crosshair.h"
 #include "fingers.h"
 #include "fire.h"
+#include "ghosthand.h"
+#include "input.h"
+#include "rack.h"
+#include "reload.h"
 #include "hands.h"
 #include "ik.h"
 #include "params.h"
@@ -43,15 +51,24 @@ public:
 
     bool on_message(HWND, UINT msg, WPARAM wparam, LPARAM) override { fire::on_message(msg, wparam); return true; }
 
-    void on_xinput_get_state(uint32_t*, uint32_t, XINPUT_STATE* state) override { if (state != nullptr) fingers::on_input(*state); }
+    void on_xinput_get_state(uint32_t*, uint32_t, XINPUT_STATE* state) override {
+        if (state == nullptr) return;
+        input::on_state(*state);     // the raw pad, for the reload modules
+        fingers::on_input(*state);   // the finger poses read the trigger as pulled, even when fire keeps it from the game
+        fire::on_input(*state);
+    }
 
     void on_pre_engine_tick(API::UGameEngine*, float delta) override {
         if (API::get()->get_local_pawn(0) != nullptr) fire::install();   // the weapon class is loaded by then
         fire::tick(delta);
         crosshair::find(delta);
+        reload::tick(delta);
+        rack::tick(delta);       // sets the left-hand override the IK solve reads
         ik::tick(delta);
         hands::tick(delta);
         fingers::tick(delta);
+        ghosthand::tick();       // after the solves: the hands where they are drawn
+        input::end_tick();
         heartbeat(delta);
     }
 

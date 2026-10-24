@@ -114,6 +114,9 @@ struct Rig {
     float since_told = settings::IK_TELL_LUA_S;   // so the first tick tells the Lua at once
 };
 Rig* g_rig = nullptr;
+bool g_ov_on = false;              // rack.cpp holds the left hand on the slide
+Vec3 g_ov_pos;
+Rot g_ov_rot;
 float g_since_try = settings::HANDS_RETRY_S;
 bool g_logged_wait = false;
 
@@ -390,6 +393,7 @@ void solve_two_bone(Rig& rig, Solver& s) {
     const Transform c2w = comp_to_world(m);
     const Vec3 shoulder_ws = bone_loc(m, s.start_f, WS);
     Vec3 effector_ws = add(ctrl_pos_ws, rotate(s.hand_offset, ctrl_rot_ws));
+    if (s.hand == controllers::LEFT && g_ov_on) { effector_ws = g_ov_pos; ctrl_rot_ws = g_ov_rot; }   // rack.cpp: the hand rides the slide
     const Rot ctrl_rot_cs = inverse_transform_rotation(c2w, ctrl_rot_ws);
     if (s.smoothing > 0) {
         const Vec3 off_cs = inverse_transform_direction(c2w, sub(effector_ws, shoulder_ws));
@@ -668,5 +672,13 @@ void tick(float delta) {
 bool exists() { return g_rig != nullptr; }
 API::UObject* mesh() { return g_rig != nullptr ? g_rig->mesh : nullptr; }
 void destroy() { destroy_rig(g_rig); g_rig = nullptr; bridge::tell_lua("sh2vr_ik_mesh", ""); }
+
+void override_left(bool on, const Vec3& effector_ws, const Rot& rot_ws) { g_ov_on = on; g_ov_pos = effector_ws; g_ov_rot = rot_ws; }
+
+bool hand_world(controllers::Side side, Vec3& out) {
+    if (g_rig == nullptr || !ue::alive(g_rig->mesh)) return false;
+    for (const auto& s : g_rig->solvers) if (s.hand == side) { out = bone_loc(g_rig->mesh, s.end_f, WS); return true; }
+    return false;
+}
 
 } // namespace sh2vr::ik

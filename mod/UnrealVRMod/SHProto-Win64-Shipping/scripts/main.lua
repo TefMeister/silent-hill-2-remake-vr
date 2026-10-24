@@ -3098,6 +3098,9 @@ local function commitPistolReload(inputState, weapon, mesh)
 end
 
 local function handlePistolManualReload(inputState, delta)
+	-- sh2vr (2026-10-24): when the C++ plugin has taken the pistol reload over, scripts/sh2vr_ported.lua sets
+	-- SH2VR_PORTED.reload = true and this block stands down (its hooks are never installed).
+	if SH2VR_PORTED ~= nil and SH2VR_PORTED.reload == true then return false end
 	ensurePistolReloadPlayHooks()
 	if configui.getValue("pistol_manual_reload") == false then
 		if pistolReload.active or pistolReload.handMag ~= nil or pistolReload.magEjected or pistolReload.awaitingRack then
@@ -3567,10 +3570,14 @@ uevrUtils.registerOnPreInputGetStateCallback(function(retval, user_index, state)
 				pcall(function() sprinting = movement:IsSprinting() == true end)
 			end
 			local alwaysAim = configui.getValue("always_aim") ~= false and gunOut and not (sprintRequested or sprinting or (status.sprintGraceFrames or 0) > 0)
+			-- sh2vr (2026-10-24 16:40): with the C++ fire module ported (SH2VR_PORTED.fire), the trigger alone no longer
+			-- forces the aim: the plugin fires the lowered gun itself (the weapon's own fire, door B) and keeps the press
+			-- from the game; only the right grip (or always_aim) aims, and then the game's own trigger fires as before
+			local triggerAims = rightTriggerPressed and not (SH2VR_PORTED ~= nil and SH2VR_PORTED.fire == true)
 			if blockEmptyAim or blockShotgunPump or blockShotgunEmpty or blockRifleBolt or blockRifleEmpty then
 				state.Gamepad.bLeftTrigger = 0
 				state.Gamepad.bRightTrigger = 0
-			elseif rightTriggerPressed or rightGripPressed or alwaysAim then
+			elseif triggerAims or rightGripPressed or alwaysAim then
 				local holdingShell = (shotgunReload ~= nil
 						and shotgunReload.isHoldingShell ~= nil
 						and shotgunReload.isHoldingShell())

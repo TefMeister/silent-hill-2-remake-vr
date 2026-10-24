@@ -1,0 +1,200 @@
+// reload.cpp -- see reload.h. The states are Visceral RE8's reload.cpp's, cut down to the pistol magazine; the
+// magazine's drawing is the game's: the pistol's own magazine bones are hidden while it is out, the game's
+// HandgunAmmoClosed static mesh rides the left controller while one is carried (the pack's numbers for its fit).
+#include "reload.h"
+
+#include <cmath>
+
+#include "ammo.h"
+#include "ghosthand.h"
+#include "gun.h"
+#include "ikmath.h"
+#include "input.h"
+#include "rack.h"
+#include "settings.h"
+
+namespace sh2vr::reload {
+
+using namespace sh2vr::ikmath;
+using gun::Rot;
+using gun::Transform;
+using gun::Vec3;
+
+namespace {
+enum class St { SEATED, DROPPED, IN_HAND };   // not OUT: a Windows macro
+const char* st_name(St s) { return s == St::SEATED ? "seated" : s == St::DROPPED ? "out" : "in the left hand"; }
+
+St g_st = St::SEATED;
+API::UObject* g_weapon = nullptr;
+API::UObject* g_hand_mesh = nullptr;   // the magazine on the left controller
+int g_mag_rounds = 0;                  // rounds that left with the magazine
+bool g_dry = false;                    // the gun was empty when its magazine came out
+bool g_in_pouch = false;
+bool g_bones_hidden = false;
+float g_since_grab = 99.0f;
+double g_closest = 9999.0;
+int g_mesh_missing_logs = 0;
+
+void set_state(St s, const char* why) {
+    LOGI("%s reload: magazine %s -> %s (%s)", TAG, st_name(g_st), st_name(s), why);
+    g_st = s;
+}
+
+void mag_bones(API::UObject* w, bool hidden) {
+    if (hidden == g_bones_hidden) return;
+    API::UObject* m = gun::mesh(w);
+    if (m == nullptr) return;
+    for (const wchar_t* b : settings::MAG_BONES) {
+        if (hidden) ue::call(m, L"HideBoneByName", {ue::name(b), (int32_t)0});   // EPhysBodyOp::PBO_None
+        else ue::call(m, L"UnHideBoneByName", {ue::name(b)});
+    }
+    g_bones_hidden = hidden;
+}
+
+// the ammo spot: from the headset, to the left, down, a little forward (the pack's holster numbers)
+bool pouch_spot(Vec3& out) {
+    Vec3 h;
+    Rot r;
+    if (!gun::hmd(h, r)) return false;
+    const Vec3 f = rotate(Vec3{1, 0, 0}, r), right = rotate(Vec3{0, 1, 0}, r), up = rotate(Vec3{0, 0, 1}, r);
+    out = add(add(add(h, mul(right, settings::HIP_RIGHT_CM)), mul(up, settings::HIP_UP_CM)), mul(f, settings::HIP_FORWARD_CM));
+    return true;
+}
+
+void destroy_hand_mesh() {
+    if (ue::alive(g_hand_mesh)) ue::call(g_hand_mesh, L"K2_DestroyComponent", {g_hand_mesh});
+    g_hand_mesh = nullptr;
+}
+
+// the game's magazine mesh on the left controller (uevr_utils.createStaticMeshComponent + the pack's hand-mag fit)
+void make_hand_mesh() {
+    destroy_hand_mesh();
+    API::UObject* ctrl = controllers::find(controllers::LEFT);
+    auto* asset = API::get()->find_uobject<API::UObject>(settings::HAND_MAG_MESH);
+    auto* cls = ue::find_class(L"Class /Script/Engine.StaticMeshComponent");
+    API::UObject* owner = nullptr;
+    if (ctrl != nullptr) ue::call_ret(ctrl, L"GetOwner", {}, owner);
+    if (asset == nullptr || cls == nullptr || owner == nullptr) {
+        if (g_mesh_missing_logs++ < 3) LOGW("%s reload: no magazine to draw in the hand (mesh asset %s, component class %s, controller owner %s); the gesture still works", TAG, asset ? "found" : "NOT LOADED", cls ? "ok" : "missing", owner ? "ok" : "missing");
+        return;
+    }
+    Transform t;
+    API::UObject* comp = nullptr;
+    if (!ue::call_ret(owner, L"AddComponentByClass", {(API::UObject*)cls, true, t, false}, comp) || comp == nullptr) { LOGW("%s reload: could not make the hand magazine component", TAG); return; }
+    ue::call(comp, L"SetStaticMesh", {asset});
+    ue::call(comp, L"SetCollisionEnabled", {(int32_t)0});
+    bool attached = false;
+    ue::call_ret(comp, L"K2_AttachTo", {ctrl, ue::name(L""), (int32_t)0, false}, attached);
+    ue::call(comp, L"K2_SetRelativeLocationAndRotation", {Vec3{settings::HAND_MAG_LOC[0], settings::HAND_MAG_LOC[1], settings::HAND_MAG_LOC[2]},
+                                                           Rot{settings::HAND_MAG_ROT[0], settings::HAND_MAG_ROT[1], settings::HAND_MAG_ROT[2]}, false, false});
+    ue::call(comp, L"SetVisibility", {true});
+    ue::call(comp, L"SetHiddenInGame", {false});
+    g_hand_mesh = comp;
+}
+
+void drop(API::UObject* w) {
+    g_mag_rounds = ammo::rounds(w);
+    g_dry = g_mag_rounds <= 0;
+    ammo::set_rounds(w, 0);
+    mag_bones(w, true);
+    set_state(St::DROPPED, "right B");
+    gun::buzz(controllers::RIGHT, settings::BUZZ_GRAB_AMP, settings::BUZZ_S);
+    LOGI("%s reload: magazine out with %d round(s) in it, %d carried", TAG, g_mag_rounds, ammo::carried(w));
+}
+
+void grab(API::UObject* w) {
+    if (ammo::carried(w) <= 0 && g_mag_rounds <= 0) {
+        LOGI("%s reload: the ammo spot is empty (nothing carried, none in the dropped magazine)", TAG);
+        gun::buzz(controllers::LEFT, settings::BUZZ_DENY_AMP, settings::BUZZ_S);
+        return;
+    }
+    make_hand_mesh();
+    g_closest = 9999.0;
+    set_state(St::IN_HAND, "taken from the ammo spot");
+    ghosthand::event("mag", "start");
+    gun::buzz(controllers::LEFT, settings::BUZZ_GRAB_AMP, settings::BUZZ_S);
+}
+
+void insert(API::UObject* w, double d) {
+    const int cap = ammo::clip_size(w);
+    const int want = cap - g_mag_rounds;
+    const int took = want > 0 ? ammo::take_carried(w, want) : 0;
+    const int total = g_mag_rounds + took;
+    ammo::fill(w, total);
+    g_mag_rounds = 0;
+    destroy_hand_mesh();
+    mag_bones(w, false);
+    set_state(St::SEATED, "brought to the gun");
+    ghosthand::value("mag_closest_cm", (float)d);
+    ghosthand::event("mag", "done");
+    gun::buzz(controllers::LEFT, settings::BUZZ_DONE_AMP, settings::BUZZ_S);
+    if (g_dry && total > 0) rack::need("a magazine into an empty gun");
+    g_dry = false;
+    LOGI("%s reload: new magazine: %d round(s) (%d from the carried ammo, capacity %d), %d carried now", TAG, total, took, cap, ammo::carried(w));
+}
+} // namespace
+
+bool managed() { return g_weapon != nullptr && gun::hmd_active(); }
+bool mag_out() { return managed() && g_st != St::SEATED; }
+bool mag_in_hand() { return managed() && g_st == St::IN_HAND; }
+bool hand_busy() { return mag_in_hand(); }
+bool blocks_fire() { return mag_out(); }
+void on_racked() {}
+
+void reset(const char* why) {
+    if (g_st != St::SEATED) LOGI("%s reload: magazine put back as it was (%s): %d round(s)", TAG, why, g_mag_rounds);
+    if (g_st != St::SEATED && ue::alive(g_weapon)) ammo::set_rounds(g_weapon, g_mag_rounds);
+    destroy_hand_mesh();
+    if (ue::alive(g_weapon)) mag_bones(g_weapon, false);
+    g_bones_hidden = false;
+    g_st = St::SEATED;
+    g_mag_rounds = 0;
+    g_dry = false;
+    g_weapon = nullptr;
+}
+
+void tick(float delta) {
+    g_since_grab += delta;
+    API::UObject* w = gun::equipped();
+    if (!gun::is_pistol(w) || !gun::hmd_active()) { if (g_weapon != nullptr) reset(gun::is_pistol(w) ? "no headset" : "no pistol in hand"); return; }
+    if (w != g_weapon) { if (g_weapon != nullptr) reset("another pistol"); g_weapon = w; }
+
+    Vec3 left, spot;
+    Rot left_rot;
+    if (!gun::controller(controllers::LEFT, left, left_rot)) return;
+    if (pouch_spot(spot)) {
+        const double d = size(sub(left, spot));
+        if (!g_in_pouch && d < settings::HIP_ENTER_CM) { g_in_pouch = true; if (g_st == St::DROPPED) gun::buzz(controllers::LEFT, settings::BUZZ_DENY_AMP, settings::BUZZ_S); }
+        else if (g_in_pouch && d > settings::HIP_LEAVE_CM) g_in_pouch = false;
+    }
+    const bool lg = input::held(XINPUT_GAMEPAD_LEFT_SHOULDER);
+
+    switch (g_st) {
+    case St::SEATED:
+        if (input::pressed(XINPUT_GAMEPAD_B) && !rack::active()) drop(w);
+        break;
+    case St::DROPPED:
+        if (input::pressed(XINPUT_GAMEPAD_LEFT_SHOULDER) && g_in_pouch && g_since_grab >= settings::RELOAD_GRAB_COOLDOWN_S) { g_since_grab = 0.0f; grab(w); }
+        break;
+    case St::IN_HAND: {
+        if (!lg) {
+            LOGI("%s reload: let go; it came within %.1f cm of the seat (needs %.0f)", TAG, g_closest, settings::MAG_DOCK_CM);
+            ghosthand::value("mag_closest_cm", (float)g_closest);
+            ghosthand::event("mag", "fail");
+            destroy_hand_mesh();
+            set_state(St::DROPPED, "left grip let go: it drops");
+            break;
+        }
+        Vec3 seat;
+        if (!gun::socket_loc(gun::mesh(w), settings::MAG_SOCKET, seat)) break;
+        const double d = size(sub(left, seat));
+        g_closest = std::fmin(g_closest, d);
+        if (d <= settings::MAG_DOCK_CM) insert(w, d);
+        break;
+    }
+    }
+    ghosthand::value("loaded", (float)ammo::rounds(w));
+    ghosthand::value("mag_in_hand", g_st == St::IN_HAND ? 1.0f : 0.0f);
+}
+
+} // namespace sh2vr::reload

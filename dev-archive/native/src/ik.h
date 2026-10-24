@@ -4,6 +4,8 @@
 #pragma once
 
 #include "common.h"
+#include "controllers.h"
+#include "ue.h"
 
 namespace sh2vr::ik {
 
@@ -11,5 +13,7 @@ void tick(float delta);     // once a frame, before the engine tick: make the ri
 bool exists();
 API::UObject* mesh();       // the arms' PoseableMeshComponent, for the modules that hang things on it
 void destroy();
+void override_left(bool on, const ue::Vec3& effector_ws, const ue::Rot& rot_ws);   // rack.cpp: the left hand rides a gun part
+bool hand_world(controllers::Side side, ue::Vec3& out);                             // the arm mesh's hand bone, world
 
 } // namespace sh2vr::ik
