@@ -1,3 +1,4 @@
+import os
 """From InternalConstructor<USHItemWeaponRanged> (0x14297FBB0, handed to GetPrivateStaticClassBody by StaticClass at
 0x14297EAE0) to the class's vtable, then the virtual slots the fire path calls: 0x718 (IsFireReady), 0x750 (fire),
 0x768 (called when the aim starts). Offline, capstone + pefile, no game running."""
@@ -6,7 +7,7 @@ import pefile
 from capstone import Cs, CS_ARCH_X86, CS_MODE_64
 
 EXE = r"C:\Steam\steamapps\common\SILENT HILL 2\SHProto\Binaries\Win64\SHProto-Win64-Shipping.exe"
-TOOL = r"~\github-backups-pd\flat-to-vr-RE-toolkit\tools\static-disasm.py"
+TOOL = os.path.expanduser(r"~\github-backups-pd\flat-to-vr-RE-toolkit\tools\static-disasm.py")
 pe = pefile.PE(EXE, fast_load=True)
 base = pe.OPTIONAL_HEADER.ImageBase
 data = pe.__data__
