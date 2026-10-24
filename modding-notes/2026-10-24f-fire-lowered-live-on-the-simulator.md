@@ -30,6 +30,13 @@ queues a door-B shot (fired on the game thread in the next tick) and the trigger
 game keeps its trigger. Our own pace between lowered shots: `FIRE_MIN_INTERVAL_S` (door B skips the game's cooldown).
 The finger poses still see the pull (they read the state before fire eats it).
 
+**Pass 2 seen flat (16:55, the trigger build installed):** a pretend pull through the trigger path (F7) fired a shot
+with the gun lowered, counted it (the class hook), spent a round and ejected the shell; ten pulls emptied the gun
+`[verified-live 2026-10-24, n=1, flat]`. The simulator's pad never reaches the plugin's XInput hook (the MCP's override
+is applied after the plugin callbacks), so the real trigger waits for Tefa's controller. Also seen: the OLD script
+turned a trigger press into aim + fire (it set LT for the game), which is what fired on the simulated pad; that rule
+is off now that the C++ owns the lowered trigger.
+
 ## How the game was run with no headset on (keep)
 
 - With UEVR attached and the Virtual Desktop runtime idle (no headset), UEVR logs `Failed to initialize Framework on

@@ -29,7 +29,16 @@ and tied to that build; `fire.cpp` checks each against the game's own UFunction 
 
 Live facts behind this: forcing the UFunction `IsFireReady` to true fired nothing lowered `[verified-live 2026-10-24, n=1]`
 (the path calls the virtual); `RequestManualFire` fires while aiming and the input mode goes 12 → 13 for a frame
-`[verified-live 2026-10-24, n=1]`.
+`[verified-live 2026-10-24, n=1]`. **The doors, tried live 16:30 (OpenXR Simulator, flat):** the game's request with
+both gates held open fires nothing (a third gate past them, not read); the weapon's own fire at slot 0x750 `(weapon,
+true)` fires a real round with the gun lowered, spends it at +0xBB4 before `OnFirePerformed`, ejects the shell
+`[verified-live 2026-10-24, n=13]`. The right trigger fires a lowered gun that way (`fire.cpp`). **Event hooks go on
+the weapon's OWN Blueprint class**: `WeaponPistol_BP_C` overrides `OnFirePerformed`; a hook on the base class's
+UFunction never fires `[verified-live 2026-10-24, n=1]`.
+Reload doors (`ammo.cpp`): rounds at +0xBB4 read and written; `WeaponClipSize`; the carried ammo through the pawn's
+`Items` component (`GetItemCount(row)`, `RemoveItem(row, n, false)`, row = `WeaponAmmoItem.RowName`); the empty pose
+through `Mesh.AnimScriptInstance.SetOutOfAmmo(bool)`; the magazine bones `magazine_joint` / `magazine_socket_joint`;
+sockets `slide_joint`, `magazine_joint`, `FX_muzzle` (Lukas's, `[reported]` until worn).
 
 ## 3. Reading this exe offline (methods that worked)
 
@@ -43,6 +52,17 @@ Live facts behind this: forcing the UFunction `IsFireReady` to true fired nothin
   `uevr_inspect_object` instead.
 - `flat-to-vr-RE-toolkit/tools/static-disasm.py --x64` reads this exe fine; the ghidrust MCP's function-start search on
   the 98 MB `.text` had not finished after 30 minutes and was not needed.
+
+## 3b. Running it with no headset (2026-10-24)
+
+- UEVR attached with the Virtual Desktop runtime idle: `Failed to initialize Framework on DirectX 12` every frame and
+  the PRESS ANY BUTTON screen takes no input. Start the exe with `XR_RUNTIME_JSON` = the OpenXR Simulator's json and
+  it runs in VR on the simulator `[verified-live 2026-10-24, n=3]`.
+- Started from the exe the game has no Steam user (no Continue, a fresh profile in the SaveGames root); `SteamAppId`
+  and `SteamGameId` = 2124490 in the environment fix it `[verified-live 2026-10-24, n=2]`.
+- The menu through the UEVR MCP: `MainMenuWidget_BP_C` (`/Engine/Transient...`) `HasSlots()`, `ContinueGame(null, 0)`;
+  then Enter at PRESS ANY BUTTON TO PLAY; `SHWeaponManageCmbSubcomp.RequestEquipWeapon("Pistol", true)`.
+- The MCP's simulated pad is applied AFTER the plugin's XInput callback: a plugin never sees `uevr_input_gamepad`.
 
 ## 4. Other engine facts (from the live sessions, 2026-10-23/24)
 
