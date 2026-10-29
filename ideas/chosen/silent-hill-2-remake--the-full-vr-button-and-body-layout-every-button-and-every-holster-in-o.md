@@ -43,3 +43,5 @@ press ever reaches two things; it needs the game's own button for inventory, bac
 the hard part.
 
 Verbatim record: [`inbox/2026-10-25b-sh2-full-vr-button-and-body-layout.md`](../inbox/2026-10-25b-sh2-full-vr-button-and-body-layout.md)
+
+Chosen by Tefa: 2026-10-29

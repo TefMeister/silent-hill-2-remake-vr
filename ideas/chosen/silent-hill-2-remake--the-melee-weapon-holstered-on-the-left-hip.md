@@ -17,3 +17,5 @@ idea above. ⚠️ Not checked: whether the melee weapon can be shown without be
 uses for the quick melee swap.
 
 Verbatim record: [`inbox/2026-10-24-sh2-melee-holstered-on-the-left-hip.md`](../inbox/2026-10-24-sh2-melee-holstered-on-the-left-hip.md)
+
+Chosen by Tefa: 2026-10-29

@@ -17,3 +17,5 @@ reference when SH2 gets its own.
 turn comes; the button layer (above) keeps B for the magazine.
 
 Verbatim record: [`inbox/2026-10-29-sh2-reload-like-re8.md`](../inbox/2026-10-29-sh2-reload-like-re8.md)
+
+Chosen by Tefa: 2026-10-29

@@ -1,14 +1,14 @@
-# The handgun in the opening room, marked on the map
+# A mannequin hiding in the very first room
 
-Order: 6008
+Order: 6001
 From: the ideas repo, `games/silent-hill-2-remake.md` (<https://github.com/TefMeister/mod-ideas/blob/main/games/silent-hill-2-remake.md>), copied 2026-10-28
 
 `[raw]` · `[not judged]` — *not checked against the game or our mod*
 
-> "SH2 - Handgun in the same room, on the table, marked on the map with a red circle, in the med box instead of the syrenge, syrenge is on the table next to it."
+> "SH2 - a mannequin hiding in the room right in the beginning where there is a syrenge and a breakable window to get out"
 
 Verbatim record: [`inbox/2026-10-28-dump-sh2-all-games-re-menus.md`](../inbox/2026-10-28-dump-sh2-all-games-re-menus.md)
 
-Same room as the hiding mannequin under **Enemies & combat**.
+Also **Level design**: it is about the opening room (the one with the syringe and the breakable window).
 
----
+Chosen by Tefa: 2026-10-29

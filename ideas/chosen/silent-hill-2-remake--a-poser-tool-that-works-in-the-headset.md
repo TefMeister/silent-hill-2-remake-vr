@@ -20,3 +20,5 @@ flashlight, paper). It is switched off by one commented-out line in `main.lua` (
 arm animation, not from `hands_parameters.json` `[inferred-static 2026-10-24]`, so poses made in the tool show on the
 Lua hands; to show them on our C++ arms, the arms have to read the saved poses (a no-game job). A "grab a finger and
 bend it" poser of our own is possible later, but sliders come first because they already exist.
+
+Chosen by Tefa: 2026-10-29

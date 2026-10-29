@@ -15,3 +15,5 @@ Related: RE2's two-hands-make-it-accurate and spread-tier entries ([`re2-viscera
 **Level design**; Pyramid Head is also **Bosses**. Kept in one place so the design stays readable.
 
 ---
+
+Chosen by Tefa: 2026-10-29
