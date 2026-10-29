@@ -19,4 +19,11 @@ bool sprinting();
 // A menu, the inventory, the map, a note or an examine screen has the controls (buttons pass through as menu buttons).
 bool menu_open();
 
+// Another module asks the game to see these pad buttons (XINPUT_GAMEPAD_* mask) for `polls` polls, in play or in a menu
+// (the holsters: the map toggle, the healing action). Queued, applied on the next polls.
+void press_for_game(WORD buttons, int polls);
+
+// While true the real left grip never reaches the game as LB, in menus either (the holsters hold the map with it).
+void keep_left_grip(bool keep);
+
 } // namespace sh2vr::buttons

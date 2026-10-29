@@ -15,6 +15,10 @@ public class SHF {
  [DllImport("user32.dll")] public static extern void mouse_event(uint f, uint x, uint y, uint d, UIntPtr e);
  [DllImport("user32.dll")] public static extern void keybd_event(byte k, byte s, uint f, UIntPtr e);
  [DllImport("user32.dll")] public static extern IntPtr GetForegroundWindow();
+ [DllImport("user32.dll")] public static extern bool ShowWindow(IntPtr h, int n);
+ [DllImport("user32.dll")] public static extern bool AttachThreadInput(uint a, uint b, bool attach);
+ [DllImport("kernel32.dll")] public static extern uint GetCurrentThreadId();
+ [DllImport("user32.dll")] public static extern bool BringWindowToTop(IntPtr h);
  [StructLayout(LayoutKind.Sequential)] public struct R { public int L,T,Rt,B; }
  public static List<IntPtr> Find(uint pid) { var list = new List<IntPtr>(); EnumWindows((h,l)=>{ uint p; GetWindowThreadProcessId(h, out p); if (p==pid && IsWindowVisible(h)) list.Add(h); return true; }, IntPtr.Zero); return list; }
 }
@@ -23,7 +27,11 @@ $p = Get-Process SHProto-Win64-Shipping -ErrorAction Stop
 $best = [IntPtr]::Zero; $ba = 0
 foreach ($h in [SHF]::Find($p.Id)) { $r = New-Object SHF+R; [SHF]::GetWindowRect($h, [ref]$r) | Out-Null; $a = ($r.Rt-$r.L)*($r.B-$r.T); if ($a -gt $ba) { $ba = $a; $best = $h } }
 $r = New-Object SHF+R; [SHF]::GetWindowRect($best, [ref]$r) | Out-Null
-[SHF]::keybd_event(0x12,0,0,[UIntPtr]::Zero); [SHF]::SetForegroundWindow($best) | Out-Null; [SHF]::keybd_event(0x12,0,2,[UIntPtr]::Zero)
+# the foreground thread must lend us its input state, or Windows refuses the switch from a background process
+$fg = [SHF]::GetForegroundWindow(); $fgpid = 0; $fgtid = [SHF]::GetWindowThreadProcessId($fg, [ref]$fgpid); $me = [SHF]::GetCurrentThreadId()
+if ($fgtid -ne $me) { [SHF]::AttachThreadInput($me, $fgtid, $true) | Out-Null }
+[SHF]::keybd_event(0x12,0,0,[UIntPtr]::Zero); [SHF]::ShowWindow($best, 9) | Out-Null; [SHF]::BringWindowToTop($best) | Out-Null; [SHF]::SetForegroundWindow($best) | Out-Null; [SHF]::keybd_event(0x12,0,2,[UIntPtr]::Zero)
+if ($fgtid -ne $me) { [SHF]::AttachThreadInput($me, $fgtid, $false) | Out-Null }
 $cx = [int](($r.L+$r.Rt)/2); $cy = [int](($r.T+$r.B)/2)
 [SHF]::SetCursorPos($cx, $cy) | Out-Null; [SHF]::mouse_event(2,0,0,0,[UIntPtr]::Zero); Start-Sleep -Milliseconds 80; [SHF]::mouse_event(4,0,0,0,[UIntPtr]::Zero)
 Start-Sleep -Milliseconds 300

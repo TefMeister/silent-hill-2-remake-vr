@@ -48,3 +48,23 @@ The pack's Lua has no weapon holsters (its "holster" is the magazine's hip pocke
 - Wear it: draw and holster each weapon; tune the spot numbers; then the left-grip items (map, flashlight, syringe,
   drink) and parked weapon meshes at the spots (the melee idea: "shown parked there while a gun is in hand").
 - The ammo pouch into tracking space (above).
+
+## Added the same morning: the LEFT grip's items (Tefa: "can you do left hand grip too?")
+- Left hip, left grip: the MAP. Pressed = the game's d-pad up (MapToggle) through the button layer's press queue; the
+  map stays while the grip is held (the real LB is kept from the game meanwhile, so the map does not flip pages by
+  itself); let go = d-pad up again, the map closes. The right grip meanwhile reaches the game as RB = Next Map. While
+  the pistol's magazine is out, the left grip at the left hip stays the reload's (the ammo pouch shares the spot).
+- Right hip, left grip: the SYRINGE "in the left hand"; bring it within 15 cm of the right hand (the wrist) = the
+  game's healing action (Y). Right shoulder, left grip: the DRINK; bring it to the mouth (12 cm ahead, 10 below the
+  head) = the same healing action (the game picks the healing item itself: one action for both).
+- Left shoulder: the flashlight stays on LT alone (the button layer); a hand-held flashlight with its beam is a later
+  piece. F5 to the game window = a pretend left grip.
+- Proved on the simulator `[verified-live 2026-10-29, n=1 each]`: left hand at the left hip + F5 -> `the map opens`
+  and the game's map screen ("Toluca Prison 1F Map", Previous/Next Map on LB/RB) was on screen; F5 -> `the map
+  closes`. Left hand at the right hip + F5 -> `the syringe is in the left hand`; moved to the right hand -> `the
+  syringe at the right wrist: used`. The drink not tried.
+- Two more facts: (1) the game polls the pad, and so our XInput callback runs, only after UEVR has spoofed a gamepad
+  connection, which the first VR CONTROLLER input causes (a simulated trigger pull): before it, `buttons:` counted
+  0 polls and a queued press waited. (2) The map is the `MenuSectionMap_Widget_C` section widget, `IsVisible()` only
+  while open; the gameplay menu reports no focus for it, so the button layer now checks that widget too (menu mode
+  in the map: X = back, the grips = LB / RB).

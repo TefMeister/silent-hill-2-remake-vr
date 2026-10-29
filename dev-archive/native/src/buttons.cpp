@@ -49,6 +49,9 @@ bool g_lt_was = false, g_rs_up_was = false;
 int g_flash_pulse = 0;             // polls left to hold the flashlight click
 int g_turn_pulse = 0;              // polls left to hold the quick turn
 bool g_menu = false;               // the frame's menu-or-gameplay answer (set on the game thread)
+WORD g_queued = 0;                 // press_for_game: what the game must see next
+int g_queued_polls = 0;
+bool g_keep_lg = false;            // keep_left_grip
 bool g_menu_was = false;
 int g_logs = 0;
 uint32_t g_polls = 0, g_rewrites = 0;
@@ -75,6 +78,18 @@ bool widget_alive(const wchar_t* class_path) {
         if (ue::alive(w)) return true;
     return false;
 }
+// The map is a section widget that answers IsVisible() true only while the map is open (its parent, the gameplay menu,
+// reports no focus for it) [verified-live 2026-10-29, n=1 open / close].
+bool widget_visible(const wchar_t* class_path) {
+    auto* cls = ue::find_class(class_path);
+    if (cls == nullptr) return false;
+    for (auto* w : cls->get_objects_matching<API::UObject>(false)) {
+        if (!ue::alive(w)) continue;
+        bool vis = false;
+        if (ue::call_ret(w, L"IsVisible", {}, vis) && vis) return true;
+    }
+    return false;
+}
 bool widget_focused(const wchar_t* class_path) {
     auto* cls = ue::find_class(class_path);
     if (cls == nullptr) return false;
@@ -90,6 +105,16 @@ bool widget_focused(const wchar_t* class_path) {
 
 bool sprinting() { return g_sprint; }
 bool menu_open() { return g_menu; }
+void press_for_game(WORD buttons, int polls) { g_queued = buttons; g_queued_polls = polls; }
+void keep_left_grip(bool keep) { g_keep_lg = keep; }
+
+namespace {
+void apply_queued(XINPUT_STATE& state) {
+    if (g_queued_polls <= 0) return;
+    state.Gamepad.wButtons |= g_queued;
+    if (--g_queued_polls == 0) g_queued = 0;
+}
+} // namespace
 
 void on_input(XINPUT_STATE& state) {
     ++g_polls;
@@ -110,6 +135,8 @@ void on_input(XINPUT_STATE& state) {
         set(state, XINPUT_GAMEPAD_Y, false);
         set(state, XINPUT_GAMEPAD_LEFT_THUMB, false);
         set(state, XINPUT_GAMEPAD_RIGHT_THUMB, false);
+        if (g_keep_lg) set(state, XINPUT_GAMEPAD_LEFT_SHOULDER, false);   // the map is held with the left grip
+        apply_queued(state);
         g_ls_was = ls_click; g_lt_was = lt; g_rs_up_was = rs_up;
         g_flash_pulse = g_turn_pulse = 0;
         ++g_rewrites;
@@ -150,6 +177,7 @@ void on_input(XINPUT_STATE& state) {
     set(state, XINPUT_GAMEPAD_RIGHT_THUMB, g_flash_pulse > 0);
     if (g_flash_pulse > 0) --g_flash_pulse;
     state.Gamepad.bLeftTrigger = 0;
+    apply_queued(state);
     (void)rg;
     ++g_rewrites;
     (void)line;
@@ -163,6 +191,7 @@ void tick(float) {
         if (widget_focused(settings::MENU_WIDGET_CLASS)) { open = true; why = "the gameplay menu has the focus"; }
         else if (widget_focused(settings::SAVE_MENU_WIDGET_CLASS)) { open = true; why = "the save menu has the focus"; }
         else if (widget_alive(settings::PAUSE_WIDGET_CLASS)) { open = true; why = "the pause menu is up"; }
+        else if (widget_visible(settings::MAP_SECTION_CLASS)) { open = true; why = "the map is open"; }
     }
     g_menu = open;
     if (open != g_menu_was) {
