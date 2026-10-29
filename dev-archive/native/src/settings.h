@@ -55,6 +55,25 @@ constexpr const wchar_t* MENU_WIDGET_CLASS = L"WidgetBlueprintGeneratedClass /Ga
 constexpr const wchar_t* SAVE_MENU_WIDGET_CLASS = L"WidgetBlueprintGeneratedClass /Game/Game/UI/GameplaySaveMenu/GameplaySaveMenu_Widget.GameplaySaveMenu_Widget_C";   // the save points' menu: same kind
 constexpr const wchar_t* PAUSE_WIDGET_CLASS = L"WidgetBlueprintGeneratedClass /Game/Game/UI/Menu/InGameMenuWidget_BP.InGameMenuWidget_BP_C";               // the pause menu (RESUME / LOAD / SETTINGS ...): EXISTS only while open
 
+// ---- the weapons on the body (holsters.cpp, 2026-10-29) ----
+constexpr bool HOLSTERS_ON = true;
+struct HolsterSpot { const wchar_t* name; double right_cm, up_cm, forward_cm; const wchar_t* row; };   // from the headset; the weapon row
+constexpr HolsterSpot HOLSTER_SPOTS[] = {
+    {L"right hip", 20.0, -35.0, 10.0, L"Pistol"},
+    {L"right shoulder", 15.0, -10.0, -10.0, L"Shotgun"},
+    {L"left shoulder", -15.0, -10.0, -10.0, L"Rifle"},
+    {L"left hip", -20.0, -35.0, 10.0, L"Melee"},
+};
+constexpr int HOLSTER_SPOT_COUNT = 4;
+constexpr const wchar_t* MELEE_ROW = L"Melee";   // a spot with this row draws the game's last-used melee weapon (IronPipe, WoodenPlank, Chainsaw...)
+constexpr double HOLSTER_ENTER_CM = 18.0, HOLSTER_LEAVE_CM = 26.0;   // the hand counts as in the spot / out of it
+constexpr const wchar_t* WEAPON_MANAGER_CLASS = L"Class /Script/SHProto.SHWeaponManageCmbSubcomp";
+constexpr const wchar_t* UNEQUIP_FN = L"RequestUnequipWeapon";      // read live 2026-10-29; see holsters.cpp for the fallback
+constexpr unsigned HOLSTER_TEST_KEY = 0x75;   // VK_F6: a pretend right grip, for the simulator (no grip there)
+constexpr int HOLSTER_LOG_MAX = 80;
+constexpr bool HOLSTER_LOG_EMPTY_GRIPS = true;
+constexpr float HOLSTER_STATUS_S = 5.0f;
+
 // ---- shooting without the aim stance (fire.cpp) ----
 constexpr unsigned FIRE_PROBE_KEY = 0x78;   // VK_F9: the probe key, sent to the game window from the session
 constexpr unsigned FIRE_FORCE_READY_KEY = 0x7A; // VK_F11 (F10 is a Windows system key and arrives differently): toggles answering "ready" to the game's fire-ready check

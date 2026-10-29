@@ -29,6 +29,7 @@
 #include "fingers.h"
 #include "fire.h"
 #include "ghosthand.h"
+#include "holsters.h"
 #include "input.h"
 #include "rack.h"
 #include "reload.h"
@@ -50,7 +51,7 @@ public:
 
     void on_custom_event(const char* name, const char* data) override { bridge::on_custom_event(name, data); }
 
-    bool on_message(HWND, UINT msg, WPARAM wparam, LPARAM) override { fire::on_message(msg, wparam); return true; }
+    bool on_message(HWND, UINT msg, WPARAM wparam, LPARAM) override { fire::on_message(msg, wparam); holsters::on_message(msg, wparam); return true; }
 
     void on_xinput_get_state(uint32_t*, uint32_t, XINPUT_STATE* state) override {
         if (state == nullptr) return;
@@ -64,6 +65,7 @@ public:
         if (API::get()->get_local_pawn(0) != nullptr) fire::install();   // the weapon class is loaded by then
         fire::tick(delta);
         buttons::tick(delta);
+        holsters::tick(delta);   // 2026-10-29: the weapons on the body (after the buttons, before the hands)
         crosshair::find(delta);
         reload::tick(delta);
         rack::tick(delta);       // sets the left-hand override the IK solve reads
