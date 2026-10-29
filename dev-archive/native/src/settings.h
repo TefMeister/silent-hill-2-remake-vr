@@ -43,6 +43,18 @@ constexpr int TRIGGER_PRESSED_OVER = 100;    // bRightTrigger > 100 (of 255) cou
 constexpr const char* THUMBREST_LEFT = "/actions/default/in/ThumbrestTouchLeft";     // the thumb rests when touched
 constexpr const char* THUMBREST_RIGHT = "/actions/default/in/ThumbrestTouchRight";
 
+// ---- the button layer (buttons.cpp, 2026-10-29) ----
+constexpr bool BUTTONS_LAYER_ON = true;        // one layer decides what the game sees; off = the raw pad as before
+constexpr bool QUICK_TURN_ON = false;          // right stick up = quick turn (Tefa: a setting, off by default)
+constexpr int STICK_DODGE_AT = 20000;          // the right stick this far down (of 32767) = the dodge press; up = quick turn
+constexpr int BUTTONS_PULSE_POLLS = 3;         // a pressed button the game must see for this many polls (flashlight, quick turn)
+constexpr int BUTTONS_LOG_MAX = 80;            // log lines about translated presses, per run
+constexpr int BUTTONS_LOG_EVERY_POLLS = 60;    // a held dodge is logged this often
+// the widgets that take the controls (the menu check); class paths read live 2026-10-29 [verified-live]
+constexpr const wchar_t* MENU_WIDGET_CLASS = L"WidgetBlueprintGeneratedClass /Game/Game/UI/GameplayMenu/GameplayMenu_Widget.GameplayMenu_Widget_C";       // inventory, map, memos, examine: lives on, HAS THE FOCUS while open
+constexpr const wchar_t* SAVE_MENU_WIDGET_CLASS = L"WidgetBlueprintGeneratedClass /Game/Game/UI/GameplaySaveMenu/GameplaySaveMenu_Widget.GameplaySaveMenu_Widget_C";   // the save points' menu: same kind
+constexpr const wchar_t* PAUSE_WIDGET_CLASS = L"WidgetBlueprintGeneratedClass /Game/Game/UI/Menu/InGameMenuWidget_BP.InGameMenuWidget_BP_C";               // the pause menu (RESUME / LOAD / SETTINGS ...): EXISTS only while open
+
 // ---- shooting without the aim stance (fire.cpp) ----
 constexpr unsigned FIRE_PROBE_KEY = 0x78;   // VK_F9: the probe key, sent to the game window from the session
 constexpr unsigned FIRE_FORCE_READY_KEY = 0x7A; // VK_F11 (F10 is a Windows system key and arrives differently): toggles answering "ready" to the game's fire-ready check

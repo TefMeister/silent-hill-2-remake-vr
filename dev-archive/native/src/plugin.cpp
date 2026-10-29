@@ -23,6 +23,7 @@
 #include <memory>
 
 #include "bridge.h"
+#include "buttons.h"
 #include "common.h"
 #include "crosshair.h"
 #include "fingers.h"
@@ -53,14 +54,16 @@ public:
 
     void on_xinput_get_state(uint32_t*, uint32_t, XINPUT_STATE* state) override {
         if (state == nullptr) return;
-        input::on_state(*state);     // the raw pad, for the reload modules
+        input::on_state(*state);     // the REAL controller, for the hand modules (reload, rack, fingers)
         fingers::on_input(*state);   // the finger poses read the trigger as pulled, even when fire keeps it from the game
+        buttons::on_input(*state);   // 2026-10-29: ONE layer decides what the game sees (Tefa's layout); from here on `state` is the game's
         fire::on_input(*state);
     }
 
     void on_pre_engine_tick(API::UGameEngine*, float delta) override {
         if (API::get()->get_local_pawn(0) != nullptr) fire::install();   // the weapon class is loaded by then
         fire::tick(delta);
+        buttons::tick(delta);
         crosshair::find(delta);
         reload::tick(delta);
         rack::tick(delta);       // sets the left-hand override the IK solve reads
