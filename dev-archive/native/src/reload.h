@@ -17,7 +17,8 @@ void tick(float delta);       // before rack::tick
 bool managed();               // the gun in hand reloads by hand (a pistol, headset on)
 bool mag_out();               // the magazine is not seated
 bool mag_in_hand();
-bool hand_busy();             // the left hand carries a magazine: the slide must not take it
+bool hand_busy();
+bool hand_on_mag();           // after an insert the left hand stays on the magazine until LG lets go             // the left hand carries a magazine: the slide must not take it
 bool blocks_fire();           // the magazine is out: the trigger waits
 void on_racked();             // rack.cpp: the slide cycled
 void reset(const char* why);

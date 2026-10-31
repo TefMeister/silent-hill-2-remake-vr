@@ -91,6 +91,8 @@ constexpr unsigned HOLSTER_LEFT_TEST_KEY = 0x74;   // VK_F5: a pretend LEFT grip
 // (the game's one healing action, Y), letting go of the grip puts it back unused.
 constexpr const wchar_t* LEFT_ITEM_MAP_SPOT = L"right hip";   // 2026-10-31 13:00, Tefa: "move the map to the right hip, LG to take it out, right hand with RG held to two hand the map"
 constexpr float MAP_TOGGLE_COOLDOWN_S = 1.0f;   // after taking the map out or putting it away, LG at the hip is ignored this long (14:32: put away, out again 0.4 s later)
+constexpr float MAP_CLOSE_RETRY_S = 1.0f;   // putting it away: the game's back again this often while the map still shows
+constexpr int MAP_CLOSE_TRIES = 5;          // and this many times at most
 constexpr float MAP_GONE_S = 0.5f;          // the map not showing this long after it showed: closed another way (Quest X)
 constexpr float MAP_NEVER_CAME_S = 3.0f;    // taken out but never showed in this long: give up
 constexpr float HEAL_SYRINGE_HOLD_S = 0.5f;    // (Tefa 2026-10-31: "2 seconds feels like forever") the right grip held this long at the lower back: the drink becomes the syringe
@@ -173,6 +175,8 @@ constexpr const wchar_t* SLIDE_SOCKET = L"slide_joint";
 constexpr const wchar_t* MAG_SOCKET = L"magazine_joint";
 constexpr const wchar_t* MUZZLE_SOCKET = L"FX_muzzle";
 constexpr const wchar_t* MAG_BONES[] = {L"magazine_joint", L"magazine_socket_joint"};   // hidden while the magazine is out
+constexpr bool RACK_NEEDS_LT = false;        // 2026-10-31 fourth wear: the grab alone holds the slide (was: LT held to pull)
+constexpr double RACK_HOME_AT = 0.3;         // the pull back below this share of the travel after it was pulled: home
 constexpr double SLIDE_GRAB_CM = 22.0;       // the left controller this close to the slide takes it (left grip)
 constexpr double SLIDE_TRAVEL_CM = 12.0;     // a full pull
 constexpr double RACK_PULLED_AT = 0.97;      // travel that counts as fully back
@@ -180,6 +184,7 @@ constexpr double RACK_FOLLOW = 0.6;          // how fast the slide follows the h
 constexpr double RACK_SPRING_STEP = 0.1;     // how fast a let-go slide springs forward, per tick
 constexpr double SLIDE_HAND_LOC[3] = {0.0, 0.0, 0.0};   // the hand on the slide, in the slide socket's frame (the pack's sliders)
 constexpr double SLIDE_HAND_ROT[3] = {0.0, 0.0, 90.0};  // pitch, yaw, roll: roll 90 = the palm on top of the slide
+constexpr bool MAG_HAND_STAYS = true;        // after an insert the left hand stays on the magazine while LG is held (fourth wear)
 constexpr double MAG_DOCK_CM = 18.0;         // a magazine this close to its seat goes in
 constexpr double HIP_RIGHT_CM = -20.0, HIP_UP_CM = -35.0, HIP_FORWARD_CM = 10.0;   // the ammo spot from the headset (the pack's holster)
 constexpr double HIP_ENTER_CM = 18.0, HIP_LEAVE_CM = 28.0;

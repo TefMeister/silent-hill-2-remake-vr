@@ -96,7 +96,7 @@ bool create_side(Side side, API::UObject* skeletal, const json::Value& def, cons
     // the profile's Offset (all zero here) on top of the game mesh's own relative rotation (IgnoreRelativeOffset false)
     Rot base;
     if (auto* r = ue::prop<Rot>(skeletal, L"RelativeRotation")) base = *r;
-    ue::call(h.component, L"K2_SetRelativeLocationAndRotation", {Vec3{}, base, false, false});
+    ue::call(h.component, L"K2_SetRelativeLocationAndRotation", {Vec3{}, base, false});   // (location, rotation, sweep); the hit result and teleport stay zero
 
     const json::Value* side_def = def.get(side == LEFT ? "Left" : "Right");
     std::string joint;

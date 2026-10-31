@@ -11,6 +11,7 @@
 #include "ghosthand.h"
 #include "gun.h"
 #include "holsters.h"
+#include "ik.h"
 #include "ikmath.h"
 #include "input.h"
 #include "rack.h"
@@ -38,6 +39,11 @@ bool g_bones_hidden = false;
 float g_since_grab = 99.0f;
 double g_closest = 9999.0;
 int g_mesh_missing_logs = 0;
+// 2026-10-31 fourth wear (Tefa: "it has to stay docked on the mag bottom even when in the pistol"): after a magazine
+// goes in, the left hand stays where it was on it (its place against the magazine seat, taken at the insert) until the
+// left grip lets go
+bool g_on_mag = false;
+Transform g_on_mag_rel;
 
 void set_state(St s, const char* why) {
     LOGI("%s reload: magazine %s -> %s (%s)", TAG, st_name(g_st), st_name(s), why);
@@ -103,6 +109,9 @@ API::UObject* make_magazine_copy(API::UObject* owner, API::UObject* pistol_mesh)
         else if (!listed(n, {settings::HAND_MAG_ANCESTORS[0], settings::HAND_MAG_ANCESTORS[1]})) ue::call(comp, L"HideBoneByName", {fn, (int32_t)0});
     }
     if (auto* b = ue::prop<float>(comp, L"BoundsScale")) *b = settings::HAND_MAG_BOUNDS_SCALE;
+    // 2026-10-31 fourth wear, "ammo from the pouch is invisible": the copy sat where its owner actor stands, so its
+    // bounds were nowhere near the hand; riding the left controller keeps them round the magazine
+    if (API::UObject* ctrl = controllers::find(controllers::LEFT)) { bool at = false; ue::call_ret(comp, L"K2_AttachTo", {ctrl, ue::name(L""), (int32_t)0, false}, at); }
     ue::call(comp, L"SetCollisionEnabled", {(int32_t)0});
     ue::call(comp, L"SetVisibility", {true});
     ue::call(comp, L"SetHiddenInGame", {false});
@@ -121,7 +130,8 @@ void drive_magazine_copy() {
     const API::FName bone = ue::name(settings::HAND_MAG_BONE);
     ue::call(g_hand_copy, L"SetBoneLocationByName", {bone, loc, (int32_t)0});
     ue::call(g_hand_copy, L"SetBoneRotationByName", {bone, rot, (int32_t)0});
-    ue::call(g_hand_copy, L"MarkRenderTransformDirty", {});
+    ue::call(g_hand_copy, L"SetBoneScaleByName", {bone, Vec3{1.0, 1.0, 1.0}, (int32_t)0});   // the pack re-asserts it too
+    ue::call(g_hand_copy, L"UpdateBounds", {});
 }
 
 // the game's magazine mesh on the left controller (uevr_utils.createStaticMeshComponent + the pack's hand-mag fit)
@@ -144,7 +154,7 @@ void make_hand_mesh(API::UObject* pistol) {
     bool attached = false;
     ue::call_ret(comp, L"K2_AttachTo", {ctrl, ue::name(L""), (int32_t)0, false}, attached);
     ue::call(comp, L"K2_SetRelativeLocationAndRotation", {Vec3{settings::HAND_MAG_LOC[0], settings::HAND_MAG_LOC[1], settings::HAND_MAG_LOC[2]},
-                                                           Rot{settings::HAND_MAG_ROT[0], settings::HAND_MAG_ROT[1], settings::HAND_MAG_ROT[2]}, false, false});
+                                                           Rot{settings::HAND_MAG_ROT[0], settings::HAND_MAG_ROT[1], settings::HAND_MAG_ROT[2]}, false});   // (location, rotation, sweep); the hit result and teleport stay zero
     g_hand_mesh = comp;
     g_hand_copy = settings::HAND_MAG_FROM_PISTOL ? make_magazine_copy(owner, gun::mesh(pistol)) : nullptr;
     const bool box = g_hand_copy == nullptr;   // the copy failed: the ammo box shows, as before
@@ -177,6 +187,33 @@ void grab(API::UObject* w) {
     gun::buzz(controllers::LEFT, settings::BUZZ_GRAB_AMP, settings::BUZZ_S);
 }
 
+void hold_on_mag_start(API::UObject* w) {
+    Vec3 loc;
+    Rot rot;
+    Transform seat;
+    if (!settings::MAG_HAND_STAYS || !gun::controller(controllers::LEFT, loc, rot) || !gun::socket_xform(gun::mesh(w), settings::MAG_SOCKET, seat)) return;
+    Transform hand;
+    hand.pos = loc;
+    hand.rot = quat_from_euler(rot);
+    API::UObject* kml = ue::cdo(L"Class /Script/Engine.KismetMathLibrary");
+    if (!ue::call_ret(kml, L"MakeRelativeTransform", {hand, seat}, g_on_mag_rel)) return;
+    g_on_mag = true;
+    LOGI("%s reload: the left hand stays on the magazine until the left grip lets go", TAG);
+}
+
+void hold_on_mag_tick(API::UObject* w) {
+    if (!g_on_mag) return;
+    Transform seat, world;
+    API::UObject* kml = ue::cdo(L"Class /Script/Engine.KismetMathLibrary");
+    if (!input::grip(false) || !gun::socket_xform(gun::mesh(w), settings::MAG_SOCKET, seat) || !ue::call_ret(kml, L"ComposeTransforms", {g_on_mag_rel, seat}, world)) {
+        g_on_mag = false;
+        ik::override_left(false, Vec3{}, Rot{});
+        LOGI("%s reload: the left hand leaves the magazine", TAG);
+        return;
+    }
+    ik::override_left(true, world.pos, gun::rot_of(world));
+}
+
 void insert(API::UObject* w, double d) {
     const int cap = ammo::clip_size(w);
     const int want = cap - g_mag_rounds;
@@ -191,6 +228,7 @@ void insert(API::UObject* w, double d) {
     ghosthand::event("mag", "done");
     gun::buzz(controllers::LEFT, settings::BUZZ_DONE_AMP, settings::BUZZ_S);
     if (g_dry && total > 0) rack::need("a magazine into an empty gun");
+    hold_on_mag_start(w);
     g_dry = false;
     LOGI("%s reload: new magazine: %d round(s) (%d from the carried ammo, capacity %d), %d carried now", TAG, total, took, cap, ammo::carried(w));
 }
@@ -200,6 +238,7 @@ bool managed() { return g_weapon != nullptr && gun::hmd_active(); }
 bool mag_out() { return managed() && g_st != St::SEATED; }
 bool mag_in_hand() { return managed() && g_st == St::IN_HAND; }
 bool hand_busy() { return mag_in_hand(); }
+bool hand_on_mag() { return g_on_mag; }
 bool blocks_fire() { return mag_out(); }
 void on_racked() {}
 
@@ -207,6 +246,7 @@ void reset(const char* why) {
     if (g_st != St::SEATED) LOGI("%s reload: magazine put back as it was (%s): %d round(s)", TAG, why, g_mag_rounds);
     if (g_st != St::SEATED && ue::alive(g_weapon)) ammo::set_rounds(g_weapon, g_mag_rounds);
     destroy_hand_mesh();
+    if (g_on_mag) { g_on_mag = false; ik::override_left(false, Vec3{}, Rot{}); }
     if (ue::alive(g_weapon)) mag_bones(g_weapon, false);
     g_bones_hidden = false;
     g_st = St::SEATED;
@@ -233,6 +273,7 @@ void tick(float delta) {
     }
     const bool lg = input::grip(false);
 
+    hold_on_mag_tick(w);
     switch (g_st) {
     case St::SEATED:
         if (input::pressed(settings::QUEST_B) && !rack::active()) drop(w);   // Quest B (the pad's X, settings.h)

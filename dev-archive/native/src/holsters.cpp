@@ -7,8 +7,9 @@
 //   right shoulder -> right grip: the shotgun
 //   left shoulder  -> right grip: the rifle
 //   left hip       -> right grip: the melee weapon (plank, pipe, chainsaw: whatever the game has equipped as melee)
-//   lower back     -> right grip: the healing item (2026-10-31, Tefa: like RE8's and RE2's sub weapon): a press takes the
-//                     drink, held 0.5 s it becomes the syringe, RT uses it (the game's healing action), let go = put back
+//   lower back     -> right grip: the healing item (2026-10-31, Tefa: like RE8's and RE2's sub weapon): a press puts the
+//                     gun away and takes the drink, a press again = the syringe, a third = put back; it stays without the
+//                     grip; RT uses it (the game's healing action); a weapon spot puts it back and draws the gun
 // The left grip (2026-10-31 13:00): the map at the right hip (twohand.cpp holds it; the right grip too = both hands), nothing at the left hip (the ammo's: reload.cpp's pistol
 // magazine, the pack's shotgun and rifle rounds), the flashlight on LT.
 //
@@ -173,9 +174,11 @@ LeftItem g_left = LeftItem::NONE;
 bool g_map_seen = false;           // the map has shown since it was taken out
 float g_map_out_s = 0.0f, g_map_gone_s = 0.0f;
 float g_map_toggle_s = 99.0f;      // since the last map toggle: a second grab right after is ignored
+bool g_map_closing = false;         // put away: the game's back pressed until the map is gone
+float g_map_close_s = 0.0f;
+int g_map_close_tries = 0;
 // the healing item, in the RIGHT hand (the lower back spot)
 std::atomic<bool> g_heal{false};   // read by fire::on_input on the input thread: RT is kept from the game while it is in hand
-float g_heal_held_s = 0.0f;        // how long the right grip has held it
 bool g_heal_syringe = false;       // held past HEAL_SYRINGE_HOLD_S: the syringe, else the drink
 bool g_rt_was = false;             // RT's edge, read on the game thread (the input poll runs at its own pace)
 const char* heal_name() { return g_heal_syringe ? "syringe" : "drink"; }
@@ -233,7 +236,7 @@ void heal_mesh_on(bool syringe) {
     bool attached = false;
     ue::call_ret(comp, L"K2_AttachTo", {ctrl, ue::name(L""), (int32_t)0, false}, attached);
     ue::call(comp, L"K2_SetRelativeLocationAndRotation", {ue::Vec3{settings::HEAL_MESH_LOC[0], settings::HEAL_MESH_LOC[1], settings::HEAL_MESH_LOC[2]},
-                                                           ue::Rot{settings::HEAL_MESH_ROT[0], settings::HEAL_MESH_ROT[1], settings::HEAL_MESH_ROT[2]}, false, false});
+                                                           ue::Rot{settings::HEAL_MESH_ROT[0], settings::HEAL_MESH_ROT[1], settings::HEAL_MESH_ROT[2]}, false});   // (location, rotation, sweep); the hit result and teleport stay zero
     ue::call(comp, L"SetVisibility", {true});
     ue::call(comp, L"SetHiddenInGame", {false});
     g_heal_mesh = comp;
@@ -271,7 +274,20 @@ void left_tick(float delta) {
     g_map_toggle_s += delta;
     // the game's own truth first: a map on screen that the hand does not hold (opened by the d-pad, or our open and close
     // crossed) is taken into the left hand, so the grips never fall through to the game as its page buttons
-    if (g_left == LeftItem::NONE && buttons::map_showing() && g_map_toggle_s >= settings::MAP_TOGGLE_COOLDOWN_S) {
+    // 2026-10-31 fourth wear, "map still doesn't go away when LG is used again in right hip holster": the log showed
+    // "put away" then, a second later, "on screen but not in the hand: taken into the left hand"; the d-pad press did not
+    // close it (on the map screen the d-pad belongs to the map). Now putting it away presses the game's back (pad B,
+    // Cancel) and presses it again every MAP_CLOSE_RETRY_S until the map is gone; nothing takes it back meanwhile.
+    if (g_map_closing) {
+        g_map_close_s += delta;
+        if (!buttons::map_showing()) { g_map_closing = false; say("the map is gone from the screen"); }
+        else if (g_map_close_s >= settings::MAP_CLOSE_RETRY_S) {
+            g_map_close_s = 0.0f;
+            if (++g_map_close_tries > settings::MAP_CLOSE_TRIES) { g_map_closing = false; say("the map would not close (the game's back pressed several times); left on screen"); }
+            else { buttons::press_for_game(XINPUT_GAMEPAD_B, settings::HOLSTER_PRESS_POLLS); say("the map is still on screen: the game's back pressed again"); }
+        }
+    }
+    if (g_left == LeftItem::NONE && !g_map_closing && buttons::map_showing() && g_map_toggle_s >= settings::MAP_TOGGLE_COOLDOWN_S) {
         g_left = LeftItem::MAP;
         g_map_seen = true;
         g_map_out_s = g_map_gone_s = 0.0f;
@@ -292,8 +308,9 @@ void left_tick(float delta) {
     } else if (map_press && g_left == LeftItem::MAP) {
         g_left = LeftItem::NONE;
         buttons::keep_left_grip(false);
-        buttons::press_for_game(XINPUT_GAMEPAD_DPAD_UP, settings::HOLSTER_PRESS_POLLS);   // MapToggle again: closes
-        say("left grip at the right hip again: the map is put away");
+        buttons::press_for_game(XINPUT_GAMEPAD_B, settings::HOLSTER_PRESS_POLLS);   // the game's back (Cancel) closes it
+        g_map_closing = true; g_map_close_s = 0.0f; g_map_close_tries = 0;
+        say("left grip at the right hip again: the map is put away (the game's back)");
         gun::buzz(controllers::LEFT, settings::BUZZ_DENY_AMP, settings::BUZZ_S);
     }
     if (g_left == LeftItem::MAP) {   // closed another way (Quest X, the game itself): the hand lets go of it too
@@ -376,15 +393,32 @@ void tick(float delta) {
 
     char line[200];
     if (pressed && in_spot >= 0 && is_heal_spot(*g_spots[in_spot].def)) {
-        // the lower back: the healing item into the right hand; the weapon (if any) is left to the game's own healing
-        g_heal = true;
-        g_heal_held_s = 0.0f;
-        g_heal_syringe = false;
-        say("right grip at the lower back: the drink is in the right hand (keep holding for the syringe; RT uses it)");
-        gun::buzz(controllers::RIGHT, settings::BUZZ_GRAB_AMP, settings::BUZZ_S);
+        // the lower back (2026-10-31 fourth wear, Tefa: "this is supposed to holster the gun and have the medicine out
+        // without rg being held, then RT to use it. right now i had both pistol and the syrenge in the same hand"):
+        // a press puts the gun away and the drink in the hand, a press again swaps it for the syringe, a third puts it back
+        if (!g_heal) {
+            if (gun::equipped() != nullptr) {
+                const bool ok = unequip();
+                if (ok) { g_holding = false; g_holding_spot = -1; }
+                say(ok ? "right grip at the lower back: the gun put away first" : "right grip at the lower back: could not put the gun away");
+            }
+            g_heal = true;
+            g_heal_syringe = false;
+            say("right grip at the lower back: the drink is out (stays without the grip; RG at the lower back again = the syringe, again = put back; RT uses it)");
+            gun::buzz(controllers::RIGHT, settings::BUZZ_GRAB_AMP, settings::BUZZ_S);
+        } else if (!g_heal_syringe) {
+            g_heal_syringe = true;
+            say("right grip at the lower back again: the drink swapped for the syringe");
+            gun::buzz(controllers::RIGHT, settings::BUZZ_GRAB_AMP, settings::BUZZ_S);
+        } else {
+            g_heal = false;
+            say("right grip at the lower back a third time: the syringe goes back unused");
+            gun::buzz(controllers::RIGHT, settings::BUZZ_DENY_AMP, settings::BUZZ_S);
+        }
     } else if (pressed && in_spot >= 0) {
         // a spot: its own weapon in hand goes back; anything else (empty hands, another spot's weapon) draws this one
         const auto& s = *g_spots[in_spot].def;
+        if (g_heal) { g_heal = false; std::snprintf(line, sizeof line, "a weapon spot with the %s out: it goes back unused", heal_name()); say(line); }
         API::UObject* wm = weapon_manager();
         API::FName row{};
         const std::string in_hand = equipped_name(wm);
@@ -410,27 +444,13 @@ void tick(float delta) {
     const bool rt = input::right_trigger();
     const bool rt_pressed = rt && !g_rt_was;
     g_rt_was = rt;
-    if (g_heal) {
-        if (released) {
-            std::snprintf(line, sizeof line, "right grip let go: the %s goes back unused", heal_name());
-            say(line);
-            g_heal = false;
-        } else {
-            g_heal_held_s += delta;
-            if (!g_heal_syringe && g_heal_held_s >= settings::HEAL_SYRINGE_HOLD_S) {
-                g_heal_syringe = true;
-                say("right grip held: the drink is swapped for the syringe");
-                gun::buzz(controllers::RIGHT, settings::BUZZ_GRAB_AMP, settings::BUZZ_S);
-            }
-            // RT with the healing item in hand never reaches the game, and never fires (fire::on_input asks heal_in_hand())
-            if (rt_pressed) {
-                buttons::press_for_game(XINPUT_GAMEPAD_Y, settings::HOLSTER_PRESS_POLLS);   // ActionHealing: the game picks the item it uses
-                std::snprintf(line, sizeof line, "RT: the %s used (the game's healing action)", heal_name());
-                say(line);
-                gun::buzz(controllers::RIGHT, settings::BUZZ_DONE_AMP, settings::BUZZ_S);
-                g_heal = false;
-            }
-        }
+    if (g_heal && rt_pressed) {
+        // RT with the healing item in hand never reaches the game, and never fires (fire::on_input asks heal_in_hand())
+        buttons::press_for_game(XINPUT_GAMEPAD_Y, settings::HOLSTER_PRESS_POLLS);   // ActionHealing: the game picks the item it uses
+        std::snprintf(line, sizeof line, "RT: the %s used (the game's healing action)", heal_name());
+        say(line);
+        gun::buzz(controllers::RIGHT, settings::BUZZ_DONE_AMP, settings::BUZZ_S);
+        g_heal = false;
     }
 
     if (g_heal) heal_mesh_on(g_heal_syringe); else if (g_heal_mesh != nullptr) heal_mesh_off();

@@ -101,7 +101,10 @@ void tick(float) {
     const bool lg = input::grip(false), lt = input::left_trigger();
     const bool may_rack = g_parked || g_needed;
 
-    if (!g_hand_on && may_rack && lg && !reload::hand_busy()) {
+    // 2026-10-31 fourth wear (Tefa: "after inserting the mag hand jumps on the slide automatically and needs LT to
+    // rack"): the slide is taken only by a FRESH left grip press near it (the grip still held from the magazine never
+    // takes it), and with RACK_NEEDS_LT off the grab itself holds the slide: pull back, then forward (or let go)
+    if (!g_hand_on && may_rack && input::grip_pressed(false) && !reload::hand_busy() && !reload::hand_on_mag()) {
         const double d = size(sub(left, slide));
         if (g_log_near < 30 && input::grip_pressed(false)) { ++g_log_near; LOGI("%s rack: left grip %.1f cm from the slide (need %.0f): %s", TAG, d, settings::SLIDE_GRAB_CM, d <= settings::SLIDE_GRAB_CM ? "HAND ON" : "too far"); }
         if (d <= settings::SLIDE_GRAB_CM) {
@@ -111,7 +114,17 @@ void tick(float) {
             gun::buzz(controllers::LEFT, settings::BUZZ_GRAB_AMP, settings::BUZZ_S);
         }
     }
-    if (g_hand_on) {
+    if (g_hand_on && !settings::RACK_NEEDS_LT) {
+        if (!g_armed) {
+            g_armed = true;
+            g_axis = axis;
+            g_base = along(left) + g_travel * settings::SLIDE_TRAVEL_CM;
+            g_max_pull = 0.0;
+            ghosthand::event("slide", "start");
+            LOGI("%s rack: slide held by the left grip: pull it back along the barrel, then forward", TAG);
+        }
+        if (!lg) hand_off(w, g_pulled ? "LG let go: it goes forward" : "LG let go");
+    } else if (g_hand_on) {
         if (lt && !g_armed) {
             g_armed = true;
             g_axis = axis;
@@ -129,8 +142,14 @@ void tick(float) {
     if (g_hand_on && g_armed) {
         const double pulled = g_base - along(left);
         g_max_pull = std::fmax(g_max_pull, pulled);
-        const double want = g_pulled ? 1.0 : clamp01(pulled / settings::SLIDE_TRAVEL_CM);
+        const double want = (g_pulled && settings::RACK_NEEDS_LT) ? 1.0 : clamp01(pulled / settings::SLIDE_TRAVEL_CM);
         g_travel += (want - g_travel) * settings::RACK_FOLLOW;
+        if (g_pulled && !settings::RACK_NEEDS_LT && g_travel <= settings::RACK_HOME_AT) {   // pulled back, then pushed forward
+            complete(w);
+            LOGI("%s rack: pushed forward again: the slide went home", TAG);
+            g_armed = false;
+            g_base = along(left);
+        }
         if (!g_pulled && g_travel >= settings::RACK_PULLED_AT) {
             g_pulled = true;
             gun::buzz(controllers::LEFT, settings::BUZZ_DONE_AMP, settings::BUZZ_S);

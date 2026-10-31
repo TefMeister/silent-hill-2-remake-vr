@@ -30,3 +30,29 @@ hook; see 2026-10-31c). Log kept: `D:/claude video game stuff/logs/sh2/2026-10-3
 - Pistol rack: after a magazine into an empty gun, "slide NEEDED", then the rack is held with LT (our rule).
 - Medicine: the models are found and shown (HealthDrink_01_B; Syringe_03_A), but only while RG is held, and the gun
   stays in the same hand.
+
+## Fixed after the wear, sh2vr.dll d3aacc7 (backup `D:/SH2 builds/_backup-2026-10-31-1924-before-sh2vr-deploy`), NOT worn
+- `K2_SetRelativeLocationAndRotation` was always refused: its 4th parameter is the out HitResult, we passed a bool. Now
+  (location, rotation, sweep) only, in reload.cpp (the magazine's fit), holsters.cpp (the medicine's fit), hands.cpp.
+  `[compile-verified 2026-10-31]`. The magazine copy now rides the left controller (its bounds were where its owner
+  actor stands), re-asserts the magazine bone's scale and updates its bounds each tick: the likely cause of "invisible"
+  `[hypothesis]`.
+- Medicine: RG at the lower back puts the gun away and takes the drink out, no grip hold; RG there again = syringe, a
+  third time = back; a weapon spot puts it back; RT uses it.
+- Map: put away with the game's back (pad B, Cancel), pressed again every 1 s (5 at most) while it still shows;
+  nothing takes it back into the hand meanwhile.
+- Pistol: after an insert the left hand stays on the magazine (its place against the seat at the insert) until LG
+  lets go; the slide only takes a FRESH left grip press, and the grab alone holds it (no LT): pull back, push forward
+  or let go = home (`RACK_NEEDS_LT` false, `RACK_HOME_AT` 0.3).
+
+## Still to do (need the game running)
+- Map screen: find and hide every HUD widget showing with the map (live widget list).
+- Map in the hand: thumb in front, fingers behind, the map locked to that grip; the same for the right hand when it
+  holds the right edge (Tefa's picture: I could not see it in this session).
+- Shotgun pump: the pack's lock after a shot never happened (gate 0 all wear): check live whether its OnFirePerformed
+  hook runs for our lowered fire (state via `shotgunPump.dumpDiag`), and why the game's own pump animation still plays.
+  The grab only at the pump (not anywhere on the gun); the pump handle must move with the hand.
+- Shotgun shells: go in when they reach the loading port (no release needed); the last push as the game's own
+  animation if possible.
+- Rifle: the round from the pouch is `SniperRifle_Shell_01_A` (the spent case, rifle_reload.lua `SHELL_MESH`): find
+  the live round mesh. The bolt: no grab at all; check live whether `rifle_manual_bolt` is on and its lock happens.
