@@ -98,12 +98,12 @@ void tick(float) {
 
     const int rounds = ammo::rounds(w);
     if (!g_parked && rounds == 0 && !reload::mag_out()) { g_parked = true; LOGI("%s rack: the pistol is empty: its slide can be racked", TAG); }
-    const bool lg = input::held(XINPUT_GAMEPAD_LEFT_SHOULDER), lt = input::left_trigger();
+    const bool lg = input::grip(false), lt = input::left_trigger();
     const bool may_rack = g_parked || g_needed;
 
     if (!g_hand_on && may_rack && lg && !reload::hand_busy()) {
         const double d = size(sub(left, slide));
-        if (g_log_near < 30 && input::pressed(XINPUT_GAMEPAD_LEFT_SHOULDER)) { ++g_log_near; LOGI("%s rack: left grip %.1f cm from the slide (need %.0f): %s", TAG, d, settings::SLIDE_GRAB_CM, d <= settings::SLIDE_GRAB_CM ? "HAND ON" : "too far"); }
+        if (g_log_near < 30 && input::grip_pressed(false)) { ++g_log_near; LOGI("%s rack: left grip %.1f cm from the slide (need %.0f): %s", TAG, d, settings::SLIDE_GRAB_CM, d <= settings::SLIDE_GRAB_CM ? "HAND ON" : "too far"); }
         if (d <= settings::SLIDE_GRAB_CM) {
             g_hand_on = true;
             g_armed = g_pulled = false;

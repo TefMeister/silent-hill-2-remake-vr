@@ -167,6 +167,7 @@ enum class LeftItem { NONE, MAP };
 LeftItem g_left = LeftItem::NONE;
 bool g_map_seen = false;           // the map has shown since it was taken out
 float g_map_out_s = 0.0f, g_map_gone_s = 0.0f;
+float g_map_toggle_s = 99.0f;      // since the last map toggle: a second grab right after is ignored
 // the healing item, in the RIGHT hand (the lower back spot)
 std::atomic<bool> g_heal{false};   // read by fire::on_input on the input thread: RT is kept from the game while it is in hand
 float g_heal_held_s = 0.0f;        // how long the right grip has held it
@@ -201,7 +202,19 @@ void left_tick(float delta) {
     // it and let go, left hand always stays on the map and putting it back in the right hip with LG closes it, so does X,
     // and LT and RT turn pages"): LG at the right hip takes it out, LG at the right hip again puts it away; letting go of
     // the grip does nothing; Quest X (the game's own back) closes it too, noticed when the map stops showing
-    if (pressed && in_spot == map_i && g_left == LeftItem::NONE) {
+    g_map_toggle_s += delta;
+    // the game's own truth first: a map on screen that the hand does not hold (opened by the d-pad, or our open and close
+    // crossed) is taken into the left hand, so the grips never fall through to the game as its page buttons
+    if (g_left == LeftItem::NONE && buttons::map_showing() && g_map_toggle_s >= settings::MAP_TOGGLE_COOLDOWN_S) {
+        g_left = LeftItem::MAP;
+        g_map_seen = true;
+        g_map_out_s = g_map_gone_s = 0.0f;
+        buttons::keep_left_grip(true);
+        say("the map is on screen but not in the hand: taken into the left hand");
+    }
+    const bool map_press = pressed && in_spot == map_i && g_map_toggle_s >= settings::MAP_TOGGLE_COOLDOWN_S;
+    if (map_press) g_map_toggle_s = 0.0f;
+    if (map_press && g_left == LeftItem::NONE) {
         g_left = LeftItem::MAP;
         g_map_seen = false;
         g_map_out_s = 0.0f;
@@ -210,7 +223,7 @@ void left_tick(float delta) {
         buttons::press_for_game(XINPUT_GAMEPAD_DPAD_UP, settings::HOLSTER_PRESS_POLLS);   // MapToggle
         say("left grip at the right hip: the map is out, in the left hand (LG at the right hip again or Quest X puts it away; RG = both hands; LT / RT turn pages)");
         gun::buzz(controllers::LEFT, settings::BUZZ_DONE_AMP, settings::BUZZ_S);
-    } else if (pressed && in_spot == map_i && g_left == LeftItem::MAP) {
+    } else if (map_press && g_left == LeftItem::MAP) {
         g_left = LeftItem::NONE;
         buttons::keep_left_grip(false);
         buttons::press_for_game(XINPUT_GAMEPAD_DPAD_UP, settings::HOLSTER_PRESS_POLLS);   // MapToggle again: closes
@@ -235,6 +248,13 @@ bool holding() { return g_holding; }
 bool showing_ammo() { return g_showing; }
 bool heal_in_hand() { return g_heal.load(); }
 bool map_held() { return g_left == LeftItem::MAP; }
+bool left_hand_to_spot_cm(double right_cm, double up_cm, double forward_cm, double& out_cm) {
+    const settings::HolsterSpot s{L"", right_cm, up_cm, forward_cm, L""};
+    TV hand{}, p{};
+    if (!left_hand(hand) || !spot_tracking(s, p)) return false;
+    out_cm = dist_cm(hand, p);
+    return true;
+}
 bool left_grip() { return g_pretend_lg || input::grip(false); }
 bool right_grip() { return grip_now(); }
 

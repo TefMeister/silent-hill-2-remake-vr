@@ -79,3 +79,20 @@ always stays on the map and putting it back in the right hip with LG closes it, 
 - Two hands, let-go: the gun's place in the right hand (GetRelativeTransform) is read when two hands start and put back
   (K2_SetRelativeTransform) when they end; the log line says "put back", "could NOT be put back" or "was never read".
 Built and installed; not run yet `[compile-verified 2026-10-31]`.
+
+## 14:40 — second wear read; the map follows the game, the pouch from the headset, the hands follow the long gun (sh2vr.dll 7e65f601, built, NOT installed: the game was still open)
+Tefa's second wear: the map works out of the hip and with both hands and LT / RT turn pages, but putting it back "jumps
+back to the right hand and then LG and RG flip the pages again". Log: put away at 14:32:27.861, out again 0.4 s later
+(a second grip press), so our state and the game's crossed `[measured 2026-10-31, headset]`. Quest B ejects the magazine
+`[verified-live]`. The pouch: no hit anywhere at the left hip. Two hands: the let-go puts the gun back `[verified-live]`
+("its place in the right hand put back"), but the right hand does not turn with the gun and the left hand slides along
+it. The meds buzz but show nothing. RT on an empty gun gives no click.
+- Map: a grip at the hip within 1 s of a toggle is ignored; a map on screen that the hand does not hold is taken into the
+  left hand, so the grips can never fall through to the game's page buttons.
+- Pouch: measured like the holsters (headset tracking space, yaw only) instead of the game's camera.
+- Every grip read (rack, reload, holsters, twohand) goes through input::grip, the pad or UEVR's VR grip action (found).
+- Two hands: the gun aims at the drawn left hand's starting place carried by the left controller; the drawn left hand
+  stays on the gun's line at its starting distance (ik override, off again on let-go); the drawn right hand turns by the
+  gun's whole turn (new ik::override_right_turn). Settings TWO_HAND_TURN_RIGHT / TWO_HAND_LOCK_LEFT.
+Still to do: the pump and bolt and the fire pace for the long guns, the dry click, the meds shown in the hand, why the
+slide reads 40-93 cm from the left hand.

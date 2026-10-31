@@ -8,6 +8,7 @@
 #include "ammo.h"
 #include "ghosthand.h"
 #include "gun.h"
+#include "holsters.h"
 #include "ikmath.h"
 #include "input.h"
 #include "rack.h"
@@ -51,15 +52,7 @@ void mag_bones(API::UObject* w, bool hidden) {
     g_bones_hidden = hidden;
 }
 
-// the ammo spot: from the headset, to the left, down, a little forward (the pack's holster numbers)
-bool pouch_spot(Vec3& out) {
-    Vec3 h;
-    Rot r;
-    if (!gun::hmd(h, r)) return false;
-    const Vec3 f = rotate(Vec3{1, 0, 0}, r), right = rotate(Vec3{0, 1, 0}, r), up = rotate(Vec3{0, 0, 1}, r);
-    out = add(add(add(h, mul(right, settings::HIP_RIGHT_CM)), mul(up, settings::HIP_UP_CM)), mul(f, settings::HIP_FORWARD_CM));
-    return true;
-}
+// the ammo spot: holsters::left_hand_to_spot_cm with the pack's holster numbers (settings HIP_*)
 
 void destroy_hand_mesh() {
     if (ue::alive(g_hand_mesh)) ue::call(g_hand_mesh, L"K2_DestroyComponent", {g_hand_mesh});
@@ -159,22 +152,24 @@ void tick(float delta) {
     if (!gun::is_pistol(w) || !gun::hmd_active()) { if (g_weapon != nullptr) reset(gun::is_pistol(w) ? "no headset" : "no pistol in hand"); return; }
     if (w != g_weapon) { if (g_weapon != nullptr) reset("another pistol"); g_weapon = w; }
 
-    Vec3 left, spot;
+    Vec3 left;
     Rot left_rot;
     if (!gun::controller(controllers::LEFT, left, left_rot)) return;
-    if (pouch_spot(spot)) {
-        const double d = size(sub(left, spot));
+    // 2026-10-31: measured like the holsters (headset tracking space, yaw only); the game's camera did not follow the
+    // headset and Tefa found no pouch at all ("i pressed LG around left hip all over and not a single hit")
+    double d = 0;
+    if (holsters::left_hand_to_spot_cm(settings::HIP_RIGHT_CM, settings::HIP_UP_CM, settings::HIP_FORWARD_CM, d)) {
         if (!g_in_pouch && d < settings::HIP_ENTER_CM) { g_in_pouch = true; if (g_st == St::DROPPED) gun::buzz(controllers::LEFT, settings::BUZZ_DENY_AMP, settings::BUZZ_S); }
         else if (g_in_pouch && d > settings::HIP_LEAVE_CM) g_in_pouch = false;
     }
-    const bool lg = input::held(XINPUT_GAMEPAD_LEFT_SHOULDER);
+    const bool lg = input::grip(false);
 
     switch (g_st) {
     case St::SEATED:
         if (input::pressed(settings::QUEST_B) && !rack::active()) drop(w);   // Quest B (the pad's X, settings.h)
         break;
     case St::DROPPED:
-        if (input::pressed(XINPUT_GAMEPAD_LEFT_SHOULDER) && g_in_pouch && g_since_grab >= settings::RELOAD_GRAB_COOLDOWN_S) { g_since_grab = 0.0f; grab(w); }
+        if (input::grip_pressed(false) && g_in_pouch && g_since_grab >= settings::RELOAD_GRAB_COOLDOWN_S) { g_since_grab = 0.0f; grab(w); }
         break;
     case St::IN_HAND: {
         if (!lg) {

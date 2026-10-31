@@ -90,6 +90,7 @@ constexpr unsigned HOLSTER_LEFT_TEST_KEY = 0x74;   // VK_F5: a pretend LEFT grip
 // hand): a right grip press there takes the drink out, keep holding and it is the syringe, RT uses what is in the hand
 // (the game's one healing action, Y), letting go of the grip puts it back unused.
 constexpr const wchar_t* LEFT_ITEM_MAP_SPOT = L"right hip";   // 2026-10-31 13:00, Tefa: "move the map to the right hip, LG to take it out, right hand with RG held to two hand the map"
+constexpr float MAP_TOGGLE_COOLDOWN_S = 1.0f;   // after taking the map out or putting it away, LG at the hip is ignored this long (14:32: put away, out again 0.4 s later)
 constexpr float MAP_GONE_S = 0.5f;          // the map not showing this long after it showed: closed another way (Quest X)
 constexpr float MAP_NEVER_CAME_S = 3.0f;    // taken out but never showed in this long: give up
 constexpr float HEAL_SYRINGE_HOLD_S = 0.5f;    // (Tefa 2026-10-31: "2 seconds feels like forever") the right grip held this long at the lower back: the drink becomes the syringe
@@ -107,6 +108,8 @@ constexpr double TWO_HAND_BARREL_AXIS[3] = {0.0, 1.0, 0.0};   // the long guns' 
 constexpr double TWO_HAND_MIN_CM = 12.0, TWO_HAND_MAX_CM = 90.0;   // the left hand this far from the right to take the gun's front
 constexpr double TWO_HAND_CONE_DEG = 50.0;    // and within this angle of the barrel (40 let the simulator's rifle in at exactly 40, 2026-10-31)
 constexpr bool TWO_HAND_AIM_AT_DRAWN_HAND = true;   // aim at the drawn left hand, not the controller point
+constexpr bool TWO_HAND_TURN_RIGHT = true;   // the drawn right hand turns with the two-handed long gun
+constexpr bool TWO_HAND_LOCK_LEFT = true;    // the drawn left hand stays on the gun's line at its starting distance (until the pump is built)
 constexpr double MAP_TWO_HAND_TILT_DEG = 45.0; // praydog's tilt of the two-handed map
 constexpr float TWO_HAND_REPORT_S = 3.0f;
 constexpr int TWO_HAND_LOG_MAX = 80;

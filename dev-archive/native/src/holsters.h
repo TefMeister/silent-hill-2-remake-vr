@@ -20,6 +20,8 @@ bool showing_ammo();
 bool heal_in_hand();
 // The left grip holds the map open (2026-10-31: taken at the right hip); twohand.cpp places it.
 bool map_held();
+// The left hand's distance to a spot given from the headset (cm right, up, forward), measured like the holsters.
+bool left_hand_to_spot_cm(double right_cm, double up_cm, double forward_cm, double& out_cm);
 // The grips as the holsters read them (the real controller, or F5 / F6 on the simulator).
 bool left_grip();
 bool right_grip();

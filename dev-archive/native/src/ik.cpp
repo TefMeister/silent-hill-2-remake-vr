@@ -46,6 +46,7 @@ Vec3 unrotate(Vec3 v, Rot r) { Vec3 o; ue::call_ret(kml(), L"LessLess_VectorRota
 Rot make_rot_from_xz(Vec3 x, Vec3 z) { Rot o; ue::call_ret(kml(), L"MakeRotFromXZ", {x, z}, o); return o; }
 Quat quat_from_euler_kismet(Rot r) { Quat q; ue::call_ret(kml(), L"Quat_MakeFromEuler", {Vec3{r.roll, r.pitch, r.yaw}}, q); return q; }   // Roll, Pitch, Yaw, as the Lua fed it
 double fclamp(double v, double lo, double hi) { return v < lo ? lo : v > hi ? hi : v; }
+Quat quat_conj_unit(Quat q) { return Quat{-q.x, -q.y, -q.z, q.w}; }
 
 // ---- the mesh (UPoseableMeshComponent) --------------------------------------------------------------------------
 Vec3 bone_loc(API::UObject* m, const API::FName& b, int space) { Vec3 o; ue::call_ret(m, L"GetBoneLocationByName", {b, (int32_t)space}, o); return o; }
@@ -115,6 +116,8 @@ struct Rig {
 };
 Rig* g_rig = nullptr;
 bool g_ov_on = false;              // rack.cpp holds the left hand on the slide
+bool g_ovr_on = false;             // twohand.cpp turns the right hand with the two-handed long gun
+Quat g_ovr_q{};
 Vec3 g_ov_pos;
 Rot g_ov_rot;
 float g_since_try = settings::HANDS_RETRY_S;
@@ -393,7 +396,15 @@ void solve_two_bone(Rig& rig, Solver& s) {
     const Transform c2w = comp_to_world(m);
     const Vec3 shoulder_ws = bone_loc(m, s.start_f, WS);
     Vec3 effector_ws = add(ctrl_pos_ws, rotate(s.hand_offset, ctrl_rot_ws));
-    if (s.hand == controllers::LEFT && g_ov_on) { effector_ws = g_ov_pos; ctrl_rot_ws = g_ov_rot; }   // rack.cpp: the hand rides the slide
+    if (s.hand == controllers::LEFT && g_ov_on) { effector_ws = g_ov_pos; ctrl_rot_ws = g_ov_rot; }   // rack.cpp / twohand.cpp: the hand rides a gun part
+    if (s.hand == controllers::RIGHT && g_ovr_on) {   // twohand.cpp: the right hand turns with the long gun, about the controller
+        const Transform ct = comp_to_world(s.controller);
+        const Quat a = g_ovr_q, b = ct.rot;
+        const Quat rn{a.w * b.x + a.x * b.w + a.y * b.z - a.z * b.y, a.w * b.y - a.x * b.z + a.y * b.w + a.z * b.x,
+                      a.w * b.z + a.x * b.y - a.y * b.x + a.z * b.w, a.w * b.w - a.x * b.x - a.y * b.y - a.z * b.z};
+        ctrl_rot_ws = make_rot_from_xz(rotate_quat(Vec3{1, 0, 0}, rn), rotate_quat(Vec3{0, 0, 1}, rn));
+        effector_ws = add(ctrl_pos_ws, rotate_quat(s.hand_offset, rn));   // the hand offset in the controller frame, turned
+    }
     const Rot ctrl_rot_cs = inverse_transform_rotation(c2w, ctrl_rot_ws);
     if (s.smoothing > 0) {
         const Vec3 off_cs = inverse_transform_direction(c2w, sub(effector_ws, shoulder_ws));
@@ -674,6 +685,7 @@ API::UObject* mesh() { return g_rig != nullptr ? g_rig->mesh : nullptr; }
 void destroy() { destroy_rig(g_rig); g_rig = nullptr; bridge::tell_lua("sh2vr_ik_mesh", ""); }
 
 void override_left(bool on, const Vec3& effector_ws, const Rot& rot_ws) { g_ov_on = on; g_ov_pos = effector_ws; g_ov_rot = rot_ws; }
+void override_right_turn(bool on, const Quat& turn_ws) { g_ovr_on = on; g_ovr_q = turn_ws; }
 
 bool hand_world(controllers::Side side, Vec3& out) {
     if (g_rig == nullptr || !ue::alive(g_rig->mesh)) return false;

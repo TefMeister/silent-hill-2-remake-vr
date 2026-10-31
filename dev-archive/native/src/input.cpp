@@ -12,8 +12,11 @@ bool g_any = false;
 bool trig(BYTE v) { return v > settings::TRIGGER_PRESSED_OVER; }
 } // namespace
 
+bool grip(bool right);
+
 void on_state(const XINPUT_STATE& state) { g_now = state; g_any = true; }
-void end_tick() { g_last = g_now; }
+bool g_grip_last[2] = {false, false};
+void end_tick() { g_last = g_now; g_grip_last[0] = grip(false); g_grip_last[1] = grip(true); }
 
 bool held(WORD button) { return g_any && (g_now.Gamepad.wButtons & button) != 0; }
 bool pressed(WORD button) { return g_any && (g_now.Gamepad.wButtons & button) != 0 && (g_last.Gamepad.wButtons & button) == 0; }
@@ -35,5 +38,7 @@ bool grip(bool right) {
     const UEVR_InputSourceHandle src = right ? API::VR::get_right_joystick_source() : API::VR::get_left_joystick_source();
     return pad || API::VR::is_action_active(action, src);
 }
+
+bool grip_pressed(bool right) { return grip(right) && !g_grip_last[right ? 1 : 0]; }
 
 } // namespace sh2vr::input

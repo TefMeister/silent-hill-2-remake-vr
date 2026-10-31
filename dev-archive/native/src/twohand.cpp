@@ -132,6 +132,9 @@ Transform g_gun_written{};
 bool g_gun_have_written = false;
 int g_gun_writes = 0;
 Transform g_gun_rel{};             // the gun's place in the right hand before two hands
+Vec3 g_barrel_ctrl{};              // the hands' line at the start, in the RIGHT controller's frame (the whole turn for the right hand)
+Vec3 g_aim_off{};                  // the drawn left hand at the start, in the LEFT controller's frame (aim there, not at the drawn hand once it is locked)
+double g_front_cm = 0;             // the right hand to the drawn left hand at the start: the left hand stays this far up the gun
 bool g_gun_have_rel = false;
 
 // the map
@@ -188,6 +191,8 @@ void tick(float delta) {
         std::snprintf(line, sizeof line, "%s; its place in the right hand %s", !lg ? "left grip let go: the long gun back in the right hand alone" : "the long gun went away: two hands off",
                       back ? "put back" : g_gun_have_rel ? "could NOT be put back" : "was never read");
         say(line);
+        ik::override_left(false, {}, {});
+        ik::override_right_turn(false, {});
         g_gun = g_gun_capture = g_gun_have_written = g_gun_have_rel = false;
         g_gun_mesh = nullptr;
     }
@@ -241,7 +246,7 @@ void tick(float delta) {
             if (world_of(g_gun_mesh, mw) && hand(controllers::LEFT, l)) {
                 const Vec3 grip = to_world(mw, g_grip_local);
                 std::snprintf(line, sizeof line, "status: the gun's start line is %.1f deg off the left hand (0 = following it), %d writes",
-                              angle_deg(qrot(mw.rot, g_barrel_local), sub(front_hand(l), grip)), g_gun_writes);
+                              angle_deg(qrot(mw.rot, g_barrel_local), sub(add(l.pos, qrot(l.rot, g_aim_off)), grip)), g_gun_writes);
                 LOGI("%s twohand: %s", TAG, line);
             }
         }
@@ -256,17 +261,30 @@ void on_view() {
         Transform mw, r, l;
         if (world_of(g_gun_mesh, mw) && hand(controllers::RIGHT, r) && hand(controllers::LEFT, l)) {
             if (g_gun_capture) {   // the gun where UEVR put it, the hands now: remember the line and the grip in the gun's frame
-                g_barrel_local = norm(qrot(qconj(mw.rot), sub(front_hand(l), r.pos)));
+                const Vec3 drawn = front_hand(l);
+                g_barrel_local = norm(qrot(qconj(mw.rot), sub(drawn, r.pos)));
+                g_barrel_ctrl = norm(qrot(qconj(r.rot), sub(drawn, r.pos)));
+                g_aim_off = qrot(qconj(l.rot), sub(drawn, l.pos));
+                g_front_cm = len(sub(drawn, r.pos));
                 g_grip_local = to_local(mw, r.pos);
                 g_gun_capture = false;
             }
             // aimed at the target, not added to the last write: run again on a gun already turned, it turns no further
+            const Vec3 aim = add(l.pos, qrot(l.rot, g_aim_off));
             const Vec3 grip = to_world(mw, g_grip_local);
-            const Quat q = from_to(qrot(mw.rot, g_barrel_local), sub(front_hand(l), grip));
+            const Quat q = from_to(qrot(mw.rot, g_barrel_local), sub(aim, grip));
             Transform t = mw;
             t.rot = qnorm(qmul(q, mw.rot));
             t.pos = add(grip, qrot(q, sub(mw.pos, grip)));
             if (set_world(g_gun_mesh, t)) { g_gun_written = t; g_gun_have_written = true; ++g_gun_writes; }
+            // the hands follow the gun (Tefa's second wear, 2026-10-31: "right hand doesn't turn with the long weapon" and
+            // the left hand "moves around the weapon freely forward and back"): the right hand turns by the whole turn
+            // from where the gun sat in it; the drawn left hand stays on the gun's line at its starting distance
+            if (settings::TWO_HAND_TURN_RIGHT) ik::override_right_turn(true, from_to(qrot(r.rot, g_barrel_ctrl), sub(aim, r.pos)));
+            if (settings::TWO_HAND_LOCK_LEFT) {
+                Vec3 lp; ue::Rot lr;
+                if (gun::controller(controllers::LEFT, lp, lr)) ik::override_left(true, add(grip, mul(norm(sub(aim, grip)), g_front_cm)), lr);
+            }
         }
     }
 
