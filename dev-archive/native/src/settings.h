@@ -59,6 +59,7 @@ constexpr const wchar_t* MAP_SECTION_CLASS = L"WidgetBlueprintGeneratedClass /Ga
 // ---- the Quest 3 face buttons as the pad sees them (2026-10-31, Tefa in the headset: "quest 3 X Y B A xbox in same order
 // B Y X A"; the log agrees: Quest X ejected the magazine through the pad's B) [verified-live 2026-10-31, headset]. Tefa's
 // plan names QUEST letters, so the mod reads these two names, never the pad letters directly.
+constexpr const char* VR_GRIP_ACTION = "/actions/default/in/Grip";   // UEVR's own grip action (input::grip)
 constexpr unsigned short QUEST_X = 0x2000;   // XINPUT_GAMEPAD_B: Quest X (left, lower) = back in the menus
 constexpr unsigned short QUEST_B = 0x4000;   // XINPUT_GAMEPAD_X: Quest B (right, upper) = the pistol's magazine out
 
@@ -89,6 +90,8 @@ constexpr unsigned HOLSTER_LEFT_TEST_KEY = 0x74;   // VK_F5: a pretend LEFT grip
 // hand): a right grip press there takes the drink out, keep holding and it is the syringe, RT uses what is in the hand
 // (the game's one healing action, Y), letting go of the grip puts it back unused.
 constexpr const wchar_t* LEFT_ITEM_MAP_SPOT = L"right hip";   // 2026-10-31 13:00, Tefa: "move the map to the right hip, LG to take it out, right hand with RG held to two hand the map"
+constexpr float MAP_GONE_S = 0.5f;          // the map not showing this long after it showed: closed another way (Quest X)
+constexpr float MAP_NEVER_CAME_S = 3.0f;    // taken out but never showed in this long: give up
 constexpr float HEAL_SYRINGE_HOLD_S = 0.5f;    // (Tefa 2026-10-31: "2 seconds feels like forever") the right grip held this long at the lower back: the drink becomes the syringe
 constexpr int HOLSTER_PRESS_POLLS = 3;        // how many pad polls a press the game must see lasts
 constexpr int HOLSTER_LOG_MAX = 80;

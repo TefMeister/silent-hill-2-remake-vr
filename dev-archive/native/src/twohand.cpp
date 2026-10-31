@@ -131,6 +131,8 @@ Vec3 g_grip_local{};               // the right hand at the start, in the gun me
 Transform g_gun_written{};
 bool g_gun_have_written = false;
 int g_gun_writes = 0;
+Transform g_gun_rel{};             // the gun's place in the right hand before two hands
+bool g_gun_have_rel = false;
 
 // the map
 API::UObject* g_map_mesh = nullptr;
@@ -180,8 +182,13 @@ void tick(float delta) {
     API::UObject* w = gun::equipped();
     const bool long_gun = is_long_gun(w) && !buttons::menu_open() && !holsters::map_held();
     if (g_gun && (!lg || !long_gun || gun::mesh(w) != g_gun_mesh)) {
-        say(!lg ? "left grip let go: the long gun back in the right hand alone" : "the long gun went away: two hands off");
-        g_gun = g_gun_capture = g_gun_have_written = false;
+        // put the gun back where it sat in the right hand: the pack places it on the hand once, not every frame, so our turn
+        // would stay (Tefa's first wear, 2026-10-31: "the weapon stays at the angle it was left")
+        const bool back = g_gun_have_rel && ue::alive(g_gun_mesh) && ue::call(g_gun_mesh, L"K2_SetRelativeTransform", {g_gun_rel, false});
+        std::snprintf(line, sizeof line, "%s; its place in the right hand %s", !lg ? "left grip let go: the long gun back in the right hand alone" : "the long gun went away: two hands off",
+                      back ? "put back" : g_gun_have_rel ? "could NOT be put back" : "was never read");
+        say(line);
+        g_gun = g_gun_capture = g_gun_have_written = g_gun_have_rel = false;
         g_gun_mesh = nullptr;
     }
     if (lg_pressed && long_gun && !g_gun) {
@@ -201,7 +208,11 @@ void tick(float delta) {
                           angle_deg(qrot(mw.rot, ax[0]), line_rl), angle_deg(qrot(mw.rot, ax[1]), line_rl), angle_deg(qrot(mw.rot, ax[2]), line_rl),
                           angle_deg(qrot(mw.rot, ax[3]), line_rl), angle_deg(qrot(mw.rot, ax[4]), line_rl), angle_deg(qrot(mw.rot, ax[5]), line_rl));
             say(line);
-            if (ok) { g_gun = true; g_gun_capture = true; g_gun_mesh = m; g_gun_have_written = false; gun::buzz(controllers::LEFT, settings::BUZZ_GRAB_AMP, settings::BUZZ_S); }
+            if (ok) {
+                g_gun = true; g_gun_capture = true; g_gun_mesh = m; g_gun_have_written = false;
+                g_gun_have_rel = ue::call_ret(m, L"GetRelativeTransform", {}, g_gun_rel);   // its place in the right hand, for the let-go
+                gun::buzz(controllers::LEFT, settings::BUZZ_GRAB_AMP, settings::BUZZ_S);
+            }
         }
     }
 

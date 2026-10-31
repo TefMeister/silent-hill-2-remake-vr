@@ -65,3 +65,17 @@ UEVR's VR_SwapControllerInputs is false. So the plan's letters are QUEST letters
 the menus (it is the game's own Cancel, so it passes as it is), `settings::QUEST_B` (pad X) = the pistol's magazine out
 (reload.cpp). Both stay hidden from the game in play. buttons.cpp now logs each face press by its Quest letter. Not
 worn yet.
+
+## 14:28 — the map is a toggle, the triggers turn its pages, the long gun goes back on let-go (sh2vr.dll d34b3bf0, backup `_backup-2026-10-31-1428-before-sh2vr-deploy`)
+Tefa: *"can LG even get the map out from right hip so it stays in left hand and RG can grip it and let go, left hand
+always stays on the map and putting it back in the right hip with LG closes it, so does X, and LT and RT turn pages"*.
+- Map: LG at the right hip takes it out, LG at the right hip again puts it away; letting go of LG does nothing; Quest X
+  (the game's own back) closes it and the mod notices when the map stops showing (0.5 s); RG held = both hands. While it
+  is out the grips never reach the game, LT / RT become the game's LB / RB (previous / next map) and never reach it as
+  triggers (so RT cannot fire).
+- The grips are read from the pad's LB / RB OR UEVR's own VR grip action (`/actions/default/in/Grip`), because the pad's
+  LB read "let go" 33 ms after the map opened while Tefa still held it `[measured 2026-10-31, headset]`. The first log line
+  says whether UEVR found that action.
+- Two hands, let-go: the gun's place in the right hand (GetRelativeTransform) is read when two hands start and put back
+  (K2_SetRelativeTransform) when they end; the log line says "put back", "could NOT be put back" or "was never read".
+Built and installed; not run yet `[compile-verified 2026-10-31]`.

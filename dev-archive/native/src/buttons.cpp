@@ -52,7 +52,10 @@ int g_turn_pulse = 0;              // polls left to hold the quick turn
 bool g_menu = false;               // the frame's menu-or-gameplay answer (set on the game thread)
 WORD g_queued = 0;                 // press_for_game: what the game must see next
 int g_queued_polls = 0;
-bool g_keep_lg = false;            // keep_left_grip
+bool g_keep_lg = false;            // keep_left_grip: the map is out (holsters.cpp)
+bool g_map_showing = false;        // the map widget is visible (game thread)
+bool g_page_lt_was = false, g_page_rt_was = false;
+int g_page_prev = 0, g_page_next = 0;   // polls left of a page turn press
 bool g_menu_was = false;
 int g_logs = 0;
 uint32_t g_polls = 0, g_rewrites = 0;
@@ -106,6 +109,7 @@ bool widget_focused(const wchar_t* class_path) {
 
 bool sprinting() { return g_sprint; }
 bool menu_open() { return g_menu; }
+bool map_showing() { return g_map_showing; }
 void press_for_game(WORD buttons, int polls) { g_queued = buttons; g_queued_polls = polls; }
 void keep_left_grip(bool keep) { g_keep_lg = keep; }
 
@@ -147,8 +151,20 @@ void on_input(XINPUT_STATE& state) {
         set(state, XINPUT_GAMEPAD_Y, false);
         set(state, XINPUT_GAMEPAD_LEFT_THUMB, false);
         set(state, XINPUT_GAMEPAD_RIGHT_THUMB, false);
-        if (g_keep_lg) set(state, XINPUT_GAMEPAD_LEFT_SHOULDER, false);   // the map is held with the left grip
-        if (g_keep_lg) set(state, XINPUT_GAMEPAD_RIGHT_SHOULDER, false);  // and the right grip holds it with both hands (2026-10-31), not the next map
+        if (g_keep_lg) {
+            // the map is out (2026-10-31, Tefa): the grips hold it and never reach the game; LT / RT turn its pages
+            // (the game's previous / next map = LB / RB); the triggers themselves never reach the game
+            const bool rt = raw.Gamepad.bRightTrigger > settings::TRIGGER_PRESSED_OVER;
+            if (lt && !g_page_lt_was) { g_page_prev = settings::BUTTONS_PULSE_POLLS; say("map: LT -> previous page (the game's LB)"); }
+            if (rt && !g_page_rt_was) { g_page_next = settings::BUTTONS_PULSE_POLLS; say("map: RT -> next page (the game's RB)"); }
+            g_page_lt_was = lt; g_page_rt_was = rt;
+            set(state, XINPUT_GAMEPAD_LEFT_SHOULDER, g_page_prev > 0);
+            set(state, XINPUT_GAMEPAD_RIGHT_SHOULDER, g_page_next > 0);
+            if (g_page_prev > 0) --g_page_prev;
+            if (g_page_next > 0) --g_page_next;
+            state.Gamepad.bLeftTrigger = 0;
+            state.Gamepad.bRightTrigger = 0;
+        }
         apply_queued(state);
         g_ls_was = ls_click; g_lt_was = lt; g_rs_up_was = rs_up;
         g_flash_pulse = g_turn_pulse = 0;
@@ -207,6 +223,7 @@ void tick(float) {
         else if (widget_visible(settings::MAP_SECTION_CLASS)) { open = true; why = "the map is open"; }
     }
     g_menu = open;
+    g_map_showing = !no_pawn && widget_visible(settings::MAP_SECTION_CLASS);
     if (open != g_menu_was) {
         g_menu_was = open;
         std::snprintf(g_why, sizeof g_why, "%s", why);

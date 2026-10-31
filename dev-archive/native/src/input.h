@@ -17,5 +17,8 @@ bool left_trigger();
 bool right_trigger();
 bool left_trigger_pressed();
 bool right_trigger_pressed();
+// A grip held: the pad's LB / RB OR UEVR's own VR grip action on that hand (2026-10-31: when the map opened, the pad's LB
+// read "let go" 33 ms later while Tefa still held the grip; the VR action does not go through the pad at all).
+bool grip(bool right);
 
 } // namespace sh2vr::input
