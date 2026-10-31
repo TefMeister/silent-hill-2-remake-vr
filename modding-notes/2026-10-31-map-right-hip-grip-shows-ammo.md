@@ -46,3 +46,13 @@ the left grip from the pack's shotgun and rifle round grabs, which the pistol-on
   wrist, either uses it. Both were already the same press (the game's Y, ActionHealing; the game picks the item).
 - The left hip: nothing of holsters.cpp; the ammo only.
 - Backup `D:/SH2 builds/_backup-2026-10-31-1131-before-sh2vr-deploy`.
+
+## Then: the healing item the settled way (sh2vr.dll ef77c753)
+Tefa: *"i thought that LG press takes the drink out, LG long press takes the syringe out and LT uses it?"* Checked:
+that is the settled layout (2026-10-25); the 10-29 build had used a mouth / wrist gesture instead, which could fire
+by itself with the right hand resting near the hip. Now: left grip pressed at the right hip = the drink in the hand;
+held 2 s (`HEAL_SYRINGE_HOLD_S`, a buzz) = the syringe; LT while holding = used (the game's Y); let go = back unused.
+LT with the left grip held is never the flashlight (buttons.cpp takes LT ALONE only). The mouth helper is gone.
+⚠️ Open: Y is the game's one healing action and the game picks the item it uses, so "drink" or "syringe" is ours
+only in the log until the game's own use-this-item call is found (live, UEVR-MCP) `[hypothesis]`.
+Backup `D:/SH2 builds/_backup-2026-10-31-1144-before-sh2vr-deploy`.

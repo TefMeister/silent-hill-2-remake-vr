@@ -161,10 +161,12 @@ bool grip_now() { return g_pretend_grip || input::held(XINPUT_GAMEPAD_RIGHT_SHOU
 
 // ---- the left grip's items: the map (held open), the syringe and the drink (a gesture) -----------------------------
 enum class LeftItem { NONE, MAP, HEAL };
+float g_heal_held_s = 0.0f;       // how long the left grip has held the healing item
+bool g_heal_syringe = false;       // held past HEAL_SYRINGE_HOLD_S: the syringe, else the drink
 LeftItem g_left = LeftItem::NONE;
 bool g_pretend_lg = false;         // F5
 bool g_lg_was = false;
-const char* left_name(LeftItem i) { return i == LeftItem::MAP ? "map" : i == LeftItem::HEAL ? "healing item" : "nothing"; }
+const char* left_name(LeftItem i) { return i == LeftItem::MAP ? "map" : i == LeftItem::HEAL ? (g_heal_syringe ? "syringe" : "drink") : "nothing"; }
 
 // the spot index with this name, or -1
 int spot_named(const wchar_t* name) {
@@ -173,20 +175,7 @@ int spot_named(const wchar_t* name) {
     return -1;
 }
 
-// the mouth, in tracking metres: a little ahead of and below the head
-bool mouth(TV& out) {
-    TV h;
-    UEVR_Quaternionf q;
-    if (!head_pose(h, q)) return false;
-    TV f = rot_q(q, {0, 0, -1});
-    f.y = 0;
-    const double len = std::sqrt(f.x * f.x + f.z * f.z);
-    if (len < 1e-6) f = {0, 0, -1}; else { f.x /= len; f.z /= len; }
-    out = {h.x + f.x * settings::MOUTH_FORWARD_CM * 0.01, h.y - settings::MOUTH_DOWN_CM * 0.01, h.z + f.z * settings::MOUTH_FORWARD_CM * 0.01};
-    return true;
-}
-
-void left_tick() {
+void left_tick(float delta) {
     const bool lg = g_pretend_lg || input::held(XINPUT_GAMEPAD_LEFT_SHOULDER);
     const bool pressed = lg && !g_lg_was, released = !lg && g_lg_was;
     g_lg_was = lg;
@@ -207,7 +196,9 @@ void left_tick() {
             gun::buzz(controllers::LEFT, settings::BUZZ_DONE_AMP, settings::BUZZ_S);
         } else if (in_spot == heal_i) {
             g_left = LeftItem::HEAL;
-            say("left grip at the right hip: the healing item is in the left hand; bring it to the mouth or the right wrist");
+            g_heal_held_s = 0.0f;
+            g_heal_syringe = false;
+            say("left grip at the right hip: the drink is in the left hand (keep holding for the syringe; LT uses it)");
             gun::buzz(controllers::LEFT, settings::BUZZ_GRAB_AMP, settings::BUZZ_S);
         }
     }
@@ -218,16 +209,20 @@ void left_tick() {
         say("left grip let go: the map closes");
     }
     if (g_left == LeftItem::HEAL && released) {
-        say("left grip let go: the healing item goes back unused");
+        say(g_heal_syringe ? "left grip let go: the syringe goes back unused" : "left grip let go: the drink goes back unused");
         g_left = LeftItem::NONE;
     }
     if (g_left == LeftItem::HEAL) {
-        TV wrist, m;
-        const bool at_wrist = right_hand(wrist) && dist_cm(hand, wrist) < settings::USE_AT_WRIST_CM;
-        const bool at_mouth = mouth(m) && dist_cm(hand, m) < settings::USE_AT_MOUTH_CM;
-        if (at_wrist || at_mouth) {
-            buttons::press_for_game(XINPUT_GAMEPAD_Y, settings::HOLSTER_PRESS_POLLS);   // ActionHealing: the game picks the item
-            say(at_mouth ? "the healing item at the mouth: used (the game's healing action)" : "the healing item at the right wrist: used (the game's healing action)");
+        g_heal_held_s += delta;
+        if (!g_heal_syringe && g_heal_held_s >= settings::HEAL_SYRINGE_HOLD_S) {
+            g_heal_syringe = true;
+            say("left grip held 2 s: the drink is swapped for the syringe");
+            gun::buzz(controllers::LEFT, settings::BUZZ_GRAB_AMP, settings::BUZZ_S);
+        }
+        // LT with the left grip held never reaches the game as the flashlight (buttons.cpp: LT ALONE is the flashlight)
+        if (input::left_trigger_pressed()) {
+            buttons::press_for_game(XINPUT_GAMEPAD_Y, settings::HOLSTER_PRESS_POLLS);   // ActionHealing: the game picks the item it uses
+            say(g_heal_syringe ? "LT: the syringe used (the game's healing action)" : "LT: the drink used (the game's healing action)");
             gun::buzz(controllers::LEFT, settings::BUZZ_DONE_AMP, settings::BUZZ_S);
             g_left = LeftItem::NONE;
         }
@@ -256,7 +251,7 @@ void tick(float delta) {
     API::UObject* pawn = gun::pawn();
     if (pawn == nullptr) { g_started = false; g_pawn_seen = nullptr; g_holding = false; return; }
     if (pawn != g_pawn_seen) { g_pawn_seen = pawn; g_started = false; g_holding = false; g_holding_spot = -1; g_left = LeftItem::NONE; buttons::keep_left_grip(false); }
-    left_tick();
+    left_tick(delta);
     for (int i = 0; i < settings::HOLSTER_SPOT_COUNT; ++i) g_spots[i].def = &settings::HOLSTER_SPOTS[i];
 
     const bool grip = grip_now();
