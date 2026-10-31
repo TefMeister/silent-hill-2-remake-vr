@@ -82,7 +82,7 @@ constexpr unsigned HOLSTER_LEFT_TEST_KEY = 0x74;   // VK_F5: a pretend LEFT grip
 // The healing item is the RIGHT hand's since 2026-10-31 (the lower back spot above; the game itself heals with the right
 // hand): a right grip press there takes the drink out, keep holding and it is the syringe, RT uses what is in the hand
 // (the game's one healing action, Y), letting go of the grip puts it back unused.
-constexpr const wchar_t* LEFT_ITEM_MAP_SPOT = L"right shoulder";
+constexpr const wchar_t* LEFT_ITEM_MAP_SPOT = L"right hip";   // 2026-10-31 13:00, Tefa: "move the map to the right hip, LG to take it out, right hand with RG held to two hand the map"
 constexpr float HEAL_SYRINGE_HOLD_S = 0.5f;    // (Tefa 2026-10-31: "2 seconds feels like forever") the right grip held this long at the lower back: the drink becomes the syringe
 constexpr int HOLSTER_PRESS_POLLS = 3;        // how many pad polls a press the game must see lasts
 constexpr int HOLSTER_LOG_MAX = 80;
@@ -92,11 +92,21 @@ constexpr float HOLSTER_STATUS_S = 5.0f;
 // optionally the crosshair while RG is held, without it triggering the AIM stance"); the on-screen part is still to come
 constexpr bool SHOW_CROSSHAIR_ON_GRIP = false;   // the optional crosshair while the grip is held (not built yet)
 
+// ---- two hands on one thing (twohand.cpp, 2026-10-31, from praydog's original SH2 profile) ----
+constexpr bool TWO_HAND_ON = true;
+constexpr double TWO_HAND_BARREL_AXIS[3] = {0.0, 1.0, 0.0};   // the long guns' barrel in the gun mesh's own frame (praydog: forward turned 90 deg about up); checked live by the press log
+constexpr double TWO_HAND_MIN_CM = 12.0, TWO_HAND_MAX_CM = 90.0;   // the left hand this far from the right to take the gun's front
+constexpr double TWO_HAND_CONE_DEG = 50.0;    // and within this angle of the barrel (40 let the simulator's rifle in at exactly 40, 2026-10-31)
+constexpr bool TWO_HAND_AIM_AT_DRAWN_HAND = true;   // aim at the drawn left hand, not the controller point
+constexpr double MAP_TWO_HAND_TILT_DEG = 45.0; // praydog's tilt of the two-handed map
+constexpr float TWO_HAND_REPORT_S = 3.0f;
+constexpr int TWO_HAND_LOG_MAX = 80;
+
 // ---- shooting without the aim stance (fire.cpp) ----
 constexpr unsigned FIRE_PROBE_KEY = 0x78;   // VK_F9: the probe key, sent to the game window from the session
 constexpr unsigned FIRE_FORCE_READY_KEY = 0x7A; // VK_F11 (F10 is a Windows system key and arrives differently): toggles answering "ready" to the game's fire-ready check
 constexpr float FIRE_PROBE_REPORT_S = 1.0f; // how long after the probe the shot count is reported
-constexpr unsigned FIRE_DIRECT_KEY = 0x77;  // VK_F8: door B, the weapon's own fire called straight
+constexpr unsigned FIRE_DIRECT_KEY = 0x72;  // VK_F3 (was F8 until 2026-10-31: F8 is the 21 Sacraments patch's own on/off key): door B, the weapon's own fire called straight
 constexpr bool FIRE_LOWERED_ON = true;      // the right trigger fires a lowered gun through door B (Tefa: the RE2 way)
 constexpr float FIRE_MIN_INTERVAL_S = 0.15f; // our own pace between lowered shots (door B skips the game's cooldown)
 constexpr int FIRE_LOWERED_LOG_FIRST = 20;  // how many lowered shots get a full log line

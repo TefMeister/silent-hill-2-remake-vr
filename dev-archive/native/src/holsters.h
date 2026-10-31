@@ -18,5 +18,10 @@ bool holding();
 bool showing_ammo();
 // The right grip holds the healing item from the lower back (2026-10-31): RT uses it, so it must not fire.
 bool heal_in_hand();
+// The left grip holds the map open (2026-10-31: taken at the right hip); twohand.cpp places it.
+bool map_held();
+// The grips as the holsters read them (the real controller, or F5 / F6 on the simulator).
+bool left_grip();
+bool right_grip();
 
 } // namespace sh2vr::holsters

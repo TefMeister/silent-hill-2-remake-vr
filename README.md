@@ -104,7 +104,9 @@ jbusfield - the VR first-person mod this is built on: https://github.com/jbusfie
 Pande4360, gwizdek, markmon, Rusty Gere, lobotomy - ideas and code inside jbusfield's scripts, credited there
 LukasBlaster7 - manual reloads
 VynnGfx - Optimized Tweaks BASE: https://www.nexusmods.com/silenthill2/mods/42
-praydog - UEVR and the Silent Hill 2 UEVR plugin: https://github.com/praydog/UEVR
+praydog - UEVR and the Silent Hill 2 UEVR plugin: https://github.com/praydog/UEVR, and his original Silent Hill 2
+  profile, whose ways of holding the map in both hands and pointing the shotgun and rifle at the other hand our
+  two-handed map and long guns are built from
 PureDark - the AFW build of UEVR: https://github.com/PureDark/UEVR
 
 If someone should be credited here and is not, please open an issue on this repo and we will fix it as soon as

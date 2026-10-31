@@ -9,7 +9,7 @@
 //   left hip       -> right grip: the melee weapon (plank, pipe, chainsaw: whatever the game has equipped as melee)
 //   lower back     -> right grip: the healing item (2026-10-31, Tefa: like RE8's and RE2's sub weapon): a press takes the
 //                     drink, held 0.5 s it becomes the syringe, RT uses it (the game's healing action), let go = put back
-// The left grip (2026-10-31): the map at the right shoulder, nothing at the left hip (the ammo's: reload.cpp's pistol
+// The left grip (2026-10-31 13:00): the map at the right hip (twohand.cpp holds it; the right grip too = both hands), nothing at the left hip (the ammo's: reload.cpp's pistol
 // magazine, the pack's shotgun and rifle rounds), the flashlight on LT.
 //
 // How it works, every frame on the game thread:
@@ -200,7 +200,7 @@ void left_tick(float delta) {
             g_left = LeftItem::MAP;
             buttons::keep_left_grip(true);
             buttons::press_for_game(XINPUT_GAMEPAD_DPAD_UP, settings::HOLSTER_PRESS_POLLS);   // MapToggle
-            say("left grip at the right shoulder: the map opens (held while the grip is held; the right grip turns its pages)");
+            say("left grip at the right hip: the map opens in the left hand (held while the grip is held; the right grip held = both hands)");
             gun::buzz(controllers::LEFT, settings::BUZZ_DONE_AMP, settings::BUZZ_S);
         }
     }
@@ -217,6 +217,9 @@ void left_tick(float delta) {
 bool holding() { return g_holding; }
 bool showing_ammo() { return g_showing; }
 bool heal_in_hand() { return g_heal.load(); }
+bool map_held() { return g_left == LeftItem::MAP; }
+bool left_grip() { return g_pretend_lg || input::held(XINPUT_GAMEPAD_LEFT_SHOULDER); }
+bool right_grip() { return grip_now(); }
 
 void on_message(UINT msg, WPARAM wparam) {
     if (msg != WM_KEYDOWN && msg != WM_SYSKEYDOWN) return;

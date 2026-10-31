@@ -136,6 +136,7 @@ void on_input(XINPUT_STATE& state) {
         set(state, XINPUT_GAMEPAD_LEFT_THUMB, false);
         set(state, XINPUT_GAMEPAD_RIGHT_THUMB, false);
         if (g_keep_lg) set(state, XINPUT_GAMEPAD_LEFT_SHOULDER, false);   // the map is held with the left grip
+        if (g_keep_lg) set(state, XINPUT_GAMEPAD_RIGHT_SHOULDER, false);  // and the right grip holds it with both hands (2026-10-31), not the next map
         apply_queued(state);
         g_ls_was = ls_click; g_lt_was = lt; g_rs_up_was = rs_up;
         g_flash_pulse = g_turn_pulse = 0;
@@ -189,7 +190,7 @@ void tick(float) {
     const char* why = no_pawn ? "no player yet" : "play";
     if (!no_pawn) {
         if (widget_focused(settings::MENU_WIDGET_CLASS)) { open = true; why = "the gameplay menu has the focus"; }
-        else if (widget_focused(settings::SAVE_MENU_WIDGET_CLASS)) { open = true; why = "the save menu has the focus"; }
+        else if (widget_focused(settings::SAVE_MENU_WIDGET_CLASS) || widget_visible(settings::SAVE_MENU_WIDGET_CLASS)) { open = true; why = "the save menu is open"; }   // 2026-10-31: the focus check missed it (X / B were dead in it); IsVisible is false while closed [measured 2026-10-31]
         else if (widget_alive(settings::PAUSE_WIDGET_CLASS)) { open = true; why = "the pause menu is up"; }
         else if (widget_visible(settings::MAP_SECTION_CLASS)) { open = true; why = "the map is open"; }
     }

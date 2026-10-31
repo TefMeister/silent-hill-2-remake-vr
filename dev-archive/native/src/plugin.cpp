@@ -30,6 +30,7 @@
 #include "fire.h"
 #include "ghosthand.h"
 #include "holsters.h"
+#include "twohand.h"
 #include "input.h"
 #include "rack.h"
 #include "reload.h"
@@ -66,6 +67,7 @@ public:
         fire::tick(delta);
         buttons::tick(delta);
         holsters::tick(delta);   // 2026-10-29: the weapons on the body (after the buttons, before the hands)
+        twohand::tick(delta);    // 2026-10-31: the long gun and the map in two hands (praydog's profile)
         crosshair::find(delta);
         reload::tick(delta);
         rack::tick(delta);       // sets the left-hand override the IK solve reads
@@ -78,6 +80,9 @@ public:
     }
 
     void on_post_engine_tick(API::UGameEngine*, float) override { crosshair::hide(); }
+
+    // after UEVR has put the held things on the controllers for this view: two hands on the long gun and the map
+    void on_post_calculate_stereo_view_offset(UEVR_StereoRenderingDeviceHandle, int, float, UEVR_Vector3f*, UEVR_Rotatorf*, bool) override { twohand::on_view(); }
 
 private:
     // one line every few seconds so a run can prove the plugin is alive and what it sees
