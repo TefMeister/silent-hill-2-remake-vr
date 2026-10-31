@@ -94,6 +94,14 @@ constexpr float MAP_TOGGLE_COOLDOWN_S = 1.0f;   // after taking the map out or p
 constexpr float MAP_GONE_S = 0.5f;          // the map not showing this long after it showed: closed another way (Quest X)
 constexpr float MAP_NEVER_CAME_S = 3.0f;    // taken out but never showed in this long: give up
 constexpr float HEAL_SYRINGE_HOLD_S = 0.5f;    // (Tefa 2026-10-31: "2 seconds feels like forever") the right grip held this long at the lower back: the drink becomes the syringe
+// 2026-10-31 evening (Tefa 10-31: "medicine also didn't work"; the log: the buzz, nothing in the hand): the item's own model in
+// the right hand, found among the game's loaded static meshes by these names (the pack's attachment keys
+// ItemBase_BP_C_HealthDrink_01_B / ItemBase_BP_C_Syringe_03_A). Not found = a log line listing what is loaded.
+constexpr const wchar_t* HEAL_DRINK_MESH_NAME = L"HealthDrink_01_B";
+constexpr const wchar_t* HEAL_SYRINGE_MESH_NAMES[] = {L"Syringe_03_A", L"Syringe_02_A"};
+constexpr double HEAL_MESH_LOC[3] = {4.0, 0.0, -2.0};   // on the right controller; guesses, to tune in the headset
+constexpr double HEAL_MESH_ROT[3] = {0.0, 0.0, 0.0};
+constexpr float HEAL_MESH_SEARCH_RETRY_S = 10.0f;      // a name not loaded is looked for again after this long
 constexpr int HOLSTER_PRESS_POLLS = 3;        // how many pad polls a press the game must see lasts
 constexpr int HOLSTER_LOG_MAX = 80;
 constexpr bool HOLSTER_LOG_EMPTY_GRIPS = true;
@@ -120,7 +128,16 @@ constexpr unsigned FIRE_FORCE_READY_KEY = 0x7A; // VK_F11 (F10 is a Windows syst
 constexpr float FIRE_PROBE_REPORT_S = 1.0f; // how long after the probe the shot count is reported
 constexpr unsigned FIRE_DIRECT_KEY = 0x72;  // VK_F3 (was F8 until 2026-10-31: F8 is the 21 Sacraments patch's own on/off key): door B, the weapon's own fire called straight
 constexpr bool FIRE_LOWERED_ON = true;      // the right trigger fires a lowered gun through door B (Tefa: the RE2 way)
-constexpr float FIRE_MIN_INTERVAL_S = 0.15f; // our own pace between lowered shots (door B skips the game's cooldown)
+constexpr float FIRE_MIN_INTERVAL_S = 0.15f; // our own pace between lowered pistol shots (door B skips the game's cooldown)
+// 2026-10-31 evening (Tefa 10-31: "fire rate is still really fast"): the long guns' own pace. The real gate is the pump / the
+// bolt (the pack's scripts, through the bridge's gate); these are the floor under it, and they cover the moment
+// before the pack's "pump owed" reaches the plugin. Guesses, to tune in the headset.
+constexpr float FIRE_MIN_INTERVAL_SHOTGUN_S = 0.8f;
+constexpr float FIRE_MIN_INTERVAL_RIFLE_S = 1.0f;
+// the empty gun's click (Tefa 10-31, fault 5): the trigger on an empty gun plays this and never calls the weapon's fire
+// (the pack's pistol reload uses the same event for its dry fire; no shotgun / rifle event is known yet)
+constexpr const wchar_t* DRY_CLICK_EVENT = L"AkAudioEvent /Game/WWiseAudio/Events/Characters/James/James_Weapons/Pistol/Play_Wpn_Pistol_Shot_No_Ammo.Play_Wpn_Pistol_Shot_No_Ammo";
+constexpr float BUZZ_CLICK_AMP = 0.25f;
 constexpr int FIRE_LOWERED_LOG_FIRST = 20;  // how many lowered shots get a full log line
 constexpr unsigned FIRE_TRIGGER_TEST_KEY = 0x76; // VK_F7: a pretend trigger pull through the same path (the simulator's pad never reaches the plugin)
 // The fire gate, read offline from this build's code (modding-notes/2026-10-24d-the-fire-gate.md) [inferred-static
@@ -163,6 +180,15 @@ constexpr double HIP_ENTER_CM = 18.0, HIP_LEAVE_CM = 28.0;
 constexpr double HAND_MAG_LOC[3] = {4.0, 1.5, -2.0};    // the magazine on the left controller (the pack's fit)
 constexpr double HAND_MAG_ROT[3] = {-15.0, 90.0, 0.0};
 constexpr const wchar_t* HAND_MAG_MESH = L"StaticMesh /Game/Game/Art/Items/Handgun/HandgunAmmoClosed_01_A.HandgunAmmoClosed_01_A";
+// 2026-10-31 evening (Tefa 10-31: "the mag looks like the actual ammo box from the game and not the pistol mag"): the hand
+// magazine is a copy of the pistol's own model with every part but the magazine shrunk away and hidden (LukasBlaster7's
+// eject visual, main.lua showOnlyPistolMagazine); HAND_MAG_MESH above stays as the invisible carrier of the fit, and is
+// shown only when the copy cannot be made.
+constexpr bool HAND_MAG_FROM_PISTOL = true;
+constexpr const wchar_t* HAND_MAG_BONE = L"magazine_joint";
+constexpr const wchar_t* HAND_MAG_KEEP[] = {L"magazine_joint", L"magazine_socket_joint"};
+constexpr const wchar_t* HAND_MAG_ANCESTORS[] = {L"Holder", L"offset_joint"};   // kept unhidden (shrunk only), or the magazine under them would hide too
+constexpr float HAND_MAG_BOUNDS_SCALE = 16.0f;
 constexpr float RELOAD_GRAB_COOLDOWN_S = 0.5f;
 constexpr float BUZZ_GRAB_AMP = 0.5f, BUZZ_DONE_AMP = 1.0f, BUZZ_DENY_AMP = 0.3f, BUZZ_S = 0.08f, BUZZ_HZ = 1000.0f;
 constexpr bool GHOST_HAND_ON = true;         // the Ghost Hand BeG0nE recorder (the rule for any mod with hand gestures)

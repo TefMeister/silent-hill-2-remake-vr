@@ -19,6 +19,8 @@
 #include <string>
 
 #include "ammo.h"
+#include "bridge.h"
+#include "gun.h"
 #include "holsters.h"
 #include "rack.h"
 #include "reload.h"
@@ -42,6 +44,8 @@ bool g_eating_rt = false;           // the press is being kept from the game unt
 bool g_fire_queued = false;         // on_input asked for a shot; tick fires it on the game thread
 float g_since_shot = 999.0f;        // seconds since our last door-B shot (the game's own cooldown is skipped)
 int g_lowered_shots = 0;
+bool g_click_queued = false;        // on_input asked for the empty click; tick plays it on the game thread
+int g_clicks = 0, g_gate_refusals = 0;
 
 // raw reads at the offsets read from this build's code; every use is behind the agree-check below
 template <typename T> T& at(API::UObject* o, size_t off) { return *reinterpret_cast<T*>(reinterpret_cast<uint8_t*>(o) + off); }
@@ -167,6 +171,12 @@ bool fire_direct(const char* who, bool loud) {
 }
 void probe_direct() { if (fire_direct("door B (weapon fire direct)", true)) report_after("door B"); }
 
+// the pace between our lowered shots for this weapon (settings.h): the pistol's, or the long guns' own floor
+float min_interval(API::UObject* weapon) {
+    if (gun::is_pistol(weapon)) return settings::FIRE_MIN_INTERVAL_S;
+    return ue::name_of(weapon).find("Rifle") != std::string::npos ? settings::FIRE_MIN_INTERVAL_RIFLE_S : settings::FIRE_MIN_INTERVAL_SHOTGUN_S;
+}
+
 // the trigger: a ranged weapon out, no aim stance (the game keeps its own trigger while aiming)
 bool lowered_gun_out(Parts& p) {
     if (!find_parts(p, "trigger", false)) return false;
@@ -214,19 +224,44 @@ void on_input(XINPUT_STATE& state) {
     const bool edge = rt && !g_rt_was;
     g_rt_was = rt;
     if (rt && holsters::heal_in_hand()) { state.Gamepad.bRightTrigger = 0; g_eating_rt = true; return; }   // RT uses the healing item (holsters.cpp); kept from the game until it is let go
-    if (rt && (rack::needed() || reload::blocks_fire())) { state.Gamepad.bRightTrigger = 0; g_eating_rt = false; return; }   // the trigger waits for the rack / the magazine
+    if (rt && (rack::needed() || reload::blocks_fire())) { state.Gamepad.bRightTrigger = 0; g_eating_rt = false; if (edge) g_click_queued = true; return; }   // the trigger waits for the rack / the magazine: the empty click
     if (!rt) { g_eating_rt = false; return; }
     if (edge) {
         Parts p;
         if (!lowered_gun_out(p)) { g_eating_rt = false; return; }   // aiming, or no gun: the game's own trigger
         g_eating_rt = true;
-        if (g_since_shot >= settings::FIRE_MIN_INTERVAL_S) g_fire_queued = true;
+        // 2026-10-31 evening: an empty gun clicks and never calls the weapon's fire. After the shotgun ran empty on 10-31 the game
+        // refused every draw and the map: our fire on an empty long gun most likely started the game's own reload, which
+        // the pack's shotgun_reload.lua then blocks, leaving the game mid-reload [hypothesis]
+        if (ammo::rounds(p.weapon) == 0) g_click_queued = true;
+        // a pump / bolt is owed (the pack's gate, through the bridge): no shot until the hand works it
+        else if (!gun::is_pistol(p.weapon) && bridge::long_gun_gate()) { if (g_gate_refusals++ < 10) LOGI("%s fire: trigger refused: the %s needs its pump / bolt first", TAG, ue::name_of(p.weapon).find("Rifle") != std::string::npos ? "rifle" : "shotgun"); }
+        else if (g_since_shot >= min_interval(p.weapon)) g_fire_queued = true;
     }
     if (g_eating_rt) state.Gamepad.bRightTrigger = 0;
 }
 
+std::string combat_state() {
+    API::UObject* combat = combat_of(API::get()->get_local_pawn(0));
+    API::UObject* sub = ranged_subcomp(combat);
+    if (sub == nullptr) return "no ranged combat part";
+    API::UObject* weapon = nullptr;
+    ue::call_ret(sub, L"GetEquippedRangedWeapon", {}, weapon);
+    return state_line(combat, sub, weapon);
+}
+
+// the empty gun's click, on the game thread: the game's own dry-fire sound on the weapon, and a light buzz
+void play_click() {
+    API::UObject* w = gun::equipped();
+    auto* ev = API::get()->find_uobject<API::UObject>(settings::DRY_CLICK_EVENT);
+    const bool played = ev != nullptr && w != nullptr && ue::call(ev, L"PostOnActor", {w});   // the delegate, mask and stop flag stay zero
+    gun::buzz(controllers::RIGHT, settings::BUZZ_CLICK_AMP, settings::BUZZ_S);
+    if (g_clicks++ < 6) LOGI("%s fire: click: the %s is empty (sound %s)", TAG, ue::name_of(w).c_str(), played ? "played" : ev == nullptr ? "NOT LOADED, buzz only" : "refused, buzz only");
+}
+
 void tick(float delta) {
     g_since_shot += delta;
+    if (g_click_queued) { g_click_queued = false; play_click(); }
     if (g_fire_queued) {   // on the game thread, where the game itself fires from
         g_fire_queued = false;
         g_since_shot = 0.0f;

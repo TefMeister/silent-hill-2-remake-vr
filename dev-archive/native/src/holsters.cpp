@@ -31,13 +31,17 @@
 
 #include "holsters.h"
 
+#include "fire.h"
+
 #include <atomic>
+#include <initializer_list>
 #include <cmath>
 #include <cstdio>
 #include <string>
 #include <string_view>
 
 #include "common.h"
+#include "controllers.h"
 #include "gun.h"
 #include "ammo.h"
 #include "buttons.h"
@@ -65,6 +69,7 @@ bool g_grip_was = false;
 int g_logs = 0;
 float g_status_in = 0.0f;
 bool g_showing = false;           // the right grip held away from every spot with a gun out
+int g_refusals_logged = 0;        // refused draws logged with the combat state
 
 void say(const char* line) {
     if (g_logs >= settings::HOLSTER_LOG_MAX) return;
@@ -174,6 +179,67 @@ float g_heal_held_s = 0.0f;        // how long the right grip has held it
 bool g_heal_syringe = false;       // held past HEAL_SYRINGE_HOLD_S: the syringe, else the drink
 bool g_rt_was = false;             // RT's edge, read on the game thread (the input poll runs at its own pace)
 const char* heal_name() { return g_heal_syringe ? "syringe" : "drink"; }
+
+// ---- the healing item's model in the right hand (2026-10-31 evening) ----
+API::UObject* g_heal_mesh = nullptr;   // the StaticMeshComponent on the right controller
+bool g_heal_mesh_syringe = false;      // which model it shows
+float g_heal_search_s = 0.0f;          // since the last search that found nothing
+
+// a loaded StaticMesh whose own name ends with ".<short>" ("StaticMesh /Game/.../HealthDrink_01_B.HealthDrink_01_B")
+API::UObject* find_static_mesh(std::initializer_list<const wchar_t*> shorts, bool log_misses) {
+    auto* cls = ue::find_class(L"Class /Script/Engine.StaticMesh");
+    if (cls == nullptr) return nullptr;
+    const auto all = API::UObjectHook::get_objects_by_class(cls, false);
+    std::string candidates;
+    int listed = 0;
+    for (const wchar_t* sh : shorts) {
+        const std::string want = "." + narrow(sh);
+        for (API::UObject* o : all) {
+            const std::string n = ue::name_of(o);
+            if (n.size() >= want.size() && n.compare(n.size() - want.size(), want.size(), want) == 0) return o;
+        }
+    }
+    if (!log_misses) return nullptr;
+    for (API::UObject* o : all) {
+        const std::string n = ue::name_of(o);
+        if ((n.find("Health") != std::string::npos || n.find("Syringe") != std::string::npos || n.find("Drink") != std::string::npos || n.find("Ampoule") != std::string::npos) && listed++ < 10) candidates += "; " + n;
+    }
+    LOGI("%s holsters: the healing item's model is not loaded (%zu static meshes looked at); look-alikes:%s", TAG, all.size(), candidates.empty() ? " none" : candidates.c_str());
+    return nullptr;
+}
+
+void heal_mesh_off() {
+    if (ue::alive(g_heal_mesh)) ue::call(g_heal_mesh, L"K2_DestroyComponent", {g_heal_mesh});
+    g_heal_mesh = nullptr;
+}
+
+void heal_mesh_on(bool syringe) {
+    if (ue::alive(g_heal_mesh) && g_heal_mesh_syringe == syringe) return;
+    heal_mesh_off();
+    if (g_heal_search_s > 0.0f) return;   // nothing was found a moment ago
+    API::UObject* asset = syringe ? find_static_mesh({settings::HEAL_SYRINGE_MESH_NAMES[0], settings::HEAL_SYRINGE_MESH_NAMES[1]}, true)
+                                  : find_static_mesh({settings::HEAL_DRINK_MESH_NAME}, true);
+    if (asset == nullptr) { g_heal_search_s = settings::HEAL_MESH_SEARCH_RETRY_S; return; }
+    API::UObject* ctrl = controllers::find(controllers::RIGHT);
+    auto* cls = ue::find_class(L"Class /Script/Engine.StaticMeshComponent");
+    API::UObject* owner = nullptr;
+    if (ctrl != nullptr) ue::call_ret(ctrl, L"GetOwner", {}, owner);
+    if (cls == nullptr || owner == nullptr) return;
+    ue::Transform t;
+    API::UObject* comp = nullptr;
+    if (!ue::call_ret(owner, L"AddComponentByClass", {(API::UObject*)cls, true, t, false}, comp) || comp == nullptr) return;
+    ue::call(comp, L"SetStaticMesh", {asset});
+    ue::call(comp, L"SetCollisionEnabled", {(int32_t)0});
+    bool attached = false;
+    ue::call_ret(comp, L"K2_AttachTo", {ctrl, ue::name(L""), (int32_t)0, false}, attached);
+    ue::call(comp, L"K2_SetRelativeLocationAndRotation", {ue::Vec3{settings::HEAL_MESH_LOC[0], settings::HEAL_MESH_LOC[1], settings::HEAL_MESH_LOC[2]},
+                                                           ue::Rot{settings::HEAL_MESH_ROT[0], settings::HEAL_MESH_ROT[1], settings::HEAL_MESH_ROT[2]}, false, false});
+    ue::call(comp, L"SetVisibility", {true});
+    ue::call(comp, L"SetHiddenInGame", {false});
+    g_heal_mesh = comp;
+    g_heal_mesh_syringe = syringe;
+    LOGI("%s holsters: the %s's model in the right hand: %s", TAG, syringe ? "syringe" : "drink", ue::name_of(asset).c_str());
+}
 bool g_pretend_lg = false;         // F5
 bool g_lg_was = false;
 const char* left_name(LeftItem i) { return i == LeftItem::MAP ? "map" : "nothing"; }
@@ -273,7 +339,7 @@ void on_message(UINT msg, WPARAM wparam) {
 void tick(float delta) {
     if (!settings::HOLSTERS_ON) return;
     API::UObject* pawn = gun::pawn();
-    if (pawn == nullptr) { g_started = false; g_pawn_seen = nullptr; g_holding = false; g_heal = false; return; }
+    if (pawn == nullptr) { g_started = false; g_pawn_seen = nullptr; g_holding = false; g_heal = false; g_heal_mesh = nullptr; return; }
     if (pawn != g_pawn_seen) { g_pawn_seen = pawn; g_started = false; g_holding = false; g_holding_spot = -1; g_left = LeftItem::NONE; g_heal = false; buttons::keep_left_grip(false); }
     left_tick(delta);
     for (int i = 0; i < settings::HOLSTER_SPOT_COUNT; ++i) g_spots[i].def = &settings::HOLSTER_SPOTS[i];
@@ -332,12 +398,15 @@ void tick(float delta) {
             const bool ok = equip(s, what);
             if (ok) { g_holding = true; g_holding_spot = in_spot; gun::buzz(controllers::RIGHT, settings::BUZZ_DONE_AMP, settings::BUZZ_S); }
             std::snprintf(line, sizeof line, "right grip at the %s: %s %s (had: %s)", narrow(s.name).c_str(), ok ? "drew the" : "could not draw the", what.c_str(), in_hand.c_str());
+            // 2026-10-31 evening: after the shotgun ran empty on 10-31 every draw was refused; say what state the game was in
+            if (!ok && g_refusals_logged++ < 5) LOGI("%s holsters: the game refused the draw; its combat state: %s", TAG, fire::combat_state().c_str());
         }
         say(line);
     } else if (pressed && in_spot < 0 && settings::HOLSTER_LOG_EMPTY_GRIPS && gun::equipped() == nullptr) {
         say("right grip with the hand away from every spot: nothing drawn");
     }
 
+    if (g_heal_search_s > 0.0f) g_heal_search_s -= delta;
     const bool rt = input::right_trigger();
     const bool rt_pressed = rt && !g_rt_was;
     g_rt_was = rt;
@@ -363,6 +432,8 @@ void tick(float delta) {
             }
         }
     }
+
+    if (g_heal) heal_mesh_on(g_heal_syringe); else if (g_heal_mesh != nullptr) heal_mesh_off();
 
     // the right grip held away from every spot with a gun out: show the ammo (never the aim stance); letting go of the
     // grip does nothing to the weapon; not while the grip holds the healing item

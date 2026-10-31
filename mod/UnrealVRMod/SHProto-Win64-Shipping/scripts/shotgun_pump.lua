@@ -17,6 +17,15 @@
 local uevrUtils = require("libs/uevr_utils")
 local controllers = require("libs/controllers")
 local configui = require("libs/configui")
+
+-- sh2vr (2026-10-31 evening): the REAL left grip. The plugin's button layer keeps the grips from the pad (the game would
+-- sprint), so the pad's LB here is the run toggle, not the grip; sh2vr_bridge.lua keeps SH2VR_GRIP_L from the plugin.
+local function sh2vrLeftGrip(stateIn)
+	if SH2VR_GRIP_L ~= nil then
+		return SH2VR_GRIP_L == true
+	end
+	return uevrUtils.isButtonPressed(stateIn, XINPUT_GAMEPAD_LEFT_SHOULDER)
+end
 local attachments = require("libs/attachments")
 local accessories = require("libs/accessories")
 
@@ -1073,7 +1082,7 @@ function M.init()
 	end)
 
 	uevrUtils.registerOnPreInputGetStateCallback(function(retval, user_index, stateIn)
-		local grip = uevrUtils.isButtonPressed(stateIn, XINPUT_GAMEPAD_LEFT_SHOULDER)
+		local grip = sh2vrLeftGrip(stateIn)
 		state.leftGripDown = grip
 
 		if not enabled() then

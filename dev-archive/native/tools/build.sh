@@ -13,7 +13,7 @@ MODPROFILE="$HERE/../../mod/UnrealVRMod/SHProto-Win64-Shipping"
 BACKUPS="/d/SH2 builds"
 BUILD="$HERE/build"
 PORTED=(hands ik fire reload buttons)
-PATCHED=(scripts/libs/hands.lua scripts/libs/ik.lua scripts/libs/hands_animation.lua scripts/sh2vr_bridge.lua scripts/main.lua)
+PATCHED=(scripts/libs/hands.lua scripts/libs/ik.lua scripts/libs/hands_animation.lua scripts/sh2vr_bridge.lua scripts/main.lua scripts/shotgun_pump.lua scripts/shotgun_reload.lua scripts/rifle_bolt.lua scripts/rifle_reload.lua)
 
 undo() {
     local dir="$1"

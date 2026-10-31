@@ -75,6 +75,7 @@ public:
         hands::tick(delta);
         fingers::tick(delta);
         ghosthand::tick();       // after the solves: the hands where they are drawn
+        bridge::send_grips(delta);   // 2026-10-31 evening: the real grips to the pack's shotgun / rifle reloads and pump / bolt
         input::end_tick();
         heartbeat(delta);
     }

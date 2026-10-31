@@ -4,6 +4,8 @@
 #include "reload.h"
 
 #include <cmath>
+#include <initializer_list>
+#include <string>
 
 #include "ammo.h"
 #include "ghosthand.h"
@@ -27,7 +29,8 @@ const char* st_name(St s) { return s == St::SEATED ? "seated" : s == St::DROPPED
 
 St g_st = St::SEATED;
 API::UObject* g_weapon = nullptr;
-API::UObject* g_hand_mesh = nullptr;   // the magazine on the left controller
+API::UObject* g_hand_mesh = nullptr;   // the magazine's carrier on the left controller (the fit); visible only as a fallback
+API::UObject* g_hand_copy = nullptr;   // the pistol's own model, only its magazine showing, driven to the carrier each tick
 int g_mag_rounds = 0;                  // rounds that left with the magazine
 bool g_dry = false;                    // the gun was empty when its magazine came out
 bool g_in_pouch = false;
@@ -56,11 +59,73 @@ void mag_bones(API::UObject* w, bool hidden) {
 
 void destroy_hand_mesh() {
     if (ue::alive(g_hand_mesh)) ue::call(g_hand_mesh, L"K2_DestroyComponent", {g_hand_mesh});
+    if (ue::alive(g_hand_copy)) ue::call(g_hand_copy, L"K2_DestroyComponent", {g_hand_copy});
     g_hand_mesh = nullptr;
+    g_hand_copy = nullptr;
+}
+
+bool listed(const std::wstring& name, std::initializer_list<const wchar_t*> list) {
+    for (const wchar_t* n : list) if (name == n) return true;
+    return false;
+}
+
+// the pistol's own model as a poseable copy with only the magazine left (LukasBlaster7's showOnlyPistolMagazine):
+// every bone but the magazine's shrunk to nothing in world space (parents first, so the magazine's own scale of one
+// holds), every bone but the magazine and its two ancestors hidden. nullptr when it cannot be made.
+API::UObject* make_magazine_copy(API::UObject* owner, API::UObject* pistol_mesh) {
+    auto* cls = ue::find_class(L"Class /Script/Engine.PoseableMeshComponent");
+    if (cls == nullptr || pistol_mesh == nullptr) return nullptr;
+    Transform t;
+    API::UObject* comp = nullptr;
+    if (!ue::call_ret(owner, L"AddComponentByClass", {(API::UObject*)cls, true, t, false}, comp) || comp == nullptr) return nullptr;
+    auto** dst = ue::prop<API::UObject*>(comp, L"SkeletalMesh");
+    auto** src = ue::prop<API::UObject*>(pistol_mesh, L"SkeletalMesh");
+    if (dst == nullptr || src == nullptr || *src == nullptr) { ue::call(comp, L"K2_DestroyComponent", {comp}); return nullptr; }
+    *dst = *src;
+    const wchar_t* follow = L"SetLeaderPoseComponent";   // the first update, then on its own (uevr_utils does the same)
+    if (!ue::call(comp, follow, {pistol_mesh, true})) { follow = L"SetMasterPoseComponent"; ue::call(comp, follow, {pistol_mesh, true}); }
+    ue::call(comp, follow, {(API::UObject*)nullptr, false});
+    ue::call(comp, L"CopyPoseFromSkeletalComponent", {pistol_mesh});
+    int32_t mats = 0;
+    ue::call_ret(pistol_mesh, L"GetNumMaterials", {}, mats);
+    for (int32_t i = 0; i < mats; ++i) { API::UObject* m = nullptr; if (ue::call_ret(pistol_mesh, L"GetMaterial", {i}, m) && m != nullptr) ue::call(comp, L"SetMaterial", {i, m}); }
+    int32_t bones = 0;
+    ue::call_ret(comp, L"GetNumBones", {}, bones);
+    int kept = 0;
+    for (int32_t i = 0; i < bones; ++i) {
+        API::FName fn{};
+        if (!ue::call_ret(comp, L"GetBoneName", {i}, fn)) continue;
+        const std::wstring n = ue::str(fn);
+        const bool keep = listed(n, {settings::HAND_MAG_KEEP[0], settings::HAND_MAG_KEEP[1]});
+        const double sc = keep ? 1.0 : 0.001;
+        ue::call(comp, L"SetBoneScaleByName", {fn, Vec3{sc, sc, sc}, (int32_t)0});   // EBoneSpaces::WorldSpace
+        if (keep) { ue::call(comp, L"UnHideBoneByName", {fn}); ++kept; }
+        else if (!listed(n, {settings::HAND_MAG_ANCESTORS[0], settings::HAND_MAG_ANCESTORS[1]})) ue::call(comp, L"HideBoneByName", {fn, (int32_t)0});
+    }
+    if (auto* b = ue::prop<float>(comp, L"BoundsScale")) *b = settings::HAND_MAG_BOUNDS_SCALE;
+    ue::call(comp, L"SetCollisionEnabled", {(int32_t)0});
+    ue::call(comp, L"SetVisibility", {true});
+    ue::call(comp, L"SetHiddenInGame", {false});
+    static int said = 0;
+    if (said++ < 3) LOGI("%s reload: the hand magazine is the pistol's own model, %d of %d bones kept", TAG, kept, bones);
+    if (kept == 0) { ue::call(comp, L"K2_DestroyComponent", {comp}); return nullptr; }
+    return comp;
+}
+
+// each tick while it is in the hand: the copy's magazine bone onto the carrier (the hand's fit)
+void drive_magazine_copy() {
+    if (!ue::alive(g_hand_copy) || !ue::alive(g_hand_mesh)) return;
+    Vec3 loc;
+    Rot rot;
+    if (!ue::call_ret(g_hand_mesh, L"K2_GetComponentLocation", {}, loc) || !ue::call_ret(g_hand_mesh, L"K2_GetComponentRotation", {}, rot)) return;
+    const API::FName bone = ue::name(settings::HAND_MAG_BONE);
+    ue::call(g_hand_copy, L"SetBoneLocationByName", {bone, loc, (int32_t)0});
+    ue::call(g_hand_copy, L"SetBoneRotationByName", {bone, rot, (int32_t)0});
+    ue::call(g_hand_copy, L"MarkRenderTransformDirty", {});
 }
 
 // the game's magazine mesh on the left controller (uevr_utils.createStaticMeshComponent + the pack's hand-mag fit)
-void make_hand_mesh() {
+void make_hand_mesh(API::UObject* pistol) {
     destroy_hand_mesh();
     API::UObject* ctrl = controllers::find(controllers::LEFT);
     auto* asset = API::get()->find_uobject<API::UObject>(settings::HAND_MAG_MESH);
@@ -80,9 +145,13 @@ void make_hand_mesh() {
     ue::call_ret(comp, L"K2_AttachTo", {ctrl, ue::name(L""), (int32_t)0, false}, attached);
     ue::call(comp, L"K2_SetRelativeLocationAndRotation", {Vec3{settings::HAND_MAG_LOC[0], settings::HAND_MAG_LOC[1], settings::HAND_MAG_LOC[2]},
                                                            Rot{settings::HAND_MAG_ROT[0], settings::HAND_MAG_ROT[1], settings::HAND_MAG_ROT[2]}, false, false});
-    ue::call(comp, L"SetVisibility", {true});
-    ue::call(comp, L"SetHiddenInGame", {false});
     g_hand_mesh = comp;
+    g_hand_copy = settings::HAND_MAG_FROM_PISTOL ? make_magazine_copy(owner, gun::mesh(pistol)) : nullptr;
+    const bool box = g_hand_copy == nullptr;   // the copy failed: the ammo box shows, as before
+    ue::call(comp, L"SetVisibility", {box});
+    ue::call(comp, L"SetHiddenInGame", {!box});
+    if (box && settings::HAND_MAG_FROM_PISTOL) LOGW("%s reload: could not copy the pistol's magazine; the ammo box shows instead", TAG);
+    drive_magazine_copy();
 }
 
 void drop(API::UObject* w) {
@@ -101,7 +170,7 @@ void grab(API::UObject* w) {
         gun::buzz(controllers::LEFT, settings::BUZZ_DENY_AMP, settings::BUZZ_S);
         return;
     }
-    make_hand_mesh();
+    make_hand_mesh(w);
     g_closest = 9999.0;
     set_state(St::IN_HAND, "taken from the ammo spot");
     ghosthand::event("mag", "start");
@@ -180,6 +249,7 @@ void tick(float delta) {
             set_state(St::DROPPED, "left grip let go: it drops");
             break;
         }
+        drive_magazine_copy();
         Vec3 seat;
         if (!gun::socket_loc(gun::mesh(w), settings::MAG_SOCKET, seat)) break;
         const double d = size(sub(left, seat));
