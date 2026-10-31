@@ -96,3 +96,19 @@ it. The meds buzz but show nothing. RT on an empty gun gives no click.
   gun's whole turn (new ik::override_right_turn). Settings TWO_HAND_TURN_RIGHT / TWO_HAND_LOCK_LEFT.
 Still to do: the pump and bolt and the fire pace for the long guns, the dry click, the meds shown in the hand, why the
 slide reads 40-93 cm from the left hand.
+
+## 14:46–14:55 — third wear (sh2vr.dll d79fcd06, backup `_backup-2026-10-31-1445-before-sh2vr-deploy`), saved here to pick up later
+Tefa: *"the right hand now followed the gun - i think - i honestly forgot :D the ammo pouch works for the handgun when
+taking out a mag, but the mag looks like the actual ammo box from the game and not the pistol mag. shotgun and rifle
+still don't work manual reloads and when empty, ammo pouch does not seem to exist for them. fire rate is still really
+fast ... and now holsters don't work ... medicine also didn't work."*
+- WORKS `[verified-live 2026-10-31, headset]`: the pistol's new magazine from the pouch at the left hip (three in the log:
+  10, 2 and 10 rounds taken from the carried ammo); the flashlight on LT; the right hand turning with the long gun
+  (Tefa thinks so, not sure).
+- The magazine in the hand is the game's ammo box model, not a pistol magazine (`settings::HAND_MAG_MESH`).
+- Holsters: every draw worked until the shotgun ran empty ("0 in the gun of 6" at 14:50:08); from 14:50:05 on the game
+  refused every RequestEquipWeapon, even with the hands empty after the shotgun went back `[measured]`. Most likely the
+  empty shotgun left the game in its own reload / out-of-ammo state, which blocks weapon changes `[hypothesis]`: look at
+  the game's own reload on the long guns first (it plays by itself, the pump / bolt and the rounds-by-hand are not built
+  in C++ yet; the pack's shotgun_reload.lua and rifle_reload.lua do not stand down and may need the aim stance).
+- Fire rate unchanged: not worked on yet. Medicine: the buzz and the log lines, nothing in the hand, no RT use seen.
