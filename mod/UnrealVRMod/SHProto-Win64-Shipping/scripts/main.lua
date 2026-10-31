@@ -3460,11 +3460,17 @@ uevrUtils.registerOnPreInputGetStateCallback(function(retval, user_index, state)
 end, 4)
 
 uevrUtils.registerOnPreInputGetStateCallback(function(retval, user_index, state)
+    -- sh2vr (2026-10-29): with the C++ button layer ported (SH2VR_PORTED.buttons, buttons.cpp), the pad rules of this
+    -- block stand down: the stick-down dodge, the stick-click sprint, the back double-tap, the LT flashlight. The snap
+    -- and smooth turn and the head gestures stay the pack's.
+    local buttonsPorted = SH2VR_PORTED ~= nil and SH2VR_PORTED.buttons == true
     if not ui.isRemapDisabled() then
-        if state.Gamepad.sThumbRY < -20000 then
+        if not buttonsPorted and state.Gamepad.sThumbRY < -20000 then
             uevrUtils.pressButton(state, XINPUT_GAMEPAD_B)
         end
-        state.Gamepad.sThumbRY = 0 --disable pitching the orbiting camera
+        if not buttonsPorted then
+            state.Gamepad.sThumbRY = 0 --disable pitching the orbiting camera
+        end
 
 	    handleSnapTurnInput(state)
 		handleSmoothTurnInput(state)
@@ -3487,7 +3493,9 @@ uevrUtils.registerOnPreInputGetStateCallback(function(retval, user_index, state)
 			local blockRifleReloadGrip = rifleReload ~= nil
 				and rifleReload.isHoldingShell ~= nil
 				and rifleReload.isHoldingShell()
-			if (sprintMode == 3 and wasTappedForward) or ((sprintMode == 1 or sprintMode == 2) and leftStickPressed) then --leftStickPressed then
+			if buttonsPorted then
+				-- the C++ layer owns sprint, the back tap and the flashlight
+			elseif (sprintMode == 3 and wasTappedForward) or ((sprintMode == 1 or sprintMode == 2) and leftStickPressed) then --leftStickPressed then
 				-- Don't turn stick-sprint into LB while hand is using hip/mag/slide reload.
 				if pistolReload.inHolsterZone
 					or pistolReload.handMag ~= nil
@@ -3504,14 +3512,18 @@ uevrUtils.registerOnPreInputGetStateCallback(function(retval, user_index, state)
 				uevrUtils.unpressButton(state, XINPUT_GAMEPAD_LEFT_SHOULDER)
 			end
 
-			if wasTappedBackward then
+			if buttonsPorted then
+				-- (the C++ layer)
+			elseif wasTappedBackward then
 				uevrUtils.pressButton(state, XINPUT_GAMEPAD_RIGHT_SHOULDER)
 			else
 				uevrUtils.unpressButton(state, XINPUT_GAMEPAD_RIGHT_SHOULDER)
     		end
 
 			--flashlight
-			if gripHead and status["isGrippingLight"] ~= true then
+			if buttonsPorted then
+				-- (the C++ layer: LT alone)
+			elseif gripHead and status["isGrippingLight"] ~= true then
 				configui.setValue("light_type", configui.getValue("light_type") == 1 and 2 or 1)
 				status["isGrippingLight"] = true
 			elseif gripHeadRight and status["isGrippingLight"] ~= true then
@@ -3574,7 +3586,14 @@ uevrUtils.registerOnPreInputGetStateCallback(function(retval, user_index, state)
 			-- forces the aim: the plugin fires the lowered gun itself (the weapon's own fire, door B) and keeps the press
 			-- from the game; only the right grip (or always_aim) aims, and then the game's own trigger fires as before
 			local triggerAims = rightTriggerPressed and not (SH2VR_PORTED ~= nil and SH2VR_PORTED.fire == true)
-			if blockEmptyAim or blockShotgunPump or blockShotgunEmpty or blockRifleBolt or blockRifleEmpty then
+			-- sh2vr (2026-10-31, Tefa): with the C++ button layer the aim stance is never asked for: not by the right grip
+			-- (holding it shows the ammo instead, holsters.cpp), not by always_aim. Only the pump / bolt blocks still keep
+			-- the trigger from the game; the left trigger is left as the C++ layer wrote it.
+			if buttonsPorted then
+				if blockShotgunPump or blockShotgunEmpty or blockRifleBolt or blockRifleEmpty then
+					state.Gamepad.bRightTrigger = 0
+				end
+			elseif blockEmptyAim or blockShotgunPump or blockShotgunEmpty or blockRifleBolt or blockRifleEmpty then
 				state.Gamepad.bLeftTrigger = 0
 				state.Gamepad.bRightTrigger = 0
 			elseif triggerAims or rightGripPressed or alwaysAim then
@@ -3594,7 +3613,8 @@ uevrUtils.registerOnPreInputGetStateCallback(function(retval, user_index, state)
 			end
 			--end aim
 
-			if uevrUtils.isButtonPressed(state, XINPUT_GAMEPAD_RIGHT_SHOULDER) then
+			-- (with the C++ layer the quick turn is the game's own RB; the pack adds no turn of its own)
+			if not buttonsPorted and uevrUtils.isButtonPressed(state, XINPUT_GAMEPAD_RIGHT_SHOULDER) then
 				status.turnStep = (status.turnStep or 0) + 180
 			end
 

@@ -72,10 +72,11 @@ constexpr const wchar_t* WEAPON_MANAGER_CLASS = L"Class /Script/SHProto.SHWeapon
 constexpr const wchar_t* UNEQUIP_FN = L"RequestUnequipWeapon";      // read live 2026-10-29; see holsters.cpp for the fallback
 constexpr unsigned HOLSTER_TEST_KEY = 0x75;   // VK_F6: a pretend right grip, for the simulator (no grip there)
 constexpr unsigned HOLSTER_LEFT_TEST_KEY = 0x74;   // VK_F5: a pretend LEFT grip
-// the left grip's items (2026-10-29, Tefa's table): the map at the left hip, the syringe at the right hip, the drink at
-// the right shoulder; the left shoulder's flashlight stays on LT for now (a hand-held flashlight is a later piece)
-constexpr const wchar_t* LEFT_ITEM_MAP_SPOT = L"left hip";
-constexpr const wchar_t* LEFT_ITEM_SYRINGE_SPOT = L"right hip";
+// the left grip's items (2026-10-29, Tefa's table; 2026-10-31 Tefa: "please move the map to right hip"): the map at the
+// right hip, the syringe at the left hip (it gives way to the ammo pouch while a magazine is out), the drink at the right
+// shoulder; the left shoulder's flashlight stays on LT for now (a hand-held flashlight is a later piece)
+constexpr const wchar_t* LEFT_ITEM_MAP_SPOT = L"right hip";
+constexpr const wchar_t* LEFT_ITEM_SYRINGE_SPOT = L"left hip";
 constexpr const wchar_t* LEFT_ITEM_DRINK_SPOT = L"right shoulder";
 constexpr double USE_AT_WRIST_CM = 15.0;      // the syringe: the left hand this close to the right hand = used
 constexpr double MOUTH_FORWARD_CM = 12.0, MOUTH_DOWN_CM = 10.0, USE_AT_MOUTH_CM = 15.0;   // the drink: at the mouth = drunk
@@ -83,6 +84,9 @@ constexpr int HOLSTER_PRESS_POLLS = 3;        // how many pad polls a press the 
 constexpr int HOLSTER_LOG_MAX = 80;
 constexpr bool HOLSTER_LOG_EMPTY_GRIPS = true;
 constexpr float HOLSTER_STATUS_S = 5.0f;
+// the right grip held away from every spot with a gun out = "show the ammo" (2026-10-31, Tefa: "show ammo counter and
+// optionally the crosshair while RG is held, without it triggering the AIM stance"); the on-screen part is still to come
+constexpr bool SHOW_CROSSHAIR_ON_GRIP = false;   // the optional crosshair while the grip is held (not built yet)
 
 // ---- shooting without the aim stance (fire.cpp) ----
 constexpr unsigned FIRE_PROBE_KEY = 0x78;   // VK_F9: the probe key, sent to the game window from the session

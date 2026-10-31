@@ -15,8 +15,11 @@
 //   - the right grip PRESSED (the real controller, input.h) inside a spot with the hands empty: the spot's weapon is
 //     equipped through the game's own weapon manager (SHWeaponManageCmbSubcomp.RequestEquipWeapon(row, Instant),
 //     proven live 2026-10-24 for "Pistol"), and the layer remembers "holding";
-//   - the right grip LET GO while holding: the weapon goes back (the game's own unequip; the function's name is a
-//     setting, read live 2026-10-29), the hands are empty again;
+//   - the right grip pressed in a spot again: the spot's own weapon in hand goes back (the game's own unequip, the
+//     function's name is a setting, read live 2026-10-29); another spot's weapon is swapped for this one. Letting go
+//     of the grip does NOTHING to the weapon (2026-10-31, Tefa: the "hold to keep it" rule is removed);
+//   - the right grip HELD away from every spot with a gun out = "show the ammo" (showing_ammo(); never the aim stance,
+//     which the button layer and the pack's main.lua no longer ask for);
 //   - at the start, and after a load, a weapon the game put in the hand with no grip held is put back once, so the
 //     hands begin empty (logged).
 // A desk test: F6 sent to the game window is a pretend right grip (pressed / let go), since the simulator has no grip;
@@ -33,6 +36,7 @@
 
 #include "common.h"
 #include "gun.h"
+#include "ammo.h"
 #include "buttons.h"
 #include "input.h"
 #include "reload.h"
@@ -57,6 +61,7 @@ bool g_pretend_grip = false;       // F6
 bool g_grip_was = false;
 int g_logs = 0;
 float g_status_in = 0.0f;
+bool g_showing = false;           // the right grip held away from every spot with a gun out
 
 void say(const char* line) {
     if (g_logs >= settings::HOLSTER_LOG_MAX) return;
@@ -146,6 +151,12 @@ bool unequip() {
     return ue::call_ret(wm, settings::UNEQUIP_FN, {true}, ok) && ok;   // RequestUnequipWeapon(Instant) [read live 2026-10-29]
 }
 
+// the weapon manager's own name for what is in hand ("None" when empty)
+std::string equipped_name(API::UObject* wm) {
+    API::FName eq{};
+    return (wm != nullptr && ue::call_ret(wm, L"GetEquippedWeaponName", {}, eq)) ? narrow(ue::str(eq)) : "?";
+}
+
 bool grip_now() { return g_pretend_grip || input::held(XINPUT_GAMEPAD_RIGHT_SHOULDER); }
 
 // ---- the left grip's items: the map (held open), the syringe and the drink (a gesture) -----------------------------
@@ -188,16 +199,16 @@ void left_tick() {
     }
     const int map_i = spot_named(settings::LEFT_ITEM_MAP_SPOT), syr_i = spot_named(settings::LEFT_ITEM_SYRINGE_SPOT), drink_i = spot_named(settings::LEFT_ITEM_DRINK_SPOT);
     if (pressed && g_left == LeftItem::NONE && in_spot >= 0) {
-        // the ammo pouch shares the left hip: while the pistol waits for its magazine, the left grip there is the reload's
-        if (in_spot == map_i && !reload::mag_out()) {
+        if (in_spot == map_i) {
             g_left = LeftItem::MAP;
             buttons::keep_left_grip(true);
             buttons::press_for_game(XINPUT_GAMEPAD_DPAD_UP, settings::HOLSTER_PRESS_POLLS);   // MapToggle
-            say("left grip at the left hip: the map opens (held while the grip is held; the right grip turns its pages)");
+            say("left grip at the right hip: the map opens (held while the grip is held; the right grip turns its pages)");
             gun::buzz(controllers::LEFT, settings::BUZZ_DONE_AMP, settings::BUZZ_S);
-        } else if (in_spot == syr_i) {
+        } else if (in_spot == syr_i && !reload::mag_out()) {
+            // the ammo pouch shares the left hip: while the pistol waits for its magazine, the left grip there is the reload's
             g_left = LeftItem::SYRINGE;
-            say("left grip at the right hip: the syringe is in the left hand; bring it to the right wrist");
+            say("left grip at the left hip: the syringe is in the left hand; bring it to the right wrist");
             gun::buzz(controllers::LEFT, settings::BUZZ_GRAB_AMP, settings::BUZZ_S);
         } else if (in_spot == drink_i) {
             g_left = LeftItem::DRINK;
@@ -237,6 +248,7 @@ void left_tick() {
 } // namespace
 
 bool holding() { return g_holding; }
+bool showing_ammo() { return g_showing; }
 
 void on_message(UINT msg, WPARAM wparam) {
     if (msg != WM_KEYDOWN && msg != WM_SYSKEYDOWN) return;
@@ -289,33 +301,47 @@ void tick(float delta) {
     }
 
     char line[200];
-    if (pressed && !g_holding && in_spot >= 0) {
+    if (pressed && in_spot >= 0) {
+        // a spot: its own weapon in hand goes back; anything else (empty hands, another spot's weapon) draws this one
         const auto& s = *g_spots[in_spot].def;
-        std::string what = narrow(s.row);
-        const bool ok = equip(s, what);
-        if (ok) { g_holding = true; g_holding_spot = in_spot; gun::buzz(controllers::RIGHT, settings::BUZZ_DONE_AMP, settings::BUZZ_S); }
-        std::snprintf(line, sizeof line, "right grip at the %s: %s %s", narrow(s.name).c_str(), ok ? "drew the" : "could not draw the", what.c_str());
+        API::UObject* wm = weapon_manager();
+        API::FName row{};
+        const std::string in_hand = equipped_name(wm);
+        const bool own = wm != nullptr && row_for(wm, s, row) && in_hand == narrow(ue::str(row));
+        if (own) {
+            const bool ok = unequip();
+            std::snprintf(line, sizeof line, "right grip at the %s: %s the %s", narrow(s.name).c_str(), ok ? "put back" : "could not put back", in_hand.c_str());
+            if (ok) { g_holding = false; g_holding_spot = -1; gun::buzz(controllers::RIGHT, settings::BUZZ_DENY_AMP, settings::BUZZ_S); }
+        } else {
+            std::string what = narrow(s.row);
+            const bool ok = equip(s, what);
+            if (ok) { g_holding = true; g_holding_spot = in_spot; gun::buzz(controllers::RIGHT, settings::BUZZ_DONE_AMP, settings::BUZZ_S); }
+            std::snprintf(line, sizeof line, "right grip at the %s: %s %s (had: %s)", narrow(s.name).c_str(), ok ? "drew the" : "could not draw the", what.c_str(), in_hand.c_str());
+        }
         say(line);
-    } else if (pressed && !g_holding && in_spot < 0 && settings::HOLSTER_LOG_EMPTY_GRIPS) {
+    } else if (pressed && in_spot < 0 && settings::HOLSTER_LOG_EMPTY_GRIPS && gun::equipped() == nullptr) {
         say("right grip with the hand away from every spot: nothing drawn");
-    } else if (released && g_holding) {
-        const bool ok = unequip();
-        std::snprintf(line, sizeof line, "right grip let go: %s (%s)", ok ? "the weapon goes back to its spot" : "could not put the weapon back",
-                      g_holding_spot >= 0 ? narrow(g_spots[g_holding_spot].def->name).c_str() : "?");
-        say(line);
-        g_holding = false;
-        g_holding_spot = -1;
-        gun::buzz(controllers::RIGHT, settings::BUZZ_DENY_AMP, settings::BUZZ_S);
     }
+
+    // the right grip held away from every spot with a gun out: show the ammo (never the aim stance); letting go of the
+    // grip does nothing to the weapon
+    const bool show = grip && in_spot < 0 && !buttons::menu_open() && gun::equipped() != nullptr;
+    if (show && !g_showing) {
+        API::UObject* w = gun::equipped();
+        std::snprintf(line, sizeof line, "right grip held with the gun out: show the ammo, %d in the gun of %d, %d carried (the on-screen counter is still to come)",
+                      ammo::rounds(w), ammo::clip_size(w), ammo::carried(w));
+        say(line);
+    } else if (!show && g_showing && released) {
+        say("right grip let go: the ammo hides again; the weapon stays in the hand");
+    }
+    g_showing = show;
 
     g_status_in -= delta;
     if (g_status_in <= 0.0f) {
         g_status_in = settings::HOLSTER_STATUS_S;
         // the weapon manager's own name for what is in hand ("None" when empty); gun::equipped() knows ranged weapons only
-        API::FName eq{};
-        API::UObject* wm = weapon_manager();
-        std::string eq_name = (wm != nullptr && ue::call_ret(wm, L"GetEquippedWeaponName", {}, eq)) ? narrow(ue::str(eq)) : "?";
-        std::snprintf(line, sizeof line, "status: holding=%d spot=%s hand in=%s (nearest spot %.0f cm) equipped=%s grip=%d%s left hand: %s", g_holding ? 1 : 0,
+        const std::string eq_name = equipped_name(weapon_manager());
+        std::snprintf(line, sizeof line, "status: drawn=%d showing ammo=%d spot=%s hand in=%s (nearest spot %.0f cm) equipped=%s grip=%d%s left hand: %s", g_holding ? 1 : 0, g_showing ? 1 : 0,
                       g_holding_spot >= 0 ? narrow(g_spots[g_holding_spot].def->name).c_str() : "-",
                       in_spot >= 0 ? narrow(g_spots[in_spot].def->name).c_str() : "-", have_hand ? nearest : -1.0,
                       eq_name.c_str(), grip ? 1 : 0, g_pretend_grip ? " (F6)" : "", left_name(g_left));

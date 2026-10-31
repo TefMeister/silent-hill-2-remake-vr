@@ -1,5 +1,5 @@
-// holsters.h -- the weapons live on the body: the right grip draws one from its spot and holds it; let go and it
-// goes back (2026-10-29, Tefa's "full VR button and body layout"). See holsters.cpp.
+// holsters.h -- the weapons live on the body: the right grip pressed in a spot draws its weapon, pressed there again puts
+// it back; letting go of the grip leaves the weapon in the hand (2026-10-29; 2026-10-31 Tefa). See holsters.cpp.
 #pragma once
 
 #include <Windows.h>
@@ -12,7 +12,9 @@ void tick(float delta);
 // F6 from the game window: a pretend right grip, pressed / let go (the simulator has no grip).
 void on_message(UINT msg, WPARAM wparam);
 
-// The right grip holds a weapon drawn from a spot (fire and the hands may ask).
+// A weapon drawn from a spot is in the hand (fire and the hands may ask).
 bool holding();
+// The right grip is held away from every spot with a gun out: the ammo is shown (2026-10-31; the on-screen part is to come).
+bool showing_ammo();
 
 } // namespace sh2vr::holsters
