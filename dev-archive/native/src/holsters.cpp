@@ -216,7 +216,7 @@ void left_tick(float delta) {
         g_heal_held_s += delta;
         if (!g_heal_syringe && g_heal_held_s >= settings::HEAL_SYRINGE_HOLD_S) {
             g_heal_syringe = true;
-            say("left grip held 2 s: the drink is swapped for the syringe");
+            say("left grip held: the drink is swapped for the syringe");
             gun::buzz(controllers::LEFT, settings::BUZZ_GRAB_AMP, settings::BUZZ_S);
         }
         // LT with the left grip held never reaches the game as the flashlight (buttons.cpp: LT ALONE is the flashlight)

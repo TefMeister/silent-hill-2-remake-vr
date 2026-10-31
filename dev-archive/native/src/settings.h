@@ -74,12 +74,12 @@ constexpr unsigned HOLSTER_TEST_KEY = 0x75;   // VK_F6: a pretend right grip, fo
 constexpr unsigned HOLSTER_LEFT_TEST_KEY = 0x74;   // VK_F5: a pretend LEFT grip
 // the left grip's items (2026-10-29, Tefa's table; 2026-10-31 Tefa: "ammo pouch needs to be on the left hip, can the map
 // go to right shoulder with LG activating it?"): the map at the right shoulder; the healing item (drink or syringe) at
-// the right hip, Tefa's settled way: a left grip press takes the drink out, keep holding 2 s and it is the syringe, LT
+// the right hip, Tefa's settled way: a left grip press takes the drink out, keep holding half a second and it is the syringe, LT
 // uses what is in the hand (the game's one healing action, Y), letting go puts it back unused; the left hip is the ammo's only (the pistol magazine, the shotgun and rifle rounds one by one); the left
 // shoulder's flashlight stays on LT for now (a hand-held flashlight is a later piece)
 constexpr const wchar_t* LEFT_ITEM_MAP_SPOT = L"right shoulder";
 constexpr const wchar_t* LEFT_ITEM_HEAL_SPOT = L"right hip";
-constexpr float HEAL_SYRINGE_HOLD_S = 2.0f;    // the left grip held this long at the healing spot: the drink becomes the syringe
+constexpr float HEAL_SYRINGE_HOLD_S = 0.5f;    // (Tefa 2026-10-31: "2 seconds feels like forever") the left grip held this long at the healing spot: the drink becomes the syringe
 constexpr double USE_AT_WRIST_CM = 15.0;      // the syringe: the left hand this close to the right hand = used
 constexpr double MOUTH_FORWARD_CM = 12.0, MOUTH_DOWN_CM = 10.0, USE_AT_MOUTH_CM = 15.0;   // the drink: at the mouth = drunk
 constexpr int HOLSTER_PRESS_POLLS = 3;        // how many pad polls a press the game must see lasts
