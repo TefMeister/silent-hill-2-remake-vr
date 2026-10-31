@@ -56,3 +56,25 @@ LT with the left grip held is never the flashlight (buttons.cpp takes LT ALONE o
 ⚠️ Open: Y is the game's one healing action and the game picks the item it uses, so "drink" or "syringe" is ours
 only in the log until the game's own use-this-item call is found (live, UEVR-MCP) `[hypothesis]`.
 Backup `D:/SH2 builds/_backup-2026-10-31-1144-before-sh2vr-deploy`.
+
+## Then: half a second, and the static leads (sh2vr.dll, backup 1148)
+Tefa: *"please change the timing to turn it into syrenge in 0.5 seconds, 2 seconds feels like forever."*
+`HEAL_SYRINGE_HOLD_S` = 0.5. Static leads for the flat jobs, read from the exe's strings `[inferred-static 2026-10-31]`:
+the game's own HUD option `AmmoWidgetVisibility` (enum `EAmmoWidgetVisibility`, beside InteractionIconVisibility /
+TutorialsVisibility; not stored in GameUserSettings.ini or the saves, so at its default) is the first thing to try
+for the ammo counter while RG is held; `USHItemHealingUseExecutive` / `USHItemUseExecutive` / `SHHealingItemHandle`
+are the item-use classes to look at for a real drink-or-syringe choice.
+
+## Then: the healing item to the lower back, in the RIGHT hand (sh2vr.dll 888f1a23)
+Tefa: *"i think the game normally puts the health drink and the syringe in the players right hand instead of the
+weapon. have you already made a game changing change to hold it in the left hand with the weapon out? if not, can we
+instead move the health drink and syringe to the lower back and little to the right like re8 right now and sub weapon
+in re2?"* Checked: nothing of ours changes how the game heals; our code only presses the game's own healing button
+(Y) and the game plays its own animation with whichever hand it uses. "Left hand" was only which grip started it.
+Now: a fifth spot, `lower back` (12 cm right, 35 down, 30 behind the head: RE2's BACK spot), row `HEAL_ROW` (no
+weapon). RIGHT grip pressed there = the drink; held 0.5 s = the syringe (buzz); RT = used (Y); let go = back unused.
+RT is kept from the game and never fires while the item is in hand, and until RT is let go after using it
+(`fire::on_input` asks `holsters::heal_in_hand()`). RT's edge is read on the game thread. The right grip holding the
+item never counts as "show the ammo". The left grip now has only the map. Unused `USE_AT_WRIST_CM` / mouth numbers
+removed. Not run yet `[compile-verified 2026-10-31]`. Backup `D:/SH2 builds/_backup-2026-10-31-1253-before-sh2vr-deploy`.
+⚠️ RT (the holding hand's own trigger) was my pick; Tefa said LT when the item was in the left hand.

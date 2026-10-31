@@ -7,8 +7,10 @@
 //   right shoulder -> right grip: the shotgun
 //   left shoulder  -> right grip: the rifle
 //   left hip       -> right grip: the melee weapon (plank, pipe, chainsaw: whatever the game has equipped as melee)
-// The left grip (2026-10-31): the map at the right shoulder, the healing item at the right hip, nothing at the left hip
-// (the ammo's: reload.cpp's pistol magazine, the pack's shotgun and rifle rounds), the flashlight on LT.
+//   lower back     -> right grip: the healing item (2026-10-31, Tefa: like RE8's and RE2's sub weapon): a press takes the
+//                     drink, held 0.5 s it becomes the syringe, RT uses it (the game's healing action), let go = put back
+// The left grip (2026-10-31): the map at the right shoulder, nothing at the left hip (the ammo's: reload.cpp's pistol
+// magazine, the pack's shotgun and rifle rounds), the flashlight on LT.
 //
 // How it works, every frame on the game thread:
 //   - the right hand inside a spot: one short buzz on the way in;
@@ -29,6 +31,7 @@
 
 #include "holsters.h"
 
+#include <atomic>
 #include <cmath>
 #include <cstdio>
 #include <string>
@@ -159,14 +162,19 @@ std::string equipped_name(API::UObject* wm) {
 
 bool grip_now() { return g_pretend_grip || input::held(XINPUT_GAMEPAD_RIGHT_SHOULDER); }
 
-// ---- the left grip's items: the map (held open), the syringe and the drink (a gesture) -----------------------------
-enum class LeftItem { NONE, MAP, HEAL };
-float g_heal_held_s = 0.0f;       // how long the left grip has held the healing item
-bool g_heal_syringe = false;       // held past HEAL_SYRINGE_HOLD_S: the syringe, else the drink
+// ---- the left grip's item: the map (held open); and the right hand's healing item ---------------------------------
+enum class LeftItem { NONE, MAP };
 LeftItem g_left = LeftItem::NONE;
+// the healing item, in the RIGHT hand (the lower back spot)
+std::atomic<bool> g_heal{false};   // read by fire::on_input on the input thread: RT is kept from the game while it is in hand
+float g_heal_held_s = 0.0f;        // how long the right grip has held it
+bool g_heal_syringe = false;       // held past HEAL_SYRINGE_HOLD_S: the syringe, else the drink
+bool g_rt_was = false;             // RT's edge, read on the game thread (the input poll runs at its own pace)
+const char* heal_name() { return g_heal_syringe ? "syringe" : "drink"; }
 bool g_pretend_lg = false;         // F5
 bool g_lg_was = false;
-const char* left_name(LeftItem i) { return i == LeftItem::MAP ? "map" : i == LeftItem::HEAL ? (g_heal_syringe ? "syringe" : "drink") : "nothing"; }
+const char* left_name(LeftItem i) { return i == LeftItem::MAP ? "map" : "nothing"; }
+bool is_heal_spot(const settings::HolsterSpot& s) { return std::wstring_view(s.row) == settings::HEAL_ROW; }
 
 // the spot index with this name, or -1
 int spot_named(const wchar_t* name) {
@@ -186,7 +194,7 @@ void left_tick(float delta) {
         TV p;
         if (spot_tracking(settings::HOLSTER_SPOTS[i], p) && dist_cm(hand, p) < settings::HOLSTER_ENTER_CM) { in_spot = i; break; }
     }
-    const int map_i = spot_named(settings::LEFT_ITEM_MAP_SPOT), heal_i = spot_named(settings::LEFT_ITEM_HEAL_SPOT);
+    const int map_i = spot_named(settings::LEFT_ITEM_MAP_SPOT);
     if (pressed && g_left == LeftItem::NONE && in_spot >= 0) {
         if (in_spot == map_i) {
             g_left = LeftItem::MAP;
@@ -194,12 +202,6 @@ void left_tick(float delta) {
             buttons::press_for_game(XINPUT_GAMEPAD_DPAD_UP, settings::HOLSTER_PRESS_POLLS);   // MapToggle
             say("left grip at the right shoulder: the map opens (held while the grip is held; the right grip turns its pages)");
             gun::buzz(controllers::LEFT, settings::BUZZ_DONE_AMP, settings::BUZZ_S);
-        } else if (in_spot == heal_i) {
-            g_left = LeftItem::HEAL;
-            g_heal_held_s = 0.0f;
-            g_heal_syringe = false;
-            say("left grip at the right hip: the drink is in the left hand (keep holding for the syringe; LT uses it)");
-            gun::buzz(controllers::LEFT, settings::BUZZ_GRAB_AMP, settings::BUZZ_S);
         }
     }
     if (g_left == LeftItem::MAP && released) {
@@ -208,31 +210,13 @@ void left_tick(float delta) {
         buttons::press_for_game(XINPUT_GAMEPAD_DPAD_UP, settings::HOLSTER_PRESS_POLLS);   // MapToggle again: closes
         say("left grip let go: the map closes");
     }
-    if (g_left == LeftItem::HEAL && released) {
-        say(g_heal_syringe ? "left grip let go: the syringe goes back unused" : "left grip let go: the drink goes back unused");
-        g_left = LeftItem::NONE;
-    }
-    if (g_left == LeftItem::HEAL) {
-        g_heal_held_s += delta;
-        if (!g_heal_syringe && g_heal_held_s >= settings::HEAL_SYRINGE_HOLD_S) {
-            g_heal_syringe = true;
-            say("left grip held: the drink is swapped for the syringe");
-            gun::buzz(controllers::LEFT, settings::BUZZ_GRAB_AMP, settings::BUZZ_S);
-        }
-        // LT with the left grip held never reaches the game as the flashlight (buttons.cpp: LT ALONE is the flashlight)
-        if (input::left_trigger_pressed()) {
-            buttons::press_for_game(XINPUT_GAMEPAD_Y, settings::HOLSTER_PRESS_POLLS);   // ActionHealing: the game picks the item it uses
-            say(g_heal_syringe ? "LT: the syringe used (the game's healing action)" : "LT: the drink used (the game's healing action)");
-            gun::buzz(controllers::LEFT, settings::BUZZ_DONE_AMP, settings::BUZZ_S);
-            g_left = LeftItem::NONE;
-        }
-    }
 }
 
 } // namespace
 
 bool holding() { return g_holding; }
 bool showing_ammo() { return g_showing; }
+bool heal_in_hand() { return g_heal.load(); }
 
 void on_message(UINT msg, WPARAM wparam) {
     if (msg != WM_KEYDOWN && msg != WM_SYSKEYDOWN) return;
@@ -249,8 +233,8 @@ void on_message(UINT msg, WPARAM wparam) {
 void tick(float delta) {
     if (!settings::HOLSTERS_ON) return;
     API::UObject* pawn = gun::pawn();
-    if (pawn == nullptr) { g_started = false; g_pawn_seen = nullptr; g_holding = false; return; }
-    if (pawn != g_pawn_seen) { g_pawn_seen = pawn; g_started = false; g_holding = false; g_holding_spot = -1; g_left = LeftItem::NONE; buttons::keep_left_grip(false); }
+    if (pawn == nullptr) { g_started = false; g_pawn_seen = nullptr; g_holding = false; g_heal = false; return; }
+    if (pawn != g_pawn_seen) { g_pawn_seen = pawn; g_started = false; g_holding = false; g_holding_spot = -1; g_left = LeftItem::NONE; g_heal = false; buttons::keep_left_grip(false); }
     left_tick(delta);
     for (int i = 0; i < settings::HOLSTER_SPOT_COUNT; ++i) g_spots[i].def = &settings::HOLSTER_SPOTS[i];
 
@@ -285,7 +269,14 @@ void tick(float delta) {
     }
 
     char line[200];
-    if (pressed && in_spot >= 0) {
+    if (pressed && in_spot >= 0 && is_heal_spot(*g_spots[in_spot].def)) {
+        // the lower back: the healing item into the right hand; the weapon (if any) is left to the game's own healing
+        g_heal = true;
+        g_heal_held_s = 0.0f;
+        g_heal_syringe = false;
+        say("right grip at the lower back: the drink is in the right hand (keep holding for the syringe; RT uses it)");
+        gun::buzz(controllers::RIGHT, settings::BUZZ_GRAB_AMP, settings::BUZZ_S);
+    } else if (pressed && in_spot >= 0) {
         // a spot: its own weapon in hand goes back; anything else (empty hands, another spot's weapon) draws this one
         const auto& s = *g_spots[in_spot].def;
         API::UObject* wm = weapon_manager();
@@ -307,9 +298,35 @@ void tick(float delta) {
         say("right grip with the hand away from every spot: nothing drawn");
     }
 
+    const bool rt = input::right_trigger();
+    const bool rt_pressed = rt && !g_rt_was;
+    g_rt_was = rt;
+    if (g_heal) {
+        if (released) {
+            std::snprintf(line, sizeof line, "right grip let go: the %s goes back unused", heal_name());
+            say(line);
+            g_heal = false;
+        } else {
+            g_heal_held_s += delta;
+            if (!g_heal_syringe && g_heal_held_s >= settings::HEAL_SYRINGE_HOLD_S) {
+                g_heal_syringe = true;
+                say("right grip held: the drink is swapped for the syringe");
+                gun::buzz(controllers::RIGHT, settings::BUZZ_GRAB_AMP, settings::BUZZ_S);
+            }
+            // RT with the healing item in hand never reaches the game, and never fires (fire::on_input asks heal_in_hand())
+            if (rt_pressed) {
+                buttons::press_for_game(XINPUT_GAMEPAD_Y, settings::HOLSTER_PRESS_POLLS);   // ActionHealing: the game picks the item it uses
+                std::snprintf(line, sizeof line, "RT: the %s used (the game's healing action)", heal_name());
+                say(line);
+                gun::buzz(controllers::RIGHT, settings::BUZZ_DONE_AMP, settings::BUZZ_S);
+                g_heal = false;
+            }
+        }
+    }
+
     // the right grip held away from every spot with a gun out: show the ammo (never the aim stance); letting go of the
-    // grip does nothing to the weapon
-    const bool show = grip && in_spot < 0 && !buttons::menu_open() && gun::equipped() != nullptr;
+    // grip does nothing to the weapon; not while the grip holds the healing item
+    const bool show = grip && in_spot < 0 && !g_heal && !buttons::menu_open() && gun::equipped() != nullptr;
     if (show && !g_showing) {
         API::UObject* w = gun::equipped();
         std::snprintf(line, sizeof line, "right grip held with the gun out: show the ammo, %d in the gun of %d, %d carried (the on-screen counter is still to come)",
@@ -325,10 +342,10 @@ void tick(float delta) {
         g_status_in = settings::HOLSTER_STATUS_S;
         // the weapon manager's own name for what is in hand ("None" when empty); gun::equipped() knows ranged weapons only
         const std::string eq_name = equipped_name(weapon_manager());
-        std::snprintf(line, sizeof line, "status: drawn=%d showing ammo=%d spot=%s hand in=%s (nearest spot %.0f cm) equipped=%s grip=%d%s left hand: %s", g_holding ? 1 : 0, g_showing ? 1 : 0,
+        std::snprintf(line, sizeof line, "status: drawn=%d showing ammo=%d spot=%s hand in=%s (nearest spot %.0f cm) equipped=%s grip=%d%s left hand: %s heal: %s", g_holding ? 1 : 0, g_showing ? 1 : 0,
                       g_holding_spot >= 0 ? narrow(g_spots[g_holding_spot].def->name).c_str() : "-",
                       in_spot >= 0 ? narrow(g_spots[in_spot].def->name).c_str() : "-", have_hand ? nearest : -1.0,
-                      eq_name.c_str(), grip ? 1 : 0, g_pretend_grip ? " (F6)" : "", left_name(g_left));
+                      eq_name.c_str(), grip ? 1 : 0, g_pretend_grip ? " (F6)" : "", left_name(g_left), g_heal ? heal_name() : "-");
         LOGI("%s holsters: %s", TAG, line);
     }
 }

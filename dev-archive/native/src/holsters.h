@@ -16,5 +16,7 @@ void on_message(UINT msg, WPARAM wparam);
 bool holding();
 // The right grip is held away from every spot with a gun out: the ammo is shown (2026-10-31; the on-screen part is to come).
 bool showing_ammo();
+// The right grip holds the healing item from the lower back (2026-10-31): RT uses it, so it must not fire.
+bool heal_in_hand();
 
 } // namespace sh2vr::holsters

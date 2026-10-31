@@ -58,14 +58,18 @@ constexpr const wchar_t* MAP_SECTION_CLASS = L"WidgetBlueprintGeneratedClass /Ga
 
 // ---- the weapons on the body (holsters.cpp, 2026-10-29) ----
 constexpr bool HOLSTERS_ON = true;
+constexpr const wchar_t* HEAL_ROW = L"";   // a spot with this row holds the healing item, not a weapon
 struct HolsterSpot { const wchar_t* name; double right_cm, up_cm, forward_cm; const wchar_t* row; };   // from the headset; the weapon row
 constexpr HolsterSpot HOLSTER_SPOTS[] = {
     {L"right hip", 20.0, -35.0, 10.0, L"Pistol"},
     {L"right shoulder", 15.0, -10.0, -10.0, L"Shotgun"},
     {L"left shoulder", -15.0, -10.0, -10.0, L"Rifle"},
     {L"left hip", -20.0, -35.0, 10.0, L"Melee"},
+    // the healing item (2026-10-31, Tefa: "move the health drink and syringe to the lower back and little to the right like
+    // re8 right now and sub weapon in re2"): RE2's BACK spot (0.12 right, as low as the hip, 0.30 behind); no weapon row
+    {L"lower back", 12.0, -35.0, -30.0, HEAL_ROW},
 };
-constexpr int HOLSTER_SPOT_COUNT = 4;
+constexpr int HOLSTER_SPOT_COUNT = 5;
 constexpr const wchar_t* MELEE_ROW = L"Melee";   // a spot with this row draws the game's last-used melee weapon (IronPipe, WoodenPlank, Chainsaw...)
 constexpr double HOLSTER_ENTER_CM = 18.0, HOLSTER_LEAVE_CM = 26.0;   // the hand counts as in the spot / out of it
 constexpr const wchar_t* WEAPON_MANAGER_CLASS = L"Class /Script/SHProto.SHWeaponManageCmbSubcomp";
@@ -73,15 +77,13 @@ constexpr const wchar_t* UNEQUIP_FN = L"RequestUnequipWeapon";      // read live
 constexpr unsigned HOLSTER_TEST_KEY = 0x75;   // VK_F6: a pretend right grip, for the simulator (no grip there)
 constexpr unsigned HOLSTER_LEFT_TEST_KEY = 0x74;   // VK_F5: a pretend LEFT grip
 // the left grip's items (2026-10-29, Tefa's table; 2026-10-31 Tefa: "ammo pouch needs to be on the left hip, can the map
-// go to right shoulder with LG activating it?"): the map at the right shoulder; the healing item (drink or syringe) at
-// the right hip, Tefa's settled way: a left grip press takes the drink out, keep holding half a second and it is the syringe, LT
-// uses what is in the hand (the game's one healing action, Y), letting go puts it back unused; the left hip is the ammo's only (the pistol magazine, the shotgun and rifle rounds one by one); the left
-// shoulder's flashlight stays on LT for now (a hand-held flashlight is a later piece)
+// go to right shoulder with LG activating it?"): the map at the right shoulder; the left hip is the ammo's only (the
+// pistol magazine, the shotgun and rifle rounds one by one); the left shoulder's flashlight stays on LT for now.
+// The healing item is the RIGHT hand's since 2026-10-31 (the lower back spot above; the game itself heals with the right
+// hand): a right grip press there takes the drink out, keep holding and it is the syringe, RT uses what is in the hand
+// (the game's one healing action, Y), letting go of the grip puts it back unused.
 constexpr const wchar_t* LEFT_ITEM_MAP_SPOT = L"right shoulder";
-constexpr const wchar_t* LEFT_ITEM_HEAL_SPOT = L"right hip";
-constexpr float HEAL_SYRINGE_HOLD_S = 0.5f;    // (Tefa 2026-10-31: "2 seconds feels like forever") the left grip held this long at the healing spot: the drink becomes the syringe
-constexpr double USE_AT_WRIST_CM = 15.0;      // the syringe: the left hand this close to the right hand = used
-constexpr double MOUTH_FORWARD_CM = 12.0, MOUTH_DOWN_CM = 10.0, USE_AT_MOUTH_CM = 15.0;   // the drink: at the mouth = drunk
+constexpr float HEAL_SYRINGE_HOLD_S = 0.5f;    // (Tefa 2026-10-31: "2 seconds feels like forever") the right grip held this long at the lower back: the drink becomes the syringe
 constexpr int HOLSTER_PRESS_POLLS = 3;        // how many pad polls a press the game must see lasts
 constexpr int HOLSTER_LOG_MAX = 80;
 constexpr bool HOLSTER_LOG_EMPTY_GRIPS = true;

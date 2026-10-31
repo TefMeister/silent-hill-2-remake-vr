@@ -19,6 +19,7 @@
 #include <string>
 
 #include "ammo.h"
+#include "holsters.h"
 #include "rack.h"
 #include "reload.h"
 #include "settings.h"
@@ -212,6 +213,7 @@ void on_input(XINPUT_STATE& state) {
     const bool rt = state.Gamepad.bRightTrigger > settings::TRIGGER_PRESSED_OVER;
     const bool edge = rt && !g_rt_was;
     g_rt_was = rt;
+    if (rt && holsters::heal_in_hand()) { state.Gamepad.bRightTrigger = 0; g_eating_rt = true; return; }   // RT uses the healing item (holsters.cpp); kept from the game until it is let go
     if (rt && (rack::needed() || reload::blocks_fire())) { state.Gamepad.bRightTrigger = 0; g_eating_rt = false; return; }   // the trigger waits for the rack / the magazine
     if (!rt) { g_eating_rt = false; return; }
     if (edge) {
