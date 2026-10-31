@@ -118,6 +118,12 @@ constexpr double TWO_HAND_CONE_DEG = 50.0;    // and within this angle of the ba
 constexpr bool TWO_HAND_AIM_AT_DRAWN_HAND = true;   // aim at the drawn left hand, not the controller point
 constexpr bool TWO_HAND_TURN_RIGHT = true;   // the drawn right hand turns with the two-handed long gun
 constexpr bool TWO_HAND_LOCK_LEFT = true;    // the drawn left hand stays on the gun's line at its starting distance (until the pump is built)
+// 2026-10-31 evening (Tefa: "is there a way to lock the left hand onto a pump handle and rifle front, right now i can
+// move my wrist freely"): the drawn left hand also takes its TURN from the gun, the turn it had against the gun at the
+// grab, kept from then on (the wrist no longer follows the controller). On the shotgun it slides back along the gun
+// with the controller, up to TWO_HAND_PUMP_SLIDE_CM, so the hand rides the pump; on the rifle it stays put.
+constexpr bool TWO_HAND_LOCK_TURN = true;
+constexpr double TWO_HAND_PUMP_SLIDE_CM = 10.0;   // the pack's pump counts 8 cm of pull (shotgun_pump.lua PUMP_TRAVEL)
 constexpr double MAP_TWO_HAND_TILT_DEG = 45.0; // praydog's tilt of the two-handed map
 constexpr float TWO_HAND_REPORT_S = 3.0f;
 constexpr int TWO_HAND_LOG_MAX = 80;

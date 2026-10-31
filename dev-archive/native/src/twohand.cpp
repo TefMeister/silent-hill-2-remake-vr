@@ -134,6 +134,9 @@ int g_gun_writes = 0;
 Transform g_gun_rel{};             // the gun's place in the right hand before two hands
 Vec3 g_barrel_ctrl{};              // the hands' line at the start, in the RIGHT controller's frame (the whole turn for the right hand)
 Vec3 g_aim_off{};                  // the drawn left hand at the start, in the LEFT controller's frame (aim there, not at the drawn hand once it is locked)
+Quat g_left_rel{};                 // the drawn left hand's turn against the gun at the grab (TWO_HAND_LOCK_TURN)
+bool g_left_rel_due = false;       // take it on the first write after the grab
+bool g_gun_is_shotgun = false;     // the hand slides with the pump only on the shotgun
 double g_front_cm = 0;             // the right hand to the drawn left hand at the start: the left hand stays this far up the gun
 bool g_gun_have_rel = false;
 
@@ -194,6 +197,7 @@ void tick(float delta) {
         ik::override_left(false, {}, {});
         ik::override_right_turn(false, {});
         g_gun = g_gun_capture = g_gun_have_written = g_gun_have_rel = false;
+        g_left_rel_due = false;
         g_gun_mesh = nullptr;
     }
     if (lg_pressed && long_gun && !g_gun) {
@@ -268,6 +272,8 @@ void on_view() {
                 g_front_cm = len(sub(drawn, r.pos));
                 g_grip_local = to_local(mw, r.pos);
                 g_gun_capture = false;
+                g_left_rel_due = true;
+                g_gun_is_shotgun = ue::name_of(g_gun_mesh).find("Shotgun") != std::string::npos || ue::name_of(gun::equipped()).find("Shotgun") != std::string::npos;
             }
             // aimed at the target, not added to the last write: run again on a gun already turned, it turns no further
             const Vec3 aim = add(l.pos, qrot(l.rot, g_aim_off));
@@ -282,8 +288,19 @@ void on_view() {
             // from where the gun sat in it; the drawn left hand stays on the gun's line at its starting distance
             if (settings::TWO_HAND_TURN_RIGHT) ik::override_right_turn(true, from_to(qrot(r.rot, g_barrel_ctrl), sub(aim, r.pos)));
             if (settings::TWO_HAND_LOCK_LEFT) {
+                // where along the gun: the grab's distance; on the shotgun the hand follows the controller back by up to the
+                // pump's slide (the pack's pump reads the controller's own pull, so the drawn hand only shows it)
+                const double reach = len(sub(aim, grip));
+                double at = g_front_cm;
+                if (g_gun_is_shotgun) at = std::fmax(g_front_cm - settings::TWO_HAND_PUMP_SLIDE_CM, std::fmin(g_front_cm, reach));
+                const Vec3 where = add(grip, mul(norm(sub(aim, grip)), at));
+                if (g_left_rel_due) { g_left_rel = qnorm(qmul(qconj(t.rot), l.rot)); g_left_rel_due = false; }
                 Vec3 lp; ue::Rot lr;
-                if (gun::controller(controllers::LEFT, lp, lr)) ik::override_left(true, add(grip, mul(norm(sub(aim, grip)), g_front_cm)), lr);
+                if (settings::TWO_HAND_LOCK_TURN) {
+                    Transform ht;
+                    ht.rot = qnorm(qmul(t.rot, g_left_rel));   // the gun's turn, then the hand's own turn against it from the grab
+                    ik::override_left(true, where, gun::rot_of(ht));
+                } else if (gun::controller(controllers::LEFT, lp, lr)) ik::override_left(true, where, lr);
             }
         }
     }

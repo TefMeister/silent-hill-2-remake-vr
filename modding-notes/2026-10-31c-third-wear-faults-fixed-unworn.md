@@ -49,3 +49,12 @@ Shotgun: fire (one shot, then the trigger waits), pump with the left hand on the
 the click, take rounds from the left hip with the left grip and let go at the loading port, one by one; then draw the
 pistol (the lock-up). Rifle the same with the bolt. Pistol magazine: does it look like a magazine, where does it sit.
 Medicine: right grip at the lower back, keep holding, look at the hand.
+
+## 16:57 — the left hand locked onto the long gun (sh2vr.dll 014079e8, backup `_backup-2026-10-31-1657-before-sh2vr-deploy`)
+Tefa: *"is there a way to lock the left hand onto a pump handle and rifle front, right now i can move my wrist freely"*.
+The two-hand lock pinned the drawn left hand's PLACE on the gun's line but passed the controller's turn, so the wrist
+followed the controller. Now (`TWO_HAND_LOCK_TURN`) the hand's turn against the gun is taken at the grab and kept: the
+gun's turn times that, every view. On the shotgun the hand slides back along the gun with the controller, up to 10 cm
+(`TWO_HAND_PUMP_SLIDE_CM`; the pack's pump counts 8 cm of the controller's own pull), so it rides the pump; on the rifle
+it stays at the grab's distance. Not worn. If the grab's angle turns out awkward, a fixed angle per gun (like the
+pistol slide's) is the next step.
