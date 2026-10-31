@@ -97,7 +97,7 @@ void drop(API::UObject* w) {
     g_dry = g_mag_rounds <= 0;
     ammo::set_rounds(w, 0);
     mag_bones(w, true);
-    set_state(St::DROPPED, "right B");
+    set_state(St::DROPPED, "Quest B");
     gun::buzz(controllers::RIGHT, settings::BUZZ_GRAB_AMP, settings::BUZZ_S);
     LOGI("%s reload: magazine out with %d round(s) in it, %d carried", TAG, g_mag_rounds, ammo::carried(w));
 }
@@ -171,7 +171,7 @@ void tick(float delta) {
 
     switch (g_st) {
     case St::SEATED:
-        if (input::pressed(XINPUT_GAMEPAD_B) && !rack::active()) drop(w);
+        if (input::pressed(settings::QUEST_B) && !rack::active()) drop(w);   // Quest B (the pad's X, settings.h)
         break;
     case St::DROPPED:
         if (input::pressed(XINPUT_GAMEPAD_LEFT_SHOULDER) && g_in_pouch && g_since_grab >= settings::RELOAD_GRAB_COOLDOWN_S) { g_since_grab = 0.0f; grab(w); }

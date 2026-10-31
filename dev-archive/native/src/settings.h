@@ -56,6 +56,12 @@ constexpr const wchar_t* SAVE_MENU_WIDGET_CLASS = L"WidgetBlueprintGeneratedClas
 constexpr const wchar_t* PAUSE_WIDGET_CLASS = L"WidgetBlueprintGeneratedClass /Game/Game/UI/Menu/InGameMenuWidget_BP.InGameMenuWidget_BP_C";               // the pause menu (RESUME / LOAD / SETTINGS ...): EXISTS only while open
 constexpr const wchar_t* MAP_SECTION_CLASS = L"WidgetBlueprintGeneratedClass /Game/Game/UI/GameplayMenu/Sections/MenuSectionMap_Widget.MenuSectionMap_Widget_C";   // the map (d-pad up): IsVisible() only while open; its parent menu reports no focus then
 
+// ---- the Quest 3 face buttons as the pad sees them (2026-10-31, Tefa in the headset: "quest 3 X Y B A xbox in same order
+// B Y X A"; the log agrees: Quest X ejected the magazine through the pad's B) [verified-live 2026-10-31, headset]. Tefa's
+// plan names QUEST letters, so the mod reads these two names, never the pad letters directly.
+constexpr unsigned short QUEST_X = 0x2000;   // XINPUT_GAMEPAD_B: Quest X (left, lower) = back in the menus
+constexpr unsigned short QUEST_B = 0x4000;   // XINPUT_GAMEPAD_X: Quest B (right, upper) = the pistol's magazine out
+
 // ---- the weapons on the body (holsters.cpp, 2026-10-29) ----
 constexpr bool HOLSTERS_ON = true;
 constexpr const wchar_t* HEAL_ROW = L"";   // a spot with this row holds the healing item, not a weapon

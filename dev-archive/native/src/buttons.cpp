@@ -17,17 +17,18 @@
 //
 // Tefa's layout (mod-ideas games/silent-hill-2-remake.md, "The full VR button and body layout"), in play:
 //   left stick click  -> run on / off (a toggle): the game sees LB held while it is on
-//   B                 -> the pistol's magazine out (reload.cpp reads it); the game never sees B
+//   (2026-10-31: the plan's letters are QUEST letters; UEVR gives Quest X as the pad's B and Quest B as the pad's X)
+//   Quest B (pad X)   -> the pistol's magazine out (reload.cpp reads it); the game never sees it
 //   A                 -> interact, vault, flip an item (the game's A, as is)
-//   X                 -> nothing in play (reloads are by hand); back in the menus (the game's B = Cancel)
+//   Quest X (pad B)   -> nothing in play; back in the menus (it is the game's own B = Cancel)
 //   Y                 -> the inventory (the game's BACK = InventoryToggle)
 //   left stick + right stick down -> dodge that way (the game's B while the stick is down)
 //   right stick up    -> quick turn (the game's RB), a setting, OFF by default
 //   LT alone          -> the flashlight (the game's right stick click); LT with the left grip = the rack (rack.cpp)
 //   grips             -> the hands (rack, magazine, holsters); the game never sees LB / RB from them
 //   RT                -> fire (fire.cpp decides, after this)
-// In a menu (the inventory, map, notes, examine, pause): A, Y as above; X -> B (back); the grips -> LB / RB (previous /
-// next item in examine); LT / RT pass (zoom); the sticks pass; the real B is kept from the game.
+// In a menu (the inventory, map, notes, examine, pause): A, Y as above; Quest X = back; the grips -> LB / RB (previous /
+// next item in examine); LT / RT pass (zoom); the sticks pass; Quest B is kept from the game.
 // [compile-verified] at most until it has run.
 
 #include "buttons.h"
@@ -127,9 +128,20 @@ void on_input(XINPUT_STATE& state) {
     const bool rs_up = raw.Gamepad.sThumbRY > settings::STICK_DODGE_AT;
     char line[120];
 
+    static WORD faces_was = 0;
+    const WORD faces = raw.Gamepad.wButtons & (XINPUT_GAMEPAD_A | XINPUT_GAMEPAD_B | XINPUT_GAMEPAD_X | XINPUT_GAMEPAD_Y);
+    const WORD fresh = (WORD)(faces & ~faces_was);
+    faces_was = faces;
+    if (fresh != 0) {
+        std::snprintf(line, sizeof line, "pressed:%s%s%s%s (Quest letters; the pad's A B X Y = Quest A X B Y)", (fresh & XINPUT_GAMEPAD_A) ? " Quest A" : "",
+                      (fresh & settings::QUEST_X) ? " Quest X" : "", (fresh & settings::QUEST_B) ? " Quest B" : "", (fresh & XINPUT_GAMEPAD_Y) ? " Quest Y" : "");
+        say(line);
+    }
+
     if (g_menu) {
-        // the menus: the game's own buttons, with Tefa's two swaps (X = back, Y = inventory) and B kept out
-        set(state, XINPUT_GAMEPAD_B, down(raw, XINPUT_GAMEPAD_X));
+        // the menus: the game's own buttons, with Tefa's two (in QUEST letters, settings.h): Quest X = back (it IS the pad's
+        // B, the game's Cancel, so it passes as it is), Quest Y = inventory; Quest B (the pad's X) kept out
+        set(state, XINPUT_GAMEPAD_B, down(raw, settings::QUEST_X));
         set(state, XINPUT_GAMEPAD_X, false);
         set(state, XINPUT_GAMEPAD_BACK, down(raw, XINPUT_GAMEPAD_BACK) || down(raw, XINPUT_GAMEPAD_Y));
         set(state, XINPUT_GAMEPAD_Y, false);
@@ -155,8 +167,8 @@ void on_input(XINPUT_STATE& state) {
     set(state, XINPUT_GAMEPAD_LEFT_THUMB, false);
 
     // the face buttons
-    set(state, XINPUT_GAMEPAD_B, false);                 // the magazine (reload.cpp reads the real B); never dodge
-    set(state, XINPUT_GAMEPAD_X, false);                 // reloads are by hand
+    set(state, XINPUT_GAMEPAD_B, false);                 // Quest X: nothing in play for now; never the game's dodge
+    set(state, XINPUT_GAMEPAD_X, false);                 // Quest B: the magazine (reload.cpp reads it); never the game's reload
     set(state, XINPUT_GAMEPAD_BACK, down(raw, XINPUT_GAMEPAD_BACK) || down(raw, XINPUT_GAMEPAD_Y));   // Y = inventory
     set(state, XINPUT_GAMEPAD_Y, false);
     if (down(raw, XINPUT_GAMEPAD_Y) && !input::held(XINPUT_GAMEPAD_Y)) say("Y -> the inventory (the game's BACK)");

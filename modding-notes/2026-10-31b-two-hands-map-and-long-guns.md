@@ -57,3 +57,11 @@ the old 2024 manual save is untouched. The save spot stands at the save point: n
 The game keeps `ScreenMode=Windowed` but rewrites the size to 1920x1080 by itself; set back to 1280x720 again (backup
 `GameUserSettings.ini.bak-2026-10-31-1328-was-1920`), and `-ResX/-ResY` did not hold either: the window measured
 1936x1119 on every launch today. Still windowed, so the session stays visible.
+
+## 14:20 — the Quest 3 face buttons are not the pad's letters (sh2vr.dll bdf3ed72, backup `_backup-2026-10-31-1422-before-sh2vr-deploy`)
+Tefa, after the first wear: *"quest 3 B was back instead of X, and they don't line up ... quest 3 X Y B A xbox in same
+order B Y X A"*. The log agrees: Quest X ejected the magazine through the pad's B `[verified-live 2026-10-31, headset]`.
+UEVR's VR_SwapControllerInputs is false. So the plan's letters are QUEST letters: `settings::QUEST_X` (pad B) = back in
+the menus (it is the game's own Cancel, so it passes as it is), `settings::QUEST_B` (pad X) = the pistol's magazine out
+(reload.cpp). Both stay hidden from the game in play. buttons.cpp now logs each face press by its Quest letter. Not
+worn yet.
