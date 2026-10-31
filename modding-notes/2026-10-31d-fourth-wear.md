@@ -56,3 +56,6 @@ hook; see 2026-10-31c). Log kept: `D:/claude video game stuff/logs/sh2/2026-10-3
   animation if possible.
 - Rifle: the round from the pouch is `SniperRifle_Shell_01_A` (the spent case, rifle_reload.lua `SHELL_MESH`): find
   the live round mesh. The bolt: no grab at all; check live whether `rifle_manual_bolt` is on and its lock happens.
+
+## Ghost Hand (BeG0nE) on this wear
+19:20:36 report: mag 3 of 3 finished, slide 2 of 2; the game's hand jumped 43 times while the controller was calm (lead: our left-hand overrides switching on and off: two-hand grab, rack, now the magazine hold); a controller jumped 196 times (tracking). Read with `begone.py report ghost-hand latest` when the hand jumps come up.
