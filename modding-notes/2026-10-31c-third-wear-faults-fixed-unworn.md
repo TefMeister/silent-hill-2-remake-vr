@@ -58,3 +58,14 @@ gun's turn times that, every view. On the shotgun the hand slides back along the
 (`TWO_HAND_PUMP_SLIDE_CM`; the pack's pump counts 8 cm of the controller's own pull), so it rides the pump; on the rifle
 it stays at the grab's distance. Not worn. If the grab's angle turns out awkward, a fixed angle per gun (like the
 pistol slide's) is the next step.
+
+## 18:52 — the first try crashed on the loading screen (UEVR, not sh2vr)
+Injected at 18:51 through the UEVR MCP (AFW b6 backend, `skipPluginInstall`, since `uevr_setup_game` without it throws on
+its own plugin path). sh2vr 014079e8 loaded, the pack's Lua talked, the pawn and arms were made. Tefa: "game didn't get to
+the gameplay, got hung on the loading screen then crashed". Crash 18:52:37: access violation reading 0xa0 at
+SHProto+0x2ae8984; UEVR logged the same address a moment before ("Encountered attempted dereference of null pointer ...
+Previous instruction does not use the same register"), i.e. UEVR's stereo hook met an engine null and could not patch
+round it. Stack: game thread, UEVRBackend+0x1685bf (its engine-tick hook) into the engine; sh2vr.dll is not in the stack
+and logged nothing new (no magazine, no medicine, no two-hand grab) `[measured 2026-10-31, n=1]`. Cause `[hypothesis]`:
+UEVR's own render hook during the level load, not this build. Crash folder: `%LOCALAPPDATA%/SilentHill2/Saved/Crashes/`.
+Next: start again, inject at the main menu, see whether it repeats.
