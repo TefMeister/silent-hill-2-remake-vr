@@ -36,3 +36,13 @@ reached buttons.cpp as the flashlight while the pack's aim block wrote LT = 0) p
 - The optional crosshair: crosshair.cpp takes the game's crosshair out of the viewport for good; showing it would
   mean collapsing instead, and it points along the head, not the gun. Decide with Tefa after the counter.
 - Wear: the map at the right hip, draw / put back / swap, the grip held = ammo line in the log, no aim stance.
+
+## Later the same morning: the map to the right shoulder, the left hip for ammo only (sh2vr.dll 3d65d3bd)
+Tefa: *"ammo pouch needs to be on the left hip, can the map go to right shoulder with LG activating it? ... for shotgun
+and rifle ammo, they get inserted one by one, not when the mag is out."* The syringe at the left hip would have taken
+the left grip from the pack's shotgun and rifle round grabs, which the pistol-only `mag_out()` check never covered.
+- The map: left grip at the RIGHT SHOULDER (held open, as before).
+- The drink and the syringe are ONE healing item at the RIGHT HIP: grab it, bring it to the mouth or to the right
+  wrist, either uses it. Both were already the same press (the game's Y, ActionHealing; the game picks the item).
+- The left hip: nothing of holsters.cpp; the ammo only.
+- Backup `D:/SH2 builds/_backup-2026-10-31-1131-before-sh2vr-deploy`.

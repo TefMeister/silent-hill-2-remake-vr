@@ -72,12 +72,13 @@ constexpr const wchar_t* WEAPON_MANAGER_CLASS = L"Class /Script/SHProto.SHWeapon
 constexpr const wchar_t* UNEQUIP_FN = L"RequestUnequipWeapon";      // read live 2026-10-29; see holsters.cpp for the fallback
 constexpr unsigned HOLSTER_TEST_KEY = 0x75;   // VK_F6: a pretend right grip, for the simulator (no grip there)
 constexpr unsigned HOLSTER_LEFT_TEST_KEY = 0x74;   // VK_F5: a pretend LEFT grip
-// the left grip's items (2026-10-29, Tefa's table; 2026-10-31 Tefa: "please move the map to right hip"): the map at the
-// right hip, the syringe at the left hip (it gives way to the ammo pouch while a magazine is out), the drink at the right
-// shoulder; the left shoulder's flashlight stays on LT for now (a hand-held flashlight is a later piece)
-constexpr const wchar_t* LEFT_ITEM_MAP_SPOT = L"right hip";
-constexpr const wchar_t* LEFT_ITEM_SYRINGE_SPOT = L"left hip";
-constexpr const wchar_t* LEFT_ITEM_DRINK_SPOT = L"right shoulder";
+// the left grip's items (2026-10-29, Tefa's table; 2026-10-31 Tefa: "ammo pouch needs to be on the left hip, can the map
+// go to right shoulder with LG activating it?"): the map at the right shoulder; the healing item (drink or syringe) at
+// the right hip, used at the mouth or at the right wrist (both are the game's one healing action, the game picks the
+// item); the left hip is the ammo's only (the pistol magazine, the shotgun and rifle rounds one by one); the left
+// shoulder's flashlight stays on LT for now (a hand-held flashlight is a later piece)
+constexpr const wchar_t* LEFT_ITEM_MAP_SPOT = L"right shoulder";
+constexpr const wchar_t* LEFT_ITEM_HEAL_SPOT = L"right hip";
 constexpr double USE_AT_WRIST_CM = 15.0;      // the syringe: the left hand this close to the right hand = used
 constexpr double MOUTH_FORWARD_CM = 12.0, MOUTH_DOWN_CM = 10.0, USE_AT_MOUTH_CM = 15.0;   // the drink: at the mouth = drunk
 constexpr int HOLSTER_PRESS_POLLS = 3;        // how many pad polls a press the game must see lasts
