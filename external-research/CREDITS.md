@@ -29,3 +29,4 @@ repository's main [CREDITS.md](../CREDITS.md).
 
 If you, or someone whose work you know, contributed to or inspired anything here and is not credited, please open a
 GitHub issue on this repo and we will correct it as soon as possible.
+- **bigbullet3**: the 21 Sacraments patch for Silent Hill 2 (Nexus Mods), as described by Wccftech and DSOGaming (2026-11-01 check).

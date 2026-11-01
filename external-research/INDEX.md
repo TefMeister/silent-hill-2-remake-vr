@@ -1,6 +1,8 @@
 # Research index
 
-**Last `/gr` pass: 2026-10-26 (estate sweep) — FULL.** Folder created this pass. The button layer's open question is answered from UEVR's source: C++ plugins edit the pad before the Lua scripts, so the pack's own pad writes land on top of ours; the game's default buttons, the shadow flags, and the state of every bundled part also checked.
+**Last `/gr` pass: 2026-11-01 (estate sweep) — CHECK-IN.** One search on the frame rate halving of 2026-10-31: nothing public ties the 21 Sacraments patch (bigbullet3, Nexus; aimed at the ray-tracing workload) to a 30 fps cap; the game itself locks cutscenes to 30 `[reported]`. Nothing else new.
+
+_Previous: **Last `/gr` pass: 2026-10-26 (estate sweep) — FULL.** Folder created this pass. The button layer's open question is answered from UEVR's source: C++ plugins edit the pad before the Lua scripts, so the pack's own pad writes land on top of ours; the game's default buttons, the shadow flags, and the state of every bundled part also checked._
 
 Status tags: 🆕 new · 👀 being looked at · ✅ used / confirmed · ❌ dead end.
 
