@@ -31,6 +31,7 @@
 // [verified-live 2026-10-29, simulator, n=1 each]. Not yet: the real grip, the headset, the hands beginning empty path.
 
 #include "holsters.h"
+#include "rhbolt.h"
 
 #include "fire.h"
 
@@ -362,7 +363,7 @@ void tick(float delta) {
     for (int i = 0; i < settings::HOLSTER_SPOT_COUNT; ++i) g_spots[i].def = &settings::HOLSTER_SPOTS[i];
 
     const bool grip = grip_now();
-    const bool pressed = grip && !g_grip_was;
+    const bool pressed = grip && !g_grip_was && !rhbolt::claims_rg();   // (2026-11-01: with the rifle locked, RG is the bolt)
     const bool released = !grip && g_grip_was;
     g_grip_was = grip;
 

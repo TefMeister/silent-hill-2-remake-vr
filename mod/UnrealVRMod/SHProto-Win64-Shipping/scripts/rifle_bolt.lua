@@ -543,6 +543,11 @@ function M.isBlockingFire()
 	return enabled() and (state.needsBolt or state.awaitRtRelease) and getEquippedRifle() ~= nil
 end
 
+-- sh2vr (2026-11-01): the plugin's right-hand bolt (rhbolt.cpp) finished a full cycle with a bolt owed: unlock as a pull would
+function M.unlockFromPlugin(reason)
+	unlock(reason or "the right hand (sh2vr)")
+end
+
 function M.isHoldingBolt()
 	return state.stuck == true or state.boltGripping == true
 end

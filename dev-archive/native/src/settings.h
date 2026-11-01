@@ -202,6 +202,17 @@ constexpr const wchar_t* HAND_MAG_ANCESTORS[] = {L"Holder", L"offset_joint"};   
 constexpr float HAND_MAG_BOUNDS_SCALE = 16.0f;
 constexpr float RELOAD_GRAB_COOLDOWN_S = 0.5f;
 constexpr float BUZZ_GRAB_AMP = 0.5f, BUZZ_DONE_AMP = 1.0f, BUZZ_DENY_AMP = 0.3f, BUZZ_S = 0.08f, BUZZ_HZ = 1000.0f;
+// rhbolt.cpp (2026-11-01, from Visceral RE8's right-hand bolt): LT locks the rifle in the left hand, RG works the bolt
+constexpr bool RH_BOLT_ON = true;
+constexpr double RH_LOCK_FOLLOW_S = 0.4;     // locked: the rifle trails the left controller this slowly (time for ~63% of the way)
+constexpr double RH_GLIDE_S = 0.15;          // the right hand gliding from the grip onto the bolt, and back
+constexpr double RH_HANDOVER_S = 0.3;        // LT let go: the gun eased back to where UEVR / twohand.cpp put it
+constexpr double RH_BOLT_TRAVEL_CM = 8.0;    // the right controller's pull for a full bolt stroke (RE8: 8 cm)
+constexpr double RH_BOLT_BACK_AT = 0.95;     // this much of the stroke = pulled back
+constexpr double RH_BOLT_HOME_AT = 0.2;      // and back under this = home: one cycle
+constexpr const wchar_t* RH_BOLT_SOCKET = L"bone_lock";   // the rifle mesh's bolt bone (LukasBlaster7's MCP finding)
+constexpr double RH_BOLT_HAND_NUDGE_CM[3] = {0.0, 0.0, 0.0};   // the drawn right hand's place from bone_lock, the gun mesh's axes: first try on it
+constexpr float RH_REPORT_S = 1.0f;          // the "status" proof line while locked
 constexpr bool GHOST_HAND_ON = true;         // the Ghost Hand BeG0nE recorder (the rule for any mod with hand gestures)
 constexpr double GHOST_MAP_MIN_CM = 15.0;    // the hands this far apart give the world-to-room turn; closer keeps the last one
 

@@ -118,6 +118,9 @@ Rig* g_rig = nullptr;
 bool g_ov_on = false;              // rack.cpp holds the left hand on the slide
 bool g_ovr_on = false;             // twohand.cpp turns the right hand with the two-handed long gun
 Quat g_ovr_q{};
+bool g_ovf_on = false;             // rhbolt.cpp places the right hand outright (the locked rifle's grip or bolt)
+Vec3 g_ovf_pos;
+Quat g_ovf_q{};
 Vec3 g_ov_pos;
 Rot g_ov_rot;
 float g_since_try = settings::HANDS_RETRY_S;
@@ -405,6 +408,10 @@ void solve_two_bone(Rig& rig, Solver& s) {
         ctrl_rot_ws = make_rot_from_xz(rotate_quat(Vec3{1, 0, 0}, rn), rotate_quat(Vec3{0, 0, 1}, rn));
         effector_ws = add(ctrl_pos_ws, rotate_quat(s.hand_offset, rn));   // the hand offset in the controller frame, turned
     }
+    if (s.hand == controllers::RIGHT && g_ovf_on) {   // rhbolt.cpp: the right hand on the locked rifle, its place and turn outright
+        effector_ws = g_ovf_pos;
+        ctrl_rot_ws = make_rot_from_xz(rotate_quat(Vec3{1, 0, 0}, g_ovf_q), rotate_quat(Vec3{0, 0, 1}, g_ovf_q));
+    }
     const Rot ctrl_rot_cs = inverse_transform_rotation(c2w, ctrl_rot_ws);
     if (s.smoothing > 0) {
         const Vec3 off_cs = inverse_transform_direction(c2w, sub(effector_ws, shoulder_ws));
@@ -686,6 +693,7 @@ void destroy() { destroy_rig(g_rig); g_rig = nullptr; bridge::tell_lua("sh2vr_ik
 
 void override_left(bool on, const Vec3& effector_ws, const Rot& rot_ws) { g_ov_on = on; g_ov_pos = effector_ws; g_ov_rot = rot_ws; }
 void override_right_turn(bool on, const Quat& turn_ws) { g_ovr_on = on; g_ovr_q = turn_ws; }
+void override_right(bool on, const Vec3& effector_ws, const Quat& rot_ws) { g_ovf_on = on; g_ovf_pos = effector_ws; g_ovf_q = rot_ws; }
 
 bool hand_world(controllers::Side side, Vec3& out) {
     if (g_rig == nullptr || !ue::alive(g_rig->mesh)) return false;

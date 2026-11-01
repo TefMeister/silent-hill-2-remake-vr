@@ -15,6 +15,7 @@ API::UObject* mesh();       // the arms' PoseableMeshComponent, for the modules 
 void destroy();
 void override_left(bool on, const ue::Vec3& effector_ws, const ue::Rot& rot_ws);   // rack.cpp: the left hand rides a gun part
 void override_right_turn(bool on, const ue::Quat& turn_ws);                         // twohand.cpp: the right hand turns with the long gun
+void override_right(bool on, const ue::Vec3& effector_ws, const ue::Quat& rot_ws);  // rhbolt.cpp: the right hand on the locked rifle (grip / bolt); wins over the turn
 bool hand_world(controllers::Side side, ue::Vec3& out);                             // the arm mesh's hand bone, world
 
 } // namespace sh2vr::ik

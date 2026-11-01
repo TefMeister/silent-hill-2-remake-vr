@@ -74,6 +74,11 @@ uevr.sdk.callbacks.on_lua_event(function(eventName, eventData)
 	if eventName == "sh2vr_grips" and eventData ~= nil then
 		SH2VR_GRIP_L = string.find(eventData, "L=1", 1, true) ~= nil
 		SH2VR_GRIP_R = string.find(eventData, "R=1", 1, true) ~= nil
+	elseif eventName == "sh2vr_bolt" and eventData == "unlock" then
+		-- 2026-11-01: the right hand worked the rifle's bolt (rhbolt.cpp): the pack's bolt unlocks as if pulled
+		if okBolt and rifleBolt ~= nil and rifleBolt.unlockFromPlugin ~= nil then
+			pcall(function() rifleBolt.unlockFromPlugin("the right hand (sh2vr)") end)
+		end
 	elseif eventName == "sh2vr_ik_mesh" then
 		if eventData ~= nil and eventData ~= "" then SH2VR_IK_MESH_NAME = eventData else SH2VR_IK_MESH_NAME = nil end
 	end
