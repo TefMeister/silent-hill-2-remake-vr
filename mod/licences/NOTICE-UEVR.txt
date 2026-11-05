@@ -1,0 +1,20 @@
+About UEVR in this package
+
+
+This package includes UEVR, made by praydog, in the AFW build made by PureDark
+(UEVR AFW v1.0-beta.6, unchanged, exactly as downloaded from https://github.com/PureDark/UEVR/releases/tag/UEVR_AFW_v1.0-beta.6).
+
+UEVR's own licence reads "Copyright (c) 2022-2025 praydog. All rights reserved." We do not own UEVR and we do not
+claim to. We asked praydog whether we could include it in this mod and have had no answer, so we include it openly,
+named and credited, because the mod is built around this exact build and does not work with any other.
+
+If praydog or PureDark asks us to stop, we will take UEVR out of the package straight away and point to their own
+downloads instead. Please open an issue on https://github.com/TefMeister/silent-hill-2-remake-vr if you are one of
+them, or if you know of a problem with this.
+
+UEVR: https://github.com/praydog/UEVR
+UEVR AFW build: https://github.com/PureDark/UEVR
+
+The files UEVRInjector.exe, UEVRInjector.pdb and UEVRInjector.dll.config are left out: the mod's own launcher
+(SH2VR.exe) starts the game and loads UEVR itself, following the steps of praydog's uevr-frontend (MIT licence,
+LICENSE-uevr-frontend.txt).

@@ -1,4 +1,5 @@
 {
+    "always_aim": false,
     "bUseControllerRotationYaw": false,
     "camera_relative_rotation": 0.0,
     "enable_raytracing": false,
@@ -33,7 +34,7 @@
         -0.30000001192092896,
         0.0
     ],
-    "light_type": 3,
+    "light_type": 1,
     "manual_rifle_bolt_grip": 30.0,
     "manual_rifle_bolt_open": 14.0,
     "manual_rifle_dock_dist": 16.0,

@@ -12,3 +12,6 @@ add_executable(SH2VR ${SOURCES})
 target_compile_definitions(SH2VR PRIVATE NOMINMAX WIN32_LEAN_AND_MEAN UNICODE _UNICODE WINVER=0x0A00 _WIN32_WINNT=0x0A00)
 target_compile_options(SH2VR PRIVATE /W4 /EHsc /MP /utf-8)
 target_link_libraries(SH2VR PRIVATE shell32 ole32 advapi32)
+# /Brepro: the same source always builds the same bytes (no time stamp), so a hash proves which build is installed.
+target_compile_options(SH2VR PRIVATE /Brepro)
+target_link_options(SH2VR PRIVATE /Brepro)

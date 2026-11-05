@@ -41,5 +41,6 @@ inline constexpr uint32_t WAIT_WINDOW_MS     = 180'000;  // first-launch shader 
 inline constexpr uint32_t INJECT_DELAY_MS    = 8'000;    // after the window shows; to tune on the first live run
 inline constexpr uint32_t POLL_MS            = 500;
 inline constexpr uint32_t REMOTE_THREAD_MS   = 30'000;   // LoadLibrary inside the game
+inline constexpr uint32_t CLOSE_AFTER_OK_MS  = 4'000;    // a double-clicked window stays this long after success
 
 }  // namespace cfg

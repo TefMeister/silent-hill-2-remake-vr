@@ -73,3 +73,36 @@ elsewhere. Waiting on Tefa's choice.
 3. [PD] build the package: `build.sh` puts sh2vr.dll into `mod/` too; a pack script lays out SH2VR.exe + package\ +
    uevr\ (or the download step) + licences + credits + the readme in Tefa's layout.
 4. [PD] sh2vr.dll sets the VR screen-effect cvars every launch.
+
+## Decision (Tefa, 2026-11-05): PureDark's AFW build goes INSIDE our zip
+
+Verbatim: *"our own zip, as we are building this mod around the existing AFW UEVR build, not meant to be updated with
+new versions of UEVR of any sort ... it all just has to be one mod. if praydog ever reaches out to tell us off, we will
+of course change it ... we will write it all down plainly on github as well, so no secret that we are releasing our mod
+like this."* `[settled]`
+
+- This replaces the 2026-09-19 decision "PureDark's AFW build stays optional": the mod is built around UEVR AFW
+  v1.0-beta.6 and ships it. No newer UEVR is followed until the mod is out.
+- The installed copy in the game folder matches PureDark's download byte for byte (all nine files)
+  `[measured 2026-11-05]`; the zip's sha256 is pinned in pack.sh (`c5eb5d3f...dbbe2c`).
+- Said openly: the repo README section "About UEVR being included", CREDITS.md, and `mod/licences/NOTICE-UEVR.txt` in
+  the zip. The injector's three files are left out (our launcher does its job).
+
+## The pack script (`dev-archive/launcher/tools/pack.sh <version>`)
+
+Builds sh2vr.dll and SH2VR.exe, lays out SH2VR.exe + Uninstall.bat + README.txt (Tefa's layout, `mod/release/`) +
+package\profile (the repo's `mod/` profile + sh2vr.dll + the ported list) + package\paks + uevr\ (the AFW zip,
+checked by sha256) + licences\ (uevr-frontend MIT, jbusfield MIT, UEVR API.h MIT, the UEVR notice) + FILES.txt (every
+file with its sha256), refuses dev tools and run-time files (uevr_mcp.dll, cache, logs, the 21 Sacraments files),
+and zips it into `D:\SH2 builds\releases\`. Trial pack 0.0.0-test: 117 files, 7.3 MB; unzipped and installed into a
+test folder with its own SH2VR.exe, every profile file arrived `[measured 2026-11-05, n=1]`. No real version packed
+yet: 0.1.0 waits for the launcher's first run on the real game.
+
+Also today:
+- The repo's `mod/` profile settings brought in line with the installed, tested ones (config.txt: `UI_FollowView=true`,
+  `VR_DecoupledPitchUIAdjust=false`; sh2_config.json: `always_aim: false`, `light_type: 1`). The board's "light_type kept
+  at Tefa's 3" was out of date: the installed value is 1.
+- Both builds use `/Brepro` now: the same source gives the same bytes (sh2vr.dll built twice: same sha256), so a hash
+  proves which build is installed. The installed sh2vr.dll (1488e262) came from the same source as today's build;
+  only its time stamp differs `[inferred-static]` (no source change since 60f40b9).
+- The launcher keeps its window open on a failure when started by a double-click (Enter closes it).

@@ -15,3 +15,6 @@ target_compile_definitions(sh2vr PRIVATE NOMINMAX WIN32_LEAN_AND_MEAN WINVER=0x0
 # /W4 for our code; 4100 and 4189 come from UEVR's own Plugin.hpp (unused parameters in its empty callbacks)
 target_compile_options(sh2vr PRIVATE /W4 /wd4100 /wd4189 /EHsc /MP /utf-8)
 set_target_properties(sh2vr PROPERTIES OUTPUT_NAME "sh2vr" PREFIX "")
+# /Brepro: the same source always builds the same bytes (no time stamp), so a hash proves which build is installed.
+target_compile_options(sh2vr PRIVATE /Brepro)
+target_link_options(sh2vr PRIVATE /Brepro)

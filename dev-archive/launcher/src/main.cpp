@@ -103,9 +103,30 @@ int play(const Places& pl, const InjectOptions& inj, bool launch) {
     return inject_uevr(pid, pl, inj) ? 0 : 7;
 }
 
+// Started by a double-click, the console window is ours alone and closes the moment we exit: on a failure keep it
+// open until Enter, so the player can read why; on success leave it up a few seconds.
+int finish(int rc) {
+    DWORD ids[4];
+    if (GetConsoleProcessList(ids, 4) == 1) {
+        if (rc != 0) {
+            wprintf(L"\nSomething went wrong (see above). Press Enter to close this window.\n");
+            (void)getwchar();
+        } else {
+            Sleep(cfg::CLOSE_AFTER_OK_MS);
+        }
+    }
+    return rc;
+}
+
+int run(int argc, wchar_t** argv);
+
 }  // namespace
 
-int wmain(int argc, wchar_t** argv) {
+int wmain(int argc, wchar_t** argv) { return finish(run(argc, argv)); }
+
+namespace {
+
+int run(int argc, wchar_t** argv) {
     Args a = parse(argc, argv);
     if (a.bad) { wprintf(L"Unknown or incomplete option. See the top of main.cpp / the readme.\n"); return 1; }
     Places pl = resolve(a);
@@ -124,3 +145,5 @@ int wmain(int argc, wchar_t** argv) {
     logf(L"! unknown command: %s", a.command.c_str());
     return 1;
 }
+
+}  // namespace
