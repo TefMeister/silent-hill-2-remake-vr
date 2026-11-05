@@ -127,6 +127,17 @@ constexpr bool TWO_HAND_LOCK_LEFT = true;    // the drawn left hand stays on the
 constexpr bool TWO_HAND_LOCK_TURN = true;
 constexpr double TWO_HAND_PUMP_SLIDE_CM = 10.0;   // the pack's pump counts 8 cm of pull (shotgun_pump.lua PUMP_TRAVEL)
 constexpr double MAP_TWO_HAND_TILT_DEG = 45.0; // praydog's tilt of the two-handed map
+// 2026-11-05 (frontgrip.cpp; Tefa: "use the games own grip independant of the wrist"): the left hand bone and fingers
+// in the game's own aim-pose grip on the long gun's front, read once per gun with the capture key, saved in
+// data/sh2vr_front_grips.json. A gun with no saved grip keeps the old lock above.
+constexpr bool FRONT_GRIP_ON = true;
+constexpr unsigned FRONT_GRIP_CAPTURE_KEY = 0x71;   // VK_F2: capture the game's grip on the long gun in hand (the game aiming)
+constexpr const wchar_t* FRONT_GRIP_HAND_BONE = L"hand_l_bn";
+constexpr int FRONT_GRIP_FINGER_DEPTH = 6;   // how far up a bone may be below the hand to count as a finger
+constexpr const wchar_t* FRONT_GRIP_SOCKET = L"Holder_L";   // the gun's own left-hand spot (the game's IK puts the hand bone there)
+constexpr const char* FRONT_GRIP_POSE_SHOTGUN = "grip_left_weapon_shotgun";      // the pack's finger poses, until the game's are captured
+constexpr const char* FRONT_GRIP_POSE_RIFLE = "grip_left_weapon_rifle_offhand";
+constexpr double FRONT_GRIP_CAPTURE_MATCH_CM = 1.0;          // the body's hand this close to Holder_L = the game's grip, fingers worth keeping
 constexpr float TWO_HAND_REPORT_S = 3.0f;
 constexpr int TWO_HAND_LOG_MAX = 80;
 

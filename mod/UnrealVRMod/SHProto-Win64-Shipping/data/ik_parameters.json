@@ -38,7 +38,7 @@
             "3548867c-5055-4363-ba62-48da44984854": {
                 "active": true,
                 "allow_stretch": false,
-                "allow_wrist_affects_elbow": false,
+                "allow_wrist_affects_elbow": true,
                 "end_bone": "hand_r_bn",
                 "end_bone_offset": [
                     -5.725,
@@ -68,13 +68,19 @@
                     },
                     {
                         "bone": "r_wrist_Offset",
+                        "pitch": 0.4,
+                        "roll": 0.485,
+                        "yaw": 0.4
+                    },
+                    {
+                        "bone": "lowerarm_twist_02_r_bn",
                         "pitch": 0.0,
-                        "roll": 0.0,
-                        "yaw": 0.0
+                        "yaw": 0.0,
+                        "roll": 0.5
                     }
                 ],
                 "wrist_bone": "",
-                "wrist_twist_influence": 0.35,
+                "wrist_twist_influence": 0.5,
                 "wrist_twist_max": 75.0
             },
             "3a786073-494e-40a7-964f-6fbd2f1d44e1": {
@@ -104,13 +110,19 @@
                 "twist_bones": [
                     {
                         "bone": "l_wrist_Offset",
-                        "pitch": 0.27300000190734863,
-                        "roll": 0.48500001430511475,
-                        "yaw": 0.0
+                        "pitch": 0.4,
+                        "roll": 0.485,
+                        "yaw": 0.4
+                    },
+                    {
+                        "bone": "lowerarm_twist_02_l_bn",
+                        "pitch": 0.0,
+                        "yaw": 0.0,
+                        "roll": 0.5
                     }
                 ],
                 "wrist_bone": "",
-                "wrist_twist_influence": 0.3499999940395355,
+                "wrist_twist_influence": 0.5,
                 "wrist_twist_max": 75.0
             }
         },

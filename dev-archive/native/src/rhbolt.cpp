@@ -9,6 +9,7 @@
 #include "buttons.h"
 #include "common.h"
 #include "controllers.h"
+#include "frontgrip.h"
 #include "gun.h"
 #include "holsters.h"
 #include "ik.h"
@@ -257,7 +258,15 @@ void on_view() {
     if (set_world(g_mesh, t)) g_last_written = g_gun_s;
     // both hands on the gun: the left on the front, the right on the grip or the bolt
     const Pose left = pmul(g_gun_s, g_left_in_gun);
-    ik::override_left(true, left.pos, rot_of(left.rot));
+    // 2026-11-05: the game's own grip on the rifle's front when one is saved (frontgrip.cpp), against the gun as placed here
+    Vec3 fg_pos; Quat fg_rot;
+    const std::string fg_key = frontgrip::key_of(gun::equipped());
+    if (frontgrip::target(fg_key, g_mesh, t, 0.0, fg_pos, fg_rot)) {
+        ik::override_left_bone(true, fg_pos, fg_rot);
+        frontgrip::set_active(fg_key);
+    } else {
+        ik::override_left(true, left.pos, rot_of(left.rot));
+    }
     const Pose grip = pmul(g_gun_s, g_right_in_gun);
     Pose want = grip;
     if (g_have_bolt && g_u > 0) {

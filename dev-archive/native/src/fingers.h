@@ -27,6 +27,7 @@ void remove(API::UObject* component);                           // destroyAnimat
 void on_input(const XINPUT_STATE& state);                        // handleInputForHands, from the plugin's XInput hook
 void tick(float delta);                                          // the finger lerps; re-poses when the held weapon changes
 bool exists();                                                   // any hand registered
+void hold_pose(Hand hand, const std::string& pose_id);           // one of the pack's poses on that hand now (frontgrip.cpp, every frame)
 int count();
 
 } // namespace sh2vr::fingers

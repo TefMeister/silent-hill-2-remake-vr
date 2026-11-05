@@ -28,6 +28,7 @@
 #include "crosshair.h"
 #include "fingers.h"
 #include "fire.h"
+#include "frontgrip.h"
 #include "ghosthand.h"
 #include "holsters.h"
 #include "twohand.h"
@@ -53,7 +54,7 @@ public:
 
     void on_custom_event(const char* name, const char* data) override { bridge::on_custom_event(name, data); }
 
-    bool on_message(HWND, UINT msg, WPARAM wparam, LPARAM) override { fire::on_message(msg, wparam); holsters::on_message(msg, wparam); return true; }
+    bool on_message(HWND, UINT msg, WPARAM wparam, LPARAM) override { fire::on_message(msg, wparam); holsters::on_message(msg, wparam); frontgrip::on_message(msg, wparam); return true; }
 
     void on_xinput_get_state(uint32_t*, uint32_t, XINPUT_STATE* state) override {
         if (state == nullptr) return;
@@ -76,6 +77,7 @@ public:
         ik::tick(delta);
         hands::tick(delta);
         fingers::tick(delta);
+        frontgrip::tick();       // 2026-11-05: after the pack's finger poses: the left fingers in the game's grip on a long gun's front
         ghosthand::tick();       // after the solves: the hands where they are drawn
         bridge::send_grips(delta);   // 2026-10-31 evening: the real grips to the pack's shotgun / rifle reloads and pump / bolt
         input::end_tick();

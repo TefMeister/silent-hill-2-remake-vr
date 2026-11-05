@@ -16,6 +16,7 @@ inline const std::vector<std::string> FILES = {
     "input_parameters.json", "montage_parameters.json", "pawn_parameters.json", "reticule_parameters.json",
     "collision_parameters.json", "remap_parameters.json", "ui_parameters.json", "gunstock_parameters.json",
     "sh2_config.json",   // the pack's own menu choices (hands_type, handedness, light ...)
+    "sh2vr_front_grips.json",   // ours (2026-11-05): the game's own left hand on each long gun's front, see frontgrip.cpp
 };
 
 void load_all();                                // read every file; logs one line per file (keys, or why not)

@@ -255,6 +255,11 @@ void tick(float delta) {
 }
 
 bool exists() { return !g_handlers.empty(); }
+
+void hold_pose(Hand hand, const std::string& pose_id) {
+    const std::string hs = hand_str(hand);
+    for (const auto& target : unique_targets()) pose(hs + "_" + target, pose_id);
+}
 int count() { return (int)g_handlers.size(); }
 
 } // namespace sh2vr::fingers

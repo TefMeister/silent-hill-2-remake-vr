@@ -123,6 +123,9 @@ Vec3 g_ovf_pos;
 Quat g_ovf_q{};
 Vec3 g_ov_pos;
 Rot g_ov_rot;
+bool g_ovb_on = false;             // frontgrip.cpp: the left hand bone placed outright (the game's grip on the long gun)
+Vec3 g_ovb_pos;
+Quat g_ovb_q{};
 float g_since_try = settings::HANDS_RETRY_S;
 bool g_logged_wait = false;
 
@@ -412,6 +415,12 @@ void solve_two_bone(Rig& rig, Solver& s) {
         effector_ws = g_ovf_pos;
         ctrl_rot_ws = make_rot_from_xz(rotate_quat(Vec3{1, 0, 0}, g_ovf_q), rotate_quat(Vec3{0, 0, 1}, g_ovf_q));
     }
+    // frontgrip.cpp: the hand bone straight onto the game's grip; the controller's real turn stays for the elbow below
+    const bool bone_direct = s.hand == controllers::LEFT && g_ovb_on;
+    if (bone_direct) {
+        effector_ws = g_ovb_pos;
+        if (!ue::call_ret(s.controller, L"K2_GetComponentRotation", {}, ctrl_rot_ws)) return;
+    }
     const Rot ctrl_rot_cs = inverse_transform_rotation(c2w, ctrl_rot_ws);
     if (s.smoothing > 0) {
         const Vec3 off_cs = inverse_transform_direction(c2w, sub(effector_ws, shoulder_ws));
@@ -468,7 +477,11 @@ void solve_two_bone(Rig& rig, Solver& s) {
 
     // rotateHandAndWrist
     Rot hand_rot_cs;
-    if (s.smoothing > 0) {
+    if (bone_direct) {   // the game's own turn of the hand bone, no end_bone_rotation (it was captured on the same skeleton)
+        const Rot bone_rot_ws = make_rot_from_xz(rotate_quat(Vec3{1, 0, 0}, g_ovb_q), rotate_quat(Vec3{0, 0, 1}, g_ovb_q));
+        hand_rot_cs = inverse_transform_rotation(c2w, bone_rot_ws);
+        set_end_bone(m, s, hand_rot_cs);
+    } else if (s.smoothing > 0) {
         Rot sm_ws = st.has_last_ctrl_rot ? smooth_rot(st.last_ctrl_rot_ws, ctrl_rot_ws, 1.0 - s.smoothing) : ctrl_rot_ws;
         st.last_ctrl_rot_ws = sm_ws; st.has_last_ctrl_rot = true;
         hand_rot_cs = compose_rotators(s.end_bone_rotation, inverse_transform_rotation(c2w, sm_ws));
@@ -694,6 +707,7 @@ void destroy() { destroy_rig(g_rig); g_rig = nullptr; bridge::tell_lua("sh2vr_ik
 void override_left(bool on, const Vec3& effector_ws, const Rot& rot_ws) { g_ov_on = on; g_ov_pos = effector_ws; g_ov_rot = rot_ws; }
 void override_right_turn(bool on, const Quat& turn_ws) { g_ovr_on = on; g_ovr_q = turn_ws; }
 void override_right(bool on, const Vec3& effector_ws, const Quat& rot_ws) { g_ovf_on = on; g_ovf_pos = effector_ws; g_ovf_q = rot_ws; }
+void override_left_bone(bool on, const Vec3& bone_ws, const Quat& rot_ws) { g_ovb_on = on; g_ovb_pos = bone_ws; g_ovb_q = rot_ws; }
 
 bool hand_world(controllers::Side side, Vec3& out) {
     if (g_rig == nullptr || !ue::alive(g_rig->mesh)) return false;

@@ -29,6 +29,7 @@
 #include "buttons.h"
 #include "common.h"
 #include "controllers.h"
+#include "frontgrip.h"
 #include "gun.h"
 #include "holsters.h"
 #include "ik.h"
@@ -151,6 +152,8 @@ Quat g_map_rel_rot{};
 int g_map_writes = 0;
 
 bool g_lg_was = false;
+bool g_fg_have = false;            // the game's grip spot given to the left hand this view (frontgrip.cpp), for the status line
+Vec3 g_fg_pos{};
 float g_report_in = 0.0f;
 
 bool is_long_gun(API::UObject* w) {
@@ -195,6 +198,9 @@ void tick(float delta) {
                       back ? "put back" : g_gun_have_rel ? "could NOT be put back" : "was never read");
         say(line);
         ik::override_left(false, {}, {});
+        ik::override_left_bone(false, {}, {});
+        frontgrip::set_active("");
+        g_fg_have = false;
         ik::override_right_turn(false, {});
         g_gun = g_gun_capture = g_gun_have_written = g_gun_have_rel = false;
         g_left_rel_due = false;
@@ -252,6 +258,9 @@ void tick(float delta) {
                 std::snprintf(line, sizeof line, "status: the gun's start line is %.1f deg off the left hand (0 = following it), %d writes",
                               angle_deg(qrot(mw.rot, g_barrel_local), sub(add(l.pos, qrot(l.rot, g_aim_off)), grip)), g_gun_writes);
                 LOGI("%s twohand: %s", TAG, line);
+                Vec3 drawn;
+                if (g_fg_have && ik::hand_world(controllers::LEFT, drawn))   // proof of effect: 0 = the drawn hand is on the game's grip
+                    LOGI("%s twohand: status: the drawn left hand is %.1f cm from the game's grip spot", TAG, len(sub(drawn, g_fg_pos)));
             }
         }
         if (g_map_mesh != nullptr) LOGI("%s twohand: status: the map %s, %d writes", TAG, g_map_two ? "in both hands" : "in the left hand", g_map_writes);
@@ -296,7 +305,17 @@ void on_view() {
                 const Vec3 where = add(grip, mul(norm(sub(aim, grip)), at));
                 if (g_left_rel_due) { g_left_rel = qnorm(qmul(qconj(t.rot), l.rot)); g_left_rel_due = false; }
                 Vec3 lp; ue::Rot lr;
-                if (settings::TWO_HAND_LOCK_TURN) {
+                // 2026-11-05: the game's own grip when this gun has one saved (frontgrip.cpp): the hand bone and the fingers
+                // exactly where the game holds the gun's front, the pump's slide taken back along the barrel
+                Vec3 fg_pos; Quat fg_rot;
+                const std::string fg_key = frontgrip::key_of(gun::equipped());
+                g_fg_have = frontgrip::target(fg_key, g_gun_mesh, t, g_front_cm - at, fg_pos, fg_rot);
+                if (g_fg_have) {
+                    g_fg_pos = fg_pos;
+                    ik::override_left(false, {}, {});
+                    ik::override_left_bone(true, fg_pos, fg_rot);
+                    frontgrip::set_active(fg_key);
+                } else if (settings::TWO_HAND_LOCK_TURN) {
                     Transform ht;
                     ht.rot = qnorm(qmul(t.rot, g_left_rel));   // the gun's turn, then the hand's own turn against it from the grab
                     ik::override_left(true, where, gun::rot_of(ht));
