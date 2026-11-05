@@ -7,6 +7,8 @@
 //   SH2VR.exe status              where everything is, what is installed
 //   SH2VR.exe attach              load UEVR into a game that is already running
 // Options: --game <folder>  (remembered)   --uevr <folder> (another UEVR build, e.g. PureDark's AFW)
+//          --sim (the OpenXR Simulator plays the headset)   --runtime-json <file> (any OpenXR runtime file): both
+//          start the game's exe directly instead of through Steam, since Steam's start passes no environment
 //          --openvr   --nullify   --delay <ms>   --test-root <folder> (every destination goes there; nothing real
 //          is touched and nothing is launched)
 #include "common.h"
@@ -24,7 +26,7 @@ namespace {
 
 struct Args {
     std::wstring command = L"play";
-    fs::path game, uevr, test_root;
+    fs::path game, uevr, test_root, runtime_json;  // runtime_json set: start the exe directly with that runtime
     InjectOptions inj{false, false, cfg::INJECT_DELAY_MS};
     bool bad = false;
 };
@@ -37,6 +39,8 @@ Args parse(int argc, wchar_t** argv) {
         if (s == L"--game") a.game = next();
         else if (s == L"--uevr") a.uevr = next();
         else if (s == L"--test-root") a.test_root = next();
+        else if (s == L"--runtime-json") a.runtime_json = next();
+        else if (s == L"--sim") a.runtime_json = known_folder_local() / cfg::SIM_JSON_REL;
         else if (s == L"--openvr") a.inj.openvr = true;
         else if (s == L"--nullify") a.inj.nullify = true;
         else if (s == L"--delay") a.inj.delay_ms = (uint32_t)wcstoul(next().c_str(), nullptr, 10);
@@ -77,7 +81,7 @@ Places resolve(const Args& a) {
     return pl;
 }
 
-int play(const Places& pl, const InjectOptions& inj, bool launch) {
+int play(const Places& pl, const InjectOptions& inj, bool launch, const fs::path& runtime_json) {
     if (!pl.test && !looks_like_game_dir(pl.game_dir)) {
         logf(L"! Silent Hill 2 was not found. Run once with --game \"<the game's folder>\".");
         return 2;
@@ -92,8 +96,16 @@ int play(const Places& pl, const InjectOptions& inj, bool launch) {
 
     if (!pid) {
         if (!launch) { logf(L"! the game is not running."); return 3; }
-        logf(L"Starting Silent Hill 2 through Steam...");
-        if (!launch_through_steam()) { logf(L"! Steam did not take the start request."); return 4; }
+        if (runtime_json.empty()) {
+            logf(L"Starting Silent Hill 2 through Steam...");
+            if (!launch_through_steam()) { logf(L"! Steam did not take the start request."); return 4; }
+        } else {
+            std::error_code ec;
+            if (!fs::exists(runtime_json, ec)) { logf(L"! the OpenXR runtime file is not there: %s", runtime_json.c_str()); return 4; }
+            if (!steam_running()) { logf(L"! start Steam first (the game needs it for your account and saves)."); return 4; }
+            logf(L"Starting Silent Hill 2 with the OpenXR runtime %s...", runtime_json.filename().c_str());
+            if (!launch_direct(pl, runtime_json)) { logf(L"! the game's exe did not start (error %lu).", GetLastError()); return 4; }
+        }
         pid = wait_for_game(cfg::WAIT_PROCESS_MS);
         if (!pid) { logf(L"! the game did not start within %u s.", cfg::WAIT_PROCESS_MS / 1000); return 5; }
     }
@@ -133,8 +145,8 @@ int run(int argc, wchar_t** argv) {
     log_open(pl.our_dir / cfg::LOG_FILE);
     logf(L"SH2VR launcher, command: %s%s", a.command.c_str(), pl.test ? L" (test root)" : L"");
 
-    if (a.command == L"play") return play(pl, a.inj, true);
-    if (a.command == L"attach") return play(pl, a.inj, false);
+    if (a.command == L"play") return play(pl, a.inj, true, a.runtime_json);
+    if (a.command == L"attach") return play(pl, a.inj, false, a.runtime_json);
     if (a.command == L"status") { print_status(pl); return 0; }
     if (a.command == L"install" || a.command == L"uninstall") {
         if (find_game_pid() && !pl.test) { logf(L"! close the game first."); return 3; }

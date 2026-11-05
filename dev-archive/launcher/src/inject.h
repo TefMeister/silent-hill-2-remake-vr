@@ -14,6 +14,8 @@ struct InjectOptions {
 
 uint32_t find_game_pid();                                   // 0 when not running
 bool launch_through_steam();
+bool steam_running();
+bool launch_direct(const Places& pl, const fs::path& runtime_json);  // the game's exe, with an OpenXR runtime file
 uint32_t wait_for_game(uint32_t timeout_ms);                // pid or 0
 bool wait_for_window(uint32_t pid, uint32_t timeout_ms);
 bool module_loaded(uint32_t pid, const wchar_t* name);

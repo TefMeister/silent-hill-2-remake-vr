@@ -35,6 +35,10 @@ inline constexpr wchar_t UEVR_NULLIFIER[]    = L"UEVRPluginNullifier.dll";
 inline constexpr char    NULLIFIER_EXPORT[]  = "nullify";
 inline constexpr wchar_t RUNTIME_KEY[]       = L"Frontend_RequestedRuntime";
 
+// The OpenXR Simulator (the pretend headset), for runs with nobody's headset on
+inline constexpr wchar_t SIM_JSON_REL[]      = L"Programs\\OpenXR-Simulator\\openxr_simulator.json";  // in %LOCALAPPDATA%
+inline constexpr wchar_t DIRECT_LAUNCH_ARGS[] = L"-windowed -ResX=1280 -ResY=720";
+
 // Timings
 inline constexpr uint32_t WAIT_PROCESS_MS    = 180'000;  // Steam start + the game's own start
 inline constexpr uint32_t WAIT_WINDOW_MS     = 180'000;  // first-launch shader compile can take minutes

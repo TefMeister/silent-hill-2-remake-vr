@@ -114,6 +114,33 @@ bool launch_through_steam() {
     return (INT_PTR)ShellExecuteW(nullptr, L"open", url.c_str(), nullptr, nullptr, SW_SHOWNORMAL) > 32;
 }
 
+bool steam_running() {
+    Handle snap(CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0));
+    if (!snap) return false;
+    PROCESSENTRY32W pe{sizeof(pe)};
+    for (BOOL ok = Process32FirstW(snap.h, &pe); ok; ok = Process32NextW(snap.h, &pe))
+        if (_wcsicmp(pe.szExeFile, L"steam.exe") == 0) return true;
+    return false;
+}
+
+// Started through Steam the game is Steam's child, so nothing of ours reaches its environment. For the OpenXR
+// Simulator (or any other runtime file) it is started straight from its exe instead, with the runtime file and the
+// Steam ids set, so the game still finds the player's Steam account and saves (KNOWN.md, 2026-10-24).
+bool launch_direct(const Places& pl, const fs::path& runtime_json) {
+    fs::path exe = pl.game_dir / L"SHProto" / L"Binaries" / L"Win64" / cfg::GAME_EXE;
+    SetEnvironmentVariableW(L"XR_RUNTIME_JSON", runtime_json.c_str());
+    SetEnvironmentVariableW(L"SteamAppId", cfg::STEAM_APP_ID);
+    SetEnvironmentVariableW(L"SteamGameId", cfg::STEAM_APP_ID);
+    std::wstring cmd = L"\"" + exe.wstring() + L"\" " + cfg::DIRECT_LAUNCH_ARGS;
+    STARTUPINFOW si{sizeof(si)};
+    PROCESS_INFORMATION pi{};
+    if (!CreateProcessW(exe.c_str(), cmd.data(), nullptr, nullptr, FALSE, 0, nullptr, exe.parent_path().c_str(), &si, &pi))
+        return false;
+    CloseHandle(pi.hThread);
+    CloseHandle(pi.hProcess);
+    return true;
+}
+
 uint32_t wait_for_game(uint32_t timeout_ms) {
     for (uint32_t t = 0; t < timeout_ms; t += cfg::POLL_MS) {
         if (uint32_t pid = find_game_pid()) return pid;
