@@ -34,6 +34,7 @@
 #include "twohand.h"
 #include "rhbolt.h"
 #include "screenfx.h"
+#include "selfprof.h"
 #include "input.h"
 #include "rack.h"
 #include "reload.h"
@@ -59,6 +60,7 @@ public:
 
     void on_xinput_get_state(uint32_t*, uint32_t, XINPUT_STATE* state) override {
         if (state == nullptr) return;
+        selfprof::Scope sp_(selfprof::XINPUT);
         input::on_state(*state);     // the REAL controller, for the hand modules (reload, rack, fingers)
         fingers::on_input(*state);   // the finger poses read the trigger as pulled, even when fire keeps it from the game
         buttons::on_input(*state);   // 2026-10-29: ONE layer decides what the game sees (Tefa's layout); from here on `state` is the game's
@@ -67,21 +69,21 @@ public:
 
     void on_pre_engine_tick(API::UGameEngine*, float delta) override {
         if (API::get()->get_local_pawn(0) != nullptr) fire::install();   // the weapon class is loaded by then
-        fire::tick(delta);
-        buttons::tick(delta);
-        holsters::tick(delta);   // 2026-10-29: the weapons on the body (after the buttons, before the hands)
-        twohand::tick(delta);    // 2026-10-31: the long gun and the map in two hands (praydog's profile)
-        rhbolt::tick(delta);     // 2026-11-01: LT locks the rifle in the left hand, RG works its bolt (RE8's right-hand bolt)
-        crosshair::find(delta);
-        screenfx::tick(delta);   // 2026-11-05: every blur and screen effect off in VR
-        reload::tick(delta);
-        rack::tick(delta);       // sets the left-hand override the IK solve reads
-        ik::tick(delta);
-        hands::tick(delta);
-        fingers::tick(delta);
-        frontgrip::tick();       // 2026-11-05: after the pack's finger poses: the left fingers in the game's grip on a long gun's front
-        ghosthand::tick();       // after the solves: the hands where they are drawn
-        bridge::send_grips(delta);   // 2026-10-31 evening: the real grips to the pack's shotgun / rifle reloads and pump / bolt
+        { selfprof::Scope sp_(selfprof::FIRE); fire::tick(delta); }
+        { selfprof::Scope sp_(selfprof::BUTTONS); buttons::tick(delta); }
+        { selfprof::Scope sp_(selfprof::HOLSTERS); holsters::tick(delta); }   // 2026-10-29: the weapons on the body (after the buttons, before the hands)
+        { selfprof::Scope sp_(selfprof::TWOHAND); twohand::tick(delta); }    // 2026-10-31: the long gun and the map in two hands (praydog's profile)
+        { selfprof::Scope sp_(selfprof::RHBOLT); rhbolt::tick(delta); }     // 2026-11-01: LT locks the rifle in the left hand, RG works its bolt (RE8's right-hand bolt)
+        { selfprof::Scope sp_(selfprof::CROSSHAIR); crosshair::find(delta); }
+        { selfprof::Scope sp_(selfprof::SCREENFX); screenfx::tick(delta); }   // 2026-11-05: every blur and screen effect off in VR
+        { selfprof::Scope sp_(selfprof::RELOAD); reload::tick(delta); }
+        { selfprof::Scope sp_(selfprof::RACK); rack::tick(delta); }       // sets the left-hand override the IK solve reads
+        { selfprof::Scope sp_(selfprof::IK); ik::tick(delta); }
+        { selfprof::Scope sp_(selfprof::HANDS); hands::tick(delta); }
+        { selfprof::Scope sp_(selfprof::FINGERS); fingers::tick(delta); }
+        { selfprof::Scope sp_(selfprof::FRONTGRIP); frontgrip::tick(); }       // 2026-11-05: after the pack's finger poses: the left fingers in the game's grip on a long gun's front
+        { selfprof::Scope sp_(selfprof::GHOSTHAND); ghosthand::tick(); }       // after the solves: the hands where they are drawn
+        { selfprof::Scope sp_(selfprof::BRIDGE); bridge::send_grips(delta); }   // 2026-10-31 evening: the real grips to the pack's shotgun / rifle reloads and pump / bolt
         input::end_tick();
         heartbeat(delta);
     }
@@ -89,7 +91,7 @@ public:
     void on_post_engine_tick(API::UGameEngine*, float) override { crosshair::hide(); }
 
     // after UEVR has put the held things on the controllers for this view: two hands on the long gun and the map
-    void on_post_calculate_stereo_view_offset(UEVR_StereoRenderingDeviceHandle, int, float, UEVR_Vector3f*, UEVR_Rotatorf*, bool) override { twohand::on_view(); rhbolt::on_view(); }
+    void on_post_calculate_stereo_view_offset(UEVR_StereoRenderingDeviceHandle, int, float, UEVR_Vector3f*, UEVR_Rotatorf*, bool) override { selfprof::Scope sp_(selfprof::VIEW); twohand::on_view(); rhbolt::on_view(); }
 
 private:
     // one line every few seconds so a run can prove the plugin is alive and what it sees
@@ -103,11 +105,14 @@ private:
         params::watch();
         const auto* vr = API::get()->param()->vr;
         const bool hmd = vr != nullptr && vr->is_hmd_active();
+        const unsigned beat_frames = m_frames - m_last_report_frames;
+        m_last_report_frames = m_frames;
         LOGI("%s alive: frame %u, %.1f ms avg, headset %s, pawn %s, hands %s, arms %s, finger poses on %d hand(s), crosshair re-hidden %d", TAG, m_frames, avg_ms, hmd ? "on" : "off",
              API::get()->get_local_pawn(0) != nullptr ? "yes" : "none", hands::exists() ? "made" : "not yet", ik::exists() ? "made" : "not yet", fingers::count(), crosshair::shown_again());
+        LOGI("%s cost: %s", TAG, selfprof::report(beat_frames).c_str());   // 2026-11-05: our own share of each frame
     }
 
-    uint32_t m_frames = 0, m_frames_at_beat = 0;
+    uint32_t m_frames = 0, m_frames_at_beat = 0, m_last_report_frames = 0;
     float m_since_beat = 0.0f;
 };
 

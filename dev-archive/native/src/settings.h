@@ -5,6 +5,7 @@ namespace sh2vr::settings {
 
 // How often the heartbeat line is written to the UEVR log while the game runs (seconds).
 constexpr float HEARTBEAT_S = 5.0f;
+constexpr int SELFPROF_TOP = 6;   // the heartbeat's cost line names this many of our modules, biggest first
 
 // Where jbusfield's saved parameter files live, under %APPDATA%: the same folder UEVR keeps the profile in.
 constexpr const wchar_t* PROFILE_DIR = L"UnrealVRMod\\SHProto-Win64-Shipping";
