@@ -106,3 +106,22 @@ Also today:
   proves which build is installed. The installed sh2vr.dll (1488e262) came from the same source as today's build;
   only its time stamp differs `[inferred-static]` (no source change since 60f40b9).
 - The launcher keeps its window open on a failure when started by a double-click (Enter closes it).
+
+## First real run, 15:11 (pretend headset, Claude alone; Tefa: "check when the next Fable session finishes, then do them")
+
+`SH2VR.exe play --sim` from the trial package, the game closed, Steam running `[verified-live 2026-11-05, simulator, n=1]`:
+
+- Installed over the home PC's profile and pak: 102 files replaced (each backed up, all in the record), config.txt and
+  cameras.txt kept, the button file moved to the backups. Started the game with the simulator, waited for the window,
+  loaded UEVR 8 s later: 23 s from start to "UEVR loaded", exit 0.
+- Inside: UEVR's OpenXR runtime up (hmd active), all four plugins loaded (sh2r, sh2vr, uevr_utils, and the dev
+  uevr_mcp the record never touched). UEVR's own log shows its usual start-up errors; `XInputHook ... xinput1_4.dll after
+  10 seconds` is in a 2026-10-23 log taken with UEVR's own injector too, so it is not ours.
+- The first start after the reinstall compiled shaders (black for about a minute). The warning took Enter, the main
+  menu's ContinueGame loaded the save, and sh2vr reported the pawn, the arms made and finger poses on both hands.
+- The game made no new InputRebinding.sav and played with none: so removing it is safe `[measured 2026-11-05, n=1]`; that
+  the bindings are then the defaults is still only `[inferred-static]` (the file held no rebinding here anyway).
+- Closed with `quit`; nothing of ours stayed running (the launcher exits once UEVR is in).
+
+Then packed the real **0.1.0**: `D:\SH2 builds\releases\Silent-Hill-2-VR-0.1.0.zip` (117 files, 7.3 MB, sha256
+e1a861b4b945ec26...), also in the private staging repo. Not worn yet.
