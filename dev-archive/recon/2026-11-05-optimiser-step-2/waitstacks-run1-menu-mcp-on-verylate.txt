@@ -1,0 +1,181 @@
+
+=== GameThread: 1286 samples ===
+-- who is waiting / working (first frame outside the system DLLs):
+   52.7 %  uevr_mcp.dll!uevr_plugin_required_version+0x2a5f84
+   18.8 %  UEVRBackend.dll!uevr_renderdoc_start_capture_watcher+0x56250c
+    4.4 %  uevr_mcp.dll!uevr_plugin_required_version+0x276a39
+    4.0 %  SHProto-Win64-Shipping.exe!IAntiLag2Module::~IAntiLag2Module+0xc15b8d
+    2.7 %  UEVRBackend.dll!uevr_renderdoc_start_capture_watcher+0x5b4b14
+-- the most common stacks:
+   26.4 %
+        ntdll.dll!NtCreateFile+0x14
+        KERNELBASE.dll!GetDriveTypeW+0xe57
+        KERNELBASE.dll!CreateFileW+0x97
+        uevr_mcp.dll!uevr_plugin_required_version+0x2a5f84
+        uevr_mcp.dll!uevr_plugin_required_version+0x2a5778
+        uevr_mcp.dll!uevr_plugin_required_version+0x2a62a9
+        uevr_mcp.dll!uevr_plugin_required_version+0x2a40f0
+        uevr_mcp.dll!uevr_plugin_required_version+0x28e6e0
+        uevr_mcp.dll!uevr_plugin_required_version+0x277ae5
+        uevr_mcp.dll!uevr_plugin_required_version+0x3d70
+        uevr_mcp.dll!uevr_plugin_required_version+0x10810
+        uevr_mcp.dll!uevr_plugin_required_version+0x936e
+   26.3 %
+        ntdll.dll!NtCreateFile+0x14
+        KERNELBASE.dll!GetDriveTypeW+0xe57
+        KERNELBASE.dll!CreateFileW+0x97
+        uevr_mcp.dll!uevr_plugin_required_version+0x2a5f84
+        uevr_mcp.dll!uevr_plugin_required_version+0x2a5778
+        uevr_mcp.dll!uevr_plugin_required_version+0x2a62a9
+        uevr_mcp.dll!uevr_plugin_required_version+0x2a40f0
+        uevr_mcp.dll!uevr_plugin_required_version+0x28e6e0
+        uevr_mcp.dll!uevr_plugin_required_version+0x277ae5
+        uevr_mcp.dll!uevr_plugin_required_version+0x3d70
+        uevr_mcp.dll!uevr_plugin_required_version+0x10810
+        uevr_mcp.dll!uevr_plugin_required_version+0xa421
+   18.8 %
+        ntdll.dll!ZwWaitForAlertByThreadId+0x14
+        ntdll.dll!RtlSleepConditionVariableSRW+0x71b
+        ntdll.dll!RtlAcquireSRWLockExclusive+0x4d
+        UEVRBackend.dll!uevr_renderdoc_start_capture_watcher+0x56250c
+        UEVRBackend.dll+0x45b8d
+        UEVRBackend.dll+0x168538
+        SHProto-Win64-Shipping.exe!AK::Monitor::GetTimeStamp+0x11b4
+        SHProto-Win64-Shipping.exe!AK::WriteBytesCount::Reserve+0x978c
+        SHProto-Win64-Shipping.exe!AK::WriteBytesCount::Reserve+0x980a
+        SHProto-Win64-Shipping.exe!AK::WriteBytesCount::Reserve+0xa600
+        SHProto-Win64-Shipping.exe!AK::WriteBytesCount::Reserve+0x13294
+        SHProto-Win64-Shipping.exe!agsCheckDriverVersion+0x6d8f2
+    3.8 %
+        ntdll.dll!NtWaitForSingleObject+0x14
+        KERNELBASE.dll!WaitForSingleObjectEx+0xaf
+        SHProto-Win64-Shipping.exe!IAntiLag2Module::~IAntiLag2Module+0xc15b8d
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0x1286e7e
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0x1295050
+        SHProto-Win64-Shipping.exe!AK::Monitor::GetTimeStamp+0x17ac
+        SHProto-Win64-Shipping.exe!AK::WriteBytesCount::Reserve+0x978c
+        SHProto-Win64-Shipping.exe!AK::WriteBytesCount::Reserve+0x980a
+        SHProto-Win64-Shipping.exe!AK::WriteBytesCount::Reserve+0xa600
+        SHProto-Win64-Shipping.exe!AK::WriteBytesCount::Reserve+0x13294
+        SHProto-Win64-Shipping.exe!agsCheckDriverVersion+0x6d8f2
+        KERNEL32.DLL!BaseThreadInitThunk+0x17
+    1.2 %
+        ntdll.dll!NtCreateFile+0x14
+        KERNELBASE.dll!GetDriveTypeA+0x1aa
+        KERNELBASE.dll!CreateDirectoryW+0x32
+        uevr_mcp.dll!uevr_plugin_required_version+0x276a39
+        uevr_mcp.dll!uevr_plugin_required_version+0xa800
+        uevr_mcp.dll!uevr_plugin_required_version+0x107db
+        uevr_mcp.dll!uevr_plugin_required_version+0xa421
+        uevr_mcp.dll!uevr_plugin_required_version+0x5713
+        uevr_mcp.dll!uevr_plugin_required_version+0x21dca1
+        uevr_mcp.dll+0x36c7
+        UEVRBackend.dll+0x709cc
+        UEVRBackend.dll+0x168592
+
+=== RenderThread 0: 1286 samples ===
+-- who is waiting / working (first frame outside the system DLLs):
+   90.6 %  SHProto-Win64-Shipping.exe!IAntiLag2Module::~IAntiLag2Module+0xc15b8d
+    0.3 %  SHProto-Win64-Shipping.exe!IAntiLag2Module::~IAntiLag2Module+0xaf4104
+    0.2 %  SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0x4f5d73
+    0.2 %  SHProto-Win64-Shipping.exe!IAntiLag2Module::~IAntiLag2Module+0xaf4bfd
+    0.2 %  SHProto-Win64-Shipping.exe!IAntiLag2Module::~IAntiLag2Module+0xad198d
+-- the most common stacks:
+   63.3 %
+        ntdll.dll!NtWaitForSingleObject+0x14
+        KERNELBASE.dll!WaitForSingleObjectEx+0xaf
+        SHProto-Win64-Shipping.exe!IAntiLag2Module::~IAntiLag2Module+0xc15b8d
+        SHProto-Win64-Shipping.exe!IAntiLag2Module::~IAntiLag2Module+0xac392b
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0x128f299
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0x128ffd7
+        SHProto-Win64-Shipping.exe!IAntiLag2Module::~IAntiLag2Module+0xc13f77
+        SHProto-Win64-Shipping.exe!IAntiLag2Module::~IAntiLag2Module+0xc0f411
+        KERNEL32.DLL!BaseThreadInitThunk+0x17
+        ntdll.dll!RtlUserThreadStart+0x2c
+   26.0 %
+        ntdll.dll!NtWaitForSingleObject+0x14
+        KERNELBASE.dll!WaitForSingleObjectEx+0xaf
+        SHProto-Win64-Shipping.exe!IAntiLag2Module::~IAntiLag2Module+0xc15b8d
+        SHProto-Win64-Shipping.exe!IAntiLag2Module::~IAntiLag2Module+0xafb9ff
+        SHProto-Win64-Shipping.exe!IAntiLag2Module::~IAntiLag2Module+0xac6c1f
+        SHProto-Win64-Shipping.exe!AK::Monitor::ResetTranslator+0x210718
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0x1218da7
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0x1229df9
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0x12243cb
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0x1233d8b
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0x1237bc2
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0xa8c456
+    0.4 %
+        ntdll.dll!NtWaitForSingleObject+0x14
+        KERNELBASE.dll!WaitForSingleObjectEx+0xaf
+        SHProto-Win64-Shipping.exe!IAntiLag2Module::~IAntiLag2Module+0xc15b8d
+        SHProto-Win64-Shipping.exe!IAntiLag2Module::~IAntiLag2Module+0xbf3a73
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0x1237857
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0xa8c456
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0xa788b3
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0xa84ff7
+        SHProto-Win64-Shipping.exe!IAntiLag2Module::~IAntiLag2Module+0xac394e
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0x128f299
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0x128ffd7
+        SHProto-Win64-Shipping.exe!IAntiLag2Module::~IAntiLag2Module+0xc13f77
+    0.4 %
+        ntdll.dll!NtWaitForSingleObject+0x14
+        KERNELBASE.dll!WaitForSingleObjectEx+0xaf
+        SHProto-Win64-Shipping.exe!IAntiLag2Module::~IAntiLag2Module+0xc15b8d
+        SHProto-Win64-Shipping.exe!IAntiLag2Module::~IAntiLag2Module+0xac392b
+        SHProto-Win64-Shipping.exe!IAntiLag2Module::~IAntiLag2Module+0xac69b5
+        SHProto-Win64-Shipping.exe!IAntiLag2Module::~IAntiLag2Module+0x7a886d
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0x1219014
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0xa9821a
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0x5af127
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0xa8c31b
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0xa788b3
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0xa84ff7
+    0.2 %
+        ntdll.dll!NtWaitForSingleObject+0x14
+        KERNELBASE.dll!WaitForSingleObjectEx+0xaf
+        SHProto-Win64-Shipping.exe!IAntiLag2Module::~IAntiLag2Module+0xc15b8d
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0x1225fde
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0x12382c9
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0xa8c456
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0xa788b3
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0xa84ff7
+        SHProto-Win64-Shipping.exe!IAntiLag2Module::~IAntiLag2Module+0xac394e
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0x128f299
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0x128ffd7
+        SHProto-Win64-Shipping.exe!IAntiLag2Module::~IAntiLag2Module+0xc13f77
+
+=== RHIThread: 1286 samples ===
+-- who is waiting / working (first frame outside the system DLLs):
+   28.8 %  uevr_mcp.dll!uevr_plugin_required_version+0x2761d8
+   25.5 %  uevr_mcp.dll!uevr_plugin_required_version+0x2a5f84
+    7.9 %  SHProto-Win64-Shipping.exe!IAntiLag2Module::~IAntiLag2Module+0xc15b8d
+    3.8 %  gdi32full.dll!StretchDIBitsImpl+0x30e
+    2.6 %  uevr_mcp.dll!uevr_plugin_required_version+0x276a39
+-- the most common stacks:
+   28.8 %
+        ntdll.dll!ZwWaitForAlertByThreadId+0x14
+        ntdll.dll!RtlSleepConditionVariableSRW+0x71b
+        ntdll.dll!RtlAcquireSRWLockExclusive+0x4d
+        uevr_mcp.dll!uevr_plugin_required_version+0x2761d8
+        uevr_mcp.dll!uevr_plugin_required_version+0x8c64
+        uevr_mcp.dll!uevr_plugin_required_version+0x4612
+        uevr_mcp.dll+0x3795
+        UEVRBackend.dll+0x70c13
+        UEVRBackend.dll+0x48790
+        UEVRBackend.dll+0x44756
+        UEVRBackend.dll+0x4e08d
+        UEVRBackend.dll+0x4da5d
+   13.8 %
+        ntdll.dll!NtCreateFile+0x14
+        KERNELBASE.dll!GetDriveTypeW+0xe57
+        KERNELBASE.dll!CreateFileW+0x97
+        uevr_mcp.dll!uevr_plugin_required_version+0x2a5f84
+        uevr_mcp.dll!uevr_plugin_required_version+0x2a5778
+        uevr_mcp.dll!uevr_plugin_required_version+0x2a62a9
+        uevr_mcp.dll!uevr_plugin_required_version+0x2a40f0
+        uevr_mcp.dll!uevr_plugin_required_version+0x28e6e0
+        uevr_mcp.dll!uevr_plugin_required_version+0x277ae5
+        uevr_mcp.dll!uevr_plugin_required_version+0x3d70
+        uevr_mcp.dll!uevr_plugin_required_version+0x10810
+        uevr_mcp.

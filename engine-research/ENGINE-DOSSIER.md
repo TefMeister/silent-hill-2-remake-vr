@@ -63,6 +63,16 @@ sockets `slide_joint`, `magazine_joint`, `FX_muzzle` (Lukas's, `[reported]` unti
 - The menu through the UEVR MCP: `MainMenuWidget_BP_C` (`/Engine/Transient...`) `HasSlots()`, `ContinueGame(null, 0)`;
   then Enter at PRESS ANY BUTTON TO PLAY; `SHWeaponManageCmbSubcomp.RequestEquipWeapon("Pistol", true)`.
 - The MCP's simulated pad is applied AFTER the plugin's XInput callback: a plugin never sees `uevr_input_gamepad`.
+- Pad callbacks run C++ plugins first (file-name order: sh2r, sh2vr, uevr_mcp, uevr_utils), the Lua pack last and
+  re-appended after every script reset, so the button layer switches the pack's pad writes OFF rather than undoing
+  them `[inferred-static 2026-10-26, /gr, UEVR source]`.
+- ⚠️ The connector dll `uevr_mcp.dll` 1.0.0 costs ~7 ms PER FRAME (it rewrites a crash-breadcrumb file ~6 times a
+  frame on the game and present threads; the throttle in its source is broken in 1.0.0, fixed on master, unreleased)
+  `[measured 2026-11-05, simulator, A/B/A]`. Keep it OUT of the profile except for the run that needs it; by keys the
+  game is driven without it (Enter at the warning, Enter on CONTINUE, Enter at PRESS ANY BUTTON TO PLAY).
+- The ghidrust connector's debug attach freezes the game for good (threads Suspended, detach does not resume them);
+  stopping the connector's process frees it `[verified-live 2026-11-05, n=1]`. Sample waits with
+  `dev-archive/tools/optimiser/waitstacks.py` instead.
 
 ## 4. Other engine facts (from the live sessions, 2026-10-23/24)
 
@@ -81,3 +91,19 @@ sockets `slide_joint`, `magazine_joint`, `FX_muzzle` (Lukas's, `[reported]` unti
 - Hooking the UFunction `IsFireReady` to force "ready" (F11): proven not enough `[verified-live 2026-10-24, n=1]`; the
   cause is in §2.
 - `SHDebug_Character_Combat_ForceRangedAim()` once: nothing visible `[verified-live 2026-10-24, n=1]`.
+
+## 6. Frame time (the optimiser, 2026-11-05; notes 2026-11-05c and 2026-11-05d)
+
+- On the simulator (90 Hz cap, 1280 x 1400 per eye), standing at the armory save: 19-21 ms with the connector dll in
+  the profile, 13.0 ms without it, 11.2 ms (the cap) without it and with UEVR's `VR_SynchronizationMode=0` (Early)
+  `[measured 2026-11-05, A/B/A, n=2 per setting]`. Early is now in the profile and in `mod/`.
+- `VR_SynchronizationMode` = WHERE UEVR calls xrWaitFrame: 0 Early (the frame's first hooked RHI command), 1 Late (top
+  of the Present hook), 2 Very Late (right after Present, for the next frame); all on the present (RHI) thread; the
+  game thread never calls it `[inferred-static 2026-11-05, praydog master]`.
+- The simulator is a 90 Hz CAP (a late caller waits 0 ms), costs ~1.1 ms per frame inside xrEndFrame, and its
+  `frame_time_ms` / `target_fps` status values are constants `[inferred-static 2026-11-05, its source + log]`.
+- Drawing settings, the game's logic, our plugin (0.2-0.9 ms, mostly the crosshair re-hide) are not the wall; r.VSync 0
+  gains ~1.5 ms (desktop pacing) `[measured 2026-11-05, step 1]`.
+- Open: at Very Late the card reads 98 % busy at 13 ms, at Early 52 % at 11.2 ms, same scene `[measured, n=2 each]`;
+  the headset's own numbers (Virtual Desktop renders larger than the simulator); the 10-31 halving to ~30 fps in the
+  headset from 13:57 (21 Sacraments installed that day) `[measured 2026-10-31, Ghost Hand reports; cause: hypothesis]`.

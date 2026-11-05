@@ -1,0 +1,155 @@
+﻿
+=== GameThread: 1065 samples ===
+-- who is waiting / working (first frame outside the system DLLs):
+   74.2 %  SHProto-Win64-Shipping.exe!IAntiLag2Module::~IAntiLag2Module+0xc15b8d
+    1.8 %  UEVRBackend.dll!uevr_renderdoc_start_capture_watcher+0x5b4b14
+    0.8 %  UEVRBackend.dll!uevr_renderdoc_start_capture_watcher+0x5b4a8c
+    0.5 %  UEVRBackend.dll!uevr_renderdoc_start_capture_watcher+0x528cd5
+-- the most common stacks:
+   73.9 %
+        ntdll.dll!NtWaitForSingleObject+0x14
+        KERNELBASE.dll!WaitForSingleObjectEx+0xaf
+        SHProto-Win64-Shipping.exe!IAntiLag2Module::~IAntiLag2Module+0xc15b8d
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0x1286e7e
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0x1295050
+        SHProto-Win64-Shipping.exe!AK::Monitor::GetTimeStamp+0x17ac
+        SHProto-Win64-Shipping.exe!AK::WriteBytesCount::Reserve+0x978c
+        SHProto-Win64-Shipping.exe!AK::WriteBytesCount::Reserve+0x980a
+        SHProto-Win64-Shipping.exe!AK::WriteBytesCount::Reserve+0xa600
+        SHProto-Win64-Shipping.exe!AK::WriteBytesCount::Reserve+0x13294
+    0.4 %
+        SHProto-Win64-Shipping.exe!src_strerror+0xe0a746
+        SHProto-Win64-Shipping.exe!src_strerror+0xe0a9d0
+        SHProto-Win64-Shipping.exe!src_strerror+0x9d03cb
+        SHProto-Win64-Shipping.exe!src_strerror+0x843a4c
+        UEVRBackend.dll+0x1685bf
+        SHProto-Win64-Shipping.exe!AK::Monitor::GetTimeStamp+0x11b4
+        SHProto-Win64-Shipping.exe!AK::WriteBytesCount::Reserve+0x978c
+        SHProto-Win64-Shipping.exe!AK::WriteBytesCount::Reserve+0x980a
+        SHProto-Win64-Shipping.exe!AK::WriteBytesCount::Reserve+0xa600
+        SHProto-Win64-Shipping.exe!AK::WriteBytesCount::Reserve+0x13294
+    0.4 %
+        UEVRBackend.dll!uevr_renderdoc_start_capture_watcher+0x528cd5
+        UEVRBackend.dll!uevr_renderdoc_start_capture_watcher+0x51fbd6
+        UEVRBackend.dll!uevr_renderdoc_start_capture_watcher+0x5207b3
+        UEVRBackend.dll!uevr_renderdoc_start_capture_watcher+0x520040
+        UEVRBackend.dll!uevr_renderdoc_start_capture_watcher+0x50bf93
+        UEVRBackend.dll+0x5896c
+        UEVRBackend.dll!uevr_renderdoc_start_capture_watcher+0x180fa3
+        UEVRBackend.dll!uevr_renderdoc_start_capture_watcher+0x17ca4a
+        UEVRBackend.dll!uevr_renderdoc_start_capture_watcher+0x17f2e7
+        UEVRBackend.dll!uevr_renderdoc_start_capture_watcher+0x214049
+    0.4 %
+        SHProto-Win64-Shipping.exe!IAntiLag2Module::~IAntiLag2Module+0xc079a3
+        UEVRBackend.dll!uevr_renderdoc_start_capture_watcher+0x4b4529
+        UEVRBackend.dll!uevr_renderdoc_start_capture_watcher+0x4da2e2
+        UEVRBackend.dll+0x653ef
+        UEVRBackend.dll!uevr_renderdoc_start_capture_watcher+0x48527d
+        UEVRBackend.dll!uevr_renderdoc_start_capture_watcher+0x48427d
+        UEVRBackend.dll!uevr_renderdoc_start_capture_watcher+0x17a32a
+        UEVRBackend.dll!uevr_renderdoc_start_capture_watcher+0x211a4a
+        UEVRBackend.dll!uevr_renderdoc_start_capture_watcher+0x186ad7
+        UEVRBackend.dll!uevr_renderdoc_start_capture_watcher+0x18838c
+
+=== RenderThread 0: 1065 samples ===
+-- who is waiting / working (first frame outside the system DLLs):
+   46.8 %  SHProto-Win64-Shipping.exe!IAntiLag2Module::~IAntiLag2Module+0xc15b8d
+    1.9 %  SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0x78d91a
+    1.2 %  SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0x4e083b
+    0.9 %  SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0x78d78d
+-- the most common stacks:
+   37.5 %
+        ntdll.dll!NtWaitForSingleObject+0x14
+        KERNELBASE.dll!WaitForSingleObjectEx+0xaf
+        SHProto-Win64-Shipping.exe!IAntiLag2Module::~IAntiLag2Module+0xc15b8d
+        SHProto-Win64-Shipping.exe!IAntiLag2Module::~IAntiLag2Module+0xafb9ff
+        SHProto-Win64-Shipping.exe!IAntiLag2Module::~IAntiLag2Module+0xac6c1f
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0x502b28
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0x4e0851
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0xa9be66
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0xab0113
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0xab7a32
+    4.0 %
+        ntdll.dll!NtWaitForSingleObject+0x14
+        KERNELBASE.dll!WaitForSingleObjectEx+0xaf
+        SHProto-Win64-Shipping.exe!IAntiLag2Module::~IAntiLag2Module+0xc15b8d
+        SHProto-Win64-Shipping.exe!IAntiLag2Module::~IAntiLag2Module+0xac392b
+        SHProto-Win64-Shipping.exe!IAntiLag2Module::~IAntiLag2Module+0xac69b5
+        SHProto-Win64-Shipping.exe!IAntiLag2Module::~IAntiLag2Module+0x7a886d
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0x1219014
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0xa9821a
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0x5af127
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0xa8c31b
+    2.1 %
+        ntdll.dll!NtWaitForSingleObject+0x14
+        KERNELBASE.dll!WaitForSingleObjectEx+0xaf
+        SHProto-Win64-Shipping.exe!IAntiLag2Module::~IAntiLag2Module+0xc15b8d
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0x1225fde
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0x12382c9
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0xa8c456
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0xa788b3
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0xa84ff7
+        SHProto-Win64-Shipping.exe!IAntiLag2Module::~IAntiLag2Module+0xac394e
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0x128f299
+    2.1 %
+        ntdll.dll!NtWaitForSingleObject+0x14
+        KERNELBASE.dll!WaitForSingleObjectEx+0xaf
+        SHProto-Win64-Shipping.exe!IAntiLag2Module::~IAntiLag2Module+0xc15b8d
+        SHProto-Win64-Shipping.exe!IAntiLag2Module::~IAntiLag2Module+0xafb9ff
+        SHProto-Win64-Shipping.exe!IAntiLag2Module::~IAntiLag2Module+0xac6c1f
+        SHProto-Win64-Shipping.exe!AK::Monitor::ResetTranslator+0x210718
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0x1218da7
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0x1229df9
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0x12243cb
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0x1233d8b
+
+=== RHIThread: 1065 samples ===
+-- who is waiting / working (first frame outside the system DLLs):
+   23.7 %  SHProto-Win64-Shipping.exe!IAntiLag2Module::~IAntiLag2Module+0xc15b8d
+    4.7 %  gdi32full.dll!StretchDIBitsImpl+0x30e
+    2.0 %  D3D12Core.dll+0x46e01
+    1.4 %  SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0x11f746f
+-- the most common stacks:
+   23.6 %
+        ntdll.dll!NtWaitForSingleObject+0x14
+        KERNELBASE.dll!WaitForSingleObjectEx+0xaf
+        SHProto-Win64-Shipping.exe!IAntiLag2Module::~IAntiLag2Module+0xc15b8d
+        SHProto-Win64-Shipping.exe!IAntiLag2Module::~IAntiLag2Module+0xac392b
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0x128ff7b
+        SHProto-Win64-Shipping.exe!IAntiLag2Module::~IAntiLag2Module+0xc13f77
+        SHProto-Win64-Shipping.exe!IAntiLag2Module::~IAntiLag2Module+0xc0f411
+        KERNEL32.DLL!BaseThreadInitThunk+0x17
+        ntdll.dll!RtlUserThreadStart+0x2c
+    4.7 %
+        win32u.dll!NtGdiStretchDIBitsInternal+0x14
+        gdi32full.dll!StretchDIBitsImpl+0x30e
+        GDI32.dll!StretchDIBits+0xb0
+        openxr_simulator.dll+0x45954
+        openxr_simulator.dll+0x6c18
+        window_view_layer.dll+0xabdc
+        XrApiLayer_xrfps.5aedc108700.dll!xrNegotiateLoaderApiLayerInterface+0x3c5d
+        XR_APILAYER_NOVENDOR_OBSMirror.292629488385.dll!xrNegotiateLoaderApiLayerInterface+0x8e50
+        XR_APILAYER_NOVENDOR_OBSMirror.292629488385.dll+0x65af
+        UEVRBackend.dll!uevr_renderdoc_start_capture_watcher+0x125092
+    1.8 %
+        win32u.dll!NtGdiDdDDISubmitCommandToHwQueue+0x14
+        D3D12Core.dll+0x46e01
+        D3D12Core.dll!D3D12GetInterface+0x1252f
+        nvwgf2umx.dll!NVENCODEAPI_Thunk+0x14ed5
+        nvwgf2umx.dll+0x11fc4f
+        nvwgf2umx.dll+0x121660
+        nvwgf2umx.dll!OpenAdapter10+0x12b8d3
+        nvwgf2umx.dll!OpenAdapter10+0x12a745
+        nvwgf2umx.dll!OpenAdapter12+0x1a8c9
+        nvwgf2umx.dll!OpenAdapter10+0x17debe
+    1.4 %
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0x11f746f
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0x11f686a
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0x11ebdd3
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0x11f686a
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0x11eb60c
+        SHProto-Win64-Shipping.exe!IAntiLag2Module::operator=+0x128c5b
+        SHProto-Win64-Shipping.exe!IAntiLag2Module::~IAntiLag2Module+0xac394e
+        SHProto-Win64-Shipping.exe!AK::WriteBytesBuffer::GetPos+0x128ff7b
+        SHProto-Win64-Shipping.exe!IAntiLag2Module::~IAntiLag2Module+0xc13f77
+        SHProto-Win64-Shipping.exe!IAntiLag2Module::~IAntiLag2Module+0xc0f411
