@@ -26,3 +26,21 @@ headset: **Virtual Desktop at 72 Hz, then at 90 Hz, same spot, read the fps.**
 
 Next (step 2): vsync off in VR from sh2vr (add r.VSync 0 to screenfx's list); the 72 Hz headset test; then cut the
 render thread (shadows already lower it ~10 %).
+
+## Second pass, 18:40-19:00: work per frame per thread (Windows thread times / the simulator's frame count)
+
+`dev-archive/tools/optimiser/threads2.ps1` (per thread: processor time over 10 s, divided by the frames the simulator
+counted). `[measured 2026-11-05, simulator, n=1-2 each]`
+
+- At first: render thread 13.4 ms per frame, game (main) thread 9.0, a third 8.6, at 50 fps.
+- Shadows off: render 13.4 -> 11.0. One cascade: -0.6. Small casters skipped (r.Shadow.RadiusThreshold 0.06): -0.6.
+  Occlusion queries off: WORSE (14.2). Draw distance 0.5: no change.
+- **But the scene drifted:** back at the original setting the render thread read 11.1 and the game thread 5.9 at 54 fps.
+  Shadow quality 3 against 5, interleaved twice: 10.25 / 10.5 against 11.2 / 10.3, inside the noise.
+- So, settled: no thread does more than ~11 ms per frame, yet a frame takes ~19 ms (53 fps on a 90 Hz pace). The rest is
+  waiting on something outside the game's own threads: the VR hand-off (xrWaitFrame / the eye submit), GPU-CPU
+  serialisation in the stereo path, or DLSS `[hypothesis]`. None of the ordinary engine settings reach it.
+- Kept: r.VSync 0 in screenfx (installed, logged `r.VSync 1 -> 0`); our plugin is 0.3 ms (selfprof).
+
+Next: `MODEL: FABLE` (a wait with no obvious cause): find what each frame waits on: PIX / Nsight timing capture of one
+frame (both MCP servers failed to connect today), or UEVR's own frame timing; and the 72 Hz headset test.

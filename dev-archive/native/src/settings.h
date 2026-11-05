@@ -156,6 +156,8 @@ constexpr ScreenFx SCREEN_FX_CVARS[] = {
     {L"r.SceneColorFringeQuality", 0.0f, "colour fringing"},
     {L"r.LensFlareQuality", 0.0f, "lens flares"},
     {L"r.Upscale.Panini.D", 0.0f, "Panini lens distortion"},
+    // 2026-11-05, the optimiser: vsync only paces the desktop window in VR; off saved 1.2-1.6 ms a frame (simulator, n=2)
+    {L"r.VSync", 0.0f, "desktop vsync"},
 };
 constexpr float SCREEN_FX_CHECK_S = 2.0f;
 constexpr int SCREEN_FX_LOOKS = 30;        // checks a missing name is looked for (30 x 2 s = the first minute)
