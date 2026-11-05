@@ -73,9 +73,11 @@ Main features
 - Fire without aiming: the trigger shoots wherever the gun points.
 - Reload the pistol by hand: a new magazine from the left hip, the slide racked by hand.
 - Two hands on the long guns, and the map held in your hand.
-- Still being worked on: the shotgun pump, the rifle bolt, and the healing items shown in the hand.
+- Still being worked on: the shotgun pump, the rifle bolt, the left hand's finger shape on the long guns, and the healing items shown in the hand.
 - VR button layout built on the game's default controls.
 - Performance tweaks included.
+- Motion blur, depth of field, film grain, colour fringing, lens flares and lens distortion switched off in VR.
+- The left hand holds the shotgun and rifle front where the game itself holds them.
 
 
 Requirements

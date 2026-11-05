@@ -8,7 +8,7 @@ Build: `cmake -S . -B build -G "Visual Studio 17 2022" -A x64` then `cmake --bui
 Layout beside `SH2VR.exe`: `package\profile\` (the UEVR profile), `package\paks\` (pak mods), `uevr\` (UEVR's own files).
 
 Commands: `play` (default), `attach`, `install`, `uninstall`, `status`. Options: `--game <folder>`, `--uevr <folder>`,
-`--openvr`, `--nullify`, `--delay <ms>`, `--test-root <folder>` (every destination goes into that folder; nothing real
+`--sim` (the OpenXR Simulator), `--runtime-json <file>`, `--no-install` (a test run with a freshly built plugin), `--openvr`, `--nullify`, `--delay <ms>`, `--test-root <folder>` (every destination goes into that folder; nothing real
 is touched and nothing is launched).
 
 The injection steps follow praydog's [uevr-frontend](https://github.com/praydog/uevr-frontend) (MIT). Notes and the

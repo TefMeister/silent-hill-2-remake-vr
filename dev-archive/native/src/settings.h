@@ -141,6 +141,25 @@ constexpr double FRONT_GRIP_CAPTURE_MATCH_CM = 1.0;          // the body's hand 
 constexpr float TWO_HAND_REPORT_S = 3.0f;
 constexpr int TWO_HAND_LOG_MAX = 80;
 
+// ---- every blur and screen effect off in VR (screenfx.cpp, 2026-11-05; the standing VR rule) ----
+// The engine's console settings, put back every few seconds when the game resets them (its graphics menu). A name this
+// build does not have is logged once and left alone. Not covered here: the game's own screen overlays (blood on the
+// screen, the low-health tint), which are post-process materials, not settings.
+struct ScreenFx { const wchar_t* name; float value; const char* what; };
+constexpr bool SCREEN_FX_OFF = true;
+constexpr ScreenFx SCREEN_FX_CVARS[] = {
+    {L"r.MotionBlurQuality", 0.0f, "motion blur"},
+    {L"r.MotionBlur.Amount", 0.0f, "motion blur (amount)"},
+    {L"r.DepthOfFieldQuality", 0.0f, "depth of field"},
+    {L"r.FilmGrain", 0.0f, "film grain"},
+    {L"r.SceneColorFringeQuality", 0.0f, "colour fringing"},
+    {L"r.LensFlareQuality", 0.0f, "lens flares"},
+    {L"r.Upscale.Panini.D", 0.0f, "Panini lens distortion"},
+};
+constexpr float SCREEN_FX_CHECK_S = 2.0f;
+constexpr int SCREEN_FX_LOOKS = 30;        // checks a missing name is looked for (30 x 2 s = the first minute)
+constexpr int SCREEN_FX_LOG_PER_VAR = 3;   // a value the game keeps putting back is logged this many times, then quietly fixed
+
 // ---- shooting without the aim stance (fire.cpp) ----
 constexpr unsigned FIRE_PROBE_KEY = 0x78;   // VK_F9: the probe key, sent to the game window from the session
 constexpr unsigned FIRE_FORCE_READY_KEY = 0x7A; // VK_F11 (F10 is a Windows system key and arrives differently): toggles answering "ready" to the game's fire-ready check

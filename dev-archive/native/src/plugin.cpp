@@ -33,6 +33,7 @@
 #include "holsters.h"
 #include "twohand.h"
 #include "rhbolt.h"
+#include "screenfx.h"
 #include "input.h"
 #include "rack.h"
 #include "reload.h"
@@ -72,6 +73,7 @@ public:
         twohand::tick(delta);    // 2026-10-31: the long gun and the map in two hands (praydog's profile)
         rhbolt::tick(delta);     // 2026-11-01: LT locks the rifle in the left hand, RG works its bolt (RE8's right-hand bolt)
         crosshair::find(delta);
+        screenfx::tick(delta);   // 2026-11-05: every blur and screen effect off in VR
         reload::tick(delta);
         rack::tick(delta);       // sets the left-hand override the IK solve reads
         ik::tick(delta);

@@ -9,7 +9,8 @@
 // Options: --game <folder>  (remembered)   --uevr <folder> (another UEVR build, e.g. PureDark's AFW)
 //          --sim (the OpenXR Simulator plays the headset)   --runtime-json <file> (any OpenXR runtime file): both
 //          start the game's exe directly instead of through Steam, since Steam's start passes no environment
-//          --openvr   --nullify   --delay <ms>   --test-root <folder> (every destination goes there; nothing real
+//          --no-install (start and load VR only: for a test run with a freshly built plugin, which `play` would
+//          otherwise replace with the package's own)   --openvr   --nullify   --delay <ms>   --test-root <folder> (every destination goes there; nothing real
 //          is touched and nothing is launched)
 #include "common.h"
 #include "inject.h"
@@ -28,6 +29,7 @@ struct Args {
     std::wstring command = L"play";
     fs::path game, uevr, test_root, runtime_json;  // runtime_json set: start the exe directly with that runtime
     InjectOptions inj{false, false, cfg::INJECT_DELAY_MS};
+    bool no_install = false;
     bool bad = false;
 };
 
@@ -42,6 +44,7 @@ Args parse(int argc, wchar_t** argv) {
         else if (s == L"--runtime-json") a.runtime_json = next();
         else if (s == L"--sim") a.runtime_json = known_folder_local() / cfg::SIM_JSON_REL;
         else if (s == L"--openvr") a.inj.openvr = true;
+        else if (s == L"--no-install") a.no_install = true;
         else if (s == L"--nullify") a.inj.nullify = true;
         else if (s == L"--delay") a.inj.delay_ms = (uint32_t)wcstoul(next().c_str(), nullptr, 10);
         else if (s.rfind(L"--", 0) == 0) a.bad = true;
@@ -81,14 +84,15 @@ Places resolve(const Args& a) {
     return pl;
 }
 
-int play(const Places& pl, const InjectOptions& inj, bool launch, const fs::path& runtime_json) {
+int play(const Places& pl, const InjectOptions& inj, bool launch, const fs::path& runtime_json, bool no_install) {
     if (!pl.test && !looks_like_game_dir(pl.game_dir)) {
         logf(L"! Silent Hill 2 was not found. Run once with --game \"<the game's folder>\".");
         return 2;
     }
     uint32_t pid = find_game_pid();
     if (pid && module_loaded(pid, cfg::UEVR_BACKEND)) { logf(L"The game is already running in VR."); return 0; }
-    if (!pid) {   // only while the game is closed: the profile and the button file are in use once it runs
+    if (no_install) logf(L"(--no-install: the installed files are left as they are)");
+    if (!pid && !no_install) {   // only while the game is closed: the profile and the button file are in use once it runs
         if (!install_all(pl)) logf(L"! some files were not placed (see above); trying anyway");
         reset_vanilla(pl);
     }
@@ -145,8 +149,8 @@ int run(int argc, wchar_t** argv) {
     log_open(pl.our_dir / cfg::LOG_FILE);
     logf(L"SH2VR launcher, command: %s%s", a.command.c_str(), pl.test ? L" (test root)" : L"");
 
-    if (a.command == L"play") return play(pl, a.inj, true, a.runtime_json);
-    if (a.command == L"attach") return play(pl, a.inj, false, a.runtime_json);
+    if (a.command == L"play") return play(pl, a.inj, true, a.runtime_json, a.no_install);
+    if (a.command == L"attach") return play(pl, a.inj, false, a.runtime_json, a.no_install);
     if (a.command == L"status") { print_status(pl); return 0; }
     if (a.command == L"install" || a.command == L"uninstall") {
         if (find_game_pid() && !pl.test) { logf(L"! close the game first."); return 3; }
