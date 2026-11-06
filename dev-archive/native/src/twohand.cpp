@@ -154,6 +154,10 @@ int g_map_writes = 0;
 bool g_lg_was = false;
 bool g_fg_have = false;            // the game's grip spot given to the left hand this view (frontgrip.cpp), for the status line
 Vec3 g_fg_pos{};
+double g_slide_prev = 0;           // the pump slide the last target was pulled back by, so the drawn gun lands the hand on the same spot
+// the proof (2026-11-06): the drawn left hand against the DRAWN gun's grip spot (what the eye sees) and against the target it was
+// solved toward last frame (the one-frame lag), summed between status lines
+double g_m_seen_sum = 0, g_m_seen_max = 0, g_m_lag_sum = 0, g_m_lag_max = 0; int g_m_n = 0;
 float g_report_in = 0.0f;
 
 bool is_long_gun(API::UObject* w) {
@@ -258,9 +262,13 @@ void tick(float delta) {
                 std::snprintf(line, sizeof line, "status: the gun's start line is %.1f deg off the left hand (0 = following it), %d writes",
                               angle_deg(qrot(mw.rot, g_barrel_local), sub(add(l.pos, qrot(l.rot, g_aim_off)), grip)), g_gun_writes);
                 LOGI("%s twohand: %s", TAG, line);
-                Vec3 drawn;
-                if (g_fg_have && ik::hand_world(controllers::LEFT, drawn))   // proof of effect: 0 = the drawn hand is on the game's grip
-                    LOGI("%s twohand: status: the drawn left hand is %.1f cm from the game's grip spot", TAG, len(sub(drawn, g_fg_pos)));
+                // proof of effect (2026-11-06, measured at view time, both eyes): "seen" = the drawn hand against the grip spot of the
+                // gun AS DRAWN (0 = the hand sits on the gun); "lag" = against the target the hand was solved toward one frame earlier
+                if (g_m_n > 0) {
+                    LOGI("%s twohand: status: the drawn left hand to the drawn gun's grip spot: mean %.1f cm, max %.1f (seen); to its last target: mean %.1f, max %.1f (the one-frame lag), %d views",
+                         TAG, g_m_seen_sum / g_m_n, g_m_seen_max, g_m_lag_sum / g_m_n, g_m_lag_max, g_m_n);
+                    g_m_seen_sum = g_m_seen_max = g_m_lag_sum = g_m_lag_max = 0; g_m_n = 0;
+                }
             }
         }
         if (g_map_mesh != nullptr) LOGI("%s twohand: status: the map %s, %d writes", TAG, g_map_two ? "in both hands" : "in the left hand", g_map_writes);
@@ -284,7 +292,8 @@ void on_view() {
                 g_left_rel_due = true;
                 g_gun_is_shotgun = ue::name_of(g_gun_mesh).find("Shotgun") != std::string::npos || ue::name_of(gun::equipped()).find("Shotgun") != std::string::npos;
             }
-            // aimed at the target, not added to the last write: run again on a gun already turned, it turns no further
+            // aimed at the target, not added to the last write: run again on a gun already turned, it turns no further.
+            // This is the PREDICTED gun (aimed at the fresh controller): the hands' targets for the next solve come from it.
             const Vec3 aim = add(l.pos, qrot(l.rot, g_aim_off));
             const Vec3 grip = to_world(mw, g_grip_local);
             const Quat q = from_to(qrot(mw.rot, g_barrel_local), sub(aim, grip));
@@ -292,6 +301,9 @@ void on_view() {
             t.rot = qnorm(qmul(q, mw.rot));
             t.pos = add(grip, qrot(q, sub(mw.pos, grip)));
             if (set_world(g_gun_mesh, t)) { g_gun_written = t; g_gun_have_written = true; ++g_gun_writes; }
+            // the proof's "lag" half, before this view's target replaces the last one: the drawn hand against what it was solved toward
+            Vec3 drawn_l; const bool have_drawn = ik::hand_world(controllers::LEFT, drawn_l);
+            if (have_drawn && g_fg_have) { const double d = len(sub(drawn_l, g_fg_pos)); g_m_lag_sum += d; if (d > g_m_lag_max) g_m_lag_max = d; }
             // the hands follow the gun (Tefa's second wear, 2026-10-31: "right hand doesn't turn with the long weapon" and
             // the left hand "moves around the weapon freely forward and back"): the right hand turns by the whole turn
             // from where the gun sat in it; the drawn left hand stays on the gun's line at its starting distance
@@ -315,6 +327,33 @@ void on_view() {
                     ik::override_left(false, {}, {});
                     ik::override_left_bone(true, fg_pos, fg_rot);
                     frontgrip::set_active(fg_key);
+                    // THE DRAWN GUN (2026-11-06, Fable): the game refreshes our arm bones only at the component's tick, so the hand
+                    // placed on this view's target shows up NEXT frame; a gun drawn at the fresh controller now ran one frame ahead
+                    // of the hand (Tefa: "stuck on to it ... visibly moves and clips"). So the gun is drawn turned about the grip
+                    // until its grip spot (pulled back by the slide the hand's LAST target used) meets the drawn hand as it is this
+                    // frame; the target above still comes from the predicted gun, so the hand keeps following the controller.
+                    if (settings::TWO_HAND_DRAW_AT_DRAWN_HAND && have_drawn) {
+                        Transform s;
+                        if (gun::socket_xform(g_gun_mesh, settings::FRONT_GRIP_SOCKET, s)) {
+                            const Vec3 back = qrot(t.rot, {settings::TWO_HAND_BARREL_AXIS[0] * g_slide_prev, settings::TWO_HAND_BARREL_AXIS[1] * g_slide_prev, settings::TWO_HAND_BARREL_AXIS[2] * g_slide_prev});
+                            const Vec3 spot = sub(s.pos, back);                  // where the hand would sit on the predicted gun
+                            const Quat qd = from_to(sub(spot, grip), sub(drawn_l, grip));
+                            Transform td = t;
+                            td.rot = qnorm(qmul(qd, t.rot));
+                            td.pos = add(grip, qrot(qd, sub(t.pos, grip)));
+                            if (set_world(g_gun_mesh, td)) {
+                                g_gun_written = td;
+                                // the proof's "seen" half: the drawn hand against the drawn gun's grip spot (radial play along the line stays)
+                                Transform s2;
+                                if (gun::socket_xform(g_gun_mesh, settings::FRONT_GRIP_SOCKET, s2)) {
+                                    const Vec3 back2 = qrot(td.rot, {settings::TWO_HAND_BARREL_AXIS[0] * g_slide_prev, settings::TWO_HAND_BARREL_AXIS[1] * g_slide_prev, settings::TWO_HAND_BARREL_AXIS[2] * g_slide_prev});
+                                    const double d = len(sub(drawn_l, sub(s2.pos, back2)));
+                                    g_m_seen_sum += d; if (d > g_m_seen_max) g_m_seen_max = d; ++g_m_n;
+                                }
+                            }
+                        }
+                    }
+                    g_slide_prev = g_front_cm - at;
                 } else if (settings::TWO_HAND_LOCK_TURN) {
                     Transform ht;
                     ht.rot = qnorm(qmul(t.rot, g_left_rel));   // the gun's turn, then the hand's own turn against it from the grab

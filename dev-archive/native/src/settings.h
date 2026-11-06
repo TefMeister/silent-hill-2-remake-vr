@@ -127,6 +127,13 @@ constexpr bool TWO_HAND_LOCK_LEFT = true;    // the drawn left hand stays on the
 // with the controller, up to TWO_HAND_PUMP_SLIDE_CM, so the hand rides the pump; on the rifle it stays put.
 constexpr bool TWO_HAND_LOCK_TURN = true;
 constexpr double TWO_HAND_PUMP_SLIDE_CM = 10.0;   // the pack's pump counts 8 cm of pull (shotgun_pump.lua PUMP_TRAVEL)
+// 2026-11-06 (Fable; Tefa's 11-06 wear: the left hand "stuck on to" the long gun, sliding and clipping): the arm mesh's bones are
+// solved at the pre-tick and only refreshed by the game at the component's own tick, while the gun is turned at view time
+// toward the FRESH controller; so the drawn hand always sat one frame behind the drawn gun. Now the gun is DRAWN aimed at
+// the drawn left hand (the bone as the game refreshed it this frame), and only the hand's NEXT target comes from the gun
+// aimed at the controller. The gun then lags the real hand by one frame like the hands already do, and the hand sits on it.
+constexpr bool TWO_HAND_DRAW_AT_DRAWN_HAND = true;
+constexpr bool RH_DRAW_WHERE_SOLVED = true;          // the locked rifle the same: drawn where the hands were solved for (one frame back)
 constexpr double MAP_TWO_HAND_TILT_DEG = 45.0; // praydog's tilt of the two-handed map
 // 2026-11-05 (frontgrip.cpp; Tefa: "use the games own grip independant of the wrist"): the left hand bone and fingers
 // in the game's own aim-pose grip on the long gun's front, read once per gun with the capture key, saved in

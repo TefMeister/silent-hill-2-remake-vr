@@ -75,7 +75,9 @@ Pose g_left_in_gun{};             // the drawn left hand (its place) and the lef
 Pose g_right_in_gun{};            // the drawn right hand and the right controller's turn, in the gun's frame
 Vec3 g_bolt_in_gun{};             // bone_lock in the gun's frame
 bool g_have_bolt = false;
-Pose g_gun_s{};                   // the gun as drawn: trailing the left controller
+Pose g_gun_s{};                   // the gun's trail behind the left controller: the hands' targets come from it
+Pose g_gun_shown{};               // 2026-11-06: the pose the hands are being solved against (g_gun_s as of the last view): the gun is DRAWN there
+bool g_shown_valid = false;
 Pose g_last_written{};
 double g_t0 = 0;                  // the current glide / handover's start (seconds)
 double g_u = 0, g_u0 = 0;         // 0 = the right hand on the grip, 1 = on the bolt
@@ -118,6 +120,10 @@ bool active() { return g_phase == Phase::ON || g_phase == Phase::BACK; }
 void tick(float delta) {
     g_now += delta;
     if (!settings::RH_BOLT_ON) return;
+    // 2026-11-06: the arm IK that runs after this tick solves both hands toward the overrides the last view set from g_gun_s;
+    // the game refreshes those bones at its own tick and draws them this frame, so THIS is the gun pose the hands will be
+    // drawn on. Remember it; on_view draws the gun there, one frame behind the trail, and the hands no longer slide on it.
+    g_gun_shown = g_gun_s; g_shown_valid = g_captured;
     API::UObject* w = gun::equipped();
     const bool rifle = is_rifle(w) && !buttons::menu_open() && !holsters::map_held();
     const bool lg = holsters::left_grip(), lt = input::left_trigger();
@@ -255,13 +261,22 @@ void on_view() {
     }
     Transform t;
     t.rot = g_gun_s.rot; t.pos = g_gun_s.pos; t.scale = g_scale;
-    if (set_world(g_mesh, t)) g_last_written = g_gun_s;
+    // the hands' targets below come from the fresh trail (t); the gun itself is DRAWN where the hands were solved for
+    const bool draw_back = settings::RH_DRAW_WHERE_SOLVED && g_shown_valid;
+    Transform td = t;
+    if (draw_back) { td.rot = g_gun_shown.rot; td.pos = g_gun_shown.pos; }
+    if (set_world(g_mesh, td)) g_last_written = draw_back ? g_gun_shown : g_gun_s;
     // both hands on the gun: the left on the front, the right on the grip or the bolt
     const Pose left = pmul(g_gun_s, g_left_in_gun);
     // 2026-11-05: the game's own grip on the rifle's front when one is saved (frontgrip.cpp), against the gun as placed here
     Vec3 fg_pos; Quat fg_rot;
     const std::string fg_key = frontgrip::key_of(gun::equipped());
-    if (frontgrip::target(fg_key, g_mesh, t, 0.0, fg_pos, fg_rot)) {
+    // frontgrip::target reads the grip socket live off the mesh, which now sits at the DRAWN pose; the hand's next target must
+    // come from the fresh trail, so the socket is read with the mesh at t and the mesh put back at td afterwards
+    bool have_fg = false;
+    if (draw_back) { if (set_world(g_mesh, t)) { have_fg = frontgrip::target(fg_key, g_mesh, t, 0.0, fg_pos, fg_rot); set_world(g_mesh, td); } }
+    else have_fg = frontgrip::target(fg_key, g_mesh, t, 0.0, fg_pos, fg_rot);
+    if (have_fg) {
         ik::override_left_bone(true, fg_pos, fg_rot);
         frontgrip::set_active(fg_key);
     } else {

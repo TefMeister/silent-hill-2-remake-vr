@@ -107,3 +107,23 @@ sockets `slide_joint`, `magazine_joint`, `FX_muzzle` (Lukas's, `[reported]` unti
 - Open: at Very Late the card reads 98 % busy at 13 ms, at Early 52 % at 11.2 ms, same scene `[measured, n=2 each]`;
   the headset's own numbers (Virtual Desktop renders larger than the simulator); the 10-31 halving to ~30 fps in the
   headset from 13:57 (21 Sacraments installed that day) `[measured 2026-10-31, Ghost Hand reports; cause: hypothesis]`.
+
+## 7. Frame order: UEVR's hands, our arm mesh, the held gun (2026-11-06, /pd, Fable; note 2026-11-06b)
+
+- **UEVR moves the motion-controller components and every UObjectHook attachment at the SECOND eye's
+  `on_pre_calculate_stereo_view_offset`** (`(view_index + 1) % 2 == 0` -> `tick_attachments`), not at the engine tick.
+  At our `on_pre_engine_tick` the controllers hold the previous frame's pose; the fresh one exists from the second
+  eye's view step on, where our `on_post_calculate_stereo_view_offset` (`twohand::on_view`, `rhbolt::on_view`) runs
+  `[inferred-static 2026-11-06, praydog's UObjectHook.cpp]`.
+- **The equipped gun's visible mesh is a child of OUR arm mesh's `hand_r_bn` socket** (the pack's grip-update callback
+  with IK arms + `attachments.lua` `K2_AttachTo`; the bridge hands the pack our poseable mesh as `sh2vr_ik_mesh`). A
+  `K2_SetWorldTransform` on it becomes a relative transform against that socket `[inferred-static 2026-11-06]`.
+- **Our arm mesh is a `UPoseableMeshComponent`: bone writes reach the picture only after the component's own tick**
+  (the refresh is `RefreshBoneTransforms`, a virtual, not a UFunction) `[reported; matches a forum report of the same
+  one-frame lag]`. A target set at the pre-tick is drawn the same frame; one set at view time is drawn next frame.
+- Consequence and cure: a gun turned at view time toward the fresh controller is drawn one frame ahead of a hand
+  placed on it (the 11-06 slide). Since 2026-11-06 the gun is drawn where the hands were solved for (`twohand.cpp`:
+  aimed at the drawn left hand bone; `rhbolt.cpp`: the trail as of the last view) and only the hands' next targets come
+  from the fresh controller. Unrun.
+- A true catch-up needs `RefreshBoneTransforms` at view time: find its vtable slot live (`uevr_vtable` on the poseable
+  mesh's class) if the drawn-gun cure is not enough.
