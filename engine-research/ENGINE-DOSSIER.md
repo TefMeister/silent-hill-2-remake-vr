@@ -127,3 +127,18 @@ sockets `slide_joint`, `magazine_joint`, `FX_muzzle` (Lukas's, `[reported]` unti
   from the fresh controller. Unrun.
 - A true catch-up needs `RefreshBoneTransforms` at view time: find its vtable slot live (`uevr_vtable` on the poseable
   mesh's class) if the drawn-gun cure is not enough.
+
+## 8. Lighting channels and the player's shadow (2026-11-06, live through the connector; note 2026-11-06c)
+
+- **The flashlight's main spot light is on lighting channels 0 and 2; James's body, his flashlight mesh and the
+  weapon meshes are on channel 1 only; his fill lights (BackLight, VeryCloseSpotlight) on 1, CloseLight on 0.** The
+  game keeps the player out of his own torch by channel. Our poseable arm mesh is on channel 0 (lit and shadowed
+  by the torch) `[verified-live 2026-11-06, n=1]`. A weapon lit by the torch in VR needs channel 0 added.
+- **A skeletal mesh following another's pose (`SetLeaderPoseComponent`) shares the leader's bone visibility**:
+  `IsBoneHiddenByName` on the follower answers for the leader's hidden bones `[verified-live 2026-11-06, n=1]`.
+- **The game ships `MI_Invisible`** (`/Game/GBK/MaterialInstances/MI_Invisible`), on three of James's 23 slots; the
+  head is slots 0, 1, 6, 8, 9, 10, 11-18, 22 (lacrimal, teeth, eye shadow, face, facial hair, eyes, hair, brows).
+  Setting them to it removes the head from the camera with the neck bone shown `[verified-live 2026-11-06, n=1]`.
+- `SetSkeletalMesh` does not exist on this build's components; `SetSkeletalMeshAsset` and `SetSkinnedAssetAndUpdate`
+  do. `GetMaterialSlotNames` is callable through the connector, not from the Lua binding.
+- `F` toggles the torch (desktop picture mean 33.2 on, 26.9 off); `1` takes the pistol out, in VR too.

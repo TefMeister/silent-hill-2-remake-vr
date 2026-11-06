@@ -256,4 +256,15 @@ constexpr float RH_REPORT_S = 1.0f;          // the "status" proof line while lo
 constexpr bool GHOST_HAND_ON = true;         // the Ghost Hand BeG0nE recorder (the rule for any mod with hand gestures)
 constexpr double GHOST_MAP_MIN_CM = 15.0;    // the hands this far apart give the world-to-room turn; closer keeps the last one
 
+// ---- shadows.cpp (2026-11-06): the player's shadows in VR, read live through the connector ---------------------------
+constexpr bool SHADOWS_ON = true;
+constexpr float SHADOWS_EVERY_S = 1.0f;              // how often the three fixes are checked and re-applied
+constexpr bool SHADOWS_WEAPON_ON_TORCH = true;       // the weapon in hand on the torch's lighting channel (0), lit and shadowed by it
+constexpr bool SHADOWS_HEAD_IN_SHADOW = true;        // the head hidden by material instead of by bone, so a hidden copy of the body casts a complete shadow
+constexpr const wchar_t* SHADOWS_HEAD_BONE = L"neck_02_bn";   // the bone the pack collapses to hide the head (main.lua hideHead)
+constexpr const wchar_t* SHADOWS_INVISIBLE_MATERIAL = L"MaterialInstanceConstant /Game/GBK/MaterialInstances/MI_Invisible.MI_Invisible";   // the game's own, on three of James's slots already
+// a body material slot whose material's name carries one of these words is part of the head (read live 2026-11-06: Lacrimal, Teeth, EyeShadow,
+// Skin_Face, FacialHair, Eyes, Hair x8, Eyebrows; the hands are "Skin_Hands", the clothes Shirt / Jacket / Pants: none match)
+constexpr const char* SHADOWS_HEAD_MATERIAL_WORDS[] = {"Lacrimal", "Teeth", "Eye", "Face", "Hair"};
+
 } // namespace sh2vr::settings

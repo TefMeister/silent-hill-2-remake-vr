@@ -34,6 +34,7 @@
 #include "twohand.h"
 #include "rhbolt.h"
 #include "screenfx.h"
+#include "shadows.h"
 #include "selfprof.h"
 #include "input.h"
 #include "rack.h"
@@ -76,6 +77,7 @@ public:
         { selfprof::Scope sp_(selfprof::RHBOLT); rhbolt::tick(delta); }     // 2026-11-01: LT locks the rifle in the left hand, RG works its bolt (RE8's right-hand bolt)
         { selfprof::Scope sp_(selfprof::CROSSHAIR); crosshair::find(delta); }
         { selfprof::Scope sp_(selfprof::SCREENFX); screenfx::tick(delta); }   // 2026-11-05: every blur and screen effect off in VR
+        { selfprof::Scope sp_(selfprof::SCREENFX); shadows::tick(delta); }    // 2026-11-06: the weapon lit by the torch, the player's complete shadow (counted with the screen effects: both are once-a-second checks)
         { selfprof::Scope sp_(selfprof::RELOAD); reload::tick(delta); }
         { selfprof::Scope sp_(selfprof::RACK); rack::tick(delta); }       // sets the left-hand override the IK solve reads
         { selfprof::Scope sp_(selfprof::IK); ik::tick(delta); }
