@@ -21,38 +21,10 @@ This mod is unfinished and still being worked on. VR in this game can cause seve
 discomfort. Take breaks, and stop at once if you feel unwell.
 
 
-Installation instructions
+Not released yet
 
 
-STEP 1 - The game
-
-
-1.1  Install SILENT HILL 2 (2024) from Steam (only tested with the Steam version).
-
-1.2  Start the game once, reach the main menu, and quit.
-
-
-STEP 2 - VR
-
-
-2.1  Start your VR runtime with OpenXR (tested with Virtual Desktop on a Quest 3).
-
-
-STEP 3 - This mod
-
-
-3.1  Unzip the package into any folder of your own (not into the game folder).
-
-3.2  Double-click SH2VR.exe. The first time, it finds the game through Steam, installs the VR profile and the
-tweaks file, and sets the game's controls back to their defaults (your old button settings are kept in a backup).
-Then it starts the game and brings up VR. From then on, SH2VR.exe is how you start the game.
-
-
-UNINSTALL
-
-
-Close the game and double-click Uninstall.bat in the package. It takes out every file the mod added and puts back
-every file it replaced.
+There is no download yet. The installation steps will be added here with the first release.
 
 
 About UEVR being included
