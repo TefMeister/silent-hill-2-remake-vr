@@ -46,10 +46,12 @@ $menu = Heartbeats $since 'none' 3
 $h = (Get-Process SHProto-Win64-Shipping).MainWindowHandle
 Enter $h; Start-Sleep 6                                   # the warning
 Enter $h; Start-Sleep 95                                  # CONTINUE, the load
-Enter $h; Start-Sleep 30                                  # PRESS ANY BUTTON TO PLAY, then settle
+Enter $h; Start-Sleep 12                                  # PRESS ANY BUTTON TO PLAY
+Enter $h; Start-Sleep 25                                  # once more: 2026-11-10 the first one came too early and every reading was taken on that screen; then settle
 $game = Heartbeats $since 'yes' 3
 $gpu = (& nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits -l 1 2>$null | Select-Object -First 5 | Measure-Object -Average).Average
 Stop-Process -Name nvidia-smi -Force -ErrorAction SilentlyContinue
 $m = if ($menu) { '{0:N1}' -f ($menu | Measure-Object -Average).Average } else { '?' }
 $g = if ($game) { '{0:N1}' -f ($game | Measure-Object -Average).Average } else { '?' }
-"RUN $Label | sync $sync | $mcpState | menu $m ms | game $g ms ($($game -join '/')) | gpu $([int]$gpu) %"
+$vr = if ((Get-Content $log | Where-Object { $_ -match 'sh2vr\] alive' } | Select-Object -Last 1) -match 'headset on') { 'VR ON' } else { 'VR OFF: THE READING IS THE FLAT GAME' }
+"RUN $Label | sync $sync | $mcpState | $vr | menu $m ms | game $g ms ($($game -join '/')) | gpu $([int]$gpu) %"
