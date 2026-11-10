@@ -195,3 +195,54 @@ and shadows off (-15 %) would change the game and are not proposals.
 
 Not measured: which share of the shadows is the torch (it moves every frame with the body, so its shadow can never be
 kept from one frame to the next, which is what Tefa's "shadows that only move with the flashlight beam" comes to).
+
+## The biggest find of the day: the alternate-eye warp was never switched on
+
+Tefa: "carry on please, as much as you can learn about where to get any performance gain".
+
+**What AFW is.** The text inside PureDark's build says it: "Alternate Frame Warping", "No DLSS instance detected, are you
+sure you have turned on DLSS in-game?", "Using DX11, AFW only supports DX12, fallback to AFR". Its public source
+(PureDark/UEVR, branch `AFW`, `src/mods/VR.hpp`): `enum RenderingMethod { NATIVE_STEREO = 0, SYNCHRONIZED = 1,
+ALTERNATING = 2, ALTERNATE_FRAMEWARP = 3 }`, and `is_using_afw()` is true only when the rendering method IS 3 (and 90
+frames have passed since the inject, DX12, not the 2D screen). `VR_AFW_FramewarpMode` (None / AlternateEyeWarping /
+PreviousFrameWarping / CombinedWarping = 3) only chooses HOW it warps once it is on. `[inferred-static 2026-11-10, from
+the source and the dll's strings]`
+
+**This profile has had `VR_RenderingMethod=0` (Native Stereo: both eyes drawn in full, every frame) since its first
+commit on 2026-10-23**, in the profile and in `mod/` (`git log -S"VR_RenderingMethod=3"` on the config: nothing). So the
+frame warp has never run in this project: every wear drew both eyes, and from the settings reset on, without DLSS too.
+`[measured: the git history and the installed file]`
+
+**Switched on** (the profile's config.txt, the old one kept beside it as `config.txt.bak-2026-11-10-before-afw-method`):
+`VR_RenderingMethod=3`, with the game's DLSS Quality (which it needs). UEVR's log then shows `Before InitFrameWarp` /
+`After InitFrameWarp`. Each game frame hands one picture pair to the headset: the simulator counted 77.0 pictures a
+second against 76.3 game frames a second. A still taken while the head swept 25 degrees side to side showed both eyes
+whole, no tears or holes; the simulator's one-eye crop now shows one eye (each eye has its own picture, not one
+double-wide target). `[verified-live 2026-11-10, simulator, n=1]`
+
+**The numbers** (gameplay, the armory, the simulator at 2048 x 2194 with the inner size matched to the headset's load;
+`[measured 2026-11-10, simulator, n=1 each]`; the simulator read 3 % under the headset on the one figure that could be
+checked):
+
+| At the headset's load | Native Stereo (as it was) | Alternate-eye warp |
+| --- | --- | --- |
+| no upscaler (this morning's state) | 32.5 ms, 31 fps | 23.0 ms, 43 fps |
+| **DLSS Quality** | 20.4 ms, 49 fps | **14.4 ms, 69 fps** |
+| DLSS Quality + the bounce light's probes at 32 | | 14.1 ms, 71 fps |
+| DLSS Balanced | 18.1 ms, 55 fps | 13.3 ms, 75 fps |
+| DLSS Performance | 16.4 ms, 61 fps | 12.4 ms, 81 fps |
+
+72 fps needs 13.9 ms: within reach for the first time (Quality is half a millisecond short; Balanced clears it).
+
+**What costs what with the warp on** (at the headset's load, DLSS Quality, 14.4 ms; A/B/A): the bounce light 2.6 ms (18 %),
+all shadows 2.25 (16 %), the finishing passes 0.9, volumetric fog 0.6, Lumen reflections 0.5, shadow size 1500 -> 1024
+0.3, the fog grid 12 0.3, AO 0.25.
+
+**The torch.** Toggled (F): 14.37 -> 13.43 -> 14.40 ms, so the torch is 0.9 ms (6.5 %); with all shadows off the toggle is
+worth 0.2 ms, so about 0.7 ms (5 %) is the torch's SHADOW and the other two thirds of the shadow cost (about 1.5 ms)
+belong to the room's own lights. `[measured, n=1]`
+
+**Not known, and only the headset can say:** how the warped eye looks around the hands and the gun in motion (the
+"shimmer" Tefa has an idea filed about), whether Virtual Desktop takes this mode without a black screen (Early sync gave
+one on 11-06; the sync stage is still Very Late), and the real frame rate. To go back: `VR_RenderingMethod=0` in the
+profile's config.txt, or copy the kept file over it. `mod/`'s config.txt is NOT changed yet: after Tefa's wear.
