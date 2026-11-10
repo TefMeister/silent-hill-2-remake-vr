@@ -146,3 +146,52 @@ solid pieces that ride on the headset just in front of the eyes, so the card ski
 - **The next step is a breakdown of one frame on the card** (which pass costs what), to see what the 82 % is. Nsight's GPU
   trace could not attach to the running game ("Cannot find process": it attaches only to a game it started); the game has
   to be started through it, with UEVR and the simulator, which was not tried today.
+
+## Where the card's time goes (the same day, last part): the bounce lighting is the big one
+
+No trace tool was needed: `dev-archive/tools/optimiser/waterfall.py` switches things off one after another (each stays off)
+and reads the frame after every step; `cvar_ab.py` then measures single pieces A/B/A. Gameplay, the armory, DLSS on with
+`r.ScreenPercentage 100` (25.2 ms) to stay clear of the simulator's 90 Hz cap. `[measured 2026-11-10, simulator, n=1 each]`
+
+**Lumen is running.** The earlier "Lumen lighting off: no change" was the wrong switch (`r.DynamicGlobalIlluminationMethod`
+read 0 and did nothing; `r.Lumen.DiffuseIndirect.Allow` is the one that acts). One at a time, of 25.2 ms:
+
+| Piece | Cost | Share |
+| --- | --- | --- |
+| **Lumen bounce light** (`r.Lumen.DiffuseIndirect.Allow 0`) | **6.0 ms** | **24 %** |
+| all shadows (`r.ShadowQuality 0`; in the waterfall, after the fog) | 3.8 ms | 15 % |
+| the global distance field (`r.AOGlobalDistanceField 0`; Lumen traces through it) | 1.7 ms | 7 % |
+| the finishing passes (`ShowFlag.PostProcessing 0`) | 1.7 ms | 7 % |
+| volumetric fog | 1.6 ms | 6 % |
+| Lumen reflections (`r.Lumen.Reflections.Allow 0`) | 1.0 ms | 4 % |
+| ambient occlusion | 0.7 ms | 3 % |
+| the upscaler and anti-aliasing themselves, reflections (SSR), see-through surfaces, particles, decals, hair, height fog, the stencil buffer, skin scattering, light shafts, distance-field shadows | within 0.2 ms each | nothing |
+
+About 8.7 ms is left with all of that off: the world's surfaces and geometry (a block over the whole view took 4.5 ms of
+it) and what the VR layer, the frame warp and the simulator do per frame.
+
+**How the frame grows with the picture's inner size** (DLSS on): 100 % 25.2 ms, 75 % 18.8, 50 % 14.6, 35 % 13.8. It flattens:
+about 12 to 13 ms does not shrink with the size at all (shadows, the fog's grid, Lumen's scene, geometry). That is why even
+DLSS Performance does not reach 72 fps here.
+
+**Making the bounce light cheaper without switching it off** (each A/B/A, of 25.2 ms):
+
+| Change | Frame | |
+| --- | --- | --- |
+| probes half as dense (`r.Lumen.ScreenProbeGather.DownsampleFactor` 16 -> 32) | -1.1 ms (-4.3 %) | the one that pays; a softer bounce light in small corners, to be judged by eye |
+| rays per probe 8x8 -> 6x6 (`...TracingOctahedronResolution 6`) | -0.5 ms (-1.9 %) | |
+| Lumen's light in the fog volume off (`r.Lumen.TranslucencyVolume.Enable 0`) | -0.6 ms (-2.4 %) | touches how the fog is lit: not offered |
+| probes 32 + rays 6x6 + no extra probes at edges, together | -1.1 ms (-4.4 %) | no more than the first alone |
+| refreshed half as often (radiosity, surface capture, probes traced per frame), a simpler light format, coarser far probes, smoothing off, bent-normal shading off, coarse-scene tracing only | within 0.2 ms | nothing |
+| half-size light gathering (`IntegrateDownsampleFactor`), the surface-lighting update factor, short-range AO | not in this build | |
+
+So the bounce light's cost sits in the part done for every pixel of each eye, and this engine version has no switch to do
+that at a smaller size. Nothing found here is both large and invisible.
+
+**Where that leaves Tefa's aim** (max settings, the look untouched): the upscaler back on was the big free one (done).
+What is left costs something to the eye, small first: the bounce light's probes at 32 (-4 %), the corner pieces (a few per
+cent, unfinished), the fog's grid at 12 (-4 %, Tefa said no to touching the fog), a lower DLSS level. Lumen off (-24 %)
+and shadows off (-15 %) would change the game and are not proposals.
+
+Not measured: which share of the shadows is the torch (it moves every frame with the body, so its shadow can never be
+kept from one frame to the next, which is what Tefa's "shadows that only move with the flashlight beam" comes to).
