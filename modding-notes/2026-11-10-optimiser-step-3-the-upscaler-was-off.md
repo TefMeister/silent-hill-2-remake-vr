@@ -86,3 +86,26 @@ DLSS at 66.7 % (13.2 against 13.8 at the prompt screen): DLSS did engage.
 - The fog grid and the other small ones are NOT applied: a look change for 4 %; Tefa's call.
 - The launcher does not yet set or check the upscaler; the game can reset it again.
 - Whether a level below Quality still looks right in the headset.
+
+## Later the same day: what is left that a player cannot see (Tefa's aim)
+
+Tefa: *"my idea was always to get the game running as well as possible with max settings and really try everything
+imaginable without sacrificing how the game looks. fog is important to look dense and right ... apart from the fog, what
+can we do, anything in the background, have shadows not real time but still maybe and only move with flashlight beam,
+anything you can think of, before lowering quality settings?"*
+
+Measured with the game's own DLSS Quality on (14.1 ms at the simulator's 2048 x 2194), A/B/A, `[measured 2026-11-10, n=1 each]`:
+
+| Idea | Result | What it means |
+| --- | --- | --- |
+| the background (other programs on the card) | the card is 1 % busy with no game running | nothing to win on this PC; Virtual Desktop's encoder while streaming was not measured |
+| shadows not redrawn (Tefa's idea) | ALL shadows off saves 1.4 ms (10 %); the engine already keeps the shadows of things that did not move (`r.Shadow.CacheWholeSceneShadows 1`) | the ceiling is 10 % and part of it is already taken; a torch that moves must redraw its own shadow |
+| the corners the lenses hide (`vr.HiddenAreaMask`) | the setting is on, switching it off changes nothing | it is NOT working: UEVR gives the engine no mask, so the hidden corners are drawn in full. The one real "nobody can see it" saving left (usually 10 to 20 % of the pixels), and it needs code in the VR layer, not a setting |
+| coarser shading at the edges (`vr.VRS.HMDFixedFoveationLevel` 2, 3) | no change | not reaching the card through UEVR's path |
+| fog's inner detail at the same density (history supersample 4 -> 1; depth slices 148 -> 96) | 0 %; -1.7 % | nothing worth touching the fog for |
+| GPU occlusion (HZB), a full depth pre-pass, the torch's shadow texels, small shadow casters | within +/-0.1 ms | nothing |
+
+So with the upscaler back on, this scene's frame is the pixel count and little else. What is left without touching the
+look, in order: (1) the hidden-corner mask, done by us in the VR layer; (2) the upscaler level, which is a look question
+only Tefa's eyes can settle in the headset (DLSS Quality often looks sharper than the plain 100 % it replaces); (3) the
+size Virtual Desktop asks for (2688 x 2880 per eye is more than the headset's panel shows 1:1), also a look question.
