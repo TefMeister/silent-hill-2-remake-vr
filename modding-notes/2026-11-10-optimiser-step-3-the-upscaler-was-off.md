@@ -109,3 +109,40 @@ So with the upscaler back on, this scene's frame is the pixel count and little e
 look, in order: (1) the hidden-corner mask, done by us in the VR layer; (2) the upscaler level, which is a look question
 only Tefa's eyes can settle in the headset (DLSS Quality often looks sharper than the plain 100 % it replaces); (3) the
 size Virtual Desktop asks for (2688 x 2880 per eye is more than the headset's panel shows 1:1), also a look question.
+
+## The eye-corner job, step 1: what covering part of the view saves (b005, simulator)
+
+Tefa: "please carry on with the eye corner work". No engine or UEVR setting does it, so the first try is the plainest one:
+solid pieces that ride on the headset just in front of the eyes, so the card skips what is behind them.
+
+- **`cornermask` in the plugin (b005, dev):** `sh2vr_mask.txt` in the profile, one piece per line (`x y z pitch yaw roll
+  sx sy sz`, cm and degrees from the headset, x forward / y right / z up, the scale of the engine's 100 cm cube
+  `/Engine/BasicShapes/Cube`). The pieces hang on a scene component that UEVR moves with the headset (its motion controller
+  state, hand 2, permanent), cast no shadow, have no collision. A 10 cm cube asked for at 40 cm ahead and 30 cm left was
+  seen there in both eyes, further left in the right eye (the parallax) `[verified-live 2026-11-10, simulator, n=1]`.
+- **Which corners a head-fixed piece can cover:** each eye sees much further to its own outer side than to the nose side
+  (this headset: 54 degrees out, 40 in). A piece at an eye's OUTER edge is outside the other eye's view, so the two outer
+  sides can be covered by one set of pieces. A piece at an eye's inner (nose-side) corner sits in the middle of the other
+  eye's view: those corners need a piece only one eye draws, which a plain mesh cannot be `[inferred, geometry]`.
+- **The measurement** (gameplay, the game's DLSS on with `r.ScreenPercentage 100` to stay clear of the simulator's 90 Hz
+  cap; baseline 25.5 ms; A/B/A, `[measured 2026-11-10, simulator, n=1 each]`):
+
+  | Covered | Frame | |
+  | --- | --- | --- |
+  | the WHOLE view (one block 10 cm ahead) | 21.0 ms | -17.7 % |
+  | the outer 20 % of each eye | 23.5 ms | -8.2 % |
+  | the outer 10 % of each eye | 23.7 ms | -7.3 % |
+
+- **What it says.** With everything hidden behind a block the frame is still 82 % of what it was: in this game most of the
+  card's time is NOT the world's surfaces (which a piece in front can skip) but work done on every pixel of the picture
+  whatever is in it (the upscaler, the anti-aliasing history, the fog, the lighting and post passes) and work done before
+  any pixel (shadows, geometry). So covering the real hidden corners with pieces can win a few per cent, not the 10 to 20 %
+  a true hidden-area mask gives an engine that skips those pixels in every pass. The outer bands gave more than their share
+  of the whole-view saving (7 to 8 % for 10 to 20 % of the pixels against 18 % for all of them): the edges are not cheaper
+  than the middle, and big pieces also hide whole objects from the engine's culling `[hypothesis]`.
+- **Not done:** the real shape of what the lenses hide (the headset's runtime can say: its visibility mask; the simulator
+  is not the Quest), so no final pieces are made and nothing is installed for play. Whether a piece at the very edge is
+  ever seen in the headset when the eye turns.
+- **The next step is a breakdown of one frame on the card** (which pass costs what), to see what the 82 % is. Nsight's GPU
+  trace could not attach to the running game ("Cannot find process": it attaches only to a game it started); the game has
+  to be started through it, with UEVR and the simulator, which was not tried today.
