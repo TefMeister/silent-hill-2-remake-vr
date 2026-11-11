@@ -142,3 +142,11 @@ sockets `slide_joint`, `magazine_joint`, `FX_muzzle` (Lukas's, `[reported]` unti
 - `SetSkeletalMesh` does not exist on this build's components; `SetSkeletalMeshAsset` and `SetSkinnedAssetAndUpdate`
   do. `GetMaterialSlotNames` is callable through the connector, not from the Lua binding.
 - `F` toggles the torch (desktop picture mean 33.2 on, 26.9 off); `1` takes the pistol out, in VR too.
+
+## 9. The real headset is not the simulator: the warp and DLSS (2026-11-12, /pd; note 2026-11-12)
+
+- Quest 3 through Virtual Desktop, started with `VR_RenderingMethod=3`: the per-eye swapchains (2688 x 2880) are made once, destroyed when the session turns READY, and Virtual Desktop refuses to make them again (17 tries); UEVR draws on regardless and the game dies about 10 s after the inject `[measured 2026-11-12, one log, n=1]`. With 0 (one double-wide picture) the same remake succeeds `[measured, n=1]`. Why it refuses is not known: UEVR does not log the error code `[inferred-static, PureDark/UEVR AFW source]`.
+- PureDark's notes say to select the warp in the menu AFTER injecting, with DLSS on and Ghosting Fix ticked `[reported]`. Starting with it on is our own route; it worked on the simulator only.
+- Both eyes at once (0) with DLSS Quality at the headset's size shows a see-through second picture; with DLSS off it is gone `[reported 2026-11-12, n=1 each]`. Each eye had its own DLSS instance (two creates in the log), and in this mode UEVR's DLSS hook changes nothing `[inferred-static]`. Suspects, untested: the late pose update against the game's motion vectors (`VR_SynchronizationMode=2`), or a wrong region at that size.
+- Our packages carry AFW beta 5 (`Tag: UEVR_AFW_v1.0-beta.5` in every log); beta 6 exists (2026-08-13).
+- `sh2vr_devcvars.txt` takes `uevr <Setting> <value>` lines for the injector's own settings since 2026-11-12 `[compile-verified]`.
