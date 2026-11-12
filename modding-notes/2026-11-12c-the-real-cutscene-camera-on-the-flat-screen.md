@@ -160,3 +160,14 @@ ONE frame a different picture (a see-through, squeezed and shifted copy of the s
 headset wear show none, yet Tefa sees a double image in the right eye there: the window does not show it in that set-up.
 Very likely the same thing as the see-through second picture of 2026-11-12 00:35 (DLSS on, real headset) and the right
 eye fault while flat. Ray tracing makes it about eight times as frequent. NOT looked into further.
+
+### The right eye's second picture, SEEN on the real headset (b013, 01:4x, Quest 3, DLSS + ray tracing on)
+
+Tefa: *"game window shows what my right eye sees"*. OBS's window capture of the same run showed one clean picture with
+no odd frame in 4.6 min, but a screen-region recording of the game window (ffmpeg gdigrab, 60 fps, 30 s) shows it
+(`headset-right-eye-right-half-ghost-b013.jpg`): **most frames carry a faint see-through second view over the RIGHT
+HALF of the right eye's picture, cut by a straight vertical edge down the middle; now and then a frame is clean**
+`[measured 2026-11-13, n=1 run]`. The same as the see-through upright panels of 2026-11-12 00:35 (DLSS on, real
+headset). Leads `[hypothesis]`: the right eye's DLSS (one instance per eye in this UEVR build) reading or writing the
+wrong part of the double-wide picture at the headset's size (it never shows at the simulator's smaller size, where
+only rare single frames appear); what OBS's window capture gets is a different copy than what the screen shows.
