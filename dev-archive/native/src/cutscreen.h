@@ -8,5 +8,6 @@
 namespace sh2vr::cutscreen {
 
 void tick(float delta);
+bool active();   // a cutscene is on the flat screen right now (the head is shown for it: shadows.cpp)
 
 } // namespace sh2vr::cutscreen

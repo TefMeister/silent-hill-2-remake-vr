@@ -3,6 +3,8 @@
 // doing them by itself is what has not run yet.
 #include "shadows.h"
 
+#include "cutscreen.h"
+
 #include <cstdio>
 #include <set>
 #include <string>
@@ -26,6 +28,8 @@ API::UObject* g_copy = nullptr;             // the shadow-only body
 API::UObject* g_weapon_mesh_done = nullptr; // the last weapon mesh given channel 0
 std::vector<int32_t> g_head_slots;          // the body's head material slots, found by their material names once
 bool g_head_slots_known = false;
+std::vector<API::UObject*> g_head_mats;     // each head slot's own material, put back while a cutscene plays on the flat screen (2026-11-12)
+bool g_head_shown = false;
 float g_since = settings::SHADOWS_EVERY_S;  // so the first tick works at once
 int g_body_fixes = 0;
 
@@ -89,7 +93,7 @@ void body_fix() {
         if (!ue::call_ret(g_body, L"GetNumMaterials", {}, n) || n <= 0) return;
         for (int32_t i = 0; i < n; ++i) {
             API::UObject* mat = nullptr;
-            if (ue::call_ret(g_body, L"GetMaterial", {i}, mat) && mat != nullptr && name_says_head(ue::name_of(mat))) g_head_slots.push_back(i);
+            if (ue::call_ret(g_body, L"GetMaterial", {i}, mat) && mat != nullptr && name_says_head(ue::name_of(mat))) { g_head_slots.push_back(i); g_head_mats.push_back(mat); }
         }
         g_head_slots_known = !g_head_slots.empty();
         if (g_head_slots_known) {
@@ -100,9 +104,14 @@ void body_fix() {
         return;
     }
     int changed = 0;
-    for (int32_t i : g_head_slots) {
+    // 2026-11-12: a cutscene on the flat screen shows the character from outside: the head's own materials are back
+    // for as long as it plays (cutscreen.cpp), invisible again after.
+    g_head_shown = cutscreen::active();
+    for (size_t k = 0; k < g_head_slots.size(); ++k) {
+        const int32_t i = g_head_slots[k];
+        API::UObject* want = g_head_shown && ue::alive(g_head_mats[k]) ? g_head_mats[k] : inv;
         API::UObject* mat = nullptr;
-        if (ue::call_ret(g_body, L"GetMaterial", {i}, mat) && mat != inv) { ue::call(g_body, L"SetMaterial", {i, inv}); ++changed; }
+        if (ue::call_ret(g_body, L"GetMaterial", {i}, mat) && mat != want) { ue::call(g_body, L"SetMaterial", {i, want}); ++changed; }
     }
     bool hidden = false;
     const API::FName neck = ue::name(settings::SHADOWS_HEAD_BONE);
@@ -147,11 +156,11 @@ void make_copy() {
 void tick(float delta) {
     if (!settings::SHADOWS_ON) return;
     g_since += delta;
-    if (g_since < settings::SHADOWS_EVERY_S) return;
+    if (g_since < settings::SHADOWS_EVERY_S && cutscreen::active() == g_head_shown) return;   // a cutscene beginning or ending is acted on at once
     g_since = 0.0f;
     API::UObject* pawn = API::get()->get_local_pawn(0);
     if (pawn != g_pawn) {   // a new pawn (a level, a death): start over; the old copy died with its pawn
-        g_pawn = pawn; g_body = nullptr; g_copy = nullptr; g_weapon_mesh_done = nullptr; g_head_slots.clear(); g_head_slots_known = false; g_body_fixes = 0;
+        g_pawn = pawn; g_body = nullptr; g_copy = nullptr; g_weapon_mesh_done = nullptr; g_head_slots.clear(); g_head_mats.clear(); g_head_slots_known = false; g_body_fixes = 0;
     }
     if (pawn == nullptr) return;
     if (!ue::alive(g_body)) { if (auto** b = ue::prop<API::UObject*>(pawn, L"Mesh")) g_body = ue::alive(*b) ? *b : nullptr; }

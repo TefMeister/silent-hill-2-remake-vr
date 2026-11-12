@@ -158,6 +158,9 @@ constexpr bool SCREEN_FX_OFF = true;
 // 2026-11-12 (cutscreen.cpp): cutscenes on a flat screen in front of the player, checked this often
 constexpr bool CUTSCENE_FLAT_SCREEN = true;
 constexpr float CUTSCENE_CHECK_S = 0.1f;
+// Tefa 2026-11-12: "flat screen should stay put on a floating big screen" (the injector's UI_Size / UI_Distance; play has 2 / 2)
+constexpr float CUTSCENE_SCREEN_SIZE = 3.5f;
+constexpr float CUTSCENE_SCREEN_DISTANCE = 3.0f;
 constexpr ScreenFx SCREEN_FX_CVARS[] = {
     {L"r.MotionBlurQuality", 0.0f, "motion blur"},
     {L"r.MotionBlur.Amount", 0.0f, "motion blur (amount)"},
