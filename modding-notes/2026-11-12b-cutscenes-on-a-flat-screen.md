@@ -52,3 +52,45 @@ game window showed this, also James head needs to be visible in cutscenes"*.
 `sh2route.py` in the recon folder: launcher `play --sim --no-install`, 62 s, Enter (warning), Down + Enter (New
 Game), Down x4 + Enter (Start Game), 32 s, Enter (press any button): the cutscene starts at once. The save folder was
 copied away first and put back after (identical by hash); New Game did not replace the armory save.
+
+## Later the same evening: the mirror, and what the flat screen really shows
+
+Tefa: *"damn the picture in the mirror is still wrong, that is one thing i really need to be figured out"*.
+
+- **The mirror in the opening cutscene is wrong in VR-flat**: instead of James's reflection, a thin bright band (the
+  ceiling light squashed) and a stretched patch of jacket (`mirror-wrong-vr-flat.png`) `[verified-live, n=4 runs]`.
+- **What the mirror is** `[verified-live 2026-11-12, UEVR connector]`: a `SHFakeMirrorComponent` (class
+  `/Script/SHProto.SHFakeMirrorComponent`, a SceneCaptureComponent2D of the game's own; here
+  `FakeToiletMirror_B_C_0.SHFakeMirror`, six instances loaded). It films into `FakeMirrorRT` with
+  `bUseCustomProjectionMatrix = true`, from a mirrored camera it works out itself each frame: `MirrorCameraPosition`,
+  `MirrorCameraRotation`, `MirrorCameraFOV` (19.8 in the mirror shot = the cutscene camera's own angle), clip plane
+  on the glass. **It has an input override: `AllowFakeInputs` (false), `FakeCameraPosition`, `FakeCameraRotation`,
+  `FakeCameraFOV` (90).** No PlanarReflection is in use.
+- **The plain game (no UEVR) at the same moment is a tight close-up over James's shoulder with his face in the
+  mirror; VR-flat shows the same camera spot as a wide view from behind** (`plain-game-...png` against
+  `vr-flat-timeline-...png`; the plain cutscene runs about 10-14 s later after the key press) `[measured, n=1 plain
+  run]`. So in flat mode the picture is still drawn with the headset's wide view angle, not the camera's: every
+  cutscene is framed too wide, and the mirror (filmed for the camera's 19.8 degrees, pasted by screen position) does
+  not fit `[inferred from those two]`.
+- Ruled out: `VR_RenderingMethod=3` (one eye at a time): the game runs, the mirror is exactly as wrong `[n=1]`.
+  `VR_RenderingMethod=1` (synchronized sequential): the game dies at start, set live or in the file (`Scene state
+  passed to FSceneView constructor is null`) `[n=2]`. `VR_DecoupledPitch=false` during the cutscene: the same
+  pictures `[n=1]` (taken out of the code again).
+- The plugin API has no hook for the view angle (only the per-eye offset and `get_ue_projection_matrix`).
+- `slomo 0.01` through the connector during the cutscene turned the picture white with a headless James: the same
+  look as the right eye in the bad run. So that white picture is a state of the game's own drawing (exposure, and
+  the head hidden), not a foreign image `[n=1]`. Do not use slomo to hold a shot.
+- The plain run counted in three "as it is" repeats: one full cutscene, no right-eye incident; the other two never
+  reached the cutscene (the route's Down was lost and Continue loaded the armory save; the route needs a picture
+  check before each key).
+- Found on the way: `sh2vr_devcvars.txt` in the profile has held `r.NGX.DLSS.Enable 0` and `r.ScreenPercentage 100`
+  since 2026-11-12 00:43, applied at every start: **DLSS is off in every run and wear since then.** Left as it is
+  (it belongs to the DLSS ghost test of that night); the board row says so.
+
+## Next for the mirror (the lead)
+
+Feed the mirror the view that is really drawn: `AllowFakeInputs = true`, `FakeCameraPosition / Rotation` = the
+camera the frame is drawn from (in play: the head), `FakeCameraFOV` = the drawn horizontal angle (from
+`get_ue_projection_matrix`). To prove live first with the connector in the mirror shot (the shot lasts about 30 s;
+set the three fields, look), then in `sh2vr.dll` for every `SHFakeMirrorComponent`. That is also the fix for mirrors
+in VR play. For the flat screen's framing itself (too wide), no way is known yet.
