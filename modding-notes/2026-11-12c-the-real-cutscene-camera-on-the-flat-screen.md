@@ -110,3 +110,53 @@ Tefa: *"the cutscenes played out like flat ones, so satisfying to see it!"* `[ve
   game) would show extra picture above and below here.
 - Mirrors in VR PLAY are a different job (the frame there is really drawn for the head): the component's input
   override, with the head's place and the drawn angle.
+
+## 2026-11-13 00:00-01:45 (Opus, the UEVR connector in from here on: Tefa, "use the uevr mcp now for everything")
+
+### The crash and the black eyes: one cause, found with the connector `[verified-live, simulator, DLSS on]`
+
+- Rate runs first: the head-and-shadow step off = 4 clean runs of 4; on (b008) = 2 crashes in 3; our plugin out = 4 of 4
+  clean. So it was ours and it was that step `[measured, n=3-4 each]`.
+- The connector: at a cutscene's start the game builds `<material in the slot>_Animated` (a dynamic material) for
+  James's eyeball slot (slot 10, `CH_James_Eyes`); with the step off it is `CH_James_Eyes_Animated` (parent
+  `CH_James_Eyes`), with the step on it was **`MI_Invisible_Animated` (parent `MI_Invisible`)**: the game animated
+  his eyes on our invisible material. No ProcessEvent call makes it (native). Black eyes for sure; the crash
+  `[inferred: the animated-eye code working on a material without its parameters; with the eyeballs left alone
+  4 runs of 4 were clean]`.
+- Fix (b012): the eyeball slot is never touched (`SHADOWS_HEAD_KEEP_WORDS`); in play the eyeballs are hidden by their
+  BONES instead (`eye_l`, `eye_r`, `eye_Lt`, `eye_Rt`, read live: `head_bn` is 15, `eye_r` 17, `eye_l` 22,
+  `eye_Rt` 52, `eye_Lt` 53), shown in a cutscene. b010 (eyeballs kept, no bone hiding) had **the two eyeballs floating
+  in front of the camera in play** (simulator still, `runs/rt-check.png`, not committed); hidden live by bone they went
+  and nothing else did. Simulator: cutscene eyes as in the plain game, play clear, no crash `[n=1 + 3 with the eyes
+  kept]`. The other head slots still swap to the invisible material in play and back in cutscenes (the shadow body
+  holds their own materials alive).
+
+### Tefa's second wear (b010, 00:4x, Quest 3)
+
+Eyes right; the cutscene screen further (4.5 m) not commented. New: *"the mirror in the far back [main-menu bathroom]
+has a glint of light run across it in the left eye, right one is steady"*; *"I can see double image in my right eye,
+but not left"*; A dead and no button advancing the main menu (keyboard used); *"the windows error/crashed sound in the
+beginning of the cutscene and at the end of it"* (the two moments our flat screen switches); *"during the cutscene
+when James is already outside talking a monologue, the background keeps, after every 7 seconds maybe, smoothly turning
+darker and then smoothly coming back"*.
+
+### The darkening: jbusfield's 10-second renderer reset `[measured + read]`
+
+Simulator stills: the monologue dips darker for a moment exactly every 10 s in VR (157, 167, 177, 187 s), never in the
+plain game. Tefa: *"it's something of jbusfields"*; it is `fix_no_raytracing_visual_glitches` (main.lua
+`onRaytracingVisualGlitchTimer`, `fix_visual_glitch_seconds` 10 in `data/sh2_config.json`): ray tracing on for 0.5 s
+and off again every 10 s, against mismatched lighting in the two eyes with ray tracing off. jbusfield (to Tefa): turn it
+off, *"but then you will likely get mismatched shadows indoors. If you now have the extra headroom from ASW you can
+check Enable Raytracing"*. Tefa: AFW + DLSS + ray tracing is the way. So: reset off (b011), ray tracing on (b013;
+checked live: `r.Lumen.HardwareRayTracing` 1 at start). **Cost: +2.1 ms a frame (+15 %), 13.9 -> 16.0 -> 13.9 ms, the
+armory, simulator A/B/A; card 59 C max** `[measured 2026-11-13, n=1]`. Unworn.
+
+### The right eye's one-frame wrong picture `[measured, simulator; Tefa: "that only occurs in right eye"]`
+
+OBS's recording of the game window (60 fps), every frame scored against its neighbours: in play the window shows for
+ONE frame a different picture (a see-through, squeezed and shifted copy of the scene beside another view;
+`runs/flicker/obs-odd-frames.jpg`), never during the flat-screen cutscene. Ray tracing off (01:12 run): 10 in about
+45 s of play; ray tracing on (01:19 run): 416 in about 4 min (median gap 0.27 s). The window recordings of Tefa's real
+headset wear show none, yet Tefa sees a double image in the right eye there: the window does not show it in that set-up.
+Very likely the same thing as the see-through second picture of 2026-11-12 00:35 (DLSS on, real headset) and the right
+eye fault while flat. Ray tracing makes it about eight times as frequent. NOT looked into further.

@@ -66,6 +66,7 @@ API::UObject* invisible_material() {
 }
 
 bool name_says_head(const std::string& material_name) {
+    for (const char* k : settings::SHADOWS_HEAD_KEEP_WORDS) if (material_name.find(k) != std::string::npos) return false;
     for (const char* k : settings::SHADOWS_HEAD_MATERIAL_WORDS) if (material_name.find(k) != std::string::npos) return true;
     return false;
 }
@@ -97,6 +98,7 @@ void body_fix() {
         for (int32_t i = 0; i < n; ++i) {
             API::UObject* mat = nullptr;
             if (ue::call_ret(g_body, L"GetMaterial", {i}, mat) && mat != nullptr && name_says_head(ue::name_of(mat))) { g_head_slots.push_back(i); g_head_mats.push_back(mat); }
+            if (mat != nullptr) LOGI("%s shadows: slot %d: %s (%s)", TAG, (int)i, ue::name_of(mat).c_str(), name_says_head(ue::name_of(mat)) ? "head, hidden in play" : "kept");
         }
         g_head_slots_known = !g_head_slots.empty();
         if (g_head_slots_known) {
@@ -128,6 +130,15 @@ void body_fix() {
             ++changed;
         }
         else if (!g_head_shown && mat != inv) { ue::call(g_body, L"SetMaterial", {i, inv}); ++changed; }
+    }
+    // the eyeballs: hidden by bone in play, shown in a cutscene (their material is never touched: the game builds its
+    // animated eye material from it at a cutscene's start)
+    for (const wchar_t* eb : settings::SHADOWS_EYE_BONES) {
+        bool eye_hidden = false;
+        const API::FName bn = ue::name(eb);
+        if (!ue::call_ret(g_body, L"IsBoneHiddenByName", {bn}, eye_hidden)) continue;
+        if (g_head_shown && eye_hidden) { ue::call(g_body, L"UnHideBoneByName", {bn}); ++changed; }
+        else if (!g_head_shown && !eye_hidden) { ue::call(g_body, L"HideBoneByName", {bn, (int32_t)0}); ++changed; }
     }
     bool hidden = false;
     const API::FName neck = ue::name(settings::SHADOWS_HEAD_BONE);

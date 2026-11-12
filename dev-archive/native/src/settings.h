@@ -277,5 +277,12 @@ constexpr const wchar_t* SHADOWS_INVISIBLE_MATERIAL = L"MaterialInstanceConstant
 // a body material slot whose material's name carries one of these words is part of the head (read live 2026-11-06: Lacrimal, Teeth, EyeShadow,
 // Skin_Face, FacialHair, Eyes, Hair x8, Eyebrows; the hands are "Skin_Hands", the clothes Shirt / Jacket / Pants: none match)
 constexpr const char* SHADOWS_HEAD_MATERIAL_WORDS[] = {"Lacrimal", "Teeth", "Eye", "Face", "Hair"};
+// 2026-11-13 (the UEVR connector): at a cutscene's start the game builds "<slot material>_Animated" for the eyeball slot
+// (CH_James_Eyes_Animated); with our invisible material there it built MI_Invisible_Animated: black eyes, and very
+// likely the crash at the opening cutscene. The eyeballs keep the game's own material (they sit at the VR camera).
+constexpr const char* SHADOWS_HEAD_KEEP_WORDS[] = {"_Eyes."};
+// ...and in play they are hidden by their bones instead (b010 showed the eyeballs floating in front of the camera; the
+// bones read with the UEVR connector 2026-11-13: eye_l / eye_r / eye_Lt / eye_Rt; hidden live, the eyeballs went, nothing else)
+constexpr const wchar_t* SHADOWS_EYE_BONES[] = {L"eye_l", L"eye_r", L"eye_Lt", L"eye_Rt"};
 
 } // namespace sh2vr::settings
