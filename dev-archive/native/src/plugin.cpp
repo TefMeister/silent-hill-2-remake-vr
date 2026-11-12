@@ -35,6 +35,7 @@
 #include "rhbolt.h"
 #include "cornermask.h"
 #include "devcvars.h"
+#include "cutscreen.h"
 #include "screenfx.h"
 #include "shadows.h"
 #include "selfprof.h"
@@ -80,6 +81,7 @@ public:
         { selfprof::Scope sp_(selfprof::CROSSHAIR); crosshair::find(delta); }
         { selfprof::Scope sp_(selfprof::SCREENFX); cornermask::tick(delta); }   // 2026-11-10: the eye-corner job's pieces on the headset (dev only: no file, nothing)
         { selfprof::Scope sp_(selfprof::SCREENFX); devcvars::tick(delta); }   // 2026-11-10: the optimiser's settings file (dev only: no file, nothing)
+        { selfprof::Scope sp_(selfprof::SCREENFX); cutscreen::tick(delta); }   // 2026-11-12: cutscenes on a flat screen
         { selfprof::Scope sp_(selfprof::SCREENFX); screenfx::tick(delta); }   // 2026-11-05: every blur and screen effect off in VR
         { selfprof::Scope sp_(selfprof::SCREENFX); shadows::tick(delta); }    // 2026-11-06: the weapon lit by the torch, the player's complete shadow (counted with the screen effects: both are once-a-second checks)
         { selfprof::Scope sp_(selfprof::RELOAD); reload::tick(delta); }

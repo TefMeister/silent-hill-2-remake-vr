@@ -155,6 +155,9 @@ constexpr int TWO_HAND_LOG_MAX = 80;
 // screen, the low-health tint), which are post-process materials, not settings.
 struct ScreenFx { const wchar_t* name; float value; const char* what; };
 constexpr bool SCREEN_FX_OFF = true;
+// 2026-11-12 (cutscreen.cpp): cutscenes on a flat screen in front of the player, checked this often
+constexpr bool CUTSCENE_FLAT_SCREEN = true;
+constexpr float CUTSCENE_CHECK_S = 0.1f;
 constexpr ScreenFx SCREEN_FX_CVARS[] = {
     {L"r.MotionBlurQuality", 0.0f, "motion blur"},
     {L"r.MotionBlur.Amount", 0.0f, "motion blur (amount)"},
