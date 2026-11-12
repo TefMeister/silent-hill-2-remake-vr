@@ -59,7 +59,7 @@ lines in one run): harmless so far.
 At the cutscene's end the game blends its camera to the play view while it still says "in cutscene" (the angle climbs
 70 -> 80 over about ten seconds, the camera swings off James): that blend is shown flat, then VR comes back.
 
-## The crash with DLSS on at the opening cutscene's first frame: OUR head step `[verified-live, 2 crashes of 2, then 3 clean runs of 3 without the old step]`
+## The crash with DLSS on at the opening cutscene's first frame `[DISPROVED 23:4x: "our head step"; see the correction below]`
 
 - b007 with DLSS on: the game died within a second of the key press that starts the opening cutscene, twice of twice
   (access violation reading 0x7 / 0x60000000f on the game thread, inside the engine's own tick:
@@ -69,11 +69,39 @@ At the cutscene's end the game blends its camera to the play view while it still
   fix on): clean (n=1). So it was `shadows.cpp` handing the head's material back from a pointer kept since the slots
   were found; nothing held that material once ours replaced it `[inferred: a dead pointer; why DLSS decides whether it
   is already dead is not known]`.
-- Cure: shown = our override taken off (`SetMaterial(slot, null)`: the mesh's own material, which the mesh asset keeps
+- (Was called the cure:) shown = our override taken off (`SetMaterial(slot, null)`: the mesh's own material, which the mesh asset keeps
   alive), hidden = the invisible material as before. Two full cutscenes with DLSS on, James has his head, no crash.
 - ⚠️ Two runs of this bisect were VOID and are not counted: the key route lost its first Enter on the warning screen
   and ran the Credits (Tefa saw it). `cutcompare.py` now checks the picture before each key (the warning's white
   square, the red bar on CONTINUE, the red START GAME bar) and stops if the screen is not the expected one.
+
+
+## CORRECTION 2026-11-12 23:4x: the crash is NOT cured, and it is not shown to be ours
+
+- The installed b008 crashed in 2 of 3 short runs straight after (`runs/rate-b008-*`): one at the cutscene's start
+  (the same place: `+4c60c37 <- +49dabdd <- +4ad784a <- UEVRBackend +1685bf`), one 29 s into the cutscene at a NEW
+  place (`+2ae8984`, reading 0xa0; UEVR logged "attempted dereference of null pointer at ...8984" just before). Two
+  test builds (eyes 2, eyes 3) also died at the start, the second before our cutscene code had even noticed the
+  cutscene. So the "bisect" above was single runs of a crash that comes and goes `[measured, n=3 + 4 earlier]`.
+- Tefa's own wear of b008 (23:20) and four simulator runs lived. The crash rate with DLSS on, with our plugin, is
+  roughly half; with DLSS off it was never seen (last night's runs, n=5, plus run 4 here) `[measured, small n]`.
+- Being measured at the time of writing: three runs with our plugin taken out (`runs/rate-noplugin-*`).
+
+## Tefa's first wear of b008 (23:20, Quest 3, DLSS on)
+
+Tefa: *"the cutscenes played out like flat ones, so satisfying to see it!"* `[verified-live 2026-11-12, headset, n=1]`.
+- *"screen has to be further from me by quite a bit, at least a meter further"*: `CUTSCENE_SCREEN_DISTANCE` 3.0 -> 4.5
+  in the source (not installed yet).
+- *"James has completely black eyes, super creepy"*. Simulator stills, face enlarged (`eyes-close-up-2.jpg`): b008 and
+  a first fix (the shadow body keeps the game's own head materials alive and the body takes them from there) both
+  have no eye shine; **with the head step switched off altogether the eyes look like the plain game's**. So it is
+  the head step, and not (only) its materials `[measured, n=1 each]`. Second fix in the source, NOT SEEN YET (both
+  runs crashed at the start): in a cutscene the game's own shadow setup comes back whole (the body casts its shadow,
+  the hidden copy does not), and the cutscene's body changes wait one second (`CUTSCENE_BODY_DELAY_S`).
+- *"i heard the windows error sound twice and my controller buttons didn't work ... i could still select things up
+  and down, just pressing A didn't do anything"* (main menu; Tefa used the keyboard). The log has the controller's
+  X, Y and B presses at the main menu and NO A at all: A is taken before our button layer sees it `[measured, n=1]`.
+  Not looked into further.
 
 ## Left
 

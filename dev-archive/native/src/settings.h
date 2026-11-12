@@ -159,8 +159,11 @@ constexpr bool SCREEN_FX_OFF = true;
 constexpr bool CUTSCENE_FLAT_SCREEN = true;
 constexpr float CUTSCENE_CHECK_S = 0.1f;
 // Tefa 2026-11-12: "flat screen should stay put on a floating big screen" (the injector's UI_Size / UI_Distance; play has 2 / 2)
+// Tefa 2026-11-12 23:2x, first wear: "screen has to be further from me by quite a bit, at least a meter further": 3.0 -> 4.5
 constexpr float CUTSCENE_SCREEN_SIZE = 3.5f;
-constexpr float CUTSCENE_SCREEN_DISTANCE = 3.0f;
+constexpr float CUTSCENE_SCREEN_DISTANCE = 4.5f;
+// shadows.cpp: the head and the game's own shadow come back this long after a cutscene began (a change on its first frames crashed the game)
+constexpr float CUTSCENE_BODY_DELAY_S = 1.0f;
 // 2026-11-12 (realcam.cpp): while flat, the cutscene camera's own view angle and one picture for both eyes
 constexpr bool CUTSCENE_REAL_CAMERA = true;
 constexpr ScreenFx SCREEN_FX_CVARS[] = {

@@ -30,6 +30,9 @@ std::vector<int32_t> g_head_slots;          // the body's head material slots, f
 bool g_head_slots_known = false;
 std::vector<API::UObject*> g_head_mats;     // each head slot's own material, put back while a cutscene plays on the flat screen (2026-11-12)
 bool g_head_shown = false;
+bool g_copy_holds_head = false;             // the shadow body carries the head slots' own (run-time) materials
+bool g_cut_want = false;                    // the head shown: a cutscene has run for CUTSCENE_BODY_DELAY_S
+float g_cut_for = 0.0f;                     // how long the current cutscene has run
 float g_since = settings::SHADOWS_EVERY_S;  // so the first tick works at once
 int g_body_fixes = 0;
 
@@ -103,26 +106,42 @@ void body_fix() {
         }
         return;
     }
+    if (!ue::alive(g_copy)) return;   // the shadow body takes the head's own materials first (make_copy), then they are hidden
     int changed = 0;
     // 2026-11-12: a cutscene on the flat screen shows the character from outside: the head's own materials are back
     // for as long as it plays (cutscreen.cpp), invisible again after.
-    g_head_shown = cutscreen::active();
+    g_head_shown = g_cut_want;
     for (size_t k = 0; k < g_head_slots.size(); ++k) {
         const int32_t i = g_head_slots[k];
         // 2026-11-12 (the DLSS-on crash at the opening cutscene's first frame): the head's own material is NOT put back
         // from a pointer kept since the slots were found (nothing held that material once ours replaced it, and handing
-        // it back killed the game inside its own tick, 2 of 2 with DLSS on). Shown = our override taken off (a null
-        // override: the mesh's own material for that slot, which the mesh asset itself keeps alive).
+        // it back killed the game inside its own tick, 2 of 2 with DLSS on). b008 then took the override off (the mesh
+        // asset's plain material): James had BLACK EYES (Tefa, headset, 2026-11-12), the game's own per-character
+        // materials are made at run time. Now the shadow body holds the game's materials from the moment it is made
+        // (make_copy), so they stay alive, and shown = the body takes them from there.
         API::UObject* mat = nullptr;
         if (!ue::call_ret(g_body, L"GetMaterial", {i}, mat)) continue;
-        if (g_head_shown && mat == inv) { ue::call(g_body, L"SetMaterial", {i, (API::UObject*)nullptr}); ++changed; }
+        if (g_head_shown && mat == inv) {
+            API::UObject* own = nullptr;
+            if (ue::alive(g_copy) && g_copy != g_pawn && g_copy_holds_head) ue::call_ret(g_copy, L"GetMaterial", {i}, own);
+            ue::call(g_body, L"SetMaterial", {i, own != nullptr && own != inv ? own : (API::UObject*)nullptr});
+            ++changed;
+        }
         else if (!g_head_shown && mat != inv) { ue::call(g_body, L"SetMaterial", {i, inv}); ++changed; }
     }
     bool hidden = false;
     const API::FName neck = ue::name(settings::SHADOWS_HEAD_BONE);
     if (ue::call_ret(g_body, L"IsBoneHiddenByName", {neck}, hidden) && hidden) { ue::call(g_body, L"UnHideBoneByName", {neck}); ++changed; }
-    bool cast = true;
-    if (get_bool(g_body, L"CastShadow", cast) && cast) { ue::call(g_body, L"SetCastShadow", {false}); ++changed; }
+    // 2026-11-12 23:4x: James's eyes were dark in cutscenes with this step on and right with it off (simulator stills,
+    // DLSS on) even with his own materials back: the shadow trick itself (the body casting none, a hidden copy casting
+    // it) darkens the eyes. In a cutscene the game's own setup comes back whole: the body casts, the copy does not.
+    const bool want_cast = g_head_shown;
+    bool cast = !want_cast;
+    if (get_bool(g_body, L"CastShadow", cast) && cast != want_cast) { ue::call(g_body, L"SetCastShadow", {want_cast}); ++changed; }
+    if (ue::alive(g_copy) && g_copy != g_pawn) {
+        bool copy_cast = want_cast;
+        if (get_bool(g_copy, L"CastShadow", copy_cast) && copy_cast == want_cast) { ue::call(g_copy, L"SetCastShadow", {!want_cast}); ++changed; }
+    }
     if (changed > 0) {
         ++g_body_fixes;
         if (g_body_fixes <= 3 || g_body_fixes % 50 == 0)
@@ -149,6 +168,16 @@ void make_copy() {
     ue::call(c, L"SetHiddenInGame", {true, false});
     ue::call(c, L"SetCastShadow", {true});
     const bool hidden_shadow = set_bool(c, L"bCastHiddenShadow", true);
+    // the head slots' own materials, read off the body now (made before body_fix first puts the invisible one there):
+    // held by the shadow body, they stay alive for the cutscenes and the head's shadow is drawn with them
+    int held = 0;
+    API::UObject* inv = invisible_material();
+    for (int32_t i : g_head_slots) {
+        API::UObject* own = nullptr;
+        if (ue::call_ret(g_body, L"GetMaterial", {i}, own) && own != nullptr && own != inv) { ue::call(c, L"SetMaterial", {i, own}); ++held; }
+    }
+    g_copy_holds_head = held == (int)g_head_slots.size();
+    LOGI("%s shadows: the shadow body holds %d of %d head materials (the game's own, for the cutscenes)", TAG, held, (int)g_head_slots.size());
     g_copy = c;
     Channels ch; channels_of(c, ch);
     bool hid = false; get_bool(c, L"bHiddenInGame", hid);
@@ -161,11 +190,16 @@ void make_copy() {
 void tick(float delta) {
     if (!settings::SHADOWS_ON) return;
     g_since += delta;
-    if (g_since < settings::SHADOWS_EVERY_S && cutscreen::active() == g_head_shown) return;   // a cutscene beginning or ending is acted on at once
+    // 2026-11-12: a change to the body on the cutscene's first frames (a material, its shadow) killed the game inside its
+    // own tick with DLSS on (3 crashes, same place; the game sets the character up for the cutscene then), so the
+    // cutscene's head and shadow wait CUTSCENE_BODY_DELAY_S; the end of a cutscene is acted on at once.
+    g_cut_for = cutscreen::active() ? g_cut_for + delta : 0.0f;
+    g_cut_want = cutscreen::active() && g_cut_for >= settings::CUTSCENE_BODY_DELAY_S;
+    if (g_since < settings::SHADOWS_EVERY_S && g_cut_want == g_head_shown) return;
     g_since = 0.0f;
     API::UObject* pawn = API::get()->get_local_pawn(0);
     if (pawn != g_pawn) {   // a new pawn (a level, a death): start over; the old copy died with its pawn
-        g_pawn = pawn; g_body = nullptr; g_copy = nullptr; g_weapon_mesh_done = nullptr; g_head_slots.clear(); g_head_mats.clear(); g_head_slots_known = false; g_body_fixes = 0;
+        g_pawn = pawn; g_body = nullptr; g_copy = nullptr; g_weapon_mesh_done = nullptr; g_head_slots.clear(); g_head_mats.clear(); g_head_slots_known = false; g_copy_holds_head = false; g_body_fixes = 0;
     }
     if (pawn == nullptr) return;
     if (!ue::alive(g_body)) { if (auto** b = ue::prop<API::UObject*>(pawn, L"Mesh")) g_body = ue::alive(*b) ? *b : nullptr; }
