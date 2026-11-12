@@ -12,6 +12,7 @@
 #include <thread>
 
 #include "common.h"
+#include "realcam.h"
 #include "settings.h"
 #include "ue.h"
 #include "uevr/API.hpp"
@@ -66,7 +67,9 @@ void write(bool on, std::string follow, std::string size, std::string distance) 
             vr->set_mod_value(KEY_DISTANCE, num(settings::CUTSCENE_SCREEN_DISTANCE).c_str());
             vr->recenter_view();
             vr->set_mod_value(KEY_FLAT, "true");
+            realcam::set_active(true);
         } else {
+            realcam::set_active(false);
             vr->set_mod_value(KEY_FLAT, "false");
             vr->set_mod_value(KEY_FOLLOW, follow.c_str());
             vr->set_mod_value(KEY_SIZE, size.c_str());

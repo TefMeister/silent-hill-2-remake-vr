@@ -109,9 +109,14 @@ void body_fix() {
     g_head_shown = cutscreen::active();
     for (size_t k = 0; k < g_head_slots.size(); ++k) {
         const int32_t i = g_head_slots[k];
-        API::UObject* want = g_head_shown && ue::alive(g_head_mats[k]) ? g_head_mats[k] : inv;
+        // 2026-11-12 (the DLSS-on crash at the opening cutscene's first frame): the head's own material is NOT put back
+        // from a pointer kept since the slots were found (nothing held that material once ours replaced it, and handing
+        // it back killed the game inside its own tick, 2 of 2 with DLSS on). Shown = our override taken off (a null
+        // override: the mesh's own material for that slot, which the mesh asset itself keeps alive).
         API::UObject* mat = nullptr;
-        if (ue::call_ret(g_body, L"GetMaterial", {i}, mat) && mat != want) { ue::call(g_body, L"SetMaterial", {i, want}); ++changed; }
+        if (!ue::call_ret(g_body, L"GetMaterial", {i}, mat)) continue;
+        if (g_head_shown && mat == inv) { ue::call(g_body, L"SetMaterial", {i, (API::UObject*)nullptr}); ++changed; }
+        else if (!g_head_shown && mat != inv) { ue::call(g_body, L"SetMaterial", {i, inv}); ++changed; }
     }
     bool hidden = false;
     const API::FName neck = ue::name(settings::SHADOWS_HEAD_BONE);
