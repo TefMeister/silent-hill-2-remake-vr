@@ -94,3 +94,32 @@ camera the frame is drawn from (in play: the head), `FakeCameraFOV` = the drawn 
 `get_ue_projection_matrix`). To prove live first with the connector in the mirror shot (the shot lasts about 30 s;
 set the three fields, look), then in `sh2vr.dll` for every `SHFakeMirrorComponent`. That is also the fix for mirrors
 in VR play. For the flat screen's framing itself (too wide), no way is known yet.
+
+## The mirror feed, tried once and taken out again (22:0x)
+
+`dev-archive/recon/2026-11-12-cutscenes-flat-screen/mirror-feed-tried/mirror.cpp`: every tick each live
+`SHFakeMirrorComponent` got `AllowFakeInputs = true`, `FakeCameraPosition / Rotation` = the left eye's view from the
+plugin's `on_post_calculate_stereo_view_offset`, `FakeCameraFOV` = the angle from `get_ue_projection_matrix` (95.9
+degrees on the simulator). Result `[verified-live 2026-11-12, n=1]`:
+
+- **The position that hook hands over is not a world position**: it logged `266 5382 -338`, pitch 0, yaw 150.9, all
+  through the cutscene, while the cutscene camera stood near `57874 49093 3281` (the component's own
+  `MirrorCameraPosition`, which is the INPUT camera as the component sees it, with `MirrorCameraRotation` and
+  `MirrorCameraFOV`: -3.3 / 63.8, 23.9 degrees in the mirror shot; the camera manager reported yet another view,
+  pitch -50, 26 degrees). So the drawn view's world position has to come from somewhere else.
+- **With the mirror filming from that wrong place the whole picture got brighter, and in the mirror shot it went
+  white with a headless James** (`whole-picture-white-in-the-mirror-shot.png`): the same picture as the right eye
+  in the bad run and as under `slomo`. So **the fake mirror's capture and the eye pictures share exposure (and very
+  likely the history the smearing comes from) under UEVR** `[inferred from three sightings]`: that is the right-eye
+  fault's mechanism, and why it only shows in cutscenes with a mirror in them (the opening bathroom).
+- The writes themselves work (the connector's write of the same fields also took).
+
+So the two open faults are one knot: (a) the mirror is filmed for the wrong view, (b) its capture bleeds into an
+eye's picture. Next, in this order: 1. the capture's own settings against the bleed (it is a
+SceneCaptureComponent2D: `bAlwaysPersistRenderingState`, `PostProcessSettings` auto-exposure override,
+`CaptureSource`, its show flags for eye adaptation / temporal AA), checked on the opening cutscene with the
+simulator's incident list; 2. the right input for the mirror: start from the component's own `MirrorCamera*` values
+(right place, wrong angle) and change only the angle (`FakeCameraFOV` with `AllowFakeInputs`, position and rotation
+copied from `MirrorCamera*` BEFORE switching the override on, refreshed by reading the game camera the component
+itself reads: find that source, e.g. the sequence's camera component or the local player's view info); 3. only then
+VR play, where the position must be the head's.
