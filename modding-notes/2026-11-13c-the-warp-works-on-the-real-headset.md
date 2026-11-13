@@ -123,3 +123,31 @@ Set C through the plugin's own settings file (six lines in `sh2vr_devcvars.txt`)
 **Nothing found reaches 13.9 ms at DLSS Quality with ray tracing on.** Set C is the most that comes for a picture
 change no bigger than the noise in this one view; whether it is invisible in the headset (wet streets, shiny metal,
 small dark corners) is Tefa's call. It is NOT installed as a default.
+
+## 7. Tefa's wear 10:10-10:30, b016, DLSS Balanced (real headset)
+
+- **The cheaper set (section 6, set C), on / off / on / off / on, live, Tefa looking:** *"honestly i see no change,
+  reflections are still there and the game looks the same, and i tried to catch the line where on is switched off and i
+  could not see it"* `[reported 2026-11-13, n=5 flips]`. Where Tefa stood the frame was 13.9 ms (72 a second) either way:
+  the 18 ms is the armory's heavy view. **b016 makes the set the mod's default** (`tuning.cpp`, applied once the
+  character exists, looked at again every 5 s; `sh2vr_notune.txt` in the profile keeps the game's values).
+  ⚠️ One of the six does not take from the plugin: `r.Lumen.Reflections.MaxRoughnessToTrace` logged `0.4 -> 0.4` every
+  5 s for a minute (the same call set it from `sh2vr_devcvars.txt` at 10:08); a console command set it at once. OPEN.
+- **Beta 5 worn** (same settings): *"the framerate feels worse, there is still a lot of outline around my hands ... the
+  shimmer around the hands is more confined though, just around the hand where in beta 6 it really reaches out
+  further. i think beta 6 felt smoother"* `[reported, n=1 wear each]`. So the outline is in both; beta 6 stays.
+  Tefa points at the warp's debug option (`VR_AFW_FramewarpDebug`, Numpad 6) for the hunt.
+- **Warp off** (beta 5, Tefa's head moving): DLSS Quality 24-27 ms, Balanced 23-25 ms, and *"with AFW off i get them
+  visual glitches again"* (the right eye's second picture): the warp is the route, mode 0 is not.
+- **DLSS Balanced** (Tefa: "we'll go down to DLSS balanced and turn down some graphics settings, but not draw distance,
+  i hate when things are popping in and out of existence"): `Adv_DLSSQuality` 3 -> 2 in GameUserSettings.ini (backup
+  in the sh2-backups folder), read back `r.ScreenPercentage` 58 after the start.
+  Armory, headset on the desk, warp on, set C `[measured, n=1 each]`: Quality 16.2 ms, **Balanced 15.2**, Performance
+  14.5. The inner size buys little now: about 14 ms of the frame does not shrink with it.
+- **The game's quality groups** (`sg.ShadowQuality` ... one and two steps down): nothing, within 0.15 ms: this game does
+  not drive its settings through them (`sweep-2026-11-13-quality-groups-results.tsv`).
+- **What the big items cost now** (Balanced, set C, 15.2 ms; `sweep-2026-11-13-big-items-results.tsv`):
+  reflections off ray tracing -1.05 (picture change 0.6 x noise in this view); all ray tracing off -1.3 or more (13.9
+  is the headset's cap; picture change 11 x noise: the ray-traced LIGHT is what shows); bounce light off the same;
+  all shadows off -1.1; fog off -0.5; shadow size 1500 -> 1024 -0.27 (1.0 x noise); reflections at a third / roughness
+  0.2: -0.15 each.
