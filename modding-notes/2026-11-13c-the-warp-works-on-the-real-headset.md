@@ -151,3 +151,30 @@ small dark corners) is Tefa's call. It is NOT installed as a default.
   is the headset's cap; picture change 11 x noise: the ray-traced LIGHT is what shows); bounce light off the same;
   all shadows off -1.1; fog off -0.5; shadow size 1500 -> 1024 -0.27 (1.0 x noise); reflections at a third / roughness
   0.2: -0.15 each.
+
+## 8. The outline, the torch's shadow, DLSS Quality again (10:50-12:25, Tefa in the headset; Opus from 11:00)
+
+- **The warp's debug view** (`Debug Framewarp` in the UEVR menu; beta 6 has no `VR_AFW_FramewarpDebug` setting to set
+  from outside, the menu tick or Numpad 6 only; it shows only in the headset). Tefa's recording
+  (`D:\Capcut export\sh2 AFW debug.mp4`): only the arms, hands and the pipe go green, never the world = the warp works
+  as its author defines it. A thin yellow line along the sleeve's and the pipe's edges and green specks past the
+  fingertips: the moving-object area sits a few pixels off the drawn object. A red patch on the back of the hand. Red
+  bands at the top and bottom of the view when the head moves up and down: the warped eye's missing edge (expected).
+- **The outline is the warp itself** `[verified-live 2026-11-13, Tefa]`: `VR_AFW_FixObjectMotionRange` 1.5 / 0 / 10 live:
+  "the same"; `VR_AFW_FixObjectMotionVector` off live, and off from the start after a restart: "the same". Warp off
+  (mode 0) for 20 s: "outline is gone". Tefa: in each eye the outline is on the OPPOSITE side of the held object: the
+  strip one eye sees that the other (really drawn) eye never saw, filled by the warp's closed core. No setting moves it.
+  Tefa has written to PureDark asking to look inside AFW; the performance and outline chase is PARKED until he answers.
+- **The torch's shadow on opposite sides per eye is parallax, not a fault** `[verified-live, Tefa]`: still the same
+  with b017's torch.cpp (the light at the middle of the eyes) AND with the warp off. The pack's "Head" light sits at the
+  eyes, so the shadow falls straight behind the object onto the far wall and each eye sees it on its own opposite side,
+  as with a real headlamp. torch.cpp stays in the source, switched OFF (`TORCH_BETWEEN_EYES false`, b018). The cure is a
+  light away from the eyes: the pack's Light Location menu (Head / OffHand / Weapon), or a chest-pocket light following
+  the head's yaw ~25 cm below the eyes (the game's own placement; not built).
+- **Vertical sync and motion blur** (Tefa asked): live `r.VSync` 0 (the injector presents with interval 0),
+  `r.MotionBlurQuality` 0, `r.MotionBlur.Amount` 0, `t.MaxFPS` 500: no cost in VR. Tefa then set motion blur off in the
+  menu (`Adv_MotionBlur` 0); the menu's VSync stays 1 (no effect in VR).
+- **DLSS back to Quality** (Tefa: "if we can go back up to quality that's awesome"), `Adv_DLSSQuality` 3 (backup kept).
+  One minute in the armory, Tefa in the headset, warp on, ray tracing on, five-second slices: **lowest 53.5, average
+  61.6, highest 69.9 fps** `[measured 2026-11-13, n=12 slices]`. Single frames are not in the heartbeat: a per-frame tool
+  (PresentMon) is not installed here.

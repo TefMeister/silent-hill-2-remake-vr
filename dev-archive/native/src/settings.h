@@ -45,7 +45,7 @@ constexpr const char* THUMBREST_LEFT = "/actions/default/in/ThumbrestTouchLeft";
 constexpr const char* THUMBREST_RIGHT = "/actions/default/in/ThumbrestTouchRight";
 
 // the frame warp (warp.cpp): config.txt keeps rendering method 0, the plugin switches to 3 once the picture is up
-constexpr bool TORCH_BETWEEN_EYES = true;     // torch.cpp: the flashlight's light at the middle of the two eyes (2026-11-13)
+constexpr bool TORCH_BETWEEN_EYES = false;    // torch.cpp: OFF: the per-eye shadow is parallax of a light at the eyes, not a lag (Tefa, warp off: same; 2026-11-13)
 constexpr bool TUNING_ON = true;              // tuning.cpp: the cheaper rendering values Tefa could not see (2026-11-13)
 constexpr float TUNING_CHECK_S = 5.0f;        // how often they are looked at again (the game writes its own back)
 constexpr bool WARP_AUTO_ON = true;
