@@ -37,6 +37,7 @@
 #include "devcvars.h"
 #include "warp.h"
 #include "tuning.h"
+#include "torch.h"
 #include "cutscreen.h"
 #include "realcam.h"
 #include "screenfx.h"
@@ -83,7 +84,7 @@ public:
         { selfprof::Scope sp_(selfprof::RHBOLT); rhbolt::tick(delta); }     // 2026-11-01: LT locks the rifle in the left hand, RG works its bolt (RE8's right-hand bolt)
         { selfprof::Scope sp_(selfprof::CROSSHAIR); crosshair::find(delta); }
         { selfprof::Scope sp_(selfprof::SCREENFX); cornermask::tick(delta); }   // 2026-11-10: the eye-corner job's pieces on the headset (dev only: no file, nothing)
-        { selfprof::Scope sp_(selfprof::SCREENFX); devcvars::tick(delta); warp::tick(delta); tuning::tick(delta); }   // 2026-11-10: the optimiser's settings file (dev only: no file, nothing)
+        { selfprof::Scope sp_(selfprof::SCREENFX); devcvars::tick(delta); warp::tick(delta); tuning::tick(delta); torch::tick(delta); }   // 2026-11-10: the optimiser's settings file (dev only: no file, nothing)
         { selfprof::Scope sp_(selfprof::SCREENFX); cutscreen::tick(delta); realcam::tick(delta); }   // 2026-11-12: cutscenes on a flat screen
         { selfprof::Scope sp_(selfprof::SCREENFX); screenfx::tick(delta); }   // 2026-11-05: every blur and screen effect off in VR
         { selfprof::Scope sp_(selfprof::SCREENFX); shadows::tick(delta); }    // 2026-11-06: the weapon lit by the torch, the player's complete shadow (counted with the screen effects: both are once-a-second checks)
@@ -103,7 +104,7 @@ public:
 
     // after UEVR has put the held things on the controllers for this view: two hands on the long gun and the map
     void on_pre_calculate_stereo_view_offset(UEVR_StereoRenderingDeviceHandle device, int, float, UEVR_Vector3f* position, UEVR_Rotatorf*, bool is_double) override { if (is_double) realcam::on_pre_view((void*)device, (void*)position); }
-    void on_post_calculate_stereo_view_offset(UEVR_StereoRenderingDeviceHandle, int, float, UEVR_Vector3f* position, UEVR_Rotatorf*, bool) override { selfprof::Scope sp_(selfprof::VIEW); realcam::on_post_view((void*)position); twohand::on_view(); rhbolt::on_view(); }
+    void on_post_calculate_stereo_view_offset(UEVR_StereoRenderingDeviceHandle, int view_index, float, UEVR_Vector3f* position, UEVR_Rotatorf*, bool) override { selfprof::Scope sp_(selfprof::VIEW); realcam::on_post_view((void*)position); twohand::on_view(); rhbolt::on_view(); torch::on_post_view(view_index, (void*)position); }
 
 private:
     // one line every few seconds so a run can prove the plugin is alive and what it sees
