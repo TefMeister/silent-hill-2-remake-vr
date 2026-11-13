@@ -78,3 +78,26 @@ since the beta 5 clip (jbusfield's Lua hands then, our C++ arms now).
 
 Our side may matter too: our arms are posed after the game's own update, so UE's velocity buffer for them may not match
 where they are drawn. The object-motion fix (30) reads exactly that buffer. Worth one look with the debug view.
+
+## 5. The outline reproduced on the simulator, and the three modes compared (same evening, Tefa's headset charging)
+
+Beta 6, DLSS as Tefa has it, the hotel-room save, warp switched on after the start (`VR_RenderingMethod` 3 through the
+connector), the simulator's right hand swung left-right in front of the face twice a second (scratch `sweep.py`), 16
+full-size captures per mode (960 x 1050 per eye: the simulator window made 2560 x 1400 for the run, put back after),
+cropped on the hands, both eyes side by side. Sheets kept in `D:/claude video game stuff/sh2-warp-study/2026-11-13/`.
+
+`[verified-live 2026-11-13, simulator, n=16 captures per mode, one run]`:
+
+| `VR_AFW_FramewarpMode` | what fills the warp's holes | what the moving sleeve and hand show |
+| --- | --- | --- |
+| 1 (alternate eye only) | the other eye | **worst**: the sleeve torn by a wedge or doubled in about half the frames; ghost fingers |
+| 3 (combined: Tefa's setting) | the other eye and the previous frame | white streaks down the sleeve's edge, jagged edges, doubled fingers in about a quarter of the frames, in both eyes in turn |
+| 2 (previous frame only) | the previous frame | **cleanest**: edges intact; now and then a soft lighter patch on the floor beside the sleeve |
+
+This fits §3: **the fill from the other eye is what draws the outline**; the previous-frame fill does not. Not yet known:
+how mode 2 FEELS in the headset (latency, smoothness, its frame cost: modes 1 and 3 cost about the same, mode 2 never
+measured), and beta 5 on the same sweep (its hole filler used motion vectors).
+
+Tools fixed on the way: `dev-archive/recon/2026-10-29-buttons/sh2_front.ps1` now picks the game's own window by its class
+(`UnrealWindow`): with a large simulator window "the largest window" was the simulator's and the presses went there. The
+connector's key presses (`uevr_input_key enter`) pass the main menu and the "press any button" after the load.

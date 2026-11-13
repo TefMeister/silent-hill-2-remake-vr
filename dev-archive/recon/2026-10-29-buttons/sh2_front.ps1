@@ -19,13 +19,17 @@ public class SHF {
  [DllImport("user32.dll")] public static extern bool AttachThreadInput(uint a, uint b, bool attach);
  [DllImport("kernel32.dll")] public static extern uint GetCurrentThreadId();
  [DllImport("user32.dll")] public static extern bool BringWindowToTop(IntPtr h);
+ [DllImport("user32.dll", CharSet=CharSet.Unicode)] public static extern int GetClassName(IntPtr h, StringBuilder s, int n);
  [StructLayout(LayoutKind.Sequential)] public struct R { public int L,T,Rt,B; }
  public static List<IntPtr> Find(uint pid) { var list = new List<IntPtr>(); EnumWindows((h,l)=>{ uint p; GetWindowThreadProcessId(h, out p); if (p==pid && IsWindowVisible(h)) list.Add(h); return true; }, IntPtr.Zero); return list; }
 }
 "@
 $p = Get-Process SHProto-Win64-Shipping -ErrorAction Stop
 $best = [IntPtr]::Zero; $ba = 0
-foreach ($h in [SHF]::Find($p.Id)) { $r = New-Object SHF+R; [SHF]::GetWindowRect($h, [ref]$r) | Out-Null; $a = ($r.Rt-$r.L)*($r.B-$r.T); if ($a -gt $ba) { $ba = $a; $best = $h } }
+# 2026-11-13: the game's own window by its class (UnrealWindow) first: with the simulator's window made big for full-size
+# pictures, "the largest window" was the simulator's, and the presses and the click went there
+foreach ($h in [SHF]::Find($p.Id)) { $sb = New-Object System.Text.StringBuilder 64; [SHF]::GetClassName($h, $sb, 64) | Out-Null; if ($sb.ToString() -eq 'UnrealWindow') { $best = $h } }
+if ($best -eq [IntPtr]::Zero) { foreach ($h in [SHF]::Find($p.Id)) { $r = New-Object SHF+R; [SHF]::GetWindowRect($h, [ref]$r) | Out-Null; $a = ($r.Rt-$r.L)*($r.B-$r.T); if ($a -gt $ba) { $ba = $a; $best = $h } } }
 $r = New-Object SHF+R; [SHF]::GetWindowRect($best, [ref]$r) | Out-Null
 # the foreground thread must lend us its input state, or Windows refuses the switch from a background process
 $fg = [SHF]::GetForegroundWindow(); $fgpid = 0; $fgtid = [SHF]::GetWindowThreadProcessId($fg, [ref]$fgpid); $me = [SHF]::GetCurrentThreadId()
