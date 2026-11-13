@@ -84,3 +84,30 @@ near pixels (the arms and the weapon, by depth) out of that eye's last real pict
 say they are now, and paints over the copy the warp left behind. Step one on the simulator: pasted back unshifted
 during a stick turn (hands locked to the view), measured with the flip measure. Then the shift by the hands' own
 motion, then the clean-up. `MODEL: FABLE`.
+
+## 8. b020: the hands' own pass works on the simulator (23:05-23:45, Fable)
+
+`dev-archive/native/src/handpaste.cpp`, called from the stand-in right after the warp's call, on the injector's own
+command list (after that call the injector only closes the list, so nothing of its state is disturbed). One full-picture
+pass over the made-up eye's picture:
+- **pasted:** where that eye's last real picture had something nearer than 1 m that the game's own velocity picture
+  marks as a moving object, the pixel is copied as it was (no shift yet). Our own copy of each eye's real picture is
+  kept each frame (the warp writes its result over the injector's per-eye picture); the injector's per-eye depth and
+  velocity pictures last until that eye is drawn again and are read in place.
+- **painted over:** where the warp put those pixels (for near pixels: the head's turn alone, the same for every depth,
+  so one 3x3 map built from the two views' matrices), the warp's picture from just beyond, along the way the room went.
+- the rest: the warp's picture.
+Two small programs compiled at start (D3DCompile); drawn into our own target, then copied over the warp's picture.
+
+`[verified-live 2026-11-13, simulator]`: with the tint (file's 4th number 2) the whole arm, hand and pipe are pasted
+on every made-up frame of a stick turn and nothing of the room is; the painted-over copy is a strip a few pixels wide
+on one side. The hands' flip, left eye: 1.25-1.5 of the room's shift without, 0.3-0.85 with (n=3 runs each; the right
+eye's skin measure is spoiled by warm lamp light in view). Frame time 18.3 ms with and without (n=2 each). 600-900
+made-up pictures redrawn every ten seconds, none refused. A start and a load with the pass on: clean (n=1).
+Faults met: the first build held plain pointers to the injector's pictures and the game died at the level load, when
+the injector replaces them (now each is held for the frame it is still needed); one run sat on a black picture after
+the load with the tint on (not seen again in two starts, cause not found; watch for it).
+NOT built yet: the shift by the hands' own motion (a waved hand is still drawn where it was one frame ago, as in plain
+mode 2, only without the room's shift on top); soft edges (the depth picture is coarser than the colour picture);
+a filler better than "the picture from just beyond"; what happens with an enemy nearer than 1 m.
+In Tefa's profile now: `1.0 0 0 1 1.0` (the pass on, the per-frame mode off). Headset verdict open.

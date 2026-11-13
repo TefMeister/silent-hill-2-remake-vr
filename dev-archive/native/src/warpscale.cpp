@@ -11,6 +11,7 @@
 #include <string>
 
 #include "common.h"
+#include "handpaste.h"
 #include "settings.h"
 #include "uevr/API.hpp"
 
@@ -19,6 +20,11 @@ namespace sh2vr::warpscale {
 namespace {
 // The layout of the call's argument, from the public header of the warp (PureDark's UEVR fork, pd-afwmod/include):
 // only the three fields used here. Checked at run time before anything is touched (a newer warp may differ).
+constexpr size_t OFF_LIST = 0;           // the command list the warp records into
+constexpr size_t OFF_IN = 8;             // FrameBufferDesc*: the drawn eye's colour, depth, motion vectors (3 TextureDesc of 56 bytes)
+constexpr size_t OFF_EYE = 64;           // EyeIndex, 0 left / 1 right: the eye that was drawn
+constexpr size_t OFF_VELOCITY = 120;     // TextureDesc*: the game's velocity picture, or null
+constexpr size_t TEX_SIZE = 56, TEX_RESOURCE = 8, TEX_STATE = 48;   // within a TextureDesc
 constexpr size_t OFF_MODE = 60;          // FrameWarpMode, 0..3
 constexpr size_t OFF_CAMERA = 72;        // CameraData*: 12 matrices of 16 floats, column-major (glm)
 constexpr int MATS = 12, MAT_FLOATS = 16;
@@ -85,7 +91,7 @@ bool perspective(const float* m) {
 void __stdcall hooked(void* params) {
     const float k = g_scale.load();
     g_calls.fetch_add(1);
-    if ((k == 1.0f && g_turn_deg.load() <= 0.0f) || params == nullptr || !readable(params, OFF_CAMERA + sizeof(void*))) { g_real(params); return; }
+    if (params == nullptr || !readable(params, OFF_CAMERA + sizeof(void*))) { g_real(params); return; }
     auto* bytes = (uint8_t*)params;
     const int32_t asked = *(int32_t*)(bytes + OFF_MODE);
     float* cam = *(float**)(bytes + OFF_CAMERA);
@@ -109,9 +115,30 @@ void __stdcall hooked(void* params) {
         *(float**)(bytes + OFF_CAMERA) = copy;
         g_scaled.fetch_add(1);
     }
+    const bool mode2 = *(int32_t*)(bytes + OFF_MODE) == MODE_PREVIOUS;
     g_real(params);
     *(float**)(bytes + OFF_CAMERA) = cam;
     *(int32_t*)(bytes + OFF_MODE) = asked;
+
+    // the made-up picture is on its way out: the hands' own pass (handpaste.cpp)
+    if (readable(params, OFF_VELOCITY + sizeof(void*))) {
+        auto* in = *(uint8_t**)(bytes + OFF_IN);
+        auto* vel = *(uint8_t**)(bytes + OFF_VELOCITY);
+        if (readable(in, TEX_SIZE * 3)) {
+            handpaste::Call c;
+            c.list = *(ID3D12GraphicsCommandList**)(bytes + OFF_LIST);
+            c.eye = *(int32_t*)(bytes + OFF_EYE);
+            c.camera = cam;
+            c.color = *(ID3D12Resource**)(in + TEX_RESOURCE);
+            c.color_state = *(uint32_t*)(in + TEX_STATE);
+            c.depth = *(ID3D12Resource**)(in + TEX_SIZE + TEX_RESOURCE);
+            c.velocity = readable(vel, TEX_SIZE) ? *(ID3D12Resource**)(vel + TEX_RESOURCE) : nullptr;
+            c.previous_frame_mode = mode2;
+            static bool said = false;
+            if (!said) { said = true; LOGI("%s warpscale: first call seen: eye %d, list %p, colour %p (state 0x%x), depth %p, velocity %p", TAG, c.eye, (void*)c.list, (void*)c.color, c.color_state, (void*)c.depth, (void*)c.velocity); }
+            handpaste::after_warp(c);
+        }
+    }
 }
 
 // the injector reaches the warp through a delay-load import: find that table's slot for EvaluateFrameWarp
@@ -153,17 +180,25 @@ void install() {
 
 void read_file() {
     const std::wstring p = appdata_dir() + L"\\" + settings::PROFILE_DIR + L"\\sh2vr_warpscale.txt";
-    float v = settings::WARP_NEAR_SCALE, t = settings::WARP_TURN_DEG_PER_FRAME, h = settings::WARP_HAND_M_PER_S;
+    float v = settings::WARP_NEAR_SCALE, t = settings::WARP_TURN_DEG_PER_FRAME, h = settings::WARP_HAND_M_PER_S, near_m = settings::HANDPASTE_NEAR_M;
+    int paste = settings::HANDPASTE_MODE;
+    static int last_paste = -1; static float last_near = -1.0f;
     FILE* f = nullptr;
     if (_wfopen_s(&f, p.c_str(), L"r") == 0 && f != nullptr) {
-        float x = 0.0f, y = -1.0f, z = -1.0f;
-        const int n = fscanf_s(f, "%f %f %f", &x, &y, &z);
+        float x = 0.0f, y = -1.0f, z = -1.0f, pm = -1.0f, pn = -1.0f;
+        const int n = fscanf_s(f, "%f %f %f %f %f", &x, &y, &z, &pm, &pn);
+        if (n >= 4 && pm >= 0.0f && pm <= 2.0f) paste = (int)pm;
+        if (n >= 5 && pn >= 0.1f && pn <= 10.0f) near_m = pn;
         if (n >= 3 && z >= 0.0f && z <= 100.0f) h = z;
         if (n >= 1 && x >= settings::WARP_NEAR_SCALE_MIN && x <= settings::WARP_NEAR_SCALE_MAX) v = x;
         if (n >= 2 && y >= 0.0f && y <= 45.0f) t = y;
         std::fclose(f);
     }
     if (t != g_turn_deg.load()) { LOGI("%s warpscale: mode 3 while the view turns more than %.2f degrees a frame (was %.2f; 0 = never)", TAG, t, g_turn_deg.load()); g_turn_deg.store(t); }
+    if (paste != last_paste || near_m != last_near) {
+        LOGI("%s warpscale: the hands' own pass %s, near line %.2f m", TAG, paste == 0 ? "off" : paste == 1 ? "on" : "on with the tint", near_m);
+        last_paste = paste; last_near = near_m; handpaste::set_mode(paste); handpaste::set_near(near_m);
+    }
     if (h != g_hand_speed.load()) { LOGI("%s warpscale: mode 3 while a hand moves faster than %.2f m/s in the room (was %.2f; 0 = never)", TAG, h, g_hand_speed.load()); g_hand_speed.store(h); }
     if (v != g_scale.load()) { LOGI("%s warpscale: factor %.2f -> %.2f", TAG, g_scale.load(), v); g_scale.store(v); }
 }
@@ -203,6 +238,7 @@ void tick(float delta) {
     g_report_timer += delta;
     if (g_report_timer >= settings::WARP_REPORT_S) {
         g_report_timer = 0.0f;
+        handpaste::report();
         const int calls = g_calls.exchange(0), comb = g_combined.exchange(0), sw = g_switches.exchange(0);
         if (!g_first_logged || comb > 0 || g_refused.load() > 0) {
             g_first_logged = true;

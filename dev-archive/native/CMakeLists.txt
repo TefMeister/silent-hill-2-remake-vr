@@ -18,3 +18,5 @@ set_target_properties(sh2vr PROPERTIES OUTPUT_NAME "sh2vr" PREFIX "")
 # /Brepro: the same source always builds the same bytes (no time stamp), so a hash proves which build is installed.
 target_compile_options(sh2vr PRIVATE /Brepro)
 target_link_options(sh2vr PRIVATE /Brepro)
+# handpaste.cpp draws its own pass on the injector's command list and compiles its two small programs at run time
+target_link_libraries(sh2vr PRIVATE d3d12 d3dcompiler)

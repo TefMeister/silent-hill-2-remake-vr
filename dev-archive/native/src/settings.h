@@ -63,7 +63,9 @@ constexpr float WARP_TURN_DEG_PER_FRAME = 0.0f;   // warpscale.cpp: a mode 2 cal
 constexpr float WARP_HAND_M_PER_S = 0.0f;         // ... or while a controller moves through the room faster than this (0 = never; third number in the file)
 constexpr float WARP_HAND_SPEED_GLITCH = 15.0f;   // a "speed" above this is a tracking jump, not a hand
 constexpr int WARP_TURN_HOLD_FRAMES = 12;         // how many frames mode 3 stays after the last fast frame
-constexpr float WARP_REPORT_S = 10.0f;            // how often the module's counts are logged
+constexpr float WARP_REPORT_S = 10.0f;
+constexpr int HANDPASTE_MODE = 0;                 // handpaste.cpp: 0 off, 1 on, 2 on with the tint (4th number in the file)
+constexpr float HANDPASTE_NEAR_M = 1.0f;          // nearer than this and marked moving by the game = hands and weapon (5th number)            // how often the module's counts are logged
 
 // ---- the button layer (buttons.cpp, 2026-10-29) ----
 constexpr bool BUTTONS_LAYER_ON = true;        // one layer decides what the game sees; off = the raw pad as before
