@@ -166,9 +166,9 @@ small dark corners) is Tefa's call. It is NOT installed as a default.
   strip one eye sees that the other (really drawn) eye never saw, filled by the warp's closed core. No setting moves it.
   Tefa has written to PureDark asking to look inside AFW; the performance and outline chase is PARKED until he answers.
 - **The torch's shadow on opposite sides per eye is parallax, not a fault** `[verified-live, Tefa]`: still the same
-  with b017's torch.cpp (the light at the middle of the eyes) AND with the warp off. The pack's "Head" light sits at the
+  with torch.cpp on (the 11:29 install, never numbered: the light at the middle of the eyes) AND with the warp off. The pack's "Head" light sits at the
   eyes, so the shadow falls straight behind the object onto the far wall and each eye sees it on its own opposite side,
-  as with a real headlamp. torch.cpp stays in the source, switched OFF (`TORCH_BETWEEN_EYES false`, b018). The cure is a
+  as with a real headlamp. torch.cpp stays in the source, switched OFF (`TORCH_BETWEEN_EYES false`, b017). The cure is a
   light away from the eyes: the pack's Light Location menu (Head / OffHand / Weapon), or a chest-pocket light following
   the head's yaw ~25 cm below the eyes (the game's own placement; not built).
 - **Vertical sync and motion blur** (Tefa asked): live `r.VSync` 0 (the injector presents with interval 0),
