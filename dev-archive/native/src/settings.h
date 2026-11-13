@@ -55,6 +55,15 @@ constexpr float STALL_LOG_MS = 100.0f;        // plugin.cpp: a frame longer than
 constexpr float TUNING_CHECK_S = 5.0f;        // how often they are looked at again (the game writes its own back)
 constexpr bool WARP_AUTO_ON = true;
 constexpr float WARP_AFTER_S = 10.0f;         // seconds of the headset drawing before the switch (a start with 3 crashes)
+constexpr bool WARP_NEAR_SCALE_ON = true;     // warpscale.cpp: stand in the injector's call to the frame warp
+constexpr float WARP_NEAR_SCALE = 1.0f;       // how many times larger the scene is described to the warp (1 = untouched; sh2vr_warpscale.txt overrides)
+constexpr float WARP_NEAR_SCALE_MIN = 0.1f;   // what the file may ask for
+constexpr float WARP_NEAR_SCALE_MAX = 100.0f;
+constexpr float WARP_TURN_DEG_PER_FRAME = 0.0f;   // warpscale.cpp: a mode 2 call is made as mode 3 while the view turns faster than this (0 = never; second number in the file)
+constexpr float WARP_HAND_M_PER_S = 0.0f;         // ... or while a controller moves through the room faster than this (0 = never; third number in the file)
+constexpr float WARP_HAND_SPEED_GLITCH = 15.0f;   // a "speed" above this is a tracking jump, not a hand
+constexpr int WARP_TURN_HOLD_FRAMES = 12;         // how many frames mode 3 stays after the last fast frame
+constexpr float WARP_REPORT_S = 10.0f;            // how often the module's counts are logged
 
 // ---- the button layer (buttons.cpp, 2026-10-29) ----
 constexpr bool BUTTONS_LAYER_ON = true;        // one layer decides what the game sees; off = the raw pad as before

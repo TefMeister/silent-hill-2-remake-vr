@@ -150,3 +150,11 @@ sockets `slide_joint`, `magazine_joint`, `FX_muzzle` (Lukas's, `[reported]` unti
 - Both eyes at once (0) with DLSS Quality at the headset's size shows a see-through second picture; with DLSS off it is gone `[reported 2026-11-12, n=1 each]`. Each eye had its own DLSS instance (two creates in the log), and in this mode UEVR's DLSS hook changes nothing `[inferred-static]`. Suspects, untested: the late pose update against the game's motion vectors (`VR_SynchronizationMode=2`), or a wrong region at that size.
 - Our packages carry AFW beta 5 (`Tag: UEVR_AFW_v1.0-beta.5` in every log); beta 6 exists (2026-08-13).
 - `sh2vr_devcvars.txt` takes `uevr <Setting> <value>` lines for the injector's own settings since 2026-11-12 `[compile-verified]`.
+
+## 10. What the frame warp does with near, moving things (2026-11-13, /lm; notes 2026-11-13d and 13e)
+
+- Mode 2 (previous frame) lands every pixel by camera and depth alone; an object's own motion is never used for where it lands, so hands and a held weapon are one frame behind on every made-up frame whenever the view turns or they move `[verified-live 2026-11-13, simulator, n=7; inferred-static for the reason]`. No `VR_AFW_*` motion setting changes it. Dead end: better velocity from our arms (it is already right: mode 3's debug view marks them) `[disproved]`.
+- Mode 3 (combined) carries marked moving objects, with the outline around them. Mode 1 is worst.
+- The warp's distances are metres; its near rules sit at 0.1, 0.5 and 1.0 `[inferred-static; the 0.1 path verified-live]`. Describing the scene larger or smaller to it (our stand-in in the injector's import of `EvaluateFrameWarp`) moves those lines and nothing else; no fix came from it.
+- The debug view: Numpad 6 as a real key press; it tints only in modes 1 and 3.
+- Ours: `warpscale.cpp` makes a mode 2 call as mode 3 while the view turns or a hand moves fast (b019; the file `sh2vr_warpscale.txt`, "scale degrees speed"). Headset verdict open.
