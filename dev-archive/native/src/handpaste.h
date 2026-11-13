@@ -22,6 +22,10 @@
 // b023: "marked moving by the game" was no test at all (this game writes every pixel's motion, so a near table was
 // pasted and carried with the hands): a pixel is hand or weapon when it is near AND its motion in the game's velocity
 // picture differs from what a still thing at its depth would show (worked out from the eye's two last real views).
+// b024 (Tefa's clips of 01:17-01:23): a movable thing lying near (the red sheet on the table) still tore, so a pixel must
+// also be within reach of a controller (along where it points, along its up, or along the arm to the shoulder); and the
+// strip the warp's displaced copy leaves is filled from the OTHER eye's picture of this very frame, carried over by
+// the background's depth, instead of the striped picture from beside (the "trail").
 #pragma once
 
 #include <cstdint>

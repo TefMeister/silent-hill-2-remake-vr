@@ -139,3 +139,19 @@ frames (half rate). Next: the shift by the hands' own motion (head-relative cont
 - The file now: `scale degrees speed pass near against`; in Tefa's profile `1.0 0 0 1 1.0 0.004`.
 - The DLL Tefa found in Downloads (PureDark's, shared once for a close-up fault): a third build, neither beta 5 nor 6:
   beta 5 with shaders 30, 48-51 changed `[measured]`. Kept out of git; to be tried once the hands are settled.
+
+## 11. Tefa wears b023 (01:15-01:25), five clips; b024 (01:35)
+
+Tefa `[reported, n=1 wear]`: *"it's much better again!"*; walking with the gun out in a good frame-rate area *"looks
+superb"*. Left: the gun trailing and the gun's shadow doubling while stepping left and right; *"table still tearing in
+front of me, like a clear line where it begins"*. Clips `VirtualDesktop.Android-20261114-0117xx ... 0123xx` (the middle
+three fifths are the useful part; the recording is ONE 2880 x 1440 view, not two eyes), read frame by frame:
+- table (011722): the tabletop holds; the red sheet on it (a movable thing, written in the velocity picture) shows a
+  doubled corner on alternate frames: the "against the room" test lets a near movable thing through when the head moves.
+- shadow (012220): the gun is the same in every frame; beside it a band of evenly striped picture on alternate frames:
+  the painted-over strip (the picture from beside, taken in steps). The gun's shadow on the wall is the wall's shading:
+  the warp shows it one frame old on made-up frames. Not ours to carry without knowing which wall pixels are shadow.
+b024: a pixel must also be within reach of a controller (16 cm of the line it points along or stands up along, 22 cm
+of the line to that shoulder); the painted-over strip is filled from the other eye's picture of the same frame
+(carried over with the background's depth taken from just beyond the strip; the picture from beside only where that
+eye's own gun is in the way). Simulator, tint: still / swinging / turning as b023 `[verified-live, n=2 captures each]`.

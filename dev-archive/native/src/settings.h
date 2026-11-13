@@ -70,6 +70,9 @@ constexpr float HANDPASTE_MAX_TURN_DEG = 25.0f;   // a hand that turned or moved
 constexpr float HANDPASTE_MAX_STEP_M = 0.25f;
 constexpr float HANDPASTE_BLEND_M = 0.15f;        // between the two hands their moves are blended over this distance
 constexpr float HANDPASTE_AGAINST_ROOM = 0.004f;  // a pixel is hand or weapon when it moves against the room by more than this (the picture is 2 wide; 6th number in the file, 0 = closeness alone)
+constexpr float HANDPASTE_WEAPON_RADIUS = 0.16f;  // hands and weapon = within this of the line a controller points along or stands up along (metres)
+constexpr float HANDPASTE_ARM_RADIUS = 0.22f;     // ... or within this of the line from the controller to that shoulder
+constexpr float HANDPASTE_SHOULDER[3] = {0.20f, -0.25f, 0.05f};   // a shoulder against the head: out, down, back (metres)
 constexpr float HANDPASTE_NEAR_M = 1.0f;          // nearer than this and marked moving by the game = hands and weapon (5th number)            // how often the module's counts are logged
 
 // ---- the button layer (buttons.cpp, 2026-10-29) ----

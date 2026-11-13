@@ -23,6 +23,8 @@ Texture2D tPrev  : register(t0);   // the made-up eye's last real picture
 Texture2D tDepth : register(t1);   // its depth
 Texture2D tVel   : register(t2);   // the game's velocity picture for it (red > 0: a moving object was drawn here)
 Texture2D tWarp  : register(t3);   // the warp's made-up picture
+Texture2D tOther : register(t4);   // the OTHER eye's picture, really drawn this very frame
+Texture2D tOtherDepth : register(t5);
 SamplerState sLin : register(s0);
 SamplerState sPt  : register(s1);
 cbuffer C : register(b0) {
@@ -33,7 +35,10 @@ cbuffer C : register(b0) {
     float4 shifts;                          // a first guess of each hand's shift in the picture (left xy, right xy)
     float4 cl; float4 cr;                   // where each controller was then (view space); cl.w: the blend band in metres
     float4 cam0; float4 cam1; float4 cam2;  // a point in front of the eye -> where the game's "previous" view saw it (rows x, y, w)
-    float4 misc;                            // x: how far (picture units) a pixel must move against the room to count; y: 1 = that test is on
+    float4 misc;                            // x: how far (picture units) a pixel must move against the room to count; y: 1 = that test is on; z: 1 = the reach test is on
+    float4 oe0; float4 oe1; float4 oe2;     // a point in front of this eye now -> the other eye's picture now (rows x, y, w)
+    float4 fl; float4 ul; float4 sl;        // left controller: where it points, its up, that shoulder (view space, then)
+    float4 fr; float4 ur; float4 sr;        // right controller; fl.w: weapon reach radius, ul.w: arm radius
 }
 
 struct V { float4 p : SV_Position; float2 uv : TEXCOORD0; };
@@ -42,6 +47,18 @@ V vs(uint id : SV_VertexID) {
 }
 bool near_depth(float d) { return (d - h0.w) * h1.w > 0; }
 float3 unproject(float2 uv, float d);
+float seg_dist(float3 p, float3 a, float3 b) { float3 ab = b - a; float t = saturate(dot(p - a, ab) / max(dot(ab, ab), 1e-6)); return distance(p, a + ab * t); }
+// within reach of a controller: along where it points and along its up (a gun, a pipe, a plank), or along the arm behind it
+bool in_reach(float3 p) {
+    float w = fl.w, a = ul.w;
+    if (seg_dist(p, cl.xyz - fl.xyz * 0.35, cl.xyz + fl.xyz * 1.2) < w) return true;
+    if (seg_dist(p, cl.xyz - ul.xyz * 1.2, cl.xyz + ul.xyz * 1.2) < w) return true;
+    if (seg_dist(p, cl.xyz, sl.xyz) < a) return true;
+    if (seg_dist(p, cr.xyz - fr.xyz * 0.35, cr.xyz + fr.xyz * 1.2) < w) return true;
+    if (seg_dist(p, cr.xyz - ur.xyz * 1.2, cr.xyz + ur.xyz * 1.2) < w) return true;
+    if (seg_dist(p, cr.xyz, sr.xyz) < a) return true;
+    return false;
+}
 // hands and weapon: close to the eyes AND moving differently from the room. The game's velocity picture holds every
 // pixel's motion in the picture (the camera's included); what a still thing would show is worked out from its depth.
 bool hand(float2 uv) {
@@ -56,7 +73,8 @@ bool hand(float2 uv) {
     float3 c = float3(dot(cam0, p), dot(cam1, p), dot(cam2, p));
     float2 still = float2(uv.x * 2 - 1, 1 - uv.y * 2) - c.xy / c.z;
     float2 r = v - still;
-    return dot(r, r) > misc.x * misc.x;
+    if (dot(r, r) <= misc.x * misc.x) return false;
+    return misc.z < 0.5 || in_reach(p.xyz);
 }
 // where, in the last real picture, the warp took the pixel it put at uv (near pixels: the head's turn alone)
 float2 source_of(float2 uv, out bool ok) {
@@ -131,7 +149,25 @@ float4 ps(V i) : SV_Target {
         for (int k = 1; k <= 12; k++) {
             float2 t = uv + dir * k;
             float2 other;
-            if (!ghost(t) && !pasted(t, other)) { c = tWarp.SampleLevel(sLin, t, 0); break; }
+            if (!ghost(t) && !pasted(t, other)) {
+                c = tWarp.SampleLevel(sLin, t, 0);
+                // better than the picture from beside: what the OTHER eye really sees there this frame. The background's
+                // depth is taken from just beyond the copy; the spot is carried into the other eye's picture.
+                bool ok2; float2 ts = source_of(t, ok2);
+                if (ok2 && all(ts >= 0) && all(ts <= 1)) {
+                    float db = tDepth.SampleLevel(sPt, ts, 0).r;
+                    float4 p = float4(unproject(uv, db), 1);
+                    float3 q = float3(dot(oe0, p), dot(oe1, p), dot(oe2, p));
+                    if (q.z > 1e-5) {
+                        float2 n = q.xy / q.z; float2 ou = float2(n.x * 0.5 + 0.5, 0.5 - n.y * 0.5);
+                        if (all(ou >= 0) && all(ou <= 1)) {
+                            float od = tOtherDepth.SampleLevel(sPt, ou, 0).r;
+                            if (near_depth(od) == near_depth(db)) c = tOther.SampleLevel(sLin, ou, 0);   // not behind that eye's own gun
+                        }
+                    }
+                }
+                break;
+            }
         }
         if (h2.w > 0.5) c.rgb = lerp(c.rgb, float3(1, 0, 0), 0.4);
     }
@@ -183,7 +219,7 @@ void hold(ID3D12Resource*& slot, ID3D12Resource* r) {
     slot = r;
 }
 
-constexpr int SRVS_PER_DRAW = 4;
+constexpr int SRVS_PER_DRAW = 6;
 constexpr D3D12_RESOURCE_STATES SHADER_READ = (D3D12_RESOURCE_STATES)(D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE | D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
 bool fail(const char* why) { g_why.store(why); g_failed.store(true); return false; }
@@ -415,7 +451,26 @@ void draw(const Call& c, const Eye& last, ID3D12Resource* warped, D3D12_RESOURCE
         for (int i = 0; i < 3; ++i) for (int col = 0; col < 4; ++col) cam[i * 4 + col] = at(m, rows[i], col);
     }
     const float* p = last.v2c;
-    const float constants[76] = {
+    // this eye now -> the other (drawn) eye's picture now
+    float oe[12]{};
+    {
+        const float* dv2w = c.camera + 1 * 16; const float* sw2v = c.camera + 4 * 16; const float* sv2c = c.camera + 6 * 16;
+        float a[16]{}, m[16]{};
+        for (int col = 0; col < 4; ++col) for (int r = 0; r < 4; ++r) for (int k = 0; k < 4; ++k) a[col * 4 + r] += at(sw2v, r, k) * dv2w[col * 4 + k];
+        for (int col = 0; col < 4; ++col) for (int r = 0; r < 4; ++r) for (int k = 0; k < 4; ++k) m[col * 4 + r] += at(sv2c, r, k) * a[col * 4 + k];
+        const int rows[3] = {0, 1, 3};
+        for (int i = 0; i < 3; ++i) for (int col = 0; col < 4; ++col) oe[i * 4 + col] = at(m, rows[i], col);
+    }
+    // each controller's axes then, and that side's shoulder (the head's axes -> view axes)
+    float fwd[2][3]{}, up[2][3]{}, shoulder[2][3]{};
+    for (int i = 0; i < 2; ++i) {
+        const float f[3] = {0, 0, -1}, u[3] = {0, 1, 0};
+        qrot(last.hand_rot[i], f, fwd[i]); qrot(last.hand_rot[i], u, up[i]);
+        fwd[i][2] *= zs; up[i][2] *= zs;
+        shoulder[i][0] = (i == 0 ? -1.0f : 1.0f) * settings::HANDPASTE_SHOULDER[0]; shoulder[i][1] = settings::HANDPASTE_SHOULDER[1]; shoulder[i][2] = settings::HANDPASTE_SHOULDER[2] * zs;
+    }
+    const float reach = last.hands_ok ? 1.0f : 0.0f;
+    const float constants[112] = {
         h.m[0], h.m[1], h.m[2], line, h.m[3], h.m[4], h.m[5], sign, h.m[6], h.m[7], h.m[8], mode == 2 ? 1.0f : mode == 4 ? 2.0f : 0.0f,
         move[0][0], move[0][1], move[0][2], move[0][3], move[0][4], move[0][5], move[0][6], move[0][7], move[0][8], move[0][9], move[0][10], move[0][11],
         move[1][0], move[1][1], move[1][2], move[1][3], move[1][4], move[1][5], move[1][6], move[1][7], move[1][8], move[1][9], move[1][10], move[1][11],
@@ -424,7 +479,10 @@ void draw(const Call& c, const Eye& last, ID3D12Resource* warped, D3D12_RESOURCE
         then_view[0][0], then_view[0][1], then_view[0][2], settings::HANDPASTE_BLEND_M,
         then_view[1][0], then_view[1][1], then_view[1][2], 0.0f,
         cam[0], cam[1], cam[2], cam[3], cam[4], cam[5], cam[6], cam[7], cam[8], cam[9], cam[10], cam[11],
-        g_against.load(), against ? 1.0f : 0.0f, 0.0f, 0.0f};
+        g_against.load(), against ? 1.0f : 0.0f, reach, 0.0f,
+        oe[0], oe[1], oe[2], oe[3], oe[4], oe[5], oe[6], oe[7], oe[8], oe[9], oe[10], oe[11],
+        fwd[0][0], fwd[0][1], fwd[0][2], settings::HANDPASTE_WEAPON_RADIUS, up[0][0], up[0][1], up[0][2], settings::HANDPASTE_ARM_RADIUS, shoulder[0][0], shoulder[0][1], shoulder[0][2], 0.0f,
+        fwd[1][0], fwd[1][1], fwd[1][2], 0.0f, up[1][0], up[1][1], up[1][2], 0.0f, shoulder[1][0], shoulder[1][1], shoulder[1][2], 0.0f};
     uint8_t* slot = g_cb_map + (size_t)g_cb_next * CB_SLOT;
     std::memcpy(slot, constants, sizeof(constants));
     const D3D12_GPU_VIRTUAL_ADDRESS cb_at = g_cb->GetGPUVirtualAddress() + (UINT64)g_cb_next * CB_SLOT;
@@ -432,6 +490,7 @@ void draw(const Call& c, const Eye& last, ID3D12Resource* warped, D3D12_RESOURCE
 
     const int base = (1 - c.eye) * SRVS_PER_DRAW;
     srv(g_keep[1 - c.eye], base + 0); srv(last.depth, base + 1); srv(last.velocity != nullptr ? last.velocity : last.depth, base + 2); srv(warped, base + 3);
+    srv(c.color, base + 4); srv(c.depth, base + 5);
     D3D12_RENDER_TARGET_VIEW_DESC rv{}; rv.Format = view_format(g_desc.Format); rv.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
     const D3D12_CPU_DESCRIPTOR_HANDLE rtv = g_rtv_heap->GetCPUDescriptorHandleForHeapStart();
     g_dev->CreateRenderTargetView(g_target, &rv, rtv);
