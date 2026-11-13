@@ -101,3 +101,12 @@ measured), and beta 5 on the same sweep (its hole filler used motion vectors).
 Tools fixed on the way: `dev-archive/recon/2026-10-29-buttons/sh2_front.ps1` now picks the game's own window by its class
 (`UnrealWindow`): with a large simulator window "the largest window" was the simulator's and the presses went there. The
 connector's key presses (`uevr_input_key enter`) pass the main menu and the "press any button" after the load.
+
+## 6. Mode 2 in the headset: the shimmer is gone (Tefa, 21:4x-21:5x)
+
+Beta 6 (game folder's `UEVR AFW b6`), started through Steam, UEVR loaded by the connector, warp on after the start, then
+`VR_AFW_FramewarpMode` switched live 3 -> 2 while Tefa waved the hands and the steel pipe. Tefa `[reported 2026-11-13, n=1]`:
+*"wow this is really really good! the shimmer is gone"*. Clip `D:\Claude videos to edit\Quest videos\VirtualDesktop.Android-20261113-215108-0.mp4`
+seconds 8-10 (spinning with the pipe in hand): six consecutive full-size frames of the pipe, edges clean and steady
+`[measured, n=1 clip]`. The frame cost of mode 2 against 3 was not read this time (the plugin logs only its own 0.35 ms).
+**Mode 2 is the setting to keep** (Tefa's word decides; making it the package default is the next step, game closed).
