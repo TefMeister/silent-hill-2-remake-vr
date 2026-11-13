@@ -25,6 +25,9 @@ constexpr Row ROWS[] = {
 };
 float g_since = 0.0f;
 int g_said = 0;
+// 2026-11-13: a value the engine does not keep (MaxRoughnessToTrace read back unchanged every time) was re-set every 5 s
+// all run, the suspect for Tefa's freeze every 4-5 s. Now each value gets TUNING_MAX_TRIES tries in a row, then is left.
+int g_tries[6] = {};
 bool g_off_said = false;
 
 bool kept_off() {
@@ -46,13 +49,17 @@ void tick(float delta) {
     auto* cm = API::get()->get_console_manager();
     if (cm == nullptr) return;
     int put = 0;
-    for (const Row& r : ROWS) {
+    for (size_t k = 0; k < sizeof(ROWS) / sizeof(ROWS[0]); ++k) {
+        const Row& r = ROWS[k];
+        if (g_tries[k] >= settings::TUNING_MAX_TRIES) continue;   // given up on: never set again this run
         auto* v = cm->find_variable(r.name);
         if (v == nullptr) continue;
         const float before = v->get_float();
-        if (std::fabs(before - r.value) < 0.001f) continue;
+        if (std::fabs(before - r.value) < 0.001f) { g_tries[k] = 0; continue; }
         v->set(r.value);
         ++put;
+        if (std::fabs(v->get_float() - r.value) >= 0.001f && ++g_tries[k] >= settings::TUNING_MAX_TRIES)
+            LOGI("%s tuning: %ls does not take (%g after setting %g), left alone from now on", TAG, r.name, v->get_float(), r.value);
         if (g_said < 30) { ++g_said; LOGI("%s tuning: %ls %g -> %g", TAG, r.name, before, v->get_float()); }
     }
     if (put > 0 && g_said < 30) LOGI("%s tuning: %d value(s) put (the game had its own back)", TAG, put);

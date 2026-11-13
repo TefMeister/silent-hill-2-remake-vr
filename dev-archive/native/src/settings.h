@@ -46,7 +46,12 @@ constexpr const char* THUMBREST_RIGHT = "/actions/default/in/ThumbrestTouchRight
 
 // the frame warp (warp.cpp): config.txt keeps rendering method 0, the plugin switches to 3 once the picture is up
 constexpr bool TORCH_BETWEEN_EYES = false;    // torch.cpp: OFF: the per-eye shadow is parallax of a light at the eyes, not a lag (Tefa, warp off: same; 2026-11-13)
+constexpr bool ROOMSCALE_STEPS_ASIDE = true;   // roomscale.cpp: roomscale off while the game steers James (2026-11-13)
+constexpr float ROOMSCALE_CHECK_S = 0.1f;       // how often that is asked (a vault starts fast)
+constexpr uint8_t ROOMSCALE_CUSTOM_MOVEMENT_MODE = 6;   // EMovementMode MOVE_Custom: the game's traversals
 constexpr bool TUNING_ON = true;              // tuning.cpp: the cheaper rendering values Tefa could not see (2026-11-13)
+constexpr int TUNING_MAX_TRIES = 3;           // tries in a row before a value that does not take is left alone
+constexpr float STALL_LOG_MS = 100.0f;        // plugin.cpp: a frame longer than this is logged with its time (Tefa's freezes)
 constexpr float TUNING_CHECK_S = 5.0f;        // how often they are looked at again (the game writes its own back)
 constexpr bool WARP_AUTO_ON = true;
 constexpr float WARP_AFTER_S = 10.0f;         // seconds of the headset drawing before the switch (a start with 3 crashes)

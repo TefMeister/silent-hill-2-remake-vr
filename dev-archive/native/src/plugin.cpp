@@ -38,6 +38,7 @@
 #include "warp.h"
 #include "tuning.h"
 #include "torch.h"
+#include "roomscale.h"
 #include "cutscreen.h"
 #include "realcam.h"
 #include "screenfx.h"
@@ -76,6 +77,9 @@ public:
     }
 
     void on_pre_engine_tick(API::UGameEngine*, float delta) override {
+        // 2026-11-13: Tefa's freeze every 4-5 s (the game drew no new picture for ~0.3 s): every long frame logged with its
+        // time, to line up against the other log lines (tuning, roomscale, cutscreen, level loads)
+        if (delta * 1000.0f > settings::STALL_LOG_MS && m_stalls < 500) { ++m_stalls; LOGI("%s stall: %.0f ms frame", TAG, delta * 1000.0f); }
         if (API::get()->get_local_pawn(0) != nullptr) fire::install();   // the weapon class is loaded by then
         { selfprof::Scope sp_(selfprof::FIRE); fire::tick(delta); }
         { selfprof::Scope sp_(selfprof::BUTTONS); buttons::tick(delta); }
@@ -84,7 +88,7 @@ public:
         { selfprof::Scope sp_(selfprof::RHBOLT); rhbolt::tick(delta); }     // 2026-11-01: LT locks the rifle in the left hand, RG works its bolt (RE8's right-hand bolt)
         { selfprof::Scope sp_(selfprof::CROSSHAIR); crosshair::find(delta); }
         { selfprof::Scope sp_(selfprof::SCREENFX); cornermask::tick(delta); }   // 2026-11-10: the eye-corner job's pieces on the headset (dev only: no file, nothing)
-        { selfprof::Scope sp_(selfprof::SCREENFX); devcvars::tick(delta); warp::tick(delta); tuning::tick(delta); torch::tick(delta); }   // 2026-11-10: the optimiser's settings file (dev only: no file, nothing)
+        { selfprof::Scope sp_(selfprof::SCREENFX); devcvars::tick(delta); warp::tick(delta); tuning::tick(delta); torch::tick(delta); roomscale::tick(delta); }   // 2026-11-10: the optimiser's settings file (dev only: no file, nothing)
         { selfprof::Scope sp_(selfprof::SCREENFX); cutscreen::tick(delta); realcam::tick(delta); }   // 2026-11-12: cutscenes on a flat screen
         { selfprof::Scope sp_(selfprof::SCREENFX); screenfx::tick(delta); }   // 2026-11-05: every blur and screen effect off in VR
         { selfprof::Scope sp_(selfprof::SCREENFX); shadows::tick(delta); }    // 2026-11-06: the weapon lit by the torch, the player's complete shadow (counted with the screen effects: both are once-a-second checks)
@@ -125,6 +129,7 @@ private:
         LOGI("%s cost: %s", TAG, selfprof::report(beat_frames).c_str());   // 2026-11-05: our own share of each frame
     }
 
+    int m_stalls = 0;
     uint32_t m_frames = 0, m_frames_at_beat = 0, m_last_report_frames = 0;
     float m_since_beat = 0.0f;
 };
