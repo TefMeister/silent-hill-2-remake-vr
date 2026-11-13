@@ -66,3 +66,13 @@ Already lean, read live: lighting mode 0 (surface cache), far field off, no ray-
   probes at 32; the connector's cost with the warp; Virtual Desktop's encoder load.
 - Which part of ray tracing cures jbusfield's "lighting differs between the eyes": if it is the bounce light (0.2 ms),
   the reflections (2.0 ms) are a free choice.
+
+## 5. b015: the warp switches itself on (09:29) `[verified-live 2026-11-13, n=1 start, real headset, nobody in it]`
+
+`dev-archive/native/src/warp.cpp` (+ `settings::WARP_AUTO_ON`, `WARP_AFTER_S` 10): config.txt keeps rendering method 0;
+once the headset has drawn for 10 s the plugin sets `VR_RenderingMethod` 3 from a thread of its own (never the game
+thread: the flat screen's lesson). A file `sh2vr_nowarp.txt` in the profile keeps it off. First run: the switch came at
+the warning screen (`warp: the headset has drawn for 10 s, switching the frame warp on (rendering method 0 -> 3)`), no
+refused swapchain in either log, then the main menu, the load and play: 18.05 ms in the armory.
+NOT tested: a cutscene with the warp on (the flat screen switches `VR_2DScreenMode`, and `realcam` was written against
+mode 0); a headset that connects late; Tefa's eyes on any of it.

@@ -44,6 +44,10 @@ constexpr int TRIGGER_PRESSED_OVER = 100;    // bRightTrigger > 100 (of 255) cou
 constexpr const char* THUMBREST_LEFT = "/actions/default/in/ThumbrestTouchLeft";     // the thumb rests when touched
 constexpr const char* THUMBREST_RIGHT = "/actions/default/in/ThumbrestTouchRight";
 
+// the frame warp (warp.cpp): config.txt keeps rendering method 0, the plugin switches to 3 once the picture is up
+constexpr bool WARP_AUTO_ON = true;
+constexpr float WARP_AFTER_S = 10.0f;         // seconds of the headset drawing before the switch (a start with 3 crashes)
+
 // ---- the button layer (buttons.cpp, 2026-10-29) ----
 constexpr bool BUTTONS_LAYER_ON = true;        // one layer decides what the game sees; off = the raw pad as before
 constexpr bool QUICK_TURN_ON = false;          // right stick up = quick turn (Tefa: a setting, off by default)
