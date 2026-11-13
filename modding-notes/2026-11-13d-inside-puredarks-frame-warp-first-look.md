@@ -110,3 +110,23 @@ Beta 6 (game folder's `UEVR AFW b6`), started through Steam, UEVR loaded by the 
 seconds 8-10 (spinning with the pipe in hand): six consecutive full-size frames of the pipe, edges clean and steady
 `[measured, n=1 clip]`. The frame cost of mode 2 against 3 was not read this time (the plugin logs only its own 0.35 ms).
 **Mode 2 is the setting to keep** (Tefa's word decides; making it the package default is the next step, game closed).
+
+## 7. What mode 2 still does: the hands and the pipe jump every other frame (Tefa, same run)
+
+Tefa: *"it's still bad though, although the shimmer is gone, it is still very much alternating so two steel pipes look
+like a fast teleporting 2 steel pipes, same with the left hand"*. Measured in the clip (`...215108-0.mp4`, seconds 8-10.5,
+all 150 frames, the pipe found by template matching, the room's motion by phase correlation) `[measured, n=1 clip]`:
+while Tefa turns, the room moves smoothly (~35 px per frame at half size) and the pipe flips between two places ~50 px
+apart (half size; ~95 px at the clip's full 2880, about 3-4 degrees) every other frame: on the drawn frames it stays in
+the hand, on the warped frames it is moved WITH THE ROOM, as if it were scenery.
+Live switches, Tefa watching: `VR_AFW_FixObjectMotionVector` off: no change; on with `VR_AFW_FixObjectMotionRange` 10
+(was 3): no change (put back to 3) `[reported, n=1 each]`. Also a thin skin-coloured sliver along the bottom edge of the
+fingers at some angles (Tefa's screenshot `VirtualDesktop.Android-20261113-220401.jpg`).
+`[hypothesis]`: the warp sees no motion for the arms and the held weapon, because our arms are posed after the game's
+update, so UE's velocity for them says "still in the world"; the warp then moves them like the walls. If so the fix is
+ours (give the arms' meshes their true previous-frame pose so the velocity buffer is right, or keep them out of the warp),
+not PureDark's file. `MODEL: FABLE`.
+Set after the run: `VR_AFW_FramewarpMode=2` in Tefa's profile (backup `config.txt.bak-2026-11-13-before-warp-mode-2`)
+and in the package (`mod/UnrealVRMod/SHProto-Win64-Shipping/config.txt`).
+Also from Tefa: the controller buttons stopped working during the daytime test today and worked again tonight; cause
+unknown (FAULTS row).
