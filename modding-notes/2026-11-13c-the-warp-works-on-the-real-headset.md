@@ -178,3 +178,24 @@ small dark corners) is Tefa's call. It is NOT installed as a default.
   One minute in the armory, Tefa in the headset, warp on, ray tracing on, five-second slices: **lowest 53.5, average
   61.6, highest 69.9 fps** `[measured 2026-11-13, n=12 slices]`. Single frames are not in the heartbeat: a per-frame tool
   (PresentMon) is not installed here.
+
+## 9. Tefa's run to town (13:00-13:40): roomscale, interactions, the 5-second freeze, black arms (b018)
+
+- **Roomscale moves James in anything the game drives.** With `VR_RoomscaleMovement` on, the head's place in the room
+  moves the body: in the paused opening cutscene James slid around with the headset; playing, he jittered; in the
+  crawl and the sideways squeeze the head pushed him through the wall. Roomscale off by hand: both gone
+  `[verified-live 2026-11-13, Tefa]`. Signals, measured with the connector (watchers `sampler3.py`, `fieldwatch.py`,
+  kept in the scratch folder, to go into the toolkit): cutscene = `IsCharacterInCutscene` (also the vault through the
+  window: the game calls it a cutscene); load-in = `IsMoveInputIgnored`; memory spots and squeezes = James not the view
+  target (`bIsLocalViewTarget` false, the camera on `SHCameraAnimationExecutive`); squeezes = `CharacterMovement.MovementMode`
+  1 -> 6 custom and `Traversal.CurrentlyPlayingTraversal` set, 9 of 9. `IsPlayingRootMotion` is true while walking: no
+  signal. **b018 `roomscale.cpp`**: roomscale off while any of the four holds, back on after, every switch logged.
+- **The freeze every 4-5 s** (Tefa's clip `game freeze stutters sh2.mp4`, debug tint on): the warp tints only the
+  frames it makes up, so drawn and made-up frames alternate; in a freeze there are 10 made-up frames in a row = the
+  GAME drew nothing for ~0.3 s. Suspect: `tuning.cpp` re-set `r.Lumen.Reflections.MaxRoughnessToTrace` every 5 s all
+  run (it never takes). b018: a value that does not take after three tries is left alone; every frame over 100 ms is
+  logged (`stall: N ms frame`) to line up against the rest of the log.
+- **The arms drawn black with a white patch, or speckled black, on alternate frames** (clips `1 AFW.mp4`,
+  `afw black hands.mp4`). Not explained; board row.
+- Tefa wants every third-person moment in play (vaults, crawls, squeezes, memory spots) first person; only real
+  cutscenes on the flat screen. Board row.
