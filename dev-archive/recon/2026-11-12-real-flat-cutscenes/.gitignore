@@ -1,3 +1,5 @@
 runs/*/
+runs/*.png
+runs/*.out
 runs/route-check.jpg
 runs/plain-route.jpg
