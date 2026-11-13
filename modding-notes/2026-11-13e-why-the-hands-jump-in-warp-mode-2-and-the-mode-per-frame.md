@@ -68,3 +68,19 @@ Start as always (Steam, UEVR by the connector). With the file as it is, the swit
 `1.0 0 0` = plain mode 2 (the old picture), `1.0 0.3 0` = for turns only, `1.0 0.3 0.5` = turns and fast hands.
 Look at: the pipe and the left hand while turning by stick and by body; waving them with the head still; the edges of
 the hands while turning (the outline); any flash at the moment the turn starts or stops.
+
+## 6. Tefa in the headset (22:50-22:56): the per-frame mode is a flop `[reported 2026-11-13, n=1 wear]`
+
+With `1.0 0.3 0.5` the log shows mode 3 on most frames while Tefa moved (408-662 of 720 calls in ten seconds), and
+Tefa: *"shimmering around the edges is back and the hands underneath still do what they did, like teleport real
+quick"*. So in the headset mode 3 does not carry the hands either; it only repaints them (the shimmer). Put back live
+to plain mode 2 (`1.0 0 0`), Tefa: *"it's like it was"*. The switch stays in the code, off.
+
+## 7. Next: take the hands off the warp's plate (Tefa: "that is worth a good try")
+
+Our stand-in sees the warp's made-up picture on its way out, the last real picture of the same eye (colour and depth),
+and the controllers' poses now. Plan: after the warp's call, on its own command list, our own drawing step cuts the
+near pixels (the arms and the weapon, by depth) out of that eye's last real picture, pastes them where the controllers
+say they are now, and paints over the copy the warp left behind. Step one on the simulator: pasted back unshifted
+during a stick turn (hands locked to the view), measured with the flip measure. Then the shift by the hands' own
+motion, then the clean-up. `MODEL: FABLE`.
