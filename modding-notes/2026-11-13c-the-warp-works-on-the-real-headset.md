@@ -76,3 +76,50 @@ the warning screen (`warp: the headset has drawn for 10 s, switching the frame w
 refused swapchain in either log, then the main menu, the load and play: 18.05 ms in the armory.
 NOT tested: a cutscene with the warp on (the flat screen switches `VR_2DScreenMode`, and `realcam` was written against
 mode 0); a headset that connects late; Tefa's eyes on any of it.
+
+## 6. Every last drop, warp on: a sweep of 46 settings on the real headset (09:35-10:05, nobody in the headset)
+
+Tool: `dev-archive/tools/optimiser/sweep.py` (new): one setting at a time through the connector, the frame time from the
+plugin's heartbeat (two readings after a 6 s settle), and a picture comparison of the game window before and after (the
+headset lay still, so the view was the same; two looks with nothing changed differ by 0.8 on its scale = the noise).
+Each setting put back after its test. The list and the raw results sit beside it
+(`sweep-2026-11-13-warp-on.json`, `...-results.tsv`). Baseline 17.8-18.1 ms, beta 6, b015, DLSS Quality (preset 5, DLL
+3.7.0), ray tracing on. `[measured 2026-11-13, n=1 each, one view: the armory]`
+
+| what | frame | picture change (x noise) |
+| --- | --- | --- |
+| ray-traced reflections at half size (`r.Lumen.Reflections.DownsampleFactor 2`) | -1.4 ms | 0.9 |
+| reflections on shinier surfaces only (`r.Lumen.Reflections.MaxRoughnessToTrace 0.3`) | -1.05 | 1.2 |
+| fog grid 8 -> 12 | -0.43 | 1.7 (Tefa said no to the fog: not used) |
+| bounce light probes 16 -> 32 | -0.4 | 1.2 |
+| reflection filter off / 3 reconstruction samples for 5 | -0.33 / -0.28 | 1.3 / 1.0 |
+| instanced meshes / skinned meshes out of the ray tracing scene | -0.3 / -0.25 | 0.9 / 0.8 (things missing from reflections: not used) |
+| local exposure off | -0.28 | 1.5 |
+| the global distance field off / distance-field AO off | -0.27 / -0.25 | 1.2 / 1.2 |
+| old-style ambient occlusion levels 0 | -0.23 | 1.9 |
+| screen traces OFF for reflections | **+1.07** (slower: the ray tracer then does all of it) | |
+| fewer screen-trace steps for reflections (50 -> 20) | +0.67 | |
+| within 0.1 ms: grain, tonemapper sharpen, bloom, shadow ray counts and bias, contact shadows, clouds, sky, half-size see-through surfaces, Nanite edge size, HZB occlusion, landscape / foliage / geometry cache in the ray tracing scene, Lumen's light in the fog, mesh distance-field tracing | nothing | |
+| already off or at the cheap value: depth of field, lens flares, colour fringing, film grain, motion blur, particles in the ray tracing scene, the reflection radiance cache (on) | | |
+
+Not levers at all: the engine's coarser shading toward the lens edges (`vr.VRS.HMDFixedFoveationLevel` 2 and 4: 18.0,
+the injector gives the engine no such picture), the ray tracing scene built in the background (`r.RayTracing.AsyncBuild`),
+and **our connector plugin: 18.03 ms without it against 18.05 with it** (the card is the limit now, at 97 %; the 7 ms
+of 2026-11-05 was a processor wait). So the connector can stay in.
+
+**Together** (they overlap, they do not add up):
+
+| set | frame |
+| --- | --- |
+| as installed | 18.1 ms (55 a second) |
+| A: reflections half size + 3 samples + both distance-field switches off | 16.45 |
+| B: A + roughness 0.3 | 16.2 |
+| C: B + probes 32 | 15.85 (63 a second), picture change 1.0 x noise |
+| D: C + reflection filter off + local exposure off | 15.85 (nothing more) |
+| for scale: ray tracing off altogether | 15.0 |
+| for scale: DLSS Performance's inner size, nothing else changed | 14.1 |
+
+Set C through the plugin's own settings file (six lines in `sh2vr_devcvars.txt`): 16.1-16.2 ms with James's arm in view.
+**Nothing found reaches 13.9 ms at DLSS Quality with ray tracing on.** Set C is the most that comes for a picture
+change no bigger than the noise in this one view; whether it is invisible in the headset (wet streets, shiny metal,
+small dark corners) is Tefa's call. It is NOT installed as a default.

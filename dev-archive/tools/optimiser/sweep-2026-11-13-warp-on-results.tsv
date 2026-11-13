@@ -1,0 +1,52 @@
+BASE	18.033333333333335	picture noise	0.796
+r.DepthOfFieldQuality	already	0.0
+r.LensFlareQuality	already	0.0
+r.SceneColorFringeQuality	already	0.0
+r.Tonemapper.GrainQuantization	1->0	ms	18.05	delta	0.02	picture	0.795	x noise	1.0
+r.FilmGrain	already	0.0
+r.Tonemapper.Sharpen	0.25->0	ms	17.93	delta	-0.1	picture	0.763	x noise	1.0
+r.BloomQuality	4->0	ms	17.9	delta	-0.13	picture	1.636	x noise	2.1
+r.LocalExposure	1->0	ms	17.75	delta	-0.28	picture	1.207	x noise	1.5
+r.Lumen.Reflections.ScreenTraces	1->0	ms	19.1	delta	1.07	picture	0.557	x noise	0.7
+r.Lumen.Reflections.RadianceCache	already	1.0
+r.Lumen.Reflections.BilateralFilter	1->0	ms	17.7	delta	-0.33	picture	1.011	x noise	1.3
+r.Lumen.Reflections.HierarchicalScreenTraces.MaxIterations	50->20	ms	18.7	delta	0.67	picture	0.895	x noise	1.1
+r.Lumen.Reflections.ScreenSpaceReconstruction.NumSamples	5->3	ms	17.75	delta	-0.28	picture	0.827	x noise	1.0
+BASE	17.8
+r.Lumen.Reflections.DownsampleFactor	1->2	ms	16.4	delta	-1.4	picture	0.734	x noise	0.9
+r.Lumen.Reflections.MaxRoughnessToTrace	0.4->0.3	ms	16.75	delta	-1.05	picture	0.929	x noise	1.2
+r.Lumen.Reflections.Temporal	1->0	ms	17.75	delta	-0.05	picture	1.224	x noise	1.5
+r.RayTracing.Geometry.NiagaraSprites	already	0.0
+r.RayTracing.Geometry.NiagaraMeshes	already	0.0
+r.RayTracing.Geometry.NiagaraRibbons	already	0.0
+r.RayTracing.Geometry.HierarchicalInstancedStaticMesh	1->0	ms	17.73	delta	-0.07	picture	0.667	x noise	0.8
+r.RayTracing.Geometry.InstancedStaticMeshes	1->0	ms	17.5	delta	-0.3	picture	0.721	x noise	0.9
+r.RayTracing.Geometry.SkeletalMeshes	1->0	ms	17.55	delta	-0.25	picture	0.669	x noise	0.8
+r.RayTracing.Geometry.Landscape	1->0	ms	17.75	delta	-0.05	picture	1.096	x noise	1.4
+r.RayTracing.Geometry.GeometryCache	1->0	ms	17.85	delta	0.05	picture	0.884	x noise	1.1
+BASE	17.8
+r.AOGlobalDistanceField	1->0	ms	17.53	delta	-0.27	picture	0.945	x noise	1.2
+r.DistanceFieldAO	1->0	ms	17.55	delta	-0.25	picture	0.939	x noise	1.2
+r.Lumen.TraceMeshSDFs	1->0	ms	17.7	delta	-0.1	picture	1.193	x noise	1.5
+r.Lumen.ScreenProbeGather.ScreenTraces	1->0	ms	17.7	delta	-0.1	picture	1.652	x noise	2.1
+r.Lumen.ScreenProbeGather.ShortRangeAO	not in this build
+r.Lumen.ScreenProbeGather.DownsampleFactor	16->32	ms	17.4	delta	-0.4	picture	0.99	x noise	1.2
+r.Lumen.TranslucencyVolume.Enable	1->0	ms	17.8	delta	0.0	picture	0.597	x noise	0.7
+r.Lumen.ScreenProbeGather.RadianceCache.ProbeResolution	already	16.0
+r.Shadow.Virtual.SMRT.RayCountLocal	8->4	ms	17.8	delta	0.0	picture	1.168	x noise	1.5
+r.Shadow.Virtual.SMRT.SamplesPerRayLocal	already	4.0
+r.Shadow.Virtual.ResolutionLodBiasLocal	0->1	ms	17.8	delta	-0.0	picture	1.008	x noise	1.3
+BASE	17.833333333333332
+r.Shadow.Virtual.SMRT.RayCountDirectional	8->4	ms	17.8	delta	-0.03	picture	1.226	x noise	1.5
+r.ContactShadows	1->0	ms	17.75	delta	-0.08	picture	0.591	x noise	0.7
+r.AmbientOcclusionLevels	-1->0	ms	17.6	delta	-0.23	picture	1.512	x noise	1.9
+r.VolumetricCloud	1->0	ms	17.8	delta	-0.03	picture	0.757	x noise	1.0
+r.SkyAtmosphere	1->0	ms	17.8	delta	-0.03	picture	0.836	x noise	1.1
+r.SeparateTranslucencyScreenPercentage	100->50	ms	17.85	delta	0.02	picture	1.124	x noise	1.4
+r.Nanite.MaxPixelsPerEdge	1->2	ms	17.73	delta	-0.1	picture	1.116	x noise	1.4
+r.VolumetricFog.GridPixelSize	8->12	ms	17.4	delta	-0.43	picture	1.329	x noise	1.7
+BASE	17.8
+r.HZBOcclusion	0->1	ms	17.9	delta	0.1	picture	1.015	x noise	1.3
+r.Lumen.Reflections.HardwareRayTracing	1->0	ms	15.95	delta	-1.85	picture	0.586	x noise	0.7
+r.Lumen.HardwareRayTracing	1->0	ms	15.0	delta	-2.8	picture	1.687	x noise	2.1
+END	17.8
