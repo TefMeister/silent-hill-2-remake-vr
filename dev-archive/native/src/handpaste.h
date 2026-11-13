@@ -11,7 +11,17 @@
 //      there, the same for every depth), the background from just beyond is pulled in.
 //   3. Everything else is the warp's picture, untouched.
 // It keeps its own copy of each eye's last real picture (the warp writes its result over the injector's).
-// Switch: the 4th number in sh2vr_warpscale.txt (0 off, 1 on, 2 on with a tint: pasted green, painted-over red).
+// Switch: the 4th number in sh2vr_warpscale.txt (0 off, 1 on, 2 on with a tint: pasted green, painted-over red,
+// 3 on without the hands' own shift: b020's step one, to compare).
+// THE HANDS' OWN MOTION (b021, Tefa 2026-11-14: "the hands are moving with less FPS than the game world"): each hand's
+// pixels are moved by how far that controller moved against the head since the eye's last real picture, projected
+// into the picture; a pixel belongs to the hand whose last place is nearer.
+// b022 (Tefa's clip of 00:43: bands of the pipe jumping sideways for a frame): the shift is now worked out per pixel in
+// depth: each pixel is carried the way its controller moved AND turned (a rigid move of the point in front of the eye),
+// blended between the two hands by distance, instead of one flat shift per hand with a hard border between them.
+// b023: "marked moving by the game" was no test at all (this game writes every pixel's motion, so a near table was
+// pasted and carried with the hands): a pixel is hand or weapon when it is near AND its motion in the game's velocity
+// picture differs from what a still thing at its depth would show (worked out from the eye's two last real views).
 #pragma once
 
 #include <cstdint>
@@ -34,6 +44,7 @@ struct Call {
 
 void set_mode(int mode);          // 0 off, 1 on, 2 on with the debug tint
 void set_near(float metres);      // how close to the eyes counts as "hands and weapon"
+void set_against_room(float amount);   // ... and how far a pixel must move against the room (picture units; 0 = closeness alone)
 void after_warp(const Call& call);
 void report();                    // one log line now and then (the game thread)
 

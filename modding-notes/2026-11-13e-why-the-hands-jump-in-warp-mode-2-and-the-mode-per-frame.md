@@ -111,3 +111,31 @@ NOT built yet: the shift by the hands' own motion (a waved hand is still drawn w
 mode 2, only without the room's shift on top); soft edges (the depth picture is coarser than the colour picture);
 a filler better than "the picture from just beyond"; what happens with an enemy nearer than 1 m.
 In Tefa's profile now: `1.0 0 0 1 1.0` (the pass on, the per-frame mode off). Headset verdict open.
+
+## 9. Tefa wears b020 (2026-11-14 00:30) `[reported, n=1 wear]`
+
+First start: hung on the loading screen and crashed: the old UEVR crash of 2026-10-31 and 2026-11-12 (reading 0xa0,
+UEVR's stereo hook meeting an engine null at the load; sh2vr not in the stack). Second start fine.
+Tefa: *"this is definitely a big step up!! ... there is now one pipe and it is just smudging when moving"*, *"it
+still leaves like a trail behind when moving"*, and *"the hands are moving with less FPS than the game world"*. As
+expected of step one: the pasted hands are the last real picture unshifted, so per eye they update only on real
+frames (half rate). Next: the shift by the hands' own motion (head-relative controller motion since that picture).
+
+## 10. b021-b023 (2026-11-14 00:35-01:20, Fable): the hands carried by their own motion, and what "hands" means
+
+- b021 (a flat shift per hand, the hand chosen by which is nearer in the picture): Tefa `[reported, n=1 wear]`:
+  *"smoother now"*, but close up the gun *"teleporting around seemingly randomly just a little bit"*. Tefa's clip
+  (`VirtualDesktop.Android-20261114-004344-0.mp4`, 4.6-5.2 s, every frame): bands of the pipe's edge jump sideways for a
+  frame or two `[measured, n=1 clip]`. And Tefa on simulator pictures with the tint: the straight edge of the pasted
+  area (the 1 m line across a table) *"is exactly where the glitching starts"*.
+- b022: each pixel carried in depth by its controller's rigid move (place AND turn, head-relative, from then to now),
+  blended between the hands over 15 cm; a few "try, see where it lands, correct" steps find the source pixel.
+- b023: "marked moving by the game" was no test. This game's velocity picture: a still thing's pixel is NOT exactly 0
+  in red (it decodes to about -2 screens), a movable thing's pixel holds its motion in the picture. So the test is now:
+  near, written (red >= 0.01), and its motion differs from what a still thing at that depth shows between the eye's
+  last two real views by more than 0.004 (file's 6th number). `[verified-live 2026-11-14, simulator, tint, n=2 captures
+  each]`: all still: nothing pasted; one hand swinging: that arm and the pipe only; stick turn: both arms and the pipe;
+  the near table and lamp never. Diagnostic view: 4th number 4.
+- The file now: `scale degrees speed pass near against`; in Tefa's profile `1.0 0 0 1 1.0 0.004`.
+- The DLL Tefa found in Downloads (PureDark's, shared once for a close-up fault): a third build, neither beta 5 nor 6:
+  beta 5 with shaders 30, 48-51 changed `[measured]`. Kept out of git; to be tried once the hands are settled.

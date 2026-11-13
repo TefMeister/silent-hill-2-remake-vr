@@ -12,6 +12,7 @@
 
 #include "common.h"
 #include "settings.h"
+#include "uevr/API.hpp"
 
 namespace sh2vr::handpaste {
 
@@ -24,17 +25,38 @@ Texture2D tVel   : register(t2);   // the game's velocity picture for it (red > 
 Texture2D tWarp  : register(t3);   // the warp's made-up picture
 SamplerState sLin : register(s0);
 SamplerState sPt  : register(s1);
-cbuffer C : register(b0) { float4 h0; float4 h1; float4 h2; float4 misc; }   // rows of the turn's map + (depth line, depth sign, tint); shift
+cbuffer C : register(b0) {
+    float4 h0; float4 h1; float4 h2;        // rows of the turn's map; w: depth line, depth sign, tint
+    float4 tl0; float4 tl1; float4 tl2;     // the left hand's move since the last real picture (view space, rows of a 3x4)
+    float4 tr0; float4 tr1; float4 tr2;     // the right hand's
+    float4 pj0; float4 pj1;                 // the eye's projection: (m00, m02, m11, m12), (m22, m23, m32, m33)
+    float4 shifts;                          // a first guess of each hand's shift in the picture (left xy, right xy)
+    float4 cl; float4 cr;                   // where each controller was then (view space); cl.w: the blend band in metres
+    float4 cam0; float4 cam1; float4 cam2;  // a point in front of the eye -> where the game's "previous" view saw it (rows x, y, w)
+    float4 misc;                            // x: how far (picture units) a pixel must move against the room to count; y: 1 = that test is on
+}
 
 struct V { float4 p : SV_Position; float2 uv : TEXCOORD0; };
 V vs(uint id : SV_VertexID) {
     V o; o.uv = float2((id << 1) & 2, id & 2); o.p = float4(o.uv * float2(2, -2) + float2(-1, 1), 0, 1); return o;
 }
+bool near_depth(float d) { return (d - h0.w) * h1.w > 0; }
+float3 unproject(float2 uv, float d);
+// hands and weapon: close to the eyes AND moving differently from the room. The game's velocity picture holds every
+// pixel's motion in the picture (the camera's included); what a still thing would show is worked out from its depth.
 bool hand(float2 uv) {
     if (any(uv < 0) || any(uv > 1)) return false;
     float d = tDepth.SampleLevel(sPt, uv, 0).r;
-    float v = tVel.SampleLevel(sPt, uv, 0).r;
-    return (d - h0.w) * h1.w > 0 && v > 0;
+    if (!near_depth(d)) return false;
+    if (misc.y < 0.5) return true;
+    float2 e = tVel.SampleLevel(sPt, uv, 0).rg;
+    if (e.r < 0.01) return false;                     // nothing written (the cleared value is not exactly 0 here): a still thing
+    float2 v = e * 4.008 - 2.004; v = v * abs(v) * 0.5;
+    float4 p = float4(unproject(uv, d), 1);
+    float3 c = float3(dot(cam0, p), dot(cam1, p), dot(cam2, p));
+    float2 still = float2(uv.x * 2 - 1, 1 - uv.y * 2) - c.xy / c.z;
+    float2 r = v - still;
+    return dot(r, r) > misc.x * misc.x;
 }
 // where, in the last real picture, the warp took the pixel it put at uv (near pixels: the head's turn alone)
 float2 source_of(float2 uv, out bool ok) {
@@ -46,10 +68,59 @@ float2 source_of(float2 uv, out bool ok) {
 }
 bool ghost(float2 uv) { bool ok; float2 s = source_of(uv, ok); return ok && hand(s); }
 
+// a pixel of the last real picture, as a point in front of the eye, and back
+float3 unproject(float2 uv, float d) {
+    float2 n = float2(uv.x * 2 - 1, 1 - uv.y * 2);
+    float z = (pj1.y - d * pj1.w) / (d * pj1.z - pj1.x);
+    float w = pj1.z * z + pj1.w;
+    return float3((n.x * w - pj0.y * z) / pj0.x, (n.y * w - pj0.w * z) / pj0.z, z);
+}
+float2 project(float3 p) {
+    float w = pj1.z * p.z + pj1.w;
+    float2 n = float2(pj0.x * p.x + pj0.y * p.z, pj0.z * p.y + pj0.w * p.z) / w;
+    return float2(n.x * 0.5 + 0.5, 0.5 - n.y * 0.5);
+}
+// the point carried the way its hand moved and turned; between the hands the two moves are blended
+float3 moved(float3 p) {
+    float dl = distance(p, cl.xyz), dr = distance(p, cr.xyz);
+    float w = saturate((dl - dr) / cl.w * 0.5 + 0.5);
+    float3 a = float3(dot(tl0.xyz, p) + tl0.w, dot(tl1.xyz, p) + tl1.w, dot(tl2.xyz, p) + tl2.w);
+    float3 b = float3(dot(tr0.xyz, p) + tr0.w, dot(tr1.xyz, p) + tr1.w, dot(tr2.xyz, p) + tr2.w);
+    return lerp(a, b, w);
+}
+// which pixel of the last real picture lands on uv now: a few steps of "try, see where it lands, correct"
+bool pasted(float2 uv, out float2 src) {
+    for (int s = 0; s < 2; s++) {
+        src = uv - (s == 0 ? shifts.xy : shifts.zw);
+        bool ok = true; float2 miss = float2(1, 1);
+        for (int k = 0; k < 4; k++) {
+            if (any(src < 0) || any(src > 1)) { ok = false; break; }
+            float d = tDepth.SampleLevel(sPt, src, 0).r;
+            if (!near_depth(d)) { ok = false; break; }
+            miss = uv - project(moved(unproject(src, d)));
+            if (k < 3) src += miss;
+        }
+        if (ok && dot(miss, miss) < 4e-6 && hand(src)) return true;
+    }
+    return false;
+}
+
 float4 ps(V i) : SV_Target {
-    float2 uv = i.uv, shift = misc.xy;
-    if (hand(uv - shift)) {
-        float4 c = tPrev.SampleLevel(sLin, uv - shift, 0);
+    float2 uv = i.uv, src;
+    if (h2.w > 1.5) {   // the diagnostic view: near pixels show red = the game's motion, green = a still thing's, blue = nothing written
+        float d = tDepth.SampleLevel(sPt, uv, 0).r;
+        float4 w = tWarp.SampleLevel(sLin, uv, 0);
+        if (!near_depth(d)) return w;
+        float2 e = tVel.SampleLevel(sPt, uv, 0).rg;
+        float2 v = e * 4.008 - 2.004; v = v * abs(v) * 0.5;
+        float4 p = float4(unproject(uv, d), 1);
+        float3 c = float3(dot(cam0, p), dot(cam1, p), dot(cam2, p));
+        float2 still = float2(uv.x * 2 - 1, 1 - uv.y * 2) - c.xy / c.z;
+        if (uv.y > 0.5) return float4(saturate(0.5 + v.x * 25), saturate(0.5 + still.x * 25), e.r < 0.01 ? 1 : 0, 1);
+        return float4(saturate(length(v) * 50), saturate(length(still) * 50), e.r < 0.01 ? 1 : 0, 1);
+    }
+    if (pasted(uv, src)) {
+        float4 c = tPrev.SampleLevel(sLin, src, 0);
         if (h2.w > 0.5) c.rgb = lerp(c.rgb, float3(0, 1, 0), 0.4);
         return c;
     }
@@ -59,7 +130,8 @@ float4 ps(V i) : SV_Target {
         float2 dir = (uv - s) / 6.0;   // the way the room went: the background beyond the copy lies that way
         for (int k = 1; k <= 12; k++) {
             float2 t = uv + dir * k;
-            if (!ghost(t) && !hand(t - shift)) { c = tWarp.SampleLevel(sLin, t, 0); break; }
+            float2 other;
+            if (!ghost(t) && !pasted(t, other)) { c = tWarp.SampleLevel(sLin, t, 0); break; }
         }
         if (h2.w > 0.5) c.rgb = lerp(c.rgb, float3(1, 0, 0), 0.4);
     }
@@ -81,16 +153,25 @@ DXGI_FORMAT g_pso_format = DXGI_FORMAT_UNKNOWN;
 ID3DBlob* g_vs = nullptr; ID3DBlob* g_ps = nullptr;
 ID3D12DescriptorHeap* g_srv_heap = nullptr; ID3D12DescriptorHeap* g_rtv_heap = nullptr;
 UINT g_srv_size = 0, g_rtv_size = 0;
+constexpr UINT CB_SLOT = 512, CB_SLOTS = 64;
+ID3D12Resource* g_cb = nullptr; uint8_t* g_cb_map = nullptr; UINT g_cb_next = 0;
+std::atomic<float> g_against{settings::HANDPASTE_AGAINST_ROOM};
 ID3D12Resource* g_target = nullptr;            // the pass draws here, then it is copied over the warp's picture
 ID3D12Resource* g_keep[2] = {nullptr, nullptr};   // each eye's last real picture
 D3D12_RESOURCE_DESC g_desc{};                  // what the three were made for
 
+struct Q { float w, x, y, z; };
 struct Eye {
     bool have = false;
     uint64_t frame = 0;
     ID3D12Resource* color = nullptr; uint32_t color_state = 0;
     ID3D12Resource* depth = nullptr; ID3D12Resource* velocity = nullptr;
     float w2v[16]{}, v2c[16]{};   // its real view that frame
+    bool have_before = false;
+    float before_w2v[16]{}, before_v2c[16]{};   // its real view the time before (what the game's velocity picture measures from)
+    bool hands_ok = false;
+    float hand_pos[2][3]{};       // each controller relative to the head then (metres, the head's own axes: x right, y up, -z ahead)
+    Q hand_rot[2]{{1, 0, 0, 0}, {1, 0, 0, 0}};   // and its turn relative to the head
 };
 Eye g_eye[2];
 uint64_t g_frame = 0;
@@ -148,7 +229,7 @@ bool make_basics(ID3D12GraphicsCommandList* list) {
     D3D12_ROOT_PARAMETER rp[2]{};
     rp[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE; rp[0].DescriptorTable.NumDescriptorRanges = 1; rp[0].DescriptorTable.pDescriptorRanges = &range;
     rp[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-    rp[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_32BIT_CONSTANTS; rp[1].Constants.Num32BitValues = 16; rp[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+    rp[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV; rp[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
     D3D12_STATIC_SAMPLER_DESC samp[2]{};
     for (int i = 0; i < 2; ++i) {
         samp[i].Filter = i == 0 ? D3D12_FILTER_MIN_MAG_MIP_LINEAR : D3D12_FILTER_MIN_MAG_MIP_POINT;
@@ -165,6 +246,12 @@ bool make_basics(ID3D12GraphicsCommandList* list) {
     if (FAILED(g_dev->CreateDescriptorHeap(&hd, IID_PPV_ARGS(&g_srv_heap)))) return fail("no descriptor heap");
     D3D12_DESCRIPTOR_HEAP_DESC rd{}; rd.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV; rd.NumDescriptors = 1;
     if (FAILED(g_dev->CreateDescriptorHeap(&rd, IID_PPV_ARGS(&g_rtv_heap)))) return fail("no target heap");
+    // the pass's numbers: a ring of slots in one always-mapped buffer (a slot is read by the card frames after it is written)
+    D3D12_HEAP_PROPERTIES up{}; up.Type = D3D12_HEAP_TYPE_UPLOAD;
+    D3D12_RESOURCE_DESC bd{}; bd.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER; bd.Width = (UINT64)CB_SLOT * CB_SLOTS; bd.Height = 1; bd.DepthOrArraySize = 1;
+    bd.MipLevels = 1; bd.SampleDesc.Count = 1; bd.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+    if (FAILED(g_dev->CreateCommittedResource(&up, D3D12_HEAP_FLAG_NONE, &bd, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&g_cb)))) return fail("no buffer for the pass's numbers");
+    if (FAILED(g_cb->Map(0, nullptr, (void**)&g_cb_map))) return fail("the numbers' buffer did not map");
     g_srv_size = g_dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
     g_rtv_size = g_dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
     return true;
@@ -227,6 +314,56 @@ bool depth_line(const float* v2c, float metres, float& line, float& sign) {
     return true;
 }
 
+// ---- the hands' own motion ---------------------------------------------------------------------------------------
+Q qmul(Q a, Q b) { return {a.w * b.w - a.x * b.x - a.y * b.y - a.z * b.z, a.w * b.x + a.x * b.w + a.y * b.z - a.z * b.y, a.w * b.y - a.x * b.z + a.y * b.w + a.z * b.x, a.w * b.z + a.x * b.y - a.y * b.x + a.z * b.w}; }
+Q qconj(Q q) { return {q.w, -q.x, -q.y, -q.z}; }
+void qrot(Q q, const float v[3], float out[3]) {
+    const float tx = 2.0f * (q.y * v[2] - q.z * v[1]), ty = 2.0f * (q.z * v[0] - q.x * v[2]), tz = 2.0f * (q.x * v[1] - q.y * v[0]);
+    out[0] = v[0] + q.w * tx + (q.y * tz - q.z * ty); out[1] = v[1] + q.w * ty + (q.z * tx - q.x * tz); out[2] = v[2] + q.w * tz + (q.x * ty - q.y * tx);
+}
+// each controller's place and turn relative to the head (metres, the head's own axes: x right, y up, -z ahead)
+bool hands_now(float pos[2][3], Q rot[2]) {
+    const auto head = API::VR::get_pose(API::VR::get_hmd_index());
+    const Q qh{head.rotation.w, head.rotation.x, head.rotation.y, head.rotation.z};
+    const UEVR_TrackedDeviceIndex idx[2] = {API::VR::get_left_controller_index(), API::VR::get_right_controller_index()};
+    for (int i = 0; i < 2; ++i) {
+        const auto p = API::VR::get_pose(idx[i]);
+        if (p.position.x == 0.0f && p.position.y == 0.0f && p.position.z == 0.0f) return false;
+        const float d[3] = {p.position.x - head.position.x, p.position.y - head.position.y, p.position.z - head.position.z};
+        qrot(qconj(qh), d, pos[i]);
+        rot[i] = qmul(qconj(qh), Q{p.rotation.w, p.rotation.x, p.rotation.y, p.rotation.z});
+    }
+    return true;
+}
+// the head's axes -> the matrices' view axes (the same, or z the other way round)
+float view_z_sign(const float* v2c) { return (v2c[2 * 4 + 3] < 0.0f) ? 1.0f : -1.0f; }
+// a view-space point -> its place in the picture (uv); false behind the eye
+bool to_uv(const float* v2c, const float v3[3], float uv[2]) {
+    const float v[4] = {v3[0], v3[1], v3[2], 1.0f};
+    float clip[4]{};
+    for (int r = 0; r < 4; ++r) for (int k = 0; k < 4; ++k) clip[r] += v2c[k * 4 + r] * v[k];
+    if (clip[3] <= 1e-4f) return false;
+    uv[0] = clip[0] / clip[3] * 0.5f + 0.5f; uv[1] = 0.5f - clip[1] / clip[3] * 0.5f;
+    return true;
+}
+// one hand's move from then to now as a 3x4 in view space (rows; the 4th of each row is the shift); false = not to be followed
+bool hand_move(const float p0[3], Q q0, const float p1[3], Q q1, float zs, float out[12]) {
+    const Q d = qmul(q1, qconj(q0));
+    const float angle = 2.0f * std::acos(std::fmin(1.0f, std::fabs(d.w))) * 57.29578f;
+    const float ex[3] = {1, 0, 0}, ey[3] = {0, 1, 0}, ez[3] = {0, 0, 1};
+    float c0[3], c1[3], c2[3], rp0[3];
+    qrot(d, ex, c0); qrot(d, ey, c1); qrot(d, ez, c2); qrot(d, p0, rp0);
+    const float t[3] = {p1[0] - rp0[0], p1[1] - rp0[1], p1[2] - rp0[2]};
+    const float step = std::sqrt((p1[0] - p0[0]) * (p1[0] - p0[0]) + (p1[1] - p0[1]) * (p1[1] - p0[1]) + (p1[2] - p0[2]) * (p1[2] - p0[2]));
+    if (angle > settings::HANDPASTE_MAX_TURN_DEG || step > settings::HANDPASTE_MAX_STEP_M) return false;
+    const float s[3] = {1.0f, 1.0f, zs};
+    for (int r = 0; r < 3; ++r) {
+        out[r * 4 + 0] = c0[r] * s[r] * s[0]; out[r * 4 + 1] = c1[r] * s[r] * s[1]; out[r * 4 + 2] = c2[r] * s[r] * s[2];
+        out[r * 4 + 3] = t[r] * s[r];
+    }
+    return true;
+}
+
 void draw(const Call& c, const Eye& last, ID3D12Resource* warped, D3D12_RESOURCE_STATES warped_state) {
     // the turn's map: a pixel of the made-up view now -> where that direction was in the eye's last real view
     const float* dest_c2v = c.camera + 3 * 16; const float* dest_v2w = c.camera + 1 * 16;
@@ -246,7 +383,52 @@ void draw(const Call& c, const Eye& last, ID3D12Resource* warped, D3D12_RESOURCE
     for (float& v : h.m) v *= flip;
 
     const int mode = g_mode.load();
-    const float constants[16] = {h.m[0], h.m[1], h.m[2], line, h.m[3], h.m[4], h.m[5], sign, h.m[6], h.m[7], h.m[8], mode >= 2 ? 1.0f : 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+    // each hand: how it moved and turned against the head since the eye's last real picture (the head's own turn is
+    // the warp's business and already in the map above)
+    const float zs = view_z_sign(last.v2c);
+    float move[2][12] = {{1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0}, {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0}};
+    float shift[2][2]{}, then_view[2][3] = {{-0.2f, -0.2f, -0.4f * zs}, {0.2f, -0.2f, -0.4f * zs}};
+    float pos_now[2][3]{}; Q rot_now[2]{};
+    if (last.hands_ok) for (int i = 0; i < 2; ++i) { then_view[i][0] = last.hand_pos[i][0]; then_view[i][1] = last.hand_pos[i][1]; then_view[i][2] = last.hand_pos[i][2] * zs; }
+    if (mode != 3 && last.hands_ok && hands_now(pos_now, rot_now)) {
+        for (int i = 0; i < 2; ++i) {
+            float m[12];
+            if (!hand_move(last.hand_pos[i], last.hand_rot[i], pos_now[i], rot_now[i], zs, m)) continue;
+            std::memcpy(move[i], m, sizeof(m));
+            const float now_view[3] = {pos_now[i][0], pos_now[i][1], pos_now[i][2] * zs};
+            float a[2], b[2];
+            if (to_uv(last.v2c, then_view[i], a) && to_uv(last.v2c, now_view, b)) { shift[i][0] = b[0] - a[0]; shift[i][1] = b[1] - a[1]; }
+        }
+    }
+    // a still thing's motion in the picture: the eye's view then -> the view the game measured from (that eye, the time before)
+    float cam[12] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1};
+    const bool against = last.have_before && last.velocity != nullptr && g_against.load() > 0.0f;
+    if (against) {
+        float v2w[16]{};   // the inverse of an affine view matrix: the rotation turned over, the shift carried back
+        for (int r = 0; r < 3; ++r) for (int col = 0; col < 3; ++col) v2w[col * 4 + r] = at(last.w2v, col, r);
+        for (int r = 0; r < 3; ++r) v2w[3 * 4 + r] = -(at(last.w2v, 0, r) * at(last.w2v, 0, 3) + at(last.w2v, 1, r) * at(last.w2v, 1, 3) + at(last.w2v, 2, r) * at(last.w2v, 2, 3));
+        v2w[15] = 1.0f;
+        float a[16]{}, m[16]{};
+        for (int col = 0; col < 4; ++col) for (int r = 0; r < 4; ++r) for (int k = 0; k < 4; ++k) a[col * 4 + r] += at(last.before_w2v, r, k) * v2w[col * 4 + k];
+        for (int col = 0; col < 4; ++col) for (int r = 0; r < 4; ++r) for (int k = 0; k < 4; ++k) m[col * 4 + r] += at(last.before_v2c, r, k) * a[col * 4 + k];
+        const int rows[3] = {0, 1, 3};
+        for (int i = 0; i < 3; ++i) for (int col = 0; col < 4; ++col) cam[i * 4 + col] = at(m, rows[i], col);
+    }
+    const float* p = last.v2c;
+    const float constants[76] = {
+        h.m[0], h.m[1], h.m[2], line, h.m[3], h.m[4], h.m[5], sign, h.m[6], h.m[7], h.m[8], mode == 2 ? 1.0f : mode == 4 ? 2.0f : 0.0f,
+        move[0][0], move[0][1], move[0][2], move[0][3], move[0][4], move[0][5], move[0][6], move[0][7], move[0][8], move[0][9], move[0][10], move[0][11],
+        move[1][0], move[1][1], move[1][2], move[1][3], move[1][4], move[1][5], move[1][6], move[1][7], move[1][8], move[1][9], move[1][10], move[1][11],
+        at(p, 0, 0), at(p, 0, 2), at(p, 1, 1), at(p, 1, 2), at(p, 2, 2), at(p, 2, 3), at(p, 3, 2), at(p, 3, 3),
+        shift[0][0], shift[0][1], shift[1][0], shift[1][1],
+        then_view[0][0], then_view[0][1], then_view[0][2], settings::HANDPASTE_BLEND_M,
+        then_view[1][0], then_view[1][1], then_view[1][2], 0.0f,
+        cam[0], cam[1], cam[2], cam[3], cam[4], cam[5], cam[6], cam[7], cam[8], cam[9], cam[10], cam[11],
+        g_against.load(), against ? 1.0f : 0.0f, 0.0f, 0.0f};
+    uint8_t* slot = g_cb_map + (size_t)g_cb_next * CB_SLOT;
+    std::memcpy(slot, constants, sizeof(constants));
+    const D3D12_GPU_VIRTUAL_ADDRESS cb_at = g_cb->GetGPUVirtualAddress() + (UINT64)g_cb_next * CB_SLOT;
+    g_cb_next = (g_cb_next + 1) % CB_SLOTS;
 
     const int base = (1 - c.eye) * SRVS_PER_DRAW;
     srv(g_keep[1 - c.eye], base + 0); srv(last.depth, base + 1); srv(last.velocity != nullptr ? last.velocity : last.depth, base + 2); srv(warped, base + 3);
@@ -264,7 +446,7 @@ void draw(const Call& c, const Eye& last, ID3D12Resource* warped, D3D12_RESOURCE
     l->SetDescriptorHeaps(1, &g_srv_heap);
     D3D12_GPU_DESCRIPTOR_HANDLE table = g_srv_heap->GetGPUDescriptorHandleForHeapStart(); table.ptr += (UINT64)base * g_srv_size;
     l->SetGraphicsRootDescriptorTable(0, table);
-    l->SetGraphicsRoot32BitConstants(1, 16, constants, 0);
+    l->SetGraphicsRootConstantBufferView(1, cb_at);
     l->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     l->DrawInstanced(3, 1, 0, 0);
     // over the warp's picture
@@ -279,6 +461,7 @@ void draw(const Call& c, const Eye& last, ID3D12Resource* warped, D3D12_RESOURCE
 
 void set_mode(int mode) { g_mode.store(mode); }
 void set_near(float metres) { g_near.store(metres); }
+void set_against_room(float amount) { g_against.store(amount); }
 
 void after_warp(const Call& c) {
     ++g_frame;
@@ -306,8 +489,11 @@ void after_warp(const Call& c) {
     transition(l, c.color, D3D12_RESOURCE_STATE_COPY_SOURCE, rest);
     // the injector replaces its pictures at a level load or a size change: hold each one for the frame it is still needed
     hold(now.color, c.color); hold(now.depth, c.depth); hold(now.velocity, c.velocity);
+    now.have_before = now.have && now.frame + 2 == g_frame;
+    if (now.have_before) { std::memcpy(now.before_w2v, now.w2v, sizeof(now.w2v)); std::memcpy(now.before_v2c, now.v2c, sizeof(now.v2c)); }
     now.have = true; now.frame = g_frame; now.color_state = c.color_state;
     std::memcpy(now.w2v, c.camera + 4 * 16, sizeof(now.w2v)); std::memcpy(now.v2c, c.camera + 6 * 16, sizeof(now.v2c));
+    now.hands_ok = hands_now(now.hand_pos, now.hand_rot);
 }
 
 void report() {

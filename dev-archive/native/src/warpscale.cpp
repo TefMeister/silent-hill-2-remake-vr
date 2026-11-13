@@ -121,7 +121,7 @@ void __stdcall hooked(void* params) {
     *(int32_t*)(bytes + OFF_MODE) = asked;
 
     // the made-up picture is on its way out: the hands' own pass (handpaste.cpp)
-    if (readable(params, OFF_VELOCITY + sizeof(void*))) {
+    if (readable(params, 160)) {
         auto* in = *(uint8_t**)(bytes + OFF_IN);
         auto* vel = *(uint8_t**)(bytes + OFF_VELOCITY);
         if (readable(in, TEX_SIZE * 3)) {
@@ -136,6 +136,15 @@ void __stdcall hooked(void* params) {
             c.previous_frame_mode = mode2;
             static bool said = false;
             if (!said) { said = true; LOGI("%s warpscale: first call seen: eye %d, list %p, colour %p (state 0x%x), depth %p, velocity %p", TAG, c.eye, (void*)c.list, (void*)c.color, c.color_state, (void*)c.depth, (void*)c.velocity); }
+            // 2026-11-14: is the game's velocity picture ever handed over? counted, and the call's tail shown once in play
+            static int seen = 0, with_velocity = 0;
+            ++seen; if (c.velocity != nullptr) ++with_velocity;
+            if (seen == 2000 || seen == 6000) {
+                const uint64_t* q = (const uint64_t*)bytes;
+                LOGI("%s warpscale: %d calls, %d with a velocity picture; the call's words 9..19: %llx %llx %llx %llx %llx %llx %llx %llx %llx %llx %llx", TAG, seen, with_velocity,
+                     (unsigned long long)q[9], (unsigned long long)q[10], (unsigned long long)q[11], (unsigned long long)q[12], (unsigned long long)q[13], (unsigned long long)q[14],
+                     (unsigned long long)q[15], (unsigned long long)q[16], (unsigned long long)q[17], (unsigned long long)q[18], (unsigned long long)q[19]);
+            }
             handpaste::after_warp(c);
         }
     }
@@ -182,12 +191,15 @@ void read_file() {
     const std::wstring p = appdata_dir() + L"\\" + settings::PROFILE_DIR + L"\\sh2vr_warpscale.txt";
     float v = settings::WARP_NEAR_SCALE, t = settings::WARP_TURN_DEG_PER_FRAME, h = settings::WARP_HAND_M_PER_S, near_m = settings::HANDPASTE_NEAR_M;
     int paste = settings::HANDPASTE_MODE;
+    float against = settings::HANDPASTE_AGAINST_ROOM;
+    static float last_against = -1.0f;
     static int last_paste = -1; static float last_near = -1.0f;
     FILE* f = nullptr;
     if (_wfopen_s(&f, p.c_str(), L"r") == 0 && f != nullptr) {
-        float x = 0.0f, y = -1.0f, z = -1.0f, pm = -1.0f, pn = -1.0f;
-        const int n = fscanf_s(f, "%f %f %f %f %f", &x, &y, &z, &pm, &pn);
-        if (n >= 4 && pm >= 0.0f && pm <= 2.0f) paste = (int)pm;
+        float x = 0.0f, y = -1.0f, z = -1.0f, pm = -1.0f, pn = -1.0f, pa = -1.0f;
+        const int n = fscanf_s(f, "%f %f %f %f %f %f", &x, &y, &z, &pm, &pn, &pa);
+        if (n >= 6 && pa >= 0.0f && pa <= 1.0f) against = pa;
+        if (n >= 4 && pm >= 0.0f && pm <= 4.0f) paste = (int)pm;
         if (n >= 5 && pn >= 0.1f && pn <= 10.0f) near_m = pn;
         if (n >= 3 && z >= 0.0f && z <= 100.0f) h = z;
         if (n >= 1 && x >= settings::WARP_NEAR_SCALE_MIN && x <= settings::WARP_NEAR_SCALE_MAX) v = x;
@@ -195,8 +207,9 @@ void read_file() {
         std::fclose(f);
     }
     if (t != g_turn_deg.load()) { LOGI("%s warpscale: mode 3 while the view turns more than %.2f degrees a frame (was %.2f; 0 = never)", TAG, t, g_turn_deg.load()); g_turn_deg.store(t); }
+    if (against != last_against) { LOGI("%s warpscale: hands = near and moving against the room by more than %.4f", TAG, against); last_against = against; handpaste::set_against_room(against); }
     if (paste != last_paste || near_m != last_near) {
-        LOGI("%s warpscale: the hands' own pass %s, near line %.2f m", TAG, paste == 0 ? "off" : paste == 1 ? "on" : "on with the tint", near_m);
+        LOGI("%s warpscale: the hands' own pass %s, near line %.2f m", TAG, paste == 0 ? "off" : paste == 1 ? "on" : paste == 2 ? "on with the tint" : "on without the hands' own shift", near_m);
         last_paste = paste; last_near = near_m; handpaste::set_mode(paste); handpaste::set_near(near_m);
     }
     if (h != g_hand_speed.load()) { LOGI("%s warpscale: mode 3 while a hand moves faster than %.2f m/s in the room (was %.2f; 0 = never)", TAG, h, g_hand_speed.load()); g_hand_speed.store(h); }

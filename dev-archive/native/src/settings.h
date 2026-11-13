@@ -65,6 +65,11 @@ constexpr float WARP_HAND_SPEED_GLITCH = 15.0f;   // a "speed" above this is a t
 constexpr int WARP_TURN_HOLD_FRAMES = 12;         // how many frames mode 3 stays after the last fast frame
 constexpr float WARP_REPORT_S = 10.0f;
 constexpr int HANDPASTE_MODE = 0;                 // handpaste.cpp: 0 off, 1 on, 2 on with the tint (4th number in the file)
+constexpr float HANDPASTE_MAX_SHIFT = 0.15f;      // the largest shift of a hand in one made-up picture (share of the picture: a tracking jump is not followed)
+constexpr float HANDPASTE_MAX_TURN_DEG = 25.0f;   // a hand that turned or moved more than this in one frame is a tracking jump: not followed
+constexpr float HANDPASTE_MAX_STEP_M = 0.25f;
+constexpr float HANDPASTE_BLEND_M = 0.15f;        // between the two hands their moves are blended over this distance
+constexpr float HANDPASTE_AGAINST_ROOM = 0.004f;  // a pixel is hand or weapon when it moves against the room by more than this (the picture is 2 wide; 6th number in the file, 0 = closeness alone)
 constexpr float HANDPASTE_NEAR_M = 1.0f;          // nearer than this and marked moving by the game = hands and weapon (5th number)            // how often the module's counts are logged
 
 // ---- the button layer (buttons.cpp, 2026-10-29) ----
