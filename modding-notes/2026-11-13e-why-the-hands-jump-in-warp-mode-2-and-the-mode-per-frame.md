@@ -177,3 +177,17 @@ eye's own gun is in the way). Simulator, tint: still / swinging / turning as b02
   never melee, switched by what is held (the standing rule). jbusfield's "Smoothing" in the arm settings (0 in the
   profile, carried into ik.cpp) smooths the arms only and has no guns-only gate: not used for this.
 - Tefa on the whole: with settings lowered or adaptive for a solid 72, *"a very solid way to play this game in VR"*.
+
+## 13. Two corrections from Tefa (02:20)
+
+- **What tears near James is anything close, the table itself too**, not only loose movable things: *"table itself is
+  tearing and reprojecting as well, doesn't matter what it is as long as it's close to James"*. So §12's item 1 is too
+  narrow `[reported]`: my frames showed the sheet and the note, Tefa's eyes say the tabletop as well. Either still
+  things near James pass the "moving against the room" test while the head moves (our "still thing" motion is not
+  exact enough close up, where a small error in the head's shift is a large shift in the picture), or the tearing
+  there is the warp's own (its nearer-than-1-unit rule re-projects by the head's turn alone, wrong for near scenery
+  while the head moves sideways). First thing next time: the tint in the headset while leaning over a table, which
+  tells the two apart.
+- **Weapon smoothing: melee too, lightly**: *"actually melee as well, just less to get rid of the hand shaking, but
+  not enough to make melee feel sluggish"*. So: guns the full amount, melee a small amount (shake only), bare hands
+  and menus raw, switched by what is held.
