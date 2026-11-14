@@ -1,6 +1,8 @@
 # Research index
 
-**Last `/gr` pass: 2026-11-11 — FULL.** The quit abort inside the OpenXR Simulator (code 7) matches its own preview thread, a static `std::thread` joined only in `xrDestroyInstance` since v1.6.0 (unfixed on master; the fork's v1.5.1 has no such thread); the UEVR crash at `+0x1503df` still has no upstream change or public match; master also lifts the 4096 picture cap for Direct3D, unreleased.
+**Last `/gr` pass: 2026-11-14 — FULL.** Nothing new for our open rows: PureDark's AFW is still v1.0-beta.6 (branches unchanged since 10-30), UEVR-nightly still 01143, praydog's and jbusfield's SH2 packs unchanged; joeyhodge's fork added opt-in OpenXR wait-only pacing for D3D12 native stereo and a world-locked movie layer for one other game (11-12/13), Virtual Desktop's newest is still 1.34.22 (10-22, nothing on frame warp), and no public report of a warp crash under Virtual Desktop or a dead A button at this game's main menu `[measured 2026-11-14, API; web searches n=3]`.
+
+_Previous: **Last `/gr` pass: 2026-11-11 — FULL.** The quit abort inside the OpenXR Simulator (code 7) matches its own preview thread, a static `std::thread` joined only in `xrDestroyInstance` since v1.6.0 (unfixed on master; the fork's v1.5.1 has no such thread); the UEVR crash at `+0x1503df` still has no upstream change or public match; master also lifts the 4096 picture cap for Direct3D, unreleased._
 
 _Previous: **Last `/gr` pass: 2026-11-07 (estate sweep) — CHECK-IN.** For Gold Digger's crash dumps: UEVR nightly (01143, 08-30), the AFW release (beta.6, 08-13) and both SH2 packs have not changed, so the quit crash of 11-06 on did not come with a UEVR update; beta.6 ships as two different dlls (nightly- and joeyhodge-based), so name ours before reading the offset; no public report matches either crash. One topic, pointer in `engine-research/inbox/`._
 
