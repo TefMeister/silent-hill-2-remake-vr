@@ -155,3 +155,25 @@ b024: a pixel must also be within reach of a controller (16 cm of the line it po
 of the line to that shoulder); the painted-over strip is filled from the other eye's picture of the same frame
 (carried over with the background's depth taken from just beyond the strip; the picture from beside only where that
 eye's own gun is in the way). Simulator, tint: still / swinging / turning as b023 `[verified-live, n=2 captures each]`.
+
+## 12. Tefa wears b024 and b025 (01:40-02:05), twelve clips; where it stands
+
+- b024 `[reported + measured, clips 0141xx-0143xx]`: Tefa: *"didn't really improve nothing ... maybe the pipe looked like it
+  had doubling"*. Frames: the pistol is the same in every frame; the pipe and the shotgun's pump are CUT and shifted
+  on alternate frames along a curved line: the reach test's lines along the controller's axes are too tight for a long
+  weapon held at an angle. b025: the reach test off (`settings::HANDPASTE_REACH_ON` false), the other-eye fill kept.
+- b025 `[reported + measured, clips 0154xx-0204xx]`: Tefa: *"this works well!"*. Frames: both hands waved outdoors:
+  single and whole in every frame; the pipe whole again; pistol, shotgun, rifle whole.
+- Still there:
+  1. a loose movable thing lying near (the red save sheet, a note on a desk) shows a notched corner or a torn edge
+     on alternate frames while the head moves: it passes "near, written, moving against the room". The clear line
+     Tefa sees is where the 1 m line crosses it. To do: the held weapon's real size from the game (its bounds against
+     the controller) for a reach test that fits, and the "still thing" motion checked against the game's own motion
+     vectors (the DLSS input) instead of our matrices alone.
+  2. the weapon's shadow on the floor flips between two places on alternate frames, in ONE view (Tefa: one eye closed,
+     like the pipe did): the warp shows the lit floor one frame old. Not carried by our pass.
+  3. a soft darker edge beside the pipe on some made-up frames (the fill).
+- Tefa: weapon smoothing wanted, the proper one (*"yeah let's build a proper one"*): gun and arm together, guns only,
+  never melee, switched by what is held (the standing rule). jbusfield's "Smoothing" in the arm settings (0 in the
+  profile, carried into ik.cpp) smooths the arms only and has no guns-only gate: not used for this.
+- Tefa on the whole: with settings lowered or adaptive for a solid 72, *"a very solid way to play this game in VR"*.

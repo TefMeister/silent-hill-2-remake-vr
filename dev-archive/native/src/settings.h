@@ -70,6 +70,7 @@ constexpr float HANDPASTE_MAX_TURN_DEG = 25.0f;   // a hand that turned or moved
 constexpr float HANDPASTE_MAX_STEP_M = 0.25f;
 constexpr float HANDPASTE_BLEND_M = 0.15f;        // between the two hands their moves are blended over this distance
 constexpr float HANDPASTE_AGAINST_ROOM = 0.004f;  // a pixel is hand or weapon when it moves against the room by more than this (the picture is 2 wide; 6th number in the file, 0 = closeness alone)
+constexpr bool HANDPASTE_REACH_ON = false;        // OFF since 2026-11-14 01:55: the lines along the controller's axes cut a pipe and the shotgun's pump in two (Tefa's clips); to be redone from the held weapon's real size
 constexpr float HANDPASTE_WEAPON_RADIUS = 0.16f;  // hands and weapon = within this of the line a controller points along or stands up along (metres)
 constexpr float HANDPASTE_ARM_RADIUS = 0.22f;     // ... or within this of the line from the controller to that shoulder
 constexpr float HANDPASTE_SHOULDER[3] = {0.20f, -0.25f, 0.05f};   // a shoulder against the head: out, down, back (metres)

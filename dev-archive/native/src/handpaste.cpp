@@ -469,7 +469,7 @@ void draw(const Call& c, const Eye& last, ID3D12Resource* warped, D3D12_RESOURCE
         fwd[i][2] *= zs; up[i][2] *= zs;
         shoulder[i][0] = (i == 0 ? -1.0f : 1.0f) * settings::HANDPASTE_SHOULDER[0]; shoulder[i][1] = settings::HANDPASTE_SHOULDER[1]; shoulder[i][2] = settings::HANDPASTE_SHOULDER[2] * zs;
     }
-    const float reach = last.hands_ok ? 1.0f : 0.0f;
+    const float reach = (settings::HANDPASTE_REACH_ON && last.hands_ok) ? 1.0f : 0.0f;
     const float constants[112] = {
         h.m[0], h.m[1], h.m[2], line, h.m[3], h.m[4], h.m[5], sign, h.m[6], h.m[7], h.m[8], mode == 2 ? 1.0f : mode == 4 ? 2.0f : 0.0f,
         move[0][0], move[0][1], move[0][2], move[0][3], move[0][4], move[0][5], move[0][6], move[0][7], move[0][8], move[0][9], move[0][10], move[0][11],
