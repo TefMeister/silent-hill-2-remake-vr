@@ -10,7 +10,7 @@
 //   lower back     -> right grip: the healing item (2026-10-31, Tefa: like RE8's and RE2's sub weapon): a press puts the
 //                     gun away and takes the drink, a press again = the syringe, a third = put back; it stays without the
 //                     grip; RT uses it (the game's healing action); a weapon spot puts it back and draws the gun
-// The left grip (2026-10-31 13:00): the map at the right hip (twohand.cpp holds it; the right grip too = both hands), nothing at the left hip (the ammo's: reload.cpp's pistol
+// The left grip (2026-10-31 13:00; the map moved 2026-11-15): the map at the LEFT BACK (settings MAP_SPOT; twohand.cpp holds it; the right grip too = both hands), nothing at the left hip (the ammo's: reload.cpp's pistol
 // magazine, the pack's shotgun and rifle rounds), the flashlight on LT.
 //
 // How it works, every frame on the game thread:
@@ -249,28 +249,17 @@ bool g_lg_was = false;
 const char* left_name(LeftItem i) { return i == LeftItem::MAP ? "map" : "nothing"; }
 bool is_heal_spot(const settings::HolsterSpot& s) { return std::wstring_view(s.row) == settings::HEAL_ROW; }
 
-// the spot index with this name, or -1
-int spot_named(const wchar_t* name) {
-    for (int i = 0; i < settings::HOLSTER_SPOT_COUNT; ++i)
-        if (std::wstring_view(settings::HOLSTER_SPOTS[i].name) == name) return i;
-    return -1;
-}
-
 void left_tick(float delta) {
     const bool lg = g_pretend_lg || input::grip(false);
     const bool pressed = lg && !g_lg_was;
     g_lg_was = lg;
     TV hand{};
     if (!left_hand(hand)) return;
-    int in_spot = -1;
-    for (int i = 0; i < settings::HOLSTER_SPOT_COUNT; ++i) {
-        TV p;
-        if (spot_tracking(settings::HOLSTER_SPOTS[i], p) && dist_cm(hand, p) < settings::HOLSTER_ENTER_CM) { in_spot = i; break; }
-    }
-    const int map_i = spot_named(settings::LEFT_ITEM_MAP_SPOT);
+    TV map_p;
+    const bool at_map = spot_tracking(settings::MAP_SPOT, map_p) && dist_cm(hand, map_p) < settings::HOLSTER_ENTER_CM;
     // the map, a toggle (2026-10-31, Tefa: "LG ... get the map out from right hip so it stays in left hand and RG can grip
     // it and let go, left hand always stays on the map and putting it back in the right hip with LG closes it, so does X,
-    // and LT and RT turn pages"): LG at the right hip takes it out, LG at the right hip again puts it away; letting go of
+    // and LT and RT turn pages"; since 2026-11-15 at the LEFT BACK, settings MAP_SPOT): LG at the spot takes it out, LG there again puts it away; letting go of
     // the grip does nothing; Quest X (the game's own back) closes it too, noticed when the map stops showing
     g_map_toggle_s += delta;
     // the game's own truth first: a map on screen that the hand does not hold (opened by the d-pad, or our open and close
@@ -295,7 +284,7 @@ void left_tick(float delta) {
         buttons::keep_left_grip(true);
         say("the map is on screen but not in the hand: taken into the left hand");
     }
-    const bool map_press = pressed && in_spot == map_i && g_map_toggle_s >= settings::MAP_TOGGLE_COOLDOWN_S;
+    const bool map_press = pressed && at_map && g_map_toggle_s >= settings::MAP_TOGGLE_COOLDOWN_S;
     if (map_press) g_map_toggle_s = 0.0f;
     if (map_press && g_left == LeftItem::NONE) {
         g_left = LeftItem::MAP;
@@ -304,14 +293,14 @@ void left_tick(float delta) {
         g_map_gone_s = 0.0f;
         buttons::keep_left_grip(true);
         buttons::press_for_game(XINPUT_GAMEPAD_DPAD_UP, settings::HOLSTER_PRESS_POLLS);   // MapToggle
-        say("left grip at the right hip: the map is out, in the left hand (LG at the right hip again or Quest X puts it away; RG = both hands; LT / RT turn pages)");
+        say("left grip at the left back: the map is out, in the left hand (LG at the left back again or Quest X puts it away; RG = both hands; LT / RT turn pages)");
         gun::buzz(controllers::LEFT, settings::BUZZ_DONE_AMP, settings::BUZZ_S);
     } else if (map_press && g_left == LeftItem::MAP) {
         g_left = LeftItem::NONE;
         buttons::keep_left_grip(false);
         buttons::press_for_game(XINPUT_GAMEPAD_B, settings::HOLSTER_PRESS_POLLS);   // the game's back (Cancel) closes it
         g_map_closing = true; g_map_close_s = 0.0f; g_map_close_tries = 0;
-        say("left grip at the right hip again: the map is put away (the game's back)");
+        say("left grip at the left back again: the map is put away (the game's back)");
         gun::buzz(controllers::LEFT, settings::BUZZ_DENY_AMP, settings::BUZZ_S);
     }
     if (g_left == LeftItem::MAP) {   // closed another way (Quest X, the game itself): the hand lets go of it too

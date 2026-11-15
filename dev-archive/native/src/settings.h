@@ -122,7 +122,11 @@ constexpr unsigned HOLSTER_LEFT_TEST_KEY = 0x74;   // VK_F5: a pretend LEFT grip
 // The healing item is the RIGHT hand's since 2026-10-31 (the lower back spot above; the game itself heals with the right
 // hand): a right grip press there takes the drink out, keep holding and it is the syringe, RT uses what is in the hand
 // (the game's one healing action, Y), letting go of the grip puts it back unused.
-constexpr const wchar_t* LEFT_ITEM_MAP_SPOT = L"right hip";   // 2026-10-31 13:00, Tefa: "move the map to the right hip, LG to take it out, right hand with RG held to two hand the map"
+// 2026-11-15: the map moves to the LEFT BACK spot, the shared layout of every Visceral mod (Tefa 2026-11-13: "map at the
+// back holster - same for SH2 by the way"; 2026-11-14: "Map = LEFT back holster"). The mirror of the lower back's
+// healing spot, as RE2 b208's BACK_LEFT mirrors its BACK_RIGHT. Its own spot, apart from the right hand's table above, so
+// a right grip there never draws anything. (2026-10-31 to 11-15 it was at the right hip.)
+constexpr HolsterSpot MAP_SPOT = {L"left back", -12.0, -35.0, -30.0, L""};
 constexpr float MAP_TOGGLE_COOLDOWN_S = 1.0f;   // after taking the map out or putting it away, LG at the hip is ignored this long (14:32: put away, out again 0.4 s later)
 constexpr float MAP_CLOSE_RETRY_S = 1.0f;   // putting it away: the game's back again this often while the map still shows
 constexpr int MAP_CLOSE_TRIES = 5;          // and this many times at most
