@@ -9,8 +9,9 @@ launcher, `SH2VR.exe play --sim --no-install` (0.1.1 folder); saves backed up to
 - **First start crashed** right after the injection (0.1.2 launcher folder): `EXCEPTION_ACCESS_VIOLATION reading
   0xffffffffffffffff` on the game thread, the stack only the game and `UEVRBackend` (no `sh2vr` frame)
   `[measured, the crash report, n=1]`. The second start (0.1.1 launcher folder, same installed plugin) ran.
-  Which folder's UEVR the launcher injected differs between the two: worth one more start from 0.1.2 to tell a
-  0.1.2 package fault from a one-off `[hypothesis]`.
+  **Not a package fault** (the reader, later the same session): both folders inject byte-identical UEVR (AFW beta 6) with
+  the same settings; the same stack crashed on 11-12 (twice) and 11-13, always 22-25 s after the start: an occasional
+  start-up crash in a hooked game function (dossier §13) `[measured: the hashes and crash folders]`.
 - Warning -> main menu -> NEW GAME -> START GAME -> PRESS ANY BUTTON by keys through the UEVR connector, a picture
   before each key (KNOWN.md's route held).
 - **The frame warp switched itself on** in play before the cutscene (thousands of warp calls in the log).

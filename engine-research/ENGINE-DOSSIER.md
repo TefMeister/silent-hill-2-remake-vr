@@ -346,3 +346,86 @@ otherwise: "a game is already running: stop").
   undo the "OBS Mirror only" reading.
 
 - **Live, 2026-11-15:** the opening cutscene with the warp on ran 3 min 38 s on the flat screen and switched back to VR cleanly; no OBS break at either switch while the simulator preview was recorded `[verified-live 2026-11-15, simulator, n=1]` (`modding-notes/2026-11-15b-the-opening-cutscene-with-the-warp-on.md`).
+
+## 13. An occasional crash 22-25 s after the start (2026-11-15, /lm reader, files only)
+
+
+For: the live session. Files only; nothing launched, attached or changed. Read: both release folders under
+`D:\SH2 builds\releases\`, the launcher source (`dev-archive/launcher/src`), the tools copy
+`D:\claude video game stuff\tools\UEVR-nightly-AFW-beta.6\`, every crash folder in
+`%LOCALAPPDATA%\SilentHill2\Saved\Crashes\` (CrashContext.runtime-xml), today's injector log, the pack's Lua in the
+installed profile, `%LOCALAPPDATA%\BeG0nE\ride.log`.
+
+### Verdict
+
+**Not a 0.1.2 package fault. A recurring early-start crash that both folders can hit** `[inferred from the measured
+points below]`. The two starts injected the very same UEVR, with the same launcher and the same inject settings. On a
+`--no-install` run, the only files that differ between the folders are never used.
+
+### 1. The two folders `[measured, sha256 first 16 hex]`
+
+- `uevr\`: all six DLLs byte-identical in 0.1.1 and 0.1.2, and identical to the public **AFW beta 6** zip's copies
+  (the tools folder `UEVR-nightly-AFW-beta.6`):
+  UEVRBackend `d3ff93e7f327016d`, PDAFWPlugin `5f3cfc38903ac438`, LuaVR `feb1db09852a61f5`, UEVRPluginNullifier
+  `ad940ec9587db5ce`, openvr_api `7e091996282fa9df`, openxr_loader `3bb4eb190024f92e`. So "the 0.1.2 package's copy
+  is not hashed yet" (board) is now done: it is beta 6.
+- Version strings in UEVRBackend.dll (both): commit `c40eaab8043dcd4b3209c77c50f7fadcd49093e8`, tag string
+  `UEVR_AFW_v1.0-beta.5` (beta 6's DLL still carries the beta 5 tag, note 2026-11-13b). Today's injector log says
+  the same commit.
+- `SH2VR.exe`: identical (`a73c4374f4e2dbf2`, 444,928 bytes).
+- **Inject settings:** compiled into the launcher (`settings.h`): `INJECT_DELAY_MS` 8000 after the window shows,
+  nullifier off and OpenXR unless `--nullify` / `--openvr` / `--delay` are passed. No settings file sits in either
+  folder. Same exe, same command line, so the settings are the same.
+- **What differs:** `package/profile/plugins/sh2vr.dll` (0.1.1 `00d3cd1f...` 677,376 B; 0.1.2 `517fad1c...`
+  759,296 B), `package/profile/config.txt` (line endings only: CRLF against LF, same 118 lines), README.txt,
+  FILES.txt. **With `--no-install` the launcher installs nothing** (`main.cpp play()`: `install_all` only
+  `if (!pid && !no_install)`). UEVR is injected from `<launcher folder>\uevr` (identical), and the game ran on the
+  installed profile in both starts. So nothing that differs was in play.
+
+### 2. The crash and its siblings `[measured, CrashContext.runtime-xml]`
+
+17:47 (`UECC-Windows-9AC0E9904B610FDAB45CA38DF45E8842_0000`), 25 s after start, game thread, reading
+0xffffffffffffffff:
+
+```
+SHProto +4f1af02 <- +4c52806 <- +4b281cd <- UEVRBackend +14cac3 <- UEVRBackend +169811 <- SHProto +507f5a1
+<- +4ad30f1 <- +4ad7b43 (inside UGameEngine::Tick, +4ad7540) <- UEVRBackend +1685bf (its engine-tick hook)
+<- +b61124 ... main loop
+```
+
+The same signature was seen three times before, all 22-25 s after start:
+
+| crash | after | reading | path above the three game frames |
+| --- | --- | --- | --- |
+| 11-12 21:33 | 22 s | 0x0 | UEVR +14cac3 <- +169811 <- S +507f5a1 <- UEVR +14d418/+17f2dd/+152f03/+23895/+1684f3 (UEVR's own tick work) |
+| 11-12 21:36 | 22 s | 0x0 | the same |
+| 11-13 20:23 | 24 s | 0xffff... | identical to today's (game tick) |
+| **11-15 17:47** | 25 s | 0xffff... | identical to 11-13 20:23 |
+
+So it is **n=4 across three days and several builds** (b007-era, b0xx on 11-13, today's b027), and it has nothing
+to do with which release folder starts the game. ride.log for today: `17:46:54 COLLECTING`, `17:47:05 VR SESSION`
+(Ghost Hand opened, i.e. the headset session was up), `17:47:10 CrashReportClient`: about 5 s after VR came up.
+
+### 3. What the offsets say `[inferred / hypothesis]`
+
+- `UEVRBackend +1685bf` is UEVR's `engine_tick_hook` (read 2026-11-12, `inbox/2026-11-12-mod-dlss-cutscene-crash-reading.md`).
+- `S +507f5a1` is reached both from the game's tick and from UEVR's own code (21:33 variant). The next frames are a
+  UEVR detour (`+169811`) that calls back into the game (`+14cac3` -> `S +4b281cd`). That is the shape of **a
+  UFunction whose native pointer UEVR replaced (`hook_ptr`), called through UObject::ProcessEvent**, with UEVR
+  calling the original `[hypothesis: +507f5a1 in ProcessEvent, +169811 the hook_ptr dispatcher; not disassembled]`.
+- UFunction hooks installed at load (before ~25 s), in both starts alike: the pack's `main.lua` marks two Blueprint
+  functions as native and hooks them (`LegacyCameraShake.BlueprintUpdateCameraShake` and `ReceivePlayShake`, flag
+  0x400, "courtesy of Praydog"); `uevr_utils.lua` hooks `PlayerController.ClientRestart`; jbusfield's `sh2r.dll`
+  hooks `MeleeWeaponEnvTrace` (log: "Hooked MeleeWeaponEnvTrace"). Our `fire.cpp` hooks (IsFireReady,
+  OnFirePerformed) come only once the pawn exists (17:50 in today's good run), so they are unlikely at 25 s.
+  `[hypothesis]` A BP function forced "native" and called while its owner is half-built (a camera shake at the
+  menu or the headset start) fits a read of 0xffff... / 0x0 inside the script VM. Not proven.
+
+### 4. To settle it, when wanted
+
+- Open `UEMinidump.dmp` of the 17:47 crash (1.1 MB, same folder) in a debugger with the game exe: name the UFunction
+  in the ProcessEvent frame (its `Function` argument). If it is one of the camera-shake functions, the cure is the
+  pack's (jbusfield), or a guard on our side.
+- Count it: this crash at 22-25 s, against starts in that period (ride.log COLLECTING lines). If it is rare, the
+  launcher could simply retry; the start is cheap.
+- Nothing points at 0.1.2. No reason to hold back the 0.1.2 folder, and no reason to re-pack it.
