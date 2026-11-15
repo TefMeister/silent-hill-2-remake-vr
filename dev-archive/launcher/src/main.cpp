@@ -17,6 +17,7 @@
 #include "install.h"
 #include "settings.h"
 #include "steam.h"
+#include "upscaler.h"
 
 #include <windows.h>
 
@@ -96,6 +97,7 @@ int play(const Places& pl, const InjectOptions& inj, bool launch, const fs::path
         if (!install_all(pl)) logf(L"! some files were not placed (see above); trying anyway");
         reset_vanilla(pl);
     }
+    if (!pid) check_upscaler(pl);   // 2026-11-15: the game switches DLSS off by itself now and then; also on --no-install runs
     if (pl.test) { logf(L"(test root: not launching anything)"); return 0; }
 
     if (!pid) {

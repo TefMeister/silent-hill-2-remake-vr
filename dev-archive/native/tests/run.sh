@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Build and run the plugin's pure-number tests (no game, no UEVR): bash dev-archive/native/tests/run.sh
+# Build and run the pure-number tests of the plugin and the launcher (no game, no UEVR): bash dev-archive/native/tests/run.sh
 set -euo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
 OUT="$HERE/../build/tests"
@@ -7,7 +7,8 @@ mkdir -p "$OUT"
 INST="C:\\Program Files (x86)\\Microsoft Visual Studio\\Installer"
 VS="$("/c/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe" -latest -products '*' -property installationPath 2>/dev/null | tr -d '\r')"
 fail=0
-for t in "$HERE"/*_test.cpp; do
+REAL_INI="$LOCALAPPDATA/SilentHill2/Saved/Config/Windows/GameUserSettings.ini"
+for t in "$HERE"/*_test.cpp "$HERE"/../../launcher/tests/*_test.cpp; do
     name="$(basename "$t" .cpp)"
     bat="$OUT/$name.build.bat"
     {
@@ -18,6 +19,8 @@ for t in "$HERE"/*_test.cpp; do
     } > "$bat"
     cmd //c "$(cygpath -w "$bat")" >"$OUT/$name.build.log" 2>&1 || { echo "BUILD FAILED: $name"; cat "$OUT/$name.build.log"; fail=1; continue; }
     echo "== $name"
-    "$OUT/$name.exe" || fail=1
+    arg=()
+    if [ "$name" = upscaler_test ] && [ -f "$REAL_INI" ]; then cp "$REAL_INI" "$OUT/GameUserSettings.copy.ini"; arg=("$OUT/GameUserSettings.copy.ini"); fi   # a copy: the real one is never handed over
+    "$OUT/$name.exe" "${arg[@]}" || fail=1
 done
 exit $fail

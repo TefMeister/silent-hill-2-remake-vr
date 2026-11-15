@@ -11,6 +11,7 @@ inline constexpr wchar_t PROFILE_NAME[]      = L"SHProto-Win64-Shipping";       
 inline constexpr wchar_t PAKS_MODS_REL[]     = L"SHProto\\Content\\Paks\\~mods"; // inside the game folder
 inline constexpr wchar_t SAVEGAMES_REL[]     = L"SilentHill2\\Saved\\SaveGames"; // inside %LOCALAPPDATA%
 inline constexpr wchar_t INPUT_REBIND_SAV[]  = L"InputRebinding.sav";           // the player's own button changes
+inline constexpr wchar_t GAME_SETTINGS_REL[] = L"Config\\Windows\\GameUserSettings.ini";  // inside SilentHill2\Saved: DLSS, motion blur (upscaler.cpp)
 
 // Our package, beside the launcher exe
 inline constexpr wchar_t PKG_PROFILE[]       = L"package\\profile";  // -> %APPDATA%\UnrealVRMod\<PROFILE_NAME>
