@@ -22,7 +22,10 @@
 //   A                 -> interact, vault, flip an item (the game's A, as is)
 //   Quest X (pad B)   -> nothing in play; back in the menus (it is the game's own B = Cancel)
 //   Y                 -> the inventory (the game's BACK = InventoryToggle)
-//   left stick + right stick down -> dodge that way (the game's B while the stick is down)
+//   left stick + right stick CLICK -> dodge that way (the game's B while the click is held). 2026-11-15, the shared
+//                     Visceral layout (Tefa 2026-11-14: "DODGE = left stick direction + right stick click"); until
+//                     then right stick down. Right stick down / up held = crouch / jump in that layout: Silent Hill 2
+//                     has neither (Tefa 2026-11-15), so right stick down does nothing now
 //   right stick up    -> quick turn (the game's RB), a setting, OFF by default
 //   LT alone          -> the flashlight (the game's right stick click); LT with the left grip = the rack (rack.cpp)
 //   grips             -> the hands (rack, magazine, holsters); the game never sees LB / RB from them
@@ -128,7 +131,7 @@ void on_input(XINPUT_STATE& state) {
     const bool lg = down(raw, XINPUT_GAMEPAD_LEFT_SHOULDER), rg = down(raw, XINPUT_GAMEPAD_RIGHT_SHOULDER);
     const bool lt = raw.Gamepad.bLeftTrigger > settings::TRIGGER_PRESSED_OVER;
     const bool ls_click = down(raw, XINPUT_GAMEPAD_LEFT_THUMB);
-    const bool rs_down = raw.Gamepad.sThumbRY < -settings::STICK_DODGE_AT;
+    const bool rs_click = down(raw, XINPUT_GAMEPAD_RIGHT_THUMB);
     const bool rs_up = raw.Gamepad.sThumbRY > settings::STICK_DODGE_AT;
     char line[120];
 
@@ -189,9 +192,9 @@ void on_input(XINPUT_STATE& state) {
     set(state, XINPUT_GAMEPAD_Y, false);
     if (down(raw, XINPUT_GAMEPAD_Y) && !input::held(XINPUT_GAMEPAD_Y)) say("Y -> the inventory (the game's BACK)");
 
-    // dodge: the left stick gives the direction, right stick down is the press (the game's B)
-    if (rs_down) set(state, XINPUT_GAMEPAD_B, true);
-    if (rs_down && g_polls % settings::BUTTONS_LOG_EVERY_POLLS == 0) say("right stick down -> dodge (the game's B)");
+    // dodge: the left stick gives the direction, the right stick's click is the press (the game's B)
+    if (rs_click) set(state, XINPUT_GAMEPAD_B, true);
+    if (rs_click && g_polls % settings::BUTTONS_LOG_EVERY_POLLS == 0) say("right stick click -> dodge (the game's B)");
 
     // quick turn: right stick up, a setting
     if (settings::QUICK_TURN_ON && rs_up && !g_rs_up_was) { g_turn_pulse = settings::BUTTONS_PULSE_POLLS; say("right stick up -> quick turn (the game's RB)"); }
