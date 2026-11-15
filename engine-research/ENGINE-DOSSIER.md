@@ -186,3 +186,163 @@ sockets `slide_joint`, `magazine_joint`, `FX_muzzle` (Lukas's, `[reported]` unti
   14 ms `[verified-numerically 2026-11-15]`. Not run in the game.
 - What is held: the weapon manager's `GetEquippedWeaponName` ("None" = bare hands) plus `GetEquippedRangedWeapon`
   (a gun) else melee; the healing item = raw. jbusfield's own per-solver `smoothing` (0 in the profile) is left alone.
+
+## 12. The OBS crash at the cutscene switch, and the stills to compare cutscenes against (2026-11-15, /lm reader + simulator run)
+
+
+For: the live session on Silent Hill 2 (and, for part 1, the Keeper: it is a Lanes fault). Read-only work: nothing
+was launched, attached, installed or committed. Files read: the plugin sources (`dev-archive/native/src`), the Lanes
+rider and `obs-rec.py` (`_lanes-next-wt`, 0.117.0 = the installed copy), `%LOCALAPPDATA%\BeG0nE\ride.log`,
+`%LOCALAPPDATA%\obs-rec-breaks.log`, OBS's crash reports (`%APPDATA%\obs-studio\crashes\`), the OBS Mirror layer's log
+(`%LOCALAPPDATA%\XR_APILAYER_NOVENDOR_OBSMirror.log`), the board, FAULTS.md.
+
+### 1. The error sound
+
+### Short answer
+
+The beep is OBS's own crash box ("OBS has crashed!"). OBS is only running because Lanes' rider records every VR
+session. **What crashes it at a cutscene is NOT the two riders**: it is the recording of the headset view. Our flat
+cutscene screen (`cutscreen.cpp` sets UEVR's `VR_2DScreenMode`) makes UEVR rebuild its OpenXR pictures at the game
+window's size; the headset view that OBS records changes size; OBS 33.0.1 dies about two seconds later. Lanes' guard
+then closes the box, kills OBS and starts a fresh recording (probably the Discord bar flash). So: the mod only sets
+it off; the fault (and the fix) is Lanes'.
+
+### What the files show
+
+- **Which log starts the recording.** Our only BeG0nE recorder is Ghost Hand (`ghosthand.cpp`), writing
+  `%LOCALAPPDATA%\BeG0nE\ghost-hand\silent-hill-2-remake-vr_<stamp>.ghl`. It opens when UEVR's `is_hmd_active()` turns
+  true and closes when it turns false; it does not look at cutscenes `[read in source]`. One `.ghl` per game run,
+  opened at the headset session's start (main menu), with one `VR SESSION` and one `RECORDING` line per run in
+  ride.log `[measured: every SH2 run 11-12 to 11-15]`. So no recorder log starts growing at a cutscene; the rider
+  starts OBS once per run, not per cutscene.
+- **The two-riders cause (FAULTS row, the Keeper's).** Real, and fixed: ride.log shows every line twice and a `CLASH
+  GUARD ... second recording does not start` one second after each start until 11-15; since `14:14:57 rider up (pid
+  3348, ..._lanes-next-wt\...)` every line is single and a refusal reason is logged (`not recording: could not tell
+  which program is logging`, 17:47:05) `[measured]`. The Startup entry runs the rider from `_lanes-next-wt`, whose
+  `rider.py` is byte-identical to the installed 0.117.0 copy and holds the `Local\BeG0nE-rider` mutex (d47dabd is
+  an ancestor of 0.117.0) `[measured]`. That fix covers the crashes right after a session start (crash reports
+  22:50:03 on 11-13, 01:15:44 on 11-14: Source Record starting its NVENC encoder, 2-6 s after a start).
+- **The cutscene crashes are a second, separate cause, NOT fixed by d47dabd.** OBS's crash reports (it keeps the last
+  ten) and the OBS Mirror log, lined up by the second `[measured]`:
+
+  | the game rebuilds its OpenXR pictures (Mirror log) | OBS crash report |
+  | --- | --- |
+  | 11-13 13:06:14 to window size (flat screen on) | 13:06:16 |
+  | 13:07:10 flat on | 13:07:12 |
+  | 13:45:55 back to the headset size (flat off) | 13:45:57 |
+  | 13:58:13 flat on | 13:58:15 |
+  | 14:06:03 flat on | 14:06:05 |
+  | 14:08:07 flat on | 14:08:08 |
+  | 11-14 02:03:05 flat on | 02:03:07 |
+  | 02:03:18 flat off | 02:03:20 |
+
+  "Flat on" = the eye picture swapchain replaced by a 1920x1080 one (the burst `1920x1080, 1920x1080, 4x4`); in 2D
+  mode UEVR sizes the eye pictures from the game window (`inbox/2026-11-12-mod-uevr-2d-mode-source-reading.md`,
+  `VR.cpp:2840-2870`). The earlier breaks (11-13 12:39, 12:51, 12:55, 12:57, 12:58, crash reports already rotated
+  out) each follow a flat on/off rebuild by 11-16 s, the guard's polling plus its restart `[measured]`. Changes of
+  size between the two headset sizes (the warp switch, 5376x2880 <-> 2688x2880; 13:49-13:56, four times) did NOT
+  crash `[measured, n=4]`.
+- **Only with the headset view as the second file.** Every crashing recording was `+ OpenXR headset view (OBS
+  Mirror)`. Simulator runs with full opening cutscenes, recorded `+ OpenXR Simulator preview` (11-12 22:31-22:37,
+  22:52-22:58, 22:59-23:05), have no break at all `[measured, n=3+]`. Tefa's 23:18 headset wear of the same build
+  broke twice (23:18:52, 23:20:16).
+- **The crash itself** (all eight above): `end_data_capture_thread -> remove_connection -> video_output_disconnect2 ->
+  pthread_mutex_unlock` on a null mutex, while the UI thread runs a queued task in `obs_output_release /
+  obs_output_destroy` (`OBSApp::Exec`) `[measured, crash reports]`. That is an output being torn down; the only
+  output besides the main recording is the Source Record filter on the mirror source. `[hypothesis]` Source Record
+  restarts its output when its source changes size, and OBS 33.0.1 crashes in that teardown.
+
+### Ours or Lanes'?
+
+Lanes' `[inferred from the measured table]`. The mod's switch is legitimate and must stay; the crash needs OBS + the
+Source Record filter on the OBS Mirror source, which only Lanes sets up (`obs-rec.py` `point_second(...,
+kind=MIRROR_KIND)`). Fix belongs on the Keeper (Lanes work), e.g. record the headset view without Source Record,
+pause the second file around a size change, or a newer OBS. The FAULTS row (2026-11-13) is half right: its cause is
+real but explains the start-of-session crashes, not the cutscene ones. The board row "[FLAT] The Windows error sound
+at the cutscene's start and end" is this, and "two Windows error sounds" at the main menu (b008) may be the
+start-of-session pair.
+
+### What a live check should look for
+
+1. On the simulator (today's live run records `+ OpenXR Simulator preview`, ride.log 17:49:01): **prediction: no
+   beep and no new row** at the cutscene's start or end `[hypothesis from the table]`.
+2. In the headset (the second file is then the OBS Mirror): at each `cutscreen: cutscene began, flat screen going
+   on` / `ended ... off` line in `%APPDATA%\UnrealVRMod\SHProto-Win64-Shipping\log.txt`:
+   - the Mirror log shows `Creating swapchain with dimensions=1920x1080` (twice) the same second;
+   - a new `%APPDATA%\obs-studio\crashes\Crash <date> <time>.txt` 1-2 s later, with `video_output_disconnect2` and
+     `obs_output_release` in it;
+   - a new row in `%LOCALAPPDATA%\obs-rec-breaks.log` (`OBS showed "OBS has crashed!"  restarted`) 5-20 s later;
+   - ride.log stays single-lined (one rider) and logs nothing at that moment (the guard writes only to the breaks
+     log).
+   All four = confirmed. A beep with no crash report = something else (look at the window list for a message box).
+3. Cheap separation without the headset: `sh2vr_flat.txt` in the profile forces the flat screen on in play
+   (`cutscreen.cpp dev_forced`); creating and deleting it switches 2D mode on and off on demand. Only useful when
+   the second file is the OBS Mirror, i.e. with the headset (or with no simulator preview window up).
+
+### 2. The opening cutscene stills: "the warp on, compared against b014's stills"
+
+### Where the reference pictures are
+
+- **b014's stills = `dev-archive/recon/2026-11-12-real-flat-cutscenes/runs/dlss-dive/`**: route stills `r0`-`r3`
+  and `t000.jpg`-`t231.jpg` (one a second from the key press that starts the opening), taken 11-13 01:55:20-01:59:11,
+  DLSS on, ray tracing on, rendering method 0 (no warp). b014 was built 01:50 (builds INDEX.md) and the deep-dive
+  session ran 01:50-02:15, so this is the b014 run `[inferred: by time; no log names the build]`. Not committed
+  (`.gitignore`: `runs/*/`); local to this PC only. No sheet was made for it.
+- **The committed reference, b008 (same camera code, DLSS on)**: `runs/sheet-realcam2-dlsson-0-120.jpg` and
+  `-123-249.jpg` (every 3 s), and the plain game without any mod: `runs/sheet-plain1-0-120.jpg` / `-123-249.jpg`.
+  Spot check: b014's `t039` (over the shoulder into the mirror) and `t093` (the car park) match the b008 sheet's +39
+  and +93 `[measured, looked at]`.
+- The plain timeline (note `modding-notes/2026-11-12c-...`): +11 two pairs of hands in the mirror frame, +21 lips
+  close-up, +30 the hand rubbed, +39 over the shoulder into the mirror, +60 the wide bathroom, +69 James's face, +78
+  black with two lines of text (to about +88), +90 out of the door, +93 the car park, +123 the wide overlook, +156 at
+  the railing, +195 behind him at the view; play from about +205. +3 to +9 are black.
+
+### How to run it
+
+All from `dev-archive/recon/2026-11-12-real-flat-cutscenes/`. The game must be CLOSED first (the script refuses
+otherwise: "a game is already running: stop").
+
+1. `python cutcompare.py warp-b0NN vr 250`
+   - `vr` starts `D:\SH2 builds\releases\Silent Hill 2 VR 0.1.1\SH2VR.exe play --sim --no-install`: the OpenXR
+     Simulator, with whatever plugin is INSTALLED (today b027; the warp switches itself on 10 s after the headset
+     starts drawing, `warp.cpp`, unless `sh2vr_nowarp.txt` is in the profile). `plain` = the game alone, `-windowed`.
+   - It copies the save folder to `D:\SH2 builds\_save-backups\2026-11-12c-real-flat-<label>` first and puts it back
+     after, checked by hash ("saves put back, same as before: True").
+   - Route, by itself with a picture check before each key: waits 50 s, the warning screen (`r0`), Enter to the main
+     menu (`r1`), down + Enter, four downs to START GAME (`r2`), Enter, 32 s, `r3` "press any button", Enter. Then one
+     still a second for `250` s (`t000`...`t249`), 640 px wide, from the game window (PrintWindow).
+   - Takes about 6 minutes in all. It closes the game the game's own way (WM_CLOSE), kills a CrashReportClient if
+     one is up, then puts the saves back.
+   - Options: `--keep-open` (leaves the game up and the saves NOT put back; close later with `python closeup.py
+     2026-11-12c-real-flat-<label>`); `--dll <path>` puts a test build in for this run only (writes beside the UEVR
+     profile: the live session's call, not the reader's).
+   - Pictures land in `runs/<label>/`; it prints `RUN <label> vr: stills N, game up True/False, cutscene-began line at
+     +X s`, then the last 40 `cutscreen:` and `realcam:` lines of the injector's log.
+2. Sheets: `python sheet.py warp-b0NN 0 120 3 7` and `python sheet.py warp-b0NN 123 249 3 7` -> `runs/sheet-warp-b0NN-0-120.jpg`
+   etc. For b014 the same with `dlss-dive` (`0 120 3 7`, `123 231 3 7`); compare against those and against the
+   committed `sheet-realcam2-dlsson-*` (same columns: 7 a row, every 3 s).
+3. `waitcut.py <s>` is not needed for the comparison; it returns once the newest `cutscene began` line is `<s>`
+   seconds old (exit 1 "no cutscene line" after 400 s): for timing a by-hand check (an OBS frame, a connector read)
+   at a fixed second into the cutscene. `odd.py <video>` counts one-frame wrong pictures in the BeG0nE recording
+   (`D:\claude video game stuff\recordings\silent-hill-2-remake-vr\`), per 20 s.
+
+### Pass / fail
+
+- **Pass:** `game up True` and the run reaches the end; `cutscene-began line` at roughly +9 to +12 s (the hands at
+  +11/12); in the log, `warp: ... switching the frame warp on (rendering method 0 -> 3)` BEFORE `cutscene began`, then
+  `realcam: angle ... the projection's first number 1.000 -> <n>` lines; every still matches b014 / b008 at the same
+  second within a second or two: the close-ups stay close (lips +21, hand +30), the mirror shot at +39 shows James in
+  the mirror like the reference, the car park +93 the same framing; black only at +3..+9 and +78..+88; at the end
+  `cutscene ended, flat screen going off` and the play view back.
+- **Fail, and what each means:** wide views from behind where the reference has a close-up = the real camera angle
+  is not applied with the warp on (realcam was written against method 0); a squeezed two-eye picture or a
+  see-through double in a still = the right-eye fault family; black or frozen stills outside the known black seconds
+  = the flat screen does not draw with the warp; `game up False` / a CrashReportClient = a crash at the switch
+  (note the second against the log); the timeline shifted by many seconds = a stall or a lost key (look at `r0`-`r3`).
+- Caveat `[hypothesis]`: the window stills are UEVR's spectator view; with the warp on, what the window shows may
+  differ from the headset. UEVR's source says the warp is off in 2D mode and method 3 falls back to synchronized
+  drawing while flat (`VR.hpp:513-523`), so the flat part itself should look like b014; the risk is the two switches.
+- Side check for part 1: this run is on the simulator, so by the table above it should NOT beep. A beep here would
+  undo the "OBS Mirror only" reading.
+
+- **Live, 2026-11-15:** the opening cutscene with the warp on ran 3 min 38 s on the flat screen and switched back to VR cleanly; no OBS break at either switch while the simulator preview was recorded `[verified-live 2026-11-15, simulator, n=1]` (`modding-notes/2026-11-15b-the-opening-cutscene-with-the-warp-on.md`).

@@ -1,0 +1,32 @@
+# 2026-11-15 (/lm, Opus, OpenXR Simulator, nobody in the headset): the opening cutscene with the warp on; b027 starts
+
+Tefa: *"2 go"* (game sessions on my own). Build installed: b027 of the build history (sh2vr.dll with today's smoothing,
+the map at the left back, the dodge on the right stick click, the menu button tap / hold). Launched by the mod's own
+launcher, `SH2VR.exe play --sim --no-install` (0.1.1 folder); saves backed up to `D:/SH2 builds/_save-backups/2026-11-15-before-lm-newgame/` first.
+
+## What ran
+
+- **First start crashed** right after the injection (0.1.2 launcher folder): `EXCEPTION_ACCESS_VIOLATION reading
+  0xffffffffffffffff` on the game thread, the stack only the game and `UEVRBackend` (no `sh2vr` frame)
+  `[measured, the crash report, n=1]`. The second start (0.1.1 launcher folder, same installed plugin) ran.
+  Which folder's UEVR the launcher injected differs between the two: worth one more start from 0.1.2 to tell a
+  0.1.2 package fault from a one-off `[hypothesis]`.
+- Warning -> main menu -> NEW GAME -> START GAME -> PRESS ANY BUTTON by keys through the UEVR connector, a picture
+  before each key (KNOWN.md's route held).
+- **The frame warp switched itself on** in play before the cutscene (thousands of warp calls in the log).
+- **The opening cutscene ran its whole length with the warp on: 3 min 38 s on the flat screen (5.5 m, the game's real
+  camera), no crash, and a clean return to VR** (both eyes alike, the hands drawn, the car-park overlook)
+  `[verified-live 2026-11-15, simulator, n=1]`. 18 stall lines in the run, all during the load-in before the cutscene
+  (the longest 1.2 s), one of 118 ms at the cutscene's start.
+- **One passing frame mid-cutscene** had a right eye 30 % darker with less than half the contrast of the left
+  (means 14.3 / 9.9); the next pair, 12 s later, matched exactly (16.6 / 16.5) `[measured, n=1 each]`: a made-up
+  frame at a shot change is the likely reading `[hypothesis]`. Tefa's headset clip of 2026-11-13 (torn frames, a tilted
+  screen at the switch) was not reproduced here; the simulator may not show what Virtual Desktop does.
+- Our plugin's cost: 0.37 ms a frame with today's additions (ik 0.24) `[measured]`. With no weapon at the start the
+  smoothing stays raw (as designed); the dodge, the menu button and the map need the VR Bench layer on for the game
+  (the connector's simulated pad reaches the game after our plugin, so our button layer never sees it): next run.
+
+## Not established
+
+- The b027 controls in play (dodge, menu tap / hold, the map at the left back, smoothing with a gun): untested.
+- Whether the first-start crash belongs to the 0.1.2 package.
