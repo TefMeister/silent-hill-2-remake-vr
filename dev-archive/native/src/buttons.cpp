@@ -82,6 +82,7 @@ inline void set(XINPUT_STATE& s, WORD b, bool on) { if (on) s.Gamepad.wButtons |
 // the menu button's tap / hold: read every poll before the menu-or-play split, written into the game's state by
 // menu_button_out in both branches
 void menu_button_in(const XINPUT_STATE& raw, bool in_menu, void (*tell)(const char*)) {
+    if (!settings::MENU_TAP_HOLD_ON) return;   // START passes as it is: the game's pause (see settings.h)
     const bool start = (raw.Gamepad.wButtons & XINPUT_GAMEPAD_START) != 0;
     const unsigned long long now = GetTickCount64();
     if (start && !g_start_was) { g_start_ours = !in_menu; g_start_t = now; g_start_fired = false; }

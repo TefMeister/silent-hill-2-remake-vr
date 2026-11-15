@@ -31,3 +31,19 @@ launcher, `SH2VR.exe play --sim --no-install` (0.1.1 folder); saves backed up to
 
 - The b027 controls in play (dodge, menu tap / hold, the map at the left back, smoothing with a gun): untested.
 - Whether the first-start crash belongs to the 0.1.2 package.
+
+## Later: b027's controls on the simulator with VR Bench, and b028
+
+Launched by the 0.1.1 launcher with the VR Bench layer on, CONTINUE, a VR trigger pull past PRESS ANY BUTTON (the save
+stands at a save point). Driven by a scratch script that holds both pretend controllers and reads the plugin's log
+`[verified-live 2026-11-15, simulator + VR Bench, n=1 each]`:
+- **the right stick click = the dodge:** "right stick click -> dodge (the game's B)";
+- **the menu button tapped = the inventory:** it opened (the gameplay menu took the focus);
+- **the left grip at the LEFT BACK = the map:** out, then put away, "the map is gone from the screen";
+- **the menu button HELD 0.6 s did NOT pause:** it opened the inventory like a tap and no "held" line came: the
+  button seems to reach the game as a short START however long it is held [hypothesis: UEVR passes it as a pulse].
+  So b027 had taken the pause away from the menu button: **b028 switches the tap / hold off** (`MENU_TAP_HOLD_ON`
+  false; the menu button = the game's pause again, Y = the inventory as before). Next: read the button's real state
+  from UEVR's own action, not from the XInput START.
+- **the pistol from the right hip:** the game refused the draw at this save spot (its combat state: no weapon here),
+  so the smoothing proof line was not seen; another spot is needed.

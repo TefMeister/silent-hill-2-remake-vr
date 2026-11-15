@@ -84,6 +84,10 @@ constexpr int STICK_DODGE_AT = 20000;          // the right stick this far up (o
 // objectives; menu held 0.3 s = pause menu"). Silent Hill 2 has no journal button: its memos are in the inventory, so a
 // tap = the inventory (the game's BACK), a hold = the pause menu (the game's START).
 constexpr unsigned long long MENU_HOLD_MS = 300;
+// 2026-11-15 (/lm, simulator + VR Bench): OFF. A 0.6 s hold of the Quest menu button reached the game as a short START
+// (the hold was never seen; it opened the inventory like a tap), so with this on the menu button could no longer pause.
+// UEVR seems to pass the button as a pulse [hypothesis]: needs the button's real state from UEVR's own action first.
+constexpr bool MENU_TAP_HOLD_ON = false;
 constexpr int BUTTONS_PULSE_POLLS = 3;         // a pressed button the game must see for this many polls (flashlight, quick turn)
 constexpr int BUTTONS_LOG_MAX = 80;            // log lines about translated presses, per run
 constexpr int BUTTONS_LOG_EVERY_POLLS = 60;    // a held dodge is logged this often
