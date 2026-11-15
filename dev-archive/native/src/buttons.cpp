@@ -22,6 +22,7 @@
 //   A                 -> interact, vault, flip an item (the game's A, as is)
 //   Quest X (pad B)   -> nothing in play; back in the menus (it is the game's own B = Cancel)
 //   Y                 -> the inventory (the game's BACK = InventoryToggle)
+//   menu button       -> tap = the inventory (memos, notes), held 0.3 s = the pause menu (2026-11-15, the shared layout)
 //   left stick + right stick CLICK -> dodge that way (the game's B while the click is held). 2026-11-15, the shared
 //                     Visceral layout (Tefa 2026-11-14: "DODGE = left stick direction + right stick click"); until
 //                     then right stick down. Right stick down / up held = crouch / jump in that layout: Silent Hill 2
@@ -52,6 +53,11 @@ bool g_ls_was = false;             // edges of the real controller, poll to poll
 bool g_lt_was = false, g_rs_up_was = false;
 int g_flash_pulse = 0;             // polls left to hold the flashlight click
 int g_turn_pulse = 0;              // polls left to hold the quick turn
+// the menu button: tap = inventory, hold = pause (2026-11-15). A press that starts in play is ours until it is let go,
+// so the still-held button never reaches the pause menu it just opened (which would close it again)
+bool g_start_was = false, g_start_ours = false, g_start_fired = false;
+unsigned long long g_start_t = 0;
+int g_pause_pulse = 0, g_inv_pulse = 0;
 bool g_menu = false;               // the frame's menu-or-gameplay answer (set on the game thread)
 WORD g_queued = 0;                 // press_for_game: what the game must see next
 int g_queued_polls = 0;
@@ -72,6 +78,29 @@ void say(const char* line) {
 
 inline bool down(const XINPUT_STATE& s, WORD b) { return (s.Gamepad.wButtons & b) != 0; }
 inline void set(XINPUT_STATE& s, WORD b, bool on) { if (on) s.Gamepad.wButtons |= b; else s.Gamepad.wButtons &= (WORD)~b; }
+
+// the menu button's tap / hold: read every poll before the menu-or-play split, written into the game's state by
+// menu_button_out in both branches
+void menu_button_in(const XINPUT_STATE& raw, bool in_menu, void (*tell)(const char*)) {
+    const bool start = (raw.Gamepad.wButtons & XINPUT_GAMEPAD_START) != 0;
+    const unsigned long long now = GetTickCount64();
+    if (start && !g_start_was) { g_start_ours = !in_menu; g_start_t = now; g_start_fired = false; }
+    if (g_start_ours) {
+        if (start && !g_start_fired && now - g_start_t >= settings::MENU_HOLD_MS) {
+            g_start_fired = true; g_pause_pulse = settings::BUTTONS_PULSE_POLLS; tell("menu button held -> the pause menu (the game's START)");
+        }
+        if (!start && !g_start_fired) { g_inv_pulse = settings::BUTTONS_PULSE_POLLS; tell("menu button tapped -> the inventory, memos and notes (the game's BACK)"); }
+        if (!start) g_start_ours = false;
+    }
+    g_start_was = start;
+}
+void menu_button_out(XINPUT_STATE& state) {
+    const bool ours = g_start_ours || g_pause_pulse > 0;
+    if (ours) set(state, XINPUT_GAMEPAD_START, g_pause_pulse > 0);   // else a press begun in a menu passes as it is
+    if (g_inv_pulse > 0) set(state, XINPUT_GAMEPAD_BACK, true);
+    if (g_pause_pulse > 0) --g_pause_pulse;
+    if (g_inv_pulse > 0) --g_inv_pulse;
+}
 
 // A menu widget has the controls when it has the user's focus: the gameplay menu (inventory, map, memos, examine)
 // answered HasAnyUserFocus true with the inventory open and false after it closed [verified-live 2026-10-29, n=1 each,
@@ -145,6 +174,7 @@ void on_input(XINPUT_STATE& state) {
         say(line);
     }
 
+    menu_button_in(raw, g_menu, say);
     if (g_menu) {
         // the menus: the game's own buttons, with Tefa's two (in QUEST letters, settings.h): Quest X = back (it IS the pad's
         // B, the game's Cancel, so it passes as it is), Quest Y = inventory; Quest B (the pad's X) kept out
@@ -168,6 +198,7 @@ void on_input(XINPUT_STATE& state) {
             state.Gamepad.bLeftTrigger = 0;
             state.Gamepad.bRightTrigger = 0;
         }
+        menu_button_out(state);
         apply_queued(state);
         g_ls_was = ls_click; g_lt_was = lt; g_rs_up_was = rs_up;
         g_flash_pulse = g_turn_pulse = 0;
@@ -209,6 +240,7 @@ void on_input(XINPUT_STATE& state) {
     set(state, XINPUT_GAMEPAD_RIGHT_THUMB, g_flash_pulse > 0);
     if (g_flash_pulse > 0) --g_flash_pulse;
     state.Gamepad.bLeftTrigger = 0;
+    menu_button_out(state);
     apply_queued(state);
     (void)rg;
     ++g_rewrites;

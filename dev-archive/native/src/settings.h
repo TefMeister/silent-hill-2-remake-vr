@@ -80,6 +80,10 @@ constexpr float HANDPASTE_NEAR_M = 1.0f;          // nearer than this and marked
 constexpr bool BUTTONS_LAYER_ON = true;        // one layer decides what the game sees; off = the raw pad as before
 constexpr bool QUICK_TURN_ON = false;          // right stick up = quick turn (Tefa: a setting, off by default)
 constexpr int STICK_DODGE_AT = 20000;          // the right stick this far up (of 32767) = quick turn (the dodge is the stick's click since 2026-11-15)
+// the menu button (the pad's START), 2026-11-15, the shared Visceral layout (Tefa 2026-11-14: "menu tap = journal /
+// objectives; menu held 0.3 s = pause menu"). Silent Hill 2 has no journal button: its memos are in the inventory, so a
+// tap = the inventory (the game's BACK), a hold = the pause menu (the game's START).
+constexpr unsigned long long MENU_HOLD_MS = 300;
 constexpr int BUTTONS_PULSE_POLLS = 3;         // a pressed button the game must see for this many polls (flashlight, quick turn)
 constexpr int BUTTONS_LOG_MAX = 80;            // log lines about translated presses, per run
 constexpr int BUTTONS_LOG_EVERY_POLLS = 60;    // a held dodge is logged this often
