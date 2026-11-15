@@ -2,6 +2,7 @@
 #include "fingers.h"
 
 #include <map>
+#include <set>
 #include <vector>
 
 #include "animation.h"
@@ -91,9 +92,15 @@ void pose(const std::string& id, const std::string& pose_id) {   // pose(animID,
     const json::Value* d = defs();
     const json::Value* poses = d != nullptr ? d->get("poses") : nullptr;
     const json::Value* p = poses != nullptr ? poses->get(pose_id) : nullptr;
-    if (p == nullptr || p->kind != json::Value::ARR) return;
+    static std::set<std::string> told;   // 2026-11-15: a pose naming a shape the file lacks does nothing; said once per pose
+    if (p == nullptr || p->kind != json::Value::ARR) {
+        if (told.insert(pose_id).second) LOGW("%s fingers: pose %s is not in hands_parameters.json: nothing posed", TAG, pose_id.c_str());
+        return;
+    }
     for (const auto& step : p->arr) {
         if (step.kind != json::Value::ARR || step.arr.size() < 2 || step.arr[0].kind != json::Value::STR || step.arr[1].kind != json::Value::STR) continue;
+        if (positions(step.arr[0].s) == nullptr && told.insert(pose_id + "/" + step.arr[0].s).second)
+            LOGW("%s fingers: pose %s names the shape %s, which hands_parameters.json does not have: that part is not posed", TAG, pose_id.c_str(), step.arr[0].s.c_str());
         animate(id, step.arr[0].s, step.arr[1].s.c_str());
     }
 }

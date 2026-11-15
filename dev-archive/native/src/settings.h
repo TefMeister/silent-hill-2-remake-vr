@@ -179,7 +179,11 @@ constexpr unsigned FRONT_GRIP_CAPTURE_KEY = 0x71;   // VK_F2: capture the game's
 constexpr const wchar_t* FRONT_GRIP_HAND_BONE = L"hand_l_bn";
 constexpr int FRONT_GRIP_FINGER_DEPTH = 6;   // how far up a bone may be below the hand to count as a finger
 constexpr const wchar_t* FRONT_GRIP_SOCKET = L"Holder_L";   // the gun's own left-hand spot (the game's IK puts the hand bone there)
-constexpr const char* FRONT_GRIP_POSE_SHOTGUN = "grip_left_weapon_shotgun";      // the pack's finger poses, until the game's are captured
+// the pack's finger poses, until the game's are captured. 2026-11-15 (/pd): the pack's "grip_left_weapon_shotgun" names two
+// shapes its hands_parameters.json never defines (left_grip_weapon_shotgun, left_trigger_weapon_shotgun), so it posed
+// nothing and the left hand kept its open pose on the pump: the 11-06 screenshots' palm up, fingers spread
+// [inferred-static 2026-11-15, the file read]. The rifle's fore-end grip is complete and is the same kind of hold.
+constexpr const char* FRONT_GRIP_POSE_SHOTGUN = "grip_left_weapon_rifle_offhand";
 constexpr const char* FRONT_GRIP_POSE_RIFLE = "grip_left_weapon_rifle_offhand";
 constexpr double FRONT_GRIP_CAPTURE_MATCH_CM = 1.0;          // the body's hand this close to Holder_L = the game's grip, fingers worth keeping
 constexpr float TWO_HAND_REPORT_S = 3.0f;
