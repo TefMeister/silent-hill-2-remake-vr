@@ -73,6 +73,20 @@ sockets `slide_joint`, `magazine_joint`, `FX_muzzle` (Lukas's, `[reported]` unti
 - The ghidrust connector's debug attach freezes the game for good (threads Suspended, detach does not resume them);
   stopping the connector's process frees it `[verified-live 2026-11-05, n=1]`. Sample waits with
   `dev-archive/tools/optimiser/waitstacks.py` instead.
+- **Crashes at quit (inbox drained 2026-11-15, from the /gd notes of 11-07 and 11-11 and the /gr and /sr answers).**
+  Three kinds on the shelves `[measured from the dumps, 2026-11-07 and 11-11]`: (1) `UEVRBackend.dll+0x1503df`, a
+  read of null+0x58 in PLAY, 2026-11-05 x4 and 2026-11-10 x2 (resolve against the exact AFW b6 dll in use: beta 6
+  ships two different dlls, nightly- and joeyhodge-based `[reported, release notes]`); (2) two stack-like write
+  faults in ntdll on 2026-11-05 evening `[hypothesis: stack overflow]`; (3) every quit since 2026-11-06 is a crash:
+  first `0xC0000409`/0xa at an address in no library (after Steam unloaded), from 2026-11-10 13:00 `0xC0000409`/0x7
+  (`abort()`) at `openxr_simulator.dll+0x919bd`. The last one is **the simulator's own fault**: since v1.6.0 its
+  preview window runs on a static `std::thread` joined only in `xrDestroyInstance`, so a process that quits without
+  it aborts `[inferred-static 2026-11-11, /gr, source read; offset not resolved against the binary]`. It costs only
+  a 150 MB dump per quit. UEVR and AFW did not change upstream since 2026-08 `[measured 2026-11-07, GitHub API]`.
+- **Closing the game under the simulator:** the process owns two top-level windows (the simulator's preview first);
+  `MainWindowHandle` may be the preview, and a close sent there closes only the preview
+  `[verified-live 2026-11-10 in the-darkness-vr, n=3; not checked in SH2]`. `run-sim.ps1` closes and keys the game's
+  own window since 2026-11-15.
 
 ## 4. Other engine facts (from the live sessions, 2026-10-23/24)
 
@@ -158,3 +172,17 @@ sockets `slide_joint`, `magazine_joint`, `FX_muzzle` (Lukas's, `[reported]` unti
 - The warp's distances are metres; its near rules sit at 0.1, 0.5 and 1.0 `[inferred-static; the 0.1 path verified-live]`. Describing the scene larger or smaller to it (our stand-in in the injector's import of `EvaluateFrameWarp`) moves those lines and nothing else; no fix came from it.
 - The debug view: Numpad 6 as a real key press; it tints only in modes 1 and 3.
 - Ours: `warpscale.cpp` makes a mode 2 call as mode 3 while the view turns or a hand moves fast (b019; the file `sh2vr_warpscale.txt`, "scale degrees speed"). Headset verdict open.
+
+## 11. Weapon smoothing (2026-11-15, /pd; `smooth.cpp`, build b023 in the build history)
+
+- The held weapon is a child of our arm mesh's `hand_r_bn` (§7), so smoothing the right hand's TARGET inside the arm
+  solve (`ik.cpp`, before the solve) moves the arm, the hand and the weapon as one piece. Not while the right hand
+  rides the rifle locked in the left hand (`rhbolt.cpp`).
+- A One Euro filter with Village's numbers (`visceral_re8_hand_smooth.lua`): strength s gives a still cut-off of
+  12 Hz x 0.65^s; gun 4 (2.1 Hz), melee 1.5 (6.3 Hz). Filtered in the controller's tracking space (its attach
+  parent), so walking and turning are not smeared `[compile-verified 2026-11-15]`.
+- By numbers on the shipped step (`tests/smooth_test.cpp`): still-hand shake per frame cut to 17 % (gun) and 34 %
+  (melee); a 120-degree swing in 0.25 s trails by 5 degrees at most with melee (under one frame) and settles in
+  14 ms `[verified-numerically 2026-11-15]`. Not run in the game.
+- What is held: the weapon manager's `GetEquippedWeaponName` ("None" = bare hands) plus `GetEquippedRangedWeapon`
+  (a gun) else melee; the healing item = raw. jbusfield's own per-solver `smoothing` (0 in the profile) is left alone.

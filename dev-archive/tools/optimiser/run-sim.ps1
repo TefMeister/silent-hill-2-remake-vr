@@ -13,12 +13,36 @@ param(
 )
 $prof = "$env:APPDATA\UnrealVRMod\SHProto-Win64-Shipping"
 $log = "$prof\log.txt"
-Add-Type -TypeDefinition 'using System; using System.Runtime.InteropServices; public static class RS { [DllImport("user32.dll")] public static extern bool PostMessage(IntPtr h, uint m, IntPtr w, IntPtr l); }'
+Add-Type -TypeDefinition @'
+using System; using System.Text; using System.Runtime.InteropServices;
+public static class RS {
+    [DllImport("user32.dll")] public static extern bool PostMessage(IntPtr h, uint m, IntPtr w, IntPtr l);
+    delegate bool EnumProc(IntPtr h, IntPtr l);
+    [DllImport("user32.dll")] static extern bool EnumWindows(EnumProc f, IntPtr l);
+    [DllImport("user32.dll")] static extern uint GetWindowThreadProcessId(IntPtr h, out uint pid);
+    [DllImport("user32.dll")] static extern bool IsWindowVisible(IntPtr h);
+    [DllImport("user32.dll", CharSet = CharSet.Unicode)] static extern int GetWindowText(IntPtr h, StringBuilder s, int n);
+    // The game's own top-level window: under the OpenXR Simulator the process also owns the simulator's preview
+    // ("OpenXR Simulator - ..."), which may come first and be what .NET calls MainWindowHandle (the-darkness-vr, 2026-11-10).
+    public static IntPtr GameWindow(uint pid) {
+        IntPtr found = IntPtr.Zero;
+        EnumWindows((h, l) => {
+            uint p; GetWindowThreadProcessId(h, out p);
+            if (p != pid || !IsWindowVisible(h)) return true;
+            var sb = new StringBuilder(256); GetWindowText(h, sb, 256); string t = sb.ToString();
+            if (t.Length == 0 || t.StartsWith("OpenXR Simulator")) return true;
+            found = h; return false;
+        }, IntPtr.Zero);
+        return found;
+    }
+}
+'@
+function Game-Window($p) { $h = [RS]::GameWindow([uint32]$p.Id); if ($h -eq [IntPtr]::Zero) { $h = $p.MainWindowHandle }; $h }
 
 function Close-Game {
     $p = Get-Process SHProto-Win64-Shipping -ErrorAction SilentlyContinue
     if (-not $p) { return }
-    [void][RS]::PostMessage($p.MainWindowHandle, 0x0010, [IntPtr]0, [IntPtr]0)   # WM_CLOSE: the game's own quit path
+    [void][RS]::PostMessage((Game-Window $p), 0x0010, [IntPtr]0, [IntPtr]0)   # WM_CLOSE: the game's own quit path
     for ($i = 0; $i -lt 30; $i++) { Start-Sleep 1; if (-not (Get-Process SHProto-Win64-Shipping -ErrorAction SilentlyContinue)) { break } }
     Start-Sleep 3
 }
@@ -43,7 +67,7 @@ Set-Location (Split-Path $Launcher)
 Start-Process -FilePath $Launcher -ArgumentList 'play', '--sim', '--no-install' -WindowStyle Hidden
 Start-Sleep 60                                            # window, UEVR in, warning screen, the menu settles
 $menu = Heartbeats $since 'none' 3
-$h = (Get-Process SHProto-Win64-Shipping).MainWindowHandle
+$h = Game-Window (Get-Process SHProto-Win64-Shipping)
 Enter $h; Start-Sleep 6                                   # the warning
 Enter $h; Start-Sleep 95                                  # CONTINUE, the load
 Enter $h; Start-Sleep 12                                  # PRESS ANY BUTTON TO PLAY

@@ -50,6 +50,7 @@
 #include "reload.h"
 #include "hands.h"
 #include "ik.h"
+#include "smooth.h"
 #include "params.h"
 #include "settings.h"
 #include "uevr/Plugin.hpp"
@@ -95,7 +96,7 @@ public:
         { selfprof::Scope sp_(selfprof::SCREENFX); shadows::tick(delta); }    // 2026-11-06: the weapon lit by the torch, the player's complete shadow (counted with the screen effects: both are once-a-second checks)
         { selfprof::Scope sp_(selfprof::RELOAD); reload::tick(delta); }
         { selfprof::Scope sp_(selfprof::RACK); rack::tick(delta); }       // sets the left-hand override the IK solve reads
-        { selfprof::Scope sp_(selfprof::IK); ik::tick(delta); }
+        { selfprof::Scope sp_(selfprof::IK); smooth::tick(delta); ik::tick(delta); }   // 2026-11-15: weapon smoothing, read inside the arm solve
         { selfprof::Scope sp_(selfprof::HANDS); hands::tick(delta); }
         { selfprof::Scope sp_(selfprof::FINGERS); fingers::tick(delta); }
         { selfprof::Scope sp_(selfprof::FRONTGRIP); frontgrip::tick(); }       // 2026-11-05: after the pack's finger poses: the left fingers in the game's grip on a long gun's front

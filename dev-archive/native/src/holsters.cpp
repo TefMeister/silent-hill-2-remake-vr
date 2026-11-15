@@ -331,6 +331,7 @@ void left_tick(float delta) {
 bool holding() { return g_holding; }
 bool showing_ammo() { return g_showing; }
 bool heal_in_hand() { return g_heal.load(); }
+std::string in_hand() { return equipped_name(weapon_manager()); }   // 2026-11-15: smooth.cpp switches by it
 bool map_held() { return g_left == LeftItem::MAP; }
 bool left_hand_to_spot_cm(double right_cm, double up_cm, double forward_cm, double& out_cm) {
     const settings::HolsterSpot s{L"", right_cm, up_cm, forward_cm, L""};

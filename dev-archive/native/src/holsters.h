@@ -4,6 +4,8 @@
 
 #include <Windows.h>
 
+#include <string>
+
 namespace sh2vr::holsters {
 
 // Once a frame, on the game thread, after input::on_state has the real controller.
@@ -18,6 +20,7 @@ bool holding();
 bool showing_ammo();
 // The right grip holds the healing item from the lower back (2026-10-31): RT uses it, so it must not fire.
 bool heal_in_hand();
+std::string in_hand();   // the weapon manager's name for what is in hand: "None" when empty, "?" when unknown
 // The left grip holds the map open (2026-10-31: taken at the right hip); twohand.cpp places it.
 bool map_held();
 // The left hand's distance to a spot given from the headset (cm right, up, forward), measured like the holsters.

@@ -317,4 +317,22 @@ constexpr const char* SHADOWS_HEAD_KEEP_WORDS[] = {"_Eyes."};
 // bones read with the UEVR connector 2026-11-13: eye_l / eye_r / eye_Lt / eye_Rt; hidden live, the eyeballs went, nothing else)
 constexpr const wchar_t* SHADOWS_EYE_BONES[] = {L"eye_l", L"eye_r", L"eye_Lt", L"eye_Rt"};
 
+// ---- smooth.cpp (2026-11-15): weapon smoothing, the proper one -------------------------------------------------------
+// Tefa 2026-11-14: "yeah let's build a proper one"; melee "just less to get rid of the hand shaking, but not enough to
+// make melee feel sluggish". A One Euro filter on the right hand (and so the arm and what it holds), the same numbers as
+// Visceral RE8's visceral_re8_hand_smooth.lua: strength 0..10 -> cut-off when still = 12 Hz * 0.65^strength.
+constexpr bool SMOOTH_ON = true;
+constexpr double SMOOTH_GUN_STRENGTH = 4.0;     // a gun in hand: Village's default (2.1 Hz when still, ~75 ms settling)
+constexpr double SMOOTH_MELEE_STRENGTH = 1.5;   // a melee weapon: light, shake only (~6.3 Hz when still)
+constexpr double SMOOTH_CUTOFF_TOP_HZ = 12.0, SMOOTH_CUTOFF_STEP = 0.65;
+constexpr double SMOOTH_BETA_ROT = 6.0;         // the cut-off's rise per rad/s of turn, at strength 0
+constexpr double SMOOTH_BETA_POS = 0.20;        // and per cm/s of move (Village: 20 per m/s)
+constexpr double SMOOTH_BETA_STEP = 0.8;        // each strength step keeps this much of the rise
+constexpr double SMOOTH_D_CUTOFF_HZ = 1.0;      // the speed estimate's own cut-off
+constexpr double SMOOTH_SNAP_CM = 50.0, SMOOTH_SNAP_RAD = 1.0;   // a jump bigger than this in one frame is taken as it is
+constexpr double SMOOTH_DT_MIN = 1.0 / 500, SMOOTH_DT_MAX = 0.1;
+constexpr double SMOOTH_STILL_RAD_S = 0.35;     // "held still" for the proof line
+constexpr float SMOOTH_REPORT_S = 10.0f;        // the proof line while smoothing
+constexpr float SMOOTH_KIND_EVERY_S = 0.2f;     // what is in hand, looked up five times a second
+
 } // namespace sh2vr::settings

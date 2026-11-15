@@ -10,6 +10,7 @@
 
 #include "common.h"
 #include "settings.h"
+#include "smooth.h"
 #include "uevr/API.hpp"
 
 namespace sh2vr::devcvars {
@@ -52,6 +53,18 @@ void tick(float delta) {
         const std::wstring name = line.substr(a, b - a);
         const size_t c = line.find_first_not_of(L" \t=", b);
         if (c == std::wstring::npos) continue;
+        if (name == L"sh2vr") {
+            // "sh2vr smooth_gun <0..10>" / "sh2vr smooth_melee <0..10>": the weapon smoothing's strengths, live (2026-11-15)
+            const size_t e = line.find_first_of(L" \t=", c);
+            const size_t v0 = e == std::wstring::npos ? e : line.find_first_not_of(L" \t=", e);
+            if (v0 == std::wstring::npos) continue;
+            const std::wstring key = line.substr(c, e - c);
+            const double val = std::wcstod(line.c_str() + v0, nullptr);
+            if (key == L"smooth_gun") { smooth::set_strength(smooth::Kind::GUN, val); ++applied; }
+            else if (key == L"smooth_melee") { smooth::set_strength(smooth::Kind::MELEE, val); ++applied; }
+            else { ++missing; LOGW("%s devcvars: sh2vr %ls is not a setting", TAG, key.c_str()); }
+            continue;
+        }
         if (name == L"uevr") {
             // "uevr <Setting> <value>": one of the VR injector's own settings (the names in its config.txt), set
             // while the game runs. Made for VR_RenderingMethod: its author says to switch the alternate-eye warp on

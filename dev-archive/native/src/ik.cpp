@@ -17,6 +17,7 @@
 #include "ikmath.h"
 #include "params.h"
 #include "settings.h"
+#include "smooth.h"
 #include "ue.h"
 
 namespace sh2vr::ik {
@@ -421,6 +422,9 @@ void solve_two_bone(Rig& rig, Solver& s) {
         effector_ws = g_ovb_pos;
         if (!ue::call_ret(s.controller, L"K2_GetComponentRotation", {}, ctrl_rot_ws)) return;
     }
+    // smooth.cpp (2026-11-15): the right hand, so the arm and what it holds, steadier by what is held. Not while the
+    // right hand rides the rifle locked in the left hand (rhbolt.cpp): it must stay on the rifle.
+    if (s.hand == controllers::RIGHT && !g_ovf_on) smooth::apply(s.controller, effector_ws, ctrl_rot_ws);
     const Rot ctrl_rot_cs = inverse_transform_rotation(c2w, ctrl_rot_ws);
     if (s.smoothing > 0) {
         const Vec3 off_cs = inverse_transform_direction(c2w, sub(effector_ws, shoulder_ws));
