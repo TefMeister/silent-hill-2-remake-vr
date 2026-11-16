@@ -183,6 +183,7 @@ std::atomic<bool> g_heal{false};   // read by fire::on_input on the input thread
 bool g_heal_syringe = false;       // held past HEAL_SYRINGE_HOLD_S: the syringe, else the drink
 bool g_rt_was = false;             // RT's edge, read on the game thread (the input poll runs at its own pace)
 const char* heal_name() { return g_heal_syringe ? "syringe" : "drink"; }
+float g_heal_hold_s = -1.0f;       // 2026-11-16: since the press that took the drink out, while that grip is still held (-1 = not)
 
 // ---- the healing item's model in the right hand (2026-10-31 evening) ----
 API::UObject* g_heal_mesh = nullptr;   // the StaticMeshComponent on the right controller
@@ -397,13 +398,16 @@ void tick(float delta) {
             g_heal_syringe = false;
             say("right grip at the lower back: the drink is out (stays without the grip; RG at the lower back again = the syringe, again = put back; RT uses it)");
             gun::buzz(controllers::RIGHT, settings::BUZZ_GRAB_AMP, settings::BUZZ_S);
-        } else if (!g_heal_syringe) {
+            g_heal_hold_s = 0.0f;   // 2026-11-16: kept held past HEAL_SYRINGE_HOLD_S = the syringe (below)
+        } else if (settings::HEAL_PRESS_CYCLES && !g_heal_syringe) {
             g_heal_syringe = true;
             say("right grip at the lower back again: the drink swapped for the syringe");
             gun::buzz(controllers::RIGHT, settings::BUZZ_GRAB_AMP, settings::BUZZ_S);
         } else {
             g_heal = false;
-            say("right grip at the lower back a third time: the syringe goes back unused");
+            g_heal_hold_s = -1.0f;
+            say(settings::HEAL_PRESS_CYCLES ? "right grip at the lower back a third time: the syringe goes back unused"
+                                            : "right grip at the lower back again: the healing item goes back unused");
             gun::buzz(controllers::RIGHT, settings::BUZZ_DENY_AMP, settings::BUZZ_S);
         }
     } else if (pressed && in_spot >= 0) {
@@ -435,6 +439,18 @@ void tick(float delta) {
     const bool rt = input::right_trigger();
     const bool rt_pressed = rt && !g_rt_was;
     g_rt_was = rt;
+    // 2026-11-16 (Tefa, b028: "holding LG doesn't bring out the syringe, pressing LG cycles through them, first med drink, then
+    // syringe, 3rd tap puts the syringe away"): the grip that took the drink out, kept held, turns it into the syringe; a
+    // press again puts either back (HEAL_PRESS_CYCLES = true: the old press-press-press cycle)
+    if (g_heal_hold_s >= 0.0f) {
+        if (!g_heal || !grip) g_heal_hold_s = -1.0f;
+        else if ((g_heal_hold_s += delta) >= settings::HEAL_SYRINGE_HOLD_S && !g_heal_syringe) {
+            g_heal_syringe = true;
+            g_heal_hold_s = -1.0f;
+            say("right grip kept held at the lower back: the drink swapped for the syringe");
+            gun::buzz(controllers::RIGHT, settings::BUZZ_GRAB_AMP, settings::BUZZ_S);
+        }
+    }
     if (g_heal && rt_pressed) {
         // RT with the healing item in hand never reaches the game, and never fires (fire::on_input asks heal_in_hand())
         buttons::press_for_game(XINPUT_GAMEPAD_Y, settings::HOLSTER_PRESS_POLLS);   // ActionHealing: the game picks the item it uses

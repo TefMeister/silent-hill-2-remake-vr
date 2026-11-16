@@ -74,6 +74,8 @@ uevr.sdk.callbacks.on_lua_event(function(eventName, eventData)
 	if eventName == "sh2vr_grips" and eventData ~= nil then
 		SH2VR_GRIP_L = string.find(eventData, "L=1", 1, true) ~= nil
 		SH2VR_GRIP_R = string.find(eventData, "R=1", 1, true) ~= nil
+		-- 2026-11-16: the left trigger too (nil from an older plugin: the pump then works as before, without LT)
+		if string.find(eventData, "LT=", 1, true) ~= nil then SH2VR_TRIG_L = string.find(eventData, "LT=1", 1, true) ~= nil end
 	elseif eventName == "sh2vr_bolt" and eventData == "unlock" then
 		-- 2026-11-01: the right hand worked the rifle's bolt (rhbolt.cpp): the pack's bolt unlocks as if pulled
 		if okBolt and rifleBolt ~= nil and rifleBolt.unlockFromPlugin ~= nil then

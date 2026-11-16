@@ -978,7 +978,10 @@ local function updatePumpPull(attachment)
 		return
 	end
 	local leftLoc = controllers.getControllerLocation(Handed.Left)
-	if leftLoc == nil or not state.leftGripDown then
+	-- sh2vr (2026-11-16, Tefa: "hand still slides up and down the length of the pump rack without LT being pressed"): a pull counts
+	-- only while LT is held too, measured from where the hand was when LT went down (SH2VR_TRIG_L nil = an older plugin: no LT)
+	local ltHeld = (SH2VR_TRIG_L == nil) or (SH2VR_TRIG_L == true)
+	if leftLoc == nil or not state.leftGripDown or not ltHeld then
 		state.pumpGripping = false
 		if state.stuck then
 			setStatus("stuck — pull back only")

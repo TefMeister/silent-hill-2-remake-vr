@@ -115,7 +115,10 @@ constexpr HolsterSpot HOLSTER_SPOTS[] = {
     {L"left hip", -20.0, -35.0, 10.0, L"Melee"},
     // the healing item (2026-10-31, Tefa: "move the health drink and syringe to the lower back and little to the right like
     // re8 right now and sub weapon in re2"): RE2's BACK spot (0.12 right, as low as the hip, 0.30 behind); no weapon row
-    {L"lower back", 12.0, -35.0, -30.0, HEAL_ROW},
+    // 2026-11-16 (Tefa, b028: the map "comes out of the medicine one"): 12 -> 22 cm right, and the map 22 cm left, so the two
+    // back spots no longer overlap (each takes the hand within 18 cm; 24 cm apart they shared the middle, and a spot 30 cm
+    // behind moves sideways about 15 cm when the head turns 30 degrees, since the spots follow the head's turn)
+    {L"lower back", 22.0, -35.0, -30.0, HEAL_ROW},
 };
 constexpr int HOLSTER_SPOT_COUNT = 5;
 constexpr const wchar_t* MELEE_ROW = L"Melee";   // a spot with this row draws the game's last-used melee weapon (IronPipe, WoodenPlank, Chainsaw...)
@@ -134,12 +137,13 @@ constexpr unsigned HOLSTER_LEFT_TEST_KEY = 0x74;   // VK_F5: a pretend LEFT grip
 // back holster - same for SH2 by the way"; 2026-11-14: "Map = LEFT back holster"). The mirror of the lower back's
 // healing spot, as RE2 b208's BACK_LEFT mirrors its BACK_RIGHT. Its own spot, apart from the right hand's table above, so
 // a right grip there never draws anything. (2026-10-31 to 11-15 it was at the right hip.)
-constexpr HolsterSpot MAP_SPOT = {L"left back", -12.0, -35.0, -30.0, L""};
+constexpr HolsterSpot MAP_SPOT = {L"left back", -22.0, -35.0, -30.0, L""};   // 2026-11-16: -12 -> -22 (see the lower back)
 constexpr float MAP_TOGGLE_COOLDOWN_S = 1.0f;   // after taking the map out or putting it away, LG at the hip is ignored this long (14:32: put away, out again 0.4 s later)
 constexpr float MAP_CLOSE_RETRY_S = 1.0f;   // putting it away: the game's back again this often while the map still shows
 constexpr int MAP_CLOSE_TRIES = 5;          // and this many times at most
 constexpr float MAP_GONE_S = 0.5f;          // the map not showing this long after it showed: closed another way (Quest X)
 constexpr float MAP_NEVER_CAME_S = 3.0f;    // taken out but never showed in this long: give up
+constexpr bool HEAL_PRESS_CYCLES = false;   // 2026-11-16: false = tap drink, held = syringe, tap again = back; true = press cycles drink, syringe, back
 constexpr float HEAL_SYRINGE_HOLD_S = 0.5f;    // (Tefa 2026-10-31: "2 seconds feels like forever") the right grip held this long at the lower back: the drink becomes the syringe
 // 2026-10-31 evening (Tefa 10-31: "medicine also didn't work"; the log: the buzz, nothing in the hand): the item's own model in
 // the right hand, found among the game's loaded static meshes by these names (the pack's attachment keys
@@ -170,6 +174,7 @@ constexpr bool TWO_HAND_LOCK_LEFT = true;    // the drawn left hand stays on the
 // grab, kept from then on (the wrist no longer follows the controller). On the shotgun it slides back along the gun
 // with the controller, up to TWO_HAND_PUMP_SLIDE_CM, so the hand rides the pump; on the rifle it stays put.
 constexpr bool TWO_HAND_LOCK_TURN = true;
+constexpr bool PUMP_NEEDS_LT = true;   // 2026-11-16 (Tefa): the hand slides with the pump, and the pump counts a pull, only while LT is held
 constexpr double TWO_HAND_PUMP_SLIDE_CM = 10.0;   // the pack's pump counts 8 cm of pull (shotgun_pump.lua PUMP_TRAVEL)
 // 2026-11-06 (Fable; Tefa's 11-06 wear: the left hand "stuck on to" the long gun, sliding and clipping): the arm mesh's bones are
 // solved at the pre-tick and only refreshed by the game at the component's own tick, while the gun is turned at view time

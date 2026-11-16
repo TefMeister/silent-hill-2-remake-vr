@@ -313,7 +313,10 @@ void on_view() {
                 // pump's slide (the pack's pump reads the controller's own pull, so the drawn hand only shows it)
                 const double reach = len(sub(aim, grip));
                 double at = g_front_cm;
-                if (g_gun_is_shotgun) at = std::fmax(g_front_cm - settings::TWO_HAND_PUMP_SLIDE_CM, std::fmin(g_front_cm, reach));
+                // 2026-11-16 (Tefa, b028: "hand still slides up and down the length of the pump rack without LT being pressed"):
+                // only while LT is held; without it the hand stays on the pump's front, as the pistol's slide wants LT too
+                if (g_gun_is_shotgun && (!settings::PUMP_NEEDS_LT || input::left_trigger()))
+                    at = std::fmax(g_front_cm - settings::TWO_HAND_PUMP_SLIDE_CM, std::fmin(g_front_cm, reach));
                 const Vec3 where = add(grip, mul(norm(sub(aim, grip)), at));
                 if (g_left_rel_due) { g_left_rel = qnorm(qmul(qconj(t.rot), l.rot)); g_left_rel_due = false; }
                 Vec3 lp; ue::Rot lr;

@@ -64,14 +64,15 @@ int montage_count() { return g_montages; }
 bool long_gun_gate() { return g_gate; }
 
 void send_grips(float delta) {
-    const int now = (input::grip(false) ? 1 : 0) | (input::grip(true) ? 2 : 0);
+    // 2026-11-16: + LT (4), for the shotgun's pump, which now counts a pull only while LT is held (shotgun_pump.lua)
+    const int now = (input::grip(false) ? 1 : 0) | (input::grip(true) ? 2 : 0) | (input::left_trigger() ? 4 : 0);
     g_grips_resend -= delta;
     if (now == g_grips_sent && g_grips_resend > 0.0f) return;
     g_grips_resend = 1.0f;
     const bool changed = now != g_grips_sent;
     g_grips_sent = now;
     char buf[16];
-    std::snprintf(buf, sizeof buf, "L=%d;R=%d", now & 1, (now >> 1) & 1);
+    std::snprintf(buf, sizeof buf, "L=%d;R=%d;LT=%d", now & 1, (now >> 1) & 1, (now >> 2) & 1);
     tell_lua("sh2vr_grips", buf);
     static int logged = 0;
     if (changed && logged < 6) { ++logged; LOGI("%s bridge: real grips to the pack: %s", TAG, buf); }
