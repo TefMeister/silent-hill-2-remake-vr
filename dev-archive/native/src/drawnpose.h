@@ -34,6 +34,7 @@ void tick(float delta);                                            // game threa
 void on_view(const void* position, const void* rotation, float world_to_meters, bool is_double);   // game thread: the END of on_post_calculate_stereo_view_offset
 bool find(const float* view_to_world, Entry& out);                 // render thread: the record of the frame this view belongs to
 void note(bool by_drawn, float differ_m);                          // render thread: one hand carried; how far the raw controller's carry was from it
+void set_hand_ticks(int ticks);                                    // a test switch: pair a view with the hands of the record this many ticks later (0 = its own)
 void report();                                                     // game thread: one log line now and then
 
 } // namespace sh2vr::drawnpose

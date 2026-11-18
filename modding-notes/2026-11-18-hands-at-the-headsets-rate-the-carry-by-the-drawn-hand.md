@@ -136,3 +136,51 @@ the record one tick later, not to tune anything.
    then 1: the hands' alternation against the room's shift should fall. The log's "differed by" is the size of what
    was wrong before (expected: millimetres while the hand speeds up, near 0 held still).
 3. Then Tefa: the gun waved a little quicker, and quick; `1.0 0 0 1 1.0 0.004 0` puts b029's carry back live.
+
+## 7. The simulator run (2026-11-18 23:25 to 2026-11-19 00:10, /lm, Fable; the OpenXR Simulator, no headset)
+
+Five starts through the launcher (`SH2VR.exe play --sim --no-install`), `toplay.sh` into play. One start crashed
+22 s in (the known start crash, dossier 13; our file not in the stack `[measured, the crash report]`); kept with its log.
+Tefa (live): the Continue save kills James quickly. No game function loads a chosen slot (`SaveManager` shows none), so
+for the run the armory save (slot 3) was copied over the Continue slot with the game closed; the save folder was backed
+up first and put back after, the same by hash.
+
+**1. The key did not fit in play, and why** `[verified-live 2026-11-18, n=2 starts]`. In the main menu every view
+matched its record. In play none did: the installed injector (beta 6) hands the warp views measured from ANOTHER
+ORIGIN than the game's own, a plain shift, different per load (first save: 310.995, 1.020, 92.265 m; the armory:
+409.005, -181.453, 543.561 m; the menu: none). The public source read for §4 (the fork's AFW branch, August) does not
+do this, so the installed build is newer than that source. Cure, b031: `drawnpose.cpp` learns the shift (record minus
+call is the same from one call to the next only for the right pairing; three calls running confirm it; thirty misses
+drop it, for a load) and takes it off the hands too. After it `[verified-live, n=3 starts, about 15 minutes of play]`:
+every view matched (0 not), with the simulated head swaying every match was the only one, always exactly 2.0
+records behind; the hands were carried by the drawn hand on all but 1 or 2 pictures in 10 s.
+
+**2. How far off the old carry was** `[measured live, the plugin's own line, n=12 ten-second lines]`. A melee weapon in
+hand (the pistol asked for through the weapon manager; the smoothing reported melee), the simulated right hand swung
+at 1 Hz (it moves in jumps, 35 a second: harsh): the raw controller's carry was 2.8 to 3.9 mm from the drawn hand's on
+average and 17 to 49 mm at most, on the frames where both existed. 3 mm at 40 cm is about 11 px in the headset.
+With the hand still: 0.0.
+
+**3. The pictures** (`dev-archive/tools/warp-study/pair.py`, new: the hand's place in the left picture minus the right,
+whose frame-to-frame flip is the made-up eye's error alone; the simulator's 22 consecutive frames, 160 px wide).
+`[measured, simulator]`, flip in x, px of the capture:
+
+| setting | round A (n=3 each) | round B (n=3 each) | round C, fast wide swing (n=3 + 2 or 3) |
+| --- | --- | --- | --- |
+| new carry, the view's own tick | 0.71 0.76 1.06 | 1.44 1.25 1.70 | 2.61 0.83 1.83, 1.35 1.07 |
+| new carry, hands one tick later | | 0.63 0.87 1.54 | 2.83 1.06 1.38, 2.09 1.14 0.99 |
+| new carry, hands one tick earlier | | 1.82 1.17 2.12 | 2.06 1.08 2.43, 2.70 1.64 1.96 |
+| old carry (raw controller) | 1.49 1.31 1.26 | 0.94 1.29 2.23 | 2.13 2.20 2.61 |
+
+The new carry is lower than the old in rounds A and C and level in B; "one tick earlier" is the worst of the three
+pairings; "own tick" against "one tick later" cannot be told apart at this size. **Not settled on the simulator:
+whether the hands in a picture are the view's own tick's or the next one's.** The switch for it is live: the 8th
+number in `sh2vr_warpscale.txt` (-1, 0, 1), beside the 7th (1 = the drawn hand, 0 = the raw controller).
+
+**4. Also seen.** The frame rate on the simulator in the armory was 44 to 62 a second. The reader's reading of the
+fork (which tick a call's view belongs to: the picture's own while the game thread is at most 2 ticks ahead, else 2
+later) fits the constant "2.0 records behind". The counts of calls "with a velocity picture" were 0 at the 2000th and
+6000th call of the first start (older logs: about half); not followed up `[hypothesis: counted before play began]`.
+
+**Installed: b031** = b030 + the learned origin + the tick switch; `sh2vr_warpscale.txt` = `1.0 0 0 1 1.0 0.004 1 0`.
+NOT established: a gun in hand (the run had a melee weapon), how it looks in the headset, the tick question above.

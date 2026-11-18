@@ -78,6 +78,10 @@ constexpr int HANDPASTE_CARRY = 1;                // how a made-up picture's han
 constexpr float HANDPASTE_CARRY_MAX_DIFFER_M = 0.05f;   // the drawn hand's carry further than this from the raw controller's = something is wrong (a convention, a mismatched frame): the raw one is used and counted
 constexpr bool DRAWNPOSE_ON = true;               // drawnpose.cpp: every view's place and both drawn hands recorded for the render thread
 constexpr float DRAWNPOSE_KEY_TOL_M = 1e-6f;      // a view's place matches a record within this (times the coordinate's size: a few float steps; the two are built from the same numbers)
+constexpr double DRAWNPOSE_ORIGIN_TOL_M = 2e-4;   // the warp measures its views from its own origin (learned live): a record fits a call when record minus call is that shift within this
+constexpr int DRAWNPOSE_ORIGIN_CONFIRM = 3;       // the same shift in this many calls running = the origin
+constexpr int DRAWNPOSE_ORIGIN_DROP = 30;         // this many calls running with no fitting record = the origin moved (a load): learned again
+constexpr int DRAWNPOSE_HAND_TICKS = 0;            // the hands paired with a view: those of the same record (0), or of the record this many ticks later (8th number in the file; a test switch)
 constexpr float DRAWNPOSE_TURN_TOL = 2e-5f;       // ... and its turn (the numbers of the view axis) within this: about a thousandth of a degree
 constexpr float HANDPASTE_NEAR_M = 1.0f;          // nearer than this and marked moving by the game = hands and weapon (5th number)            // how often the module's counts are logged
 

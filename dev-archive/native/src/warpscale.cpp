@@ -193,13 +193,15 @@ void read_file() {
     float v = settings::WARP_NEAR_SCALE, t = settings::WARP_TURN_DEG_PER_FRAME, h = settings::WARP_HAND_M_PER_S, near_m = settings::HANDPASTE_NEAR_M;
     int paste = settings::HANDPASTE_MODE, carry = settings::HANDPASTE_CARRY;
     static int last_carry = -1;
+    int ticks = settings::DRAWNPOSE_HAND_TICKS; static int last_ticks = -99;
     float against = settings::HANDPASTE_AGAINST_ROOM;
     static float last_against = -1.0f;
     static int last_paste = -1; static float last_near = -1.0f;
     FILE* f = nullptr;
     if (_wfopen_s(&f, p.c_str(), L"r") == 0 && f != nullptr) {
-        float x = 0.0f, y = -1.0f, z = -1.0f, pm = -1.0f, pn = -1.0f, pa = -1.0f, pc = -1.0f;
-        const int n = fscanf_s(f, "%f %f %f %f %f %f %f", &x, &y, &z, &pm, &pn, &pa, &pc);
+        float x = 0.0f, y = -1.0f, z = -1.0f, pm = -1.0f, pn = -1.0f, pa = -1.0f, pc = -1.0f, pt = 0.0f;
+        const int n = fscanf_s(f, "%f %f %f %f %f %f %f %f", &x, &y, &z, &pm, &pn, &pa, &pc, &pt);
+        if (n >= 8 && pt >= -3.0f && pt <= 3.0f) ticks = (int)pt;
         if (n >= 7 && (pc == 0.0f || pc == 1.0f)) carry = (int)pc;
         if (n >= 6 && pa >= 0.0f && pa <= 1.0f) against = pa;
         if (n >= 4 && pm >= 0.0f && pm <= 4.0f) paste = (int)pm;
@@ -215,6 +217,7 @@ void read_file() {
         LOGI("%s warpscale: the hands' own pass %s, near line %.2f m", TAG, paste == 0 ? "off" : paste == 1 ? "on" : paste == 2 ? "on with the tint" : "on without the hands' own shift", near_m);
         last_paste = paste; last_near = near_m; handpaste::set_mode(paste); handpaste::set_near(near_m);
     }
+    if (ticks != last_ticks) { LOGI("%s warpscale: a view is paired with the hands of the record %d tick(s) later", TAG, ticks); last_ticks = ticks; drawnpose::set_hand_ticks(ticks); }
     if (carry != last_carry) { LOGI("%s warpscale: a made-up picture's hands follow %s", TAG, carry == 1 ? "the hand the game drew (drawnpose)" : "the raw controller (as b020-b029)"); last_carry = carry; handpaste::set_carry(carry); }
     if (h != g_hand_speed.load()) { LOGI("%s warpscale: mode 3 while a hand moves faster than %.2f m/s in the room (was %.2f; 0 = never)", TAG, h, g_hand_speed.load()); g_hand_speed.store(h); }
     if (v != g_scale.load()) { LOGI("%s warpscale: factor %.2f -> %.2f", TAG, g_scale.load(), v); g_scale.store(v); }

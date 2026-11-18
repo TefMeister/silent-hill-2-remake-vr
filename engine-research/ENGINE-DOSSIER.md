@@ -450,3 +450,17 @@ Full story: `modding-notes/2026-11-18-hands-at-the-headsets-rate-the-carry-by-th
   and a read one frame off in time misses as much `[verified-numerically 2026-11-18, tests/handcarry_test.cpp]`.
 - Hands at the HEADSET's rate while the game runs slower needs pictures handed to the headset between the game's
   frames, from a loop of our own in UEVR's open side: the size of an own frame warp. Not started (parked row).
+
+### 14b. Seen live 2026-11-18 (simulator): the installed injector shifts the origin
+
+- In play the views in the warp's call are the game's own minus a constant, different per load (310.995, 1.020,
+  92.265 m in one save; 409.005, -181.453, 543.561 m in the armory; none in the main menu) `[verified-live 2026-11-18,
+  n=2 saves]`. The August source of the fork does not do this: the installed beta 6 is newer than the public AFW branch.
+  Anything of ours that goes into the warp's world must take the same shift off (`drawnpose.cpp` learns it).
+- With the shift learned, every call's view matches exactly one of our per-tick records while the head moves, always
+  2 records behind the newest `[verified-live 2026-11-18, n=3 starts]`. The reader's reading of the fork (inbox file of
+  2026-11-18, folded in here): one stereo-offset call a tick, only for the eye being drawn; the call's view is the
+  picture's own tick while the game thread is 0 to 2 ticks ahead of the present, else the view 2 ticks later
+  `[inferred-static]`; plugins' callbacks run before the Lua loader's, so a script could still move the view after ours.
+- NOT settled: whether the hands in the picture are that same tick's (the simulator's 160 px frames cannot tell
+  "same" from "one later"; "one earlier" measured worst).
