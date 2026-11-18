@@ -128,6 +128,9 @@ bool g_ovb_on = false;             // frontgrip.cpp: the left hand bone placed o
 Vec3 g_ovb_pos;
 Quat g_ovb_q{};
 float g_since_try = settings::HANDS_RETRY_S;
+// each hand as the solve placed it THIS tick (world): what the frame warp's made-up pictures must follow (drawnpose.cpp)
+struct Drawn { bool ok = false; Vec3 pos; Quat rot; };
+Drawn g_drawn[2];
 bool g_logged_wait = false;
 
 Transform identity() { return Transform{}; }
@@ -432,6 +435,7 @@ void solve_two_bone(Rig& rig, Solver& s) {
         st.last_effector_cs = sm; st.has_last_effector = true;
         effector_ws = add(shoulder_ws, transform_direction(c2w, sm));
     }
+    g_drawn[s.hand == controllers::RIGHT ? 1 : 0] = {true, effector_ws, bone_direct ? g_ovb_q : quat_from_euler(ctrl_rot_ws)};
     const Vec3 shoulder_to_hand = sub(effector_ws, shoulder_ws);
     const double reach_len = size(shoulder_to_hand);
     if (reach_len < 0.0001) return;
@@ -666,6 +670,7 @@ bool create(API::UObject* pawn) {
 } // namespace
 
 void tick(float delta) {
+    g_drawn[0].ok = g_drawn[1].ok = false;   // set again by this tick's solve; an animation or no arms = not ours to follow
     API::UObject* pawn = API::get()->get_local_pawn(0);
     if (g_rig != nullptr && (pawn != g_rig->pawn || !ue::alive(g_rig->mesh))) { LOGI("%s ik: the pawn or the arms went away, rebuilding", TAG); destroy(); }
     if (g_rig == nullptr) {
@@ -712,6 +717,13 @@ void override_left(bool on, const Vec3& effector_ws, const Rot& rot_ws) { g_ov_o
 void override_right_turn(bool on, const Quat& turn_ws) { g_ovr_on = on; g_ovr_q = turn_ws; }
 void override_right(bool on, const Vec3& effector_ws, const Quat& rot_ws) { g_ovf_on = on; g_ovf_pos = effector_ws; g_ovf_q = rot_ws; }
 void override_left_bone(bool on, const Vec3& bone_ws, const Quat& rot_ws) { g_ovb_on = on; g_ovb_pos = bone_ws; g_ovb_q = rot_ws; }
+
+bool drawn(controllers::Side side, Vec3& pos_ws, Quat& rot_ws) {
+    const Drawn& d = g_drawn[side == controllers::RIGHT ? 1 : 0];
+    if (!d.ok) return false;
+    pos_ws = d.pos; rot_ws = d.rot;
+    return true;
+}
 
 bool hand_world(controllers::Side side, Vec3& out) {
     if (g_rig == nullptr || !ue::alive(g_rig->mesh)) return false;

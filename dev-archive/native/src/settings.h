@@ -74,6 +74,11 @@ constexpr bool HANDPASTE_REACH_ON = false;        // OFF since 2026-11-14 01:55:
 constexpr float HANDPASTE_WEAPON_RADIUS = 0.16f;  // hands and weapon = within this of the line a controller points along or stands up along (metres)
 constexpr float HANDPASTE_ARM_RADIUS = 0.22f;     // ... or within this of the line from the controller to that shoulder
 constexpr float HANDPASTE_SHOULDER[3] = {0.20f, -0.25f, 0.05f};   // a shoulder against the head: out, down, back (metres)
+constexpr int HANDPASTE_CARRY = 1;                // how a made-up picture's hands are carried: 1 = by the hand THE GAME DREW in the two frames (drawnpose.cpp, 2026-11-18), 0 = by the raw controller (b020-b029); 7th number in the file
+constexpr float HANDPASTE_CARRY_MAX_DIFFER_M = 0.05f;   // the drawn hand's carry further than this from the raw controller's = something is wrong (a convention, a mismatched frame): the raw one is used and counted
+constexpr bool DRAWNPOSE_ON = true;               // drawnpose.cpp: every view's place and both drawn hands recorded for the render thread
+constexpr float DRAWNPOSE_KEY_TOL_M = 1e-6f;      // a view's place matches a record within this (times the coordinate's size: a few float steps; the two are built from the same numbers)
+constexpr float DRAWNPOSE_TURN_TOL = 2e-5f;       // ... and its turn (the numbers of the view axis) within this: about a thousandth of a degree
 constexpr float HANDPASTE_NEAR_M = 1.0f;          // nearer than this and marked moving by the game = hands and weapon (5th number)            // how often the module's counts are logged
 
 // ---- the button layer (buttons.cpp, 2026-10-29) ----

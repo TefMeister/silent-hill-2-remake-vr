@@ -10,7 +10,9 @@
 #include <cmath>
 #include <cstring>
 
+#include "carry_math.h"
 #include "common.h"
+#include "drawnpose.h"
 #include "settings.h"
 #include "uevr/API.hpp"
 
@@ -178,6 +180,7 @@ float4 ps(V i) : SV_Target {
 // ---- state (the render thread's own, except the atomics) ----------------------------------------------------------
 std::atomic<int> g_mode{settings::HANDPASTE_MODE};
 std::atomic<float> g_near{settings::HANDPASTE_NEAR_M};
+std::atomic<int> g_carry{settings::HANDPASTE_CARRY};
 std::atomic<int> g_draws{0}, g_skips{0};
 std::atomic<bool> g_failed{false};
 std::atomic<const char*> g_why{nullptr};
@@ -208,6 +211,8 @@ struct Eye {
     bool hands_ok = false;
     float hand_pos[2][3]{};       // each controller relative to the head then (metres, the head's own axes: x right, y up, -z ahead)
     Q hand_rot[2]{{1, 0, 0, 0}, {1, 0, 0, 0}};   // and its turn relative to the head
+    bool drawn_ok = false;
+    drawnpose::Entry drawn;       // both hands as the game drew them in that picture (the warp's world)
 };
 Eye g_eye[2];
 uint64_t g_frame = 0;
@@ -400,7 +405,7 @@ bool hand_move(const float p0[3], Q q0, const float p1[3], Q q1, float zs, float
     return true;
 }
 
-void draw(const Call& c, const Eye& last, ID3D12Resource* warped, D3D12_RESOURCE_STATES warped_state) {
+void draw(const Call& c, const Eye& last, const drawnpose::Entry* drawn_now, ID3D12Resource* warped, D3D12_RESOURCE_STATES warped_state) {
     // the turn's map: a pixel of the made-up view now -> where that direction was in the eye's last real view
     const float* dest_c2v = c.camera + 3 * 16; const float* dest_v2w = c.camera + 1 * 16;
     float line = 0.0f, sign = 1.0f;
@@ -425,15 +430,39 @@ void draw(const Call& c, const Eye& last, ID3D12Resource* warped, D3D12_RESOURCE
     float move[2][12] = {{1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0}, {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0}};
     float shift[2][2]{}, then_view[2][3] = {{-0.2f, -0.2f, -0.4f * zs}, {0.2f, -0.2f, -0.4f * zs}};
     float pos_now[2][3]{}; Q rot_now[2]{};
+    bool raw_ok[2] = {false, false};
     if (last.hands_ok) for (int i = 0; i < 2; ++i) { then_view[i][0] = last.hand_pos[i][0]; then_view[i][1] = last.hand_pos[i][1]; then_view[i][2] = last.hand_pos[i][2] * zs; }
     if (mode != 3 && last.hands_ok && hands_now(pos_now, rot_now)) {
         for (int i = 0; i < 2; ++i) {
             float m[12];
             if (!hand_move(last.hand_pos[i], last.hand_rot[i], pos_now[i], rot_now[i], zs, m)) continue;
-            std::memcpy(move[i], m, sizeof(m));
+            std::memcpy(move[i], m, sizeof(m)); raw_ok[i] = true;
             const float now_view[3] = {pos_now[i][0], pos_now[i][1], pos_now[i][2] * zs};
             float a[2], b[2];
             if (to_uv(last.v2c, then_view[i], a) && to_uv(last.v2c, now_view, b)) { shift[i][0] = b[0] - a[0]; shift[i][1] = b[1] - a[1]; }
+        }
+    }
+    // 2026-11-18: BY THE HAND THE GAME DREW. The raw controller's move above is not the drawn hand's (a smoothed gun, a
+    // hand riding a slide, and it is read at another moment than the frame was posed): the two poses the arm solve
+    // used for this eye's last real picture and for the frame being made up now give the carry exactly, straight
+    // between the two views' own matrices (carry_math.h). The raw move stays as the fallback and as the yardstick.
+    const bool by_drawn = mode != 3 && g_carry.load() == 1 && last.drawn_ok && drawn_now != nullptr;
+    if (mode != 3 && g_carry.load() == 1 && !by_drawn) { drawnpose::note(false, -1.0f); drawnpose::note(false, -1.0f); }   // no record for one of the two frames
+    if (by_drawn) {
+        const float* dest_w2v = c.camera + 0 * 16;   // the made-up eye's view now
+        for (int i = 0; i < 2; ++i) {
+            float rows[12], tv[3], a[3], b[3];
+            if (!carry_math::carry(last.w2v, dest_w2v, last.drawn.hand[i], drawn_now->hand[i], rows, tv)) { drawnpose::note(false, -1.0f); continue; }
+            carry_math::apply(rows, tv, a);
+            const float step = std::sqrt((a[0] - tv[0]) * (a[0] - tv[0]) + (a[1] - tv[1]) * (a[1] - tv[1]) + (a[2] - tv[2]) * (a[2] - tv[2]));
+            carry_math::apply(move[i], tv, b);   // where the raw controller's move would have put the same point
+            const float differ = std::sqrt((a[0] - b[0]) * (a[0] - b[0]) + (a[1] - b[1]) * (a[1] - b[1]) + (a[2] - b[2]) * (a[2] - b[2]));
+            if (carry_math::turn_deg(rows) > settings::HANDPASTE_MAX_TURN_DEG || step > settings::HANDPASTE_MAX_STEP_M || (raw_ok[i] && differ > settings::HANDPASTE_CARRY_MAX_DIFFER_M)) { drawnpose::note(false, -1.0f); continue; }
+            std::memcpy(move[i], rows, sizeof(rows));
+            then_view[i][0] = tv[0]; then_view[i][1] = tv[1]; then_view[i][2] = tv[2];
+            float ua[2], ub[2];
+            if (to_uv(last.v2c, tv, ua) && to_uv(last.v2c, a, ub)) { shift[i][0] = ub[0] - ua[0]; shift[i][1] = ub[1] - ua[1]; }
+            drawnpose::note(true, raw_ok[i] ? differ : -1.0f);
         }
     }
     // a still thing's motion in the picture: the eye's view then -> the view the game measured from (that eye, the time before)
@@ -520,6 +549,7 @@ void draw(const Call& c, const Eye& last, ID3D12Resource* warped, D3D12_RESOURCE
 
 void set_mode(int mode) { g_mode.store(mode); }
 void set_near(float metres) { g_near.store(metres); }
+void set_carry(int how) { g_carry.store(how); }
 void set_against_room(float amount) { g_against.store(amount); }
 
 void after_warp(const Call& c) {
@@ -529,11 +559,15 @@ void after_warp(const Call& c) {
     if (mode <= 0) { g_eye[0].have = g_eye[1].have = false; return; }
     if (!make_basics(c.list) || !make_pictures(c.color) || !make_pso(view_format(g_desc.Format))) return;
 
+    // which frame of the game this drawn eye's picture is, and so where the game drew the hands in it
+    drawnpose::Entry drawn_now;
+    const bool drawn_ok = g_carry.load() == 1 && drawnpose::find(c.camera + 5 * 16, drawn_now);   // the drawn eye's view-to-world
+
     // 1. the made-up eye: the warp has just written its picture where that eye's last real one was
     const Eye& last = g_eye[1 - c.eye];
     if (c.previous_frame_mode && last.have && last.frame + 1 == g_frame && last.color != nullptr && last.depth != nullptr) {
         const D3D12_RESOURCE_DESC wd = last.color->GetDesc();
-        if (wd.Width == g_desc.Width && wd.Height == g_desc.Height && wd.Format == g_desc.Format) draw(c, last, last.color, (D3D12_RESOURCE_STATES)last.color_state);
+        if (wd.Width == g_desc.Width && wd.Height == g_desc.Height && wd.Format == g_desc.Format) draw(c, last, drawn_ok ? &drawn_now : nullptr, last.color, (D3D12_RESOURCE_STATES)last.color_state);
         else g_skips.fetch_add(1);
     } else g_skips.fetch_add(1);
 
@@ -553,6 +587,7 @@ void after_warp(const Call& c) {
     now.have = true; now.frame = g_frame; now.color_state = c.color_state;
     std::memcpy(now.w2v, c.camera + 4 * 16, sizeof(now.w2v)); std::memcpy(now.v2c, c.camera + 6 * 16, sizeof(now.v2c));
     now.hands_ok = hands_now(now.hand_pos, now.hand_rot);
+    now.drawn_ok = drawn_ok; if (drawn_ok) now.drawn = drawn_now;
 }
 
 void report() {

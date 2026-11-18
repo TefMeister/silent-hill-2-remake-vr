@@ -19,6 +19,9 @@ void override_right(bool on, const ue::Vec3& effector_ws, const ue::Quat& rot_ws
 // frontgrip.cpp (2026-11-05): the left HAND BONE itself at this world place and turn (the game's own grip on a long gun),
 // no controller offset and no end_bone_rotation; wins over override_left. The elbow still reads the real controller.
 void override_left_bone(bool on, const ue::Vec3& bone_ws, const ue::Quat& rot_ws);
+// the hand as THIS tick's solve placed it (its target place and turn, world; smoothing and every override in): false
+// when the arm was not solved this tick (no arms yet, an animation plays). drawnpose.cpp, 2026-11-18.
+bool drawn(controllers::Side side, ue::Vec3& pos_ws, ue::Quat& rot_ws);
 bool hand_world(controllers::Side side, ue::Vec3& out);                             // the arm mesh's hand bone, world
 
 } // namespace sh2vr::ik

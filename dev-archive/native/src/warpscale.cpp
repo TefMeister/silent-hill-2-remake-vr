@@ -11,6 +11,7 @@
 #include <string>
 
 #include "common.h"
+#include "drawnpose.h"
 #include "handpaste.h"
 #include "settings.h"
 #include "uevr/API.hpp"
@@ -190,14 +191,16 @@ void install() {
 void read_file() {
     const std::wstring p = appdata_dir() + L"\\" + settings::PROFILE_DIR + L"\\sh2vr_warpscale.txt";
     float v = settings::WARP_NEAR_SCALE, t = settings::WARP_TURN_DEG_PER_FRAME, h = settings::WARP_HAND_M_PER_S, near_m = settings::HANDPASTE_NEAR_M;
-    int paste = settings::HANDPASTE_MODE;
+    int paste = settings::HANDPASTE_MODE, carry = settings::HANDPASTE_CARRY;
+    static int last_carry = -1;
     float against = settings::HANDPASTE_AGAINST_ROOM;
     static float last_against = -1.0f;
     static int last_paste = -1; static float last_near = -1.0f;
     FILE* f = nullptr;
     if (_wfopen_s(&f, p.c_str(), L"r") == 0 && f != nullptr) {
-        float x = 0.0f, y = -1.0f, z = -1.0f, pm = -1.0f, pn = -1.0f, pa = -1.0f;
-        const int n = fscanf_s(f, "%f %f %f %f %f %f", &x, &y, &z, &pm, &pn, &pa);
+        float x = 0.0f, y = -1.0f, z = -1.0f, pm = -1.0f, pn = -1.0f, pa = -1.0f, pc = -1.0f;
+        const int n = fscanf_s(f, "%f %f %f %f %f %f %f", &x, &y, &z, &pm, &pn, &pa, &pc);
+        if (n >= 7 && (pc == 0.0f || pc == 1.0f)) carry = (int)pc;
         if (n >= 6 && pa >= 0.0f && pa <= 1.0f) against = pa;
         if (n >= 4 && pm >= 0.0f && pm <= 4.0f) paste = (int)pm;
         if (n >= 5 && pn >= 0.1f && pn <= 10.0f) near_m = pn;
@@ -212,6 +215,7 @@ void read_file() {
         LOGI("%s warpscale: the hands' own pass %s, near line %.2f m", TAG, paste == 0 ? "off" : paste == 1 ? "on" : paste == 2 ? "on with the tint" : "on without the hands' own shift", near_m);
         last_paste = paste; last_near = near_m; handpaste::set_mode(paste); handpaste::set_near(near_m);
     }
+    if (carry != last_carry) { LOGI("%s warpscale: a made-up picture's hands follow %s", TAG, carry == 1 ? "the hand the game drew (drawnpose)" : "the raw controller (as b020-b029)"); last_carry = carry; handpaste::set_carry(carry); }
     if (h != g_hand_speed.load()) { LOGI("%s warpscale: mode 3 while a hand moves faster than %.2f m/s in the room (was %.2f; 0 = never)", TAG, h, g_hand_speed.load()); g_hand_speed.store(h); }
     if (v != g_scale.load()) { LOGI("%s warpscale: factor %.2f -> %.2f", TAG, g_scale.load(), v); g_scale.store(v); }
 }
@@ -252,6 +256,7 @@ void tick(float delta) {
     if (g_report_timer >= settings::WARP_REPORT_S) {
         g_report_timer = 0.0f;
         handpaste::report();
+        drawnpose::report();
         const int calls = g_calls.exchange(0), comb = g_combined.exchange(0), sw = g_switches.exchange(0);
         if (!g_first_logged || comb > 0 || g_refused.load() > 0) {
             g_first_logged = true;

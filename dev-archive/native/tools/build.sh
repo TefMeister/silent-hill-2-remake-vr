@@ -43,7 +43,9 @@ if [ -f "$PROFILE/plugins/sh2vr.dll" ]; then cp -p "$PROFILE/plugins/sh2vr.dll" 
 tasklist 2>/dev/null | grep -qi "SHProto-Win64-Shipping" && { echo "the game is running: close it first, the plugin file is locked"; exit 1; }
 cp "$DLL" "$PROFILE/plugins/sh2vr.dll" && cmp -s "$DLL" "$PROFILE/plugins/sh2vr.dll" && echo "installed plugins/sh2vr.dll" || { echo "INSTALL FAILED: the copy does not match"; exit 1; }
 for f in "${PATCHED[@]}"; do
-    if cmp -s "$MODPROFILE/$f" "$PROFILE/$f"; then echo "same    $f"; continue; fi
+    # the same but for line endings counts as the same (2026-11-18: a clone with CRLF check-out rewrote seven installed
+    # scripts that differed in nothing else, and the builds history then saw them as changed)
+    if cmp -s "$MODPROFILE/$f" "$PROFILE/$f" || { [ -f "$PROFILE/$f" ] && cmp -s <(tr -d '' < "$MODPROFILE/$f") <(tr -d '' < "$PROFILE/$f"); }; then echo "same    $f"; continue; fi
     mkdir -p "$BK/files/$(dirname "$f")"; [ -f "$PROFILE/$f" ] && cp -p "$PROFILE/$f" "$BK/files/$f"
     cp "$MODPROFILE/$f" "$PROFILE/$f" && echo "patched $f"
 done

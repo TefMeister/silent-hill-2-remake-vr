@@ -429,3 +429,24 @@ to do with which release folder starts the game. ride.log for today: `17:46:54 C
 - Count it: this crash at 22-25 s, against starts in that period (ride.log COLLECTING lines). If it is rare, the
   launcher could simply retry; the start is cheap.
 - Nothing points at 0.1.2. No reason to hold back the 0.1.2 folder, and no reason to re-pack it.
+
+## 14. The frame warp's views, and which hands went into which picture (2026-11-18, /pd, files and the fork's public source)
+
+Full story: `modding-notes/2026-11-18-hands-at-the-headsets-rate-the-carry-by-the-drawn-hand.md`.
+
+- The view the warp's call carries for the drawn eye is built in UEVR's open side (PureDark's fork, AFW branch,
+  `FFakeStereoRenderingHook.cpp`) right after the plugins' `on_post_calculate_stereo_view_offset`, from the very
+  location and rotation that callback sees: `position = (y, z, -x) / (world_to_meters * VR_WorldScale)` (the division
+  in doubles, then floats), `view-to-world = translate(position) * yawPitchRoll(-yaw, pitch, -roll)`; `VR.cpp`
+  `update_camera_data` copies it into `cameraData[eye].srcViewToWorldMatrix`, the other eye's into `dest`
+  `[inferred-static 2026-11-18]`. So a UE world point `p` is `(p.y, p.z, -p.x) / scale` in the warp's world, and that
+  reading agrees with Unreal's own rotation matrix within 0.04 mm over 20,000 random views
+  `[verified-numerically 2026-11-18, tests/carry_test.cpp]`.
+- The eye's place in a call is therefore a key the game thread can compute too: `drawnpose.cpp` matches each warp
+  call to the tick that posed it that way. NOT yet seen live (the counts are in the log's `drawnpose:` line).
+- The views are floats: 3 km from the map's origin a carried hand point is 0.6 mm (3 px) off `[verified-numerically]`.
+- **Dead end, do not repeat:** carrying the made-up frame's hands by the raw controller's move read at the warp's
+  call (b020-b029). It cannot follow a smoothed gun (11 to 30 px apart on quicker moves, flipping every other frame)
+  and a read one frame off in time misses as much `[verified-numerically 2026-11-18, tests/handcarry_test.cpp]`.
+- Hands at the HEADSET's rate while the game runs slower needs pictures handed to the headset between the game's
+  frames, from a loop of our own in UEVR's open side: the size of an own frame warp. Not started (parked row).
