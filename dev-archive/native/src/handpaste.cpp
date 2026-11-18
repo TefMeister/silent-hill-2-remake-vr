@@ -147,11 +147,22 @@ float4 ps(V i) : SV_Target {
     bool ok; float2 s = source_of(uv, ok);
     float4 c = tWarp.SampleLevel(sLin, uv, 0);
     if (ok && hand(s)) {
-        float2 dir = (uv - s) / 6.0;   // the way the room went: the background beyond the copy lies that way
-        for (int k = 1; k <= 12; k++) {
+        // where to look for the background beyond the warp's leftover copy. The way the room went (uv - s) works
+        // while the head turns; with the head still it is zero and the search never left the copy, so the old gun
+        // stayed (Tefa 2026-11-19, headset: "a trail of guns", tinted red / orange). Then: away from where each
+        // hand went, then the sides; each in steps of at least misc.w of the picture.
+        float2 dirs[6] = { uv - s, -shifts.xy, -shifts.zw, float2(1, 0), float2(-1, 0), float2(0, -1) };
+        bool done = false;
+        [loop] for (int di = 0; di < 6 && !done; di++) {
+          float len = length(dirs[di]);
+          if (len < 1e-5) continue;
+          float2 dir = dirs[di] / len * max(len / 6.0, misc.w);
+          [loop] for (int k = 1; k <= 16; k++) {
             float2 t = uv + dir * k;
+            if (any(t < 0) || any(t > 1)) break;
             float2 other;
             if (!ghost(t) && !pasted(t, other)) {
+                done = true;
                 c = tWarp.SampleLevel(sLin, t, 0);
                 // better than the picture from beside: what the OTHER eye really sees there this frame. The background's
                 // depth is taken from just beyond the copy; the spot is carried into the other eye's picture.
@@ -170,8 +181,9 @@ float4 ps(V i) : SV_Target {
                 }
                 break;
             }
+          }
         }
-        if (h2.w > 0.5) c.rgb = lerp(c.rgb, float3(1, 0, 0), 0.4);
+        if (h2.w > 0.5) c.rgb = lerp(c.rgb, done ? float3(1, 0, 0) : float3(1, 0, 1), 0.4);   // magenta: no background found
     }
     return c;
 }
@@ -508,7 +520,7 @@ void draw(const Call& c, const Eye& last, const drawnpose::Entry* drawn_now, ID3
         then_view[0][0], then_view[0][1], then_view[0][2], settings::HANDPASTE_BLEND_M,
         then_view[1][0], then_view[1][1], then_view[1][2], 0.0f,
         cam[0], cam[1], cam[2], cam[3], cam[4], cam[5], cam[6], cam[7], cam[8], cam[9], cam[10], cam[11],
-        g_against.load(), against ? 1.0f : 0.0f, reach, 0.0f,
+        g_against.load(), against ? 1.0f : 0.0f, reach, settings::HANDPASTE_FILL_STEP,
         oe[0], oe[1], oe[2], oe[3], oe[4], oe[5], oe[6], oe[7], oe[8], oe[9], oe[10], oe[11],
         fwd[0][0], fwd[0][1], fwd[0][2], settings::HANDPASTE_WEAPON_RADIUS, up[0][0], up[0][1], up[0][2], settings::HANDPASTE_ARM_RADIUS, shoulder[0][0], shoulder[0][1], shoulder[0][2], 0.0f,
         fwd[1][0], fwd[1][1], fwd[1][2], 0.0f, up[1][0], up[1][1], up[1][2], 0.0f, shoulder[1][0], shoulder[1][1], shoulder[1][2], 0.0f};

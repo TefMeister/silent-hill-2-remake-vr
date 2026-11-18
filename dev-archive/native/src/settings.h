@@ -83,6 +83,7 @@ constexpr int DRAWNPOSE_ORIGIN_CONFIRM = 3;       // the same shift in this many
 constexpr int DRAWNPOSE_ORIGIN_DROP = 30;         // this many calls running with no fitting record = the origin moved (a load): learned again
 constexpr int DRAWNPOSE_HAND_TICKS = 0;            // the hands paired with a view: those of the same record (0), or of the record this many ticks later (8th number in the file; a test switch)
 constexpr float DRAWNPOSE_TURN_TOL = 2e-5f;       // ... and its turn (the numbers of the view axis) within this: about a thousandth of a degree
+constexpr float HANDPASTE_FILL_STEP = 0.006f;     // the search for the background beyond the warp's leftover copy moves at least this share of the picture a step (16 steps); 2026-11-19: with the head still it had moved 0 and left the old gun
 constexpr float HANDPASTE_NEAR_M = 1.0f;          // nearer than this and marked moving by the game = hands and weapon (5th number)            // how often the module's counts are logged
 
 // ---- the button layer (buttons.cpp, 2026-10-29) ----

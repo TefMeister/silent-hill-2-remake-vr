@@ -184,3 +184,27 @@ later) fits the constant "2.0 records behind". The counts of calls "with a veloc
 
 **Installed: b031** = b030 + the learned origin + the tick switch; `sh2vr_warpscale.txt` = `1.0 0 0 1 1.0 0.004 1 0`.
 NOT established: a gun in hand (the run had a melee weapon), how it looks in the headset, the tick question above.
+
+## 8. Tefa wears b031 and b032 (2026-11-19 00:00-00:30, /ms, Opus; the real headset, Tefa driving)
+
+The game was started by the session on Tefa's word ("please launch the game"); Tefa played.
+
+- **b031** `[reported, n=1 wear]`: *"when moving it quickly it still leaves like a trail of guns behind it, but when
+  just holding it out it feels really good and smooth"*. The log: 72 frames a second (13.9 ms), every view matched,
+  1436-1440 of 1440 hands carried by the drawn hand `[measured]`. The tick switch (8th number 1, hands one tick later)
+  live: *"still the same trail"*: put back to 0.
+- The tint (4th number 2), Tefa's screenshots in the recon folder: green = our pasted hand where it is now, red = the
+  warp's leftover copy painted over. **Corrected the same session:** I first read the red gun shape as the old gun left
+  in place. With the tint, red marks the painted area whatever fills it, so that reading proved nothing. Still found
+  and fixed (b032): with the head still the search for the background beyond the copy stepped 0 and never left it;
+  it now also searches away from where each hand went and sideways (`settings::HANDPASTE_FILL_STEP`), magenta where it
+  finds nothing. No magenta in Tefa's three b032 screenshots: a background was found everywhere `[measured, n=3]`.
+  `tests/shader_compile.py` (new) compiles the pass with the same call the plugin makes, at the desk.
+- **b032** `[reported, n=1 wear]`: *"it felt pretty damn good honestly!"*.
+- Open: whether the remaining trail on quick waves is a second gun inside one picture (ours, fixable) or 72 separate
+  pictures strung together by the eye (the display: only more pictures for the hands, option (a), or a slight hand-only
+  blur would help). One untinted screenshot mid-wave tells them apart; not taken yet.
+- New faults from Tefa, same wear: James's movement seems off ("the roomscale might be off"), and a two-handed gun
+  grabbed "just starts moving on its own like curving upwards and stays in that position in my right hand" (seen in
+  the run before the last). Board rows.
+- The game closed itself once at 00:20 (UEVR log ends at a DLSS release, no crash report written).
