@@ -45,7 +45,7 @@ cp "$DLL" "$PROFILE/plugins/sh2vr.dll" && cmp -s "$DLL" "$PROFILE/plugins/sh2vr.
 for f in "${PATCHED[@]}"; do
     # the same but for line endings counts as the same (2026-11-18: a clone with CRLF check-out rewrote seven installed
     # scripts that differed in nothing else, and the builds history then saw them as changed)
-    if cmp -s "$MODPROFILE/$f" "$PROFILE/$f" || { [ -f "$PROFILE/$f" ] && cmp -s <(tr -d '' < "$MODPROFILE/$f") <(tr -d '' < "$PROFILE/$f"); }; then echo "same    $f"; continue; fi
+    if cmp -s "$MODPROFILE/$f" "$PROFILE/$f" || { [ -f "$PROFILE/$f" ] && cmp -s <(tr -d '\r' < "$MODPROFILE/$f") <(tr -d '\r' < "$PROFILE/$f"); }; then echo "same    $f"; continue; fi
     mkdir -p "$BK/files/$(dirname "$f")"; [ -f "$PROFILE/$f" ] && cp -p "$PROFILE/$f" "$BK/files/$f"
     cp "$MODPROFILE/$f" "$PROFILE/$f" && echo "patched $f"
 done
