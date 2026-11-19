@@ -464,3 +464,26 @@ Full story: `modding-notes/2026-11-18-hands-at-the-headsets-rate-the-carry-by-th
   `[inferred-static]`; plugins' callbacks run before the Lua loader's, so a script could still move the view after ours.
 - NOT settled: whether the hands in the picture are that same tick's (the simulator's 160 px frames cannot tell
   "same" from "one later"; "one earlier" measured worst).
+
+## 15. A turn that builds up: two shortest-way turns a view on the held gun (2026-11-19, /lm, simulator; note 2026-11-19)
+
+- The two-handed long gun is a child of our arm mesh's `hand_r_bn`; `twohand::on_view` writes its world place at every
+  view. Until b032 it read the gun where the last view had left it and made two shortest-way turns about the right
+  hand's grip (aim at the left hand; meet the drawn left hand). Aimed at targets, so the direction never drifted, but
+  the pair leaves a small turn about the hands' line each view and nothing took it out: **0.6 degrees a second with the
+  left hand circling 6 cm, 11.9 degrees in 20 s, without end** `[verified-live 2026-11-19, simulator, n=1]`. Tefa in the
+  headset: the gun "curving upwards ... stays in that position".
+- **Rule for any per-view write on something the hand holds: start from a fixed place (its saved place in the hand),
+  never from the last write.** b033 does (`TWO_HAND_FROM_ITS_PLACE`): the same circling, no creep in 30 s
+  `[verified-live 2026-11-19, simulator, n=1]`. "Aims at a target" is not the same as "does not build up": a
+  shortest-way turn fixes two of the three angles and leaves the third to history.
+- Dead end avoided: Tefa's wear log already showed the barrel within 0.1 to 2.8 degrees of the left hand throughout, so
+  the smoothing and the drawn-hand record were not the cause; the board's planned test (smoothing off) would not have
+  separated it.
+- Measured for the first time, not explained: while two-handed and circling, the gun sits 15 to 16 degrees (mean) out
+  of its place in the drawn right hand: the hand takes only part of the turn `[measured 2026-11-19, n=1]`.
+- The hand carry for the warp's made-up pictures (section 14): a refused carry repeats the last good one for up to 3
+  pictures since b033 (was: the raw controller's move at once); refusals are counted by reason in the log.
+- DLSS Balanced from the start runs with the warp on (simulator, 3 runs); the close Tefa hit is the live change.
+- The occasional start crash (section 13): 2 of 5 starts on 2026-11-19; the injector's last line both times was `Scene
+  state passed to FSceneView constructor is null`.

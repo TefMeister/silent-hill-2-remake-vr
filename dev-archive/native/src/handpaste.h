@@ -51,7 +51,7 @@ struct Call {
 
 void set_mode(int mode);          // 0 off, 1 on, 2 on with the debug tint
 void set_near(float metres);      // how close to the eyes counts as "hands and weapon"
-void set_carry(int how);          // 1 = the hands follow the hand the game drew (drawnpose.cpp), 0 = the raw controller (b020-b029)
+void set_carry(int how);          // 1 = the hands follow the hand the game drew (drawnpose.cpp; a refused carry keeps the last good one), 2 = the same, a refused carry by the raw controller (b032), 0 = the raw controller (b020-b029)
 void set_against_room(float amount);   // ... and how far a pixel must move against the room (picture units; 0 = closeness alone)
 void after_warp(const Call& call);
 void report();                    // one log line now and then (the game thread)

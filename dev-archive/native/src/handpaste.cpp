@@ -194,6 +194,14 @@ std::atomic<int> g_mode{settings::HANDPASTE_MODE};
 std::atomic<float> g_near{settings::HANDPASTE_NEAR_M};
 std::atomic<int> g_carry{settings::HANDPASTE_CARRY};
 std::atomic<int> g_draws{0}, g_skips{0};
+// 2026-11-19: a carry by the drawn hand that is refused (Tefa, b032: the hands and gun "every now and then just jittery").
+// It used to fall back to the raw controller's move for that one picture, which is not where the smoothed, drawn hand
+// went: a one-picture jump [hypothesis]. Now the hand keeps its last good carry for up to HANDPASTE_KEEP_FRAMES pictures.
+// Counted by reason and said in the status line; 7th number 2 in the file = the b032 way, for an A/B in the headset.
+struct Kept { bool ok = false; int age = 0; float rows[12]{}; };
+Kept g_kept[2];   // the render thread's own
+enum { WHY_NO_RECORD, WHY_NO_CARRY, WHY_TURN, WHY_STEP, WHY_DIFFER, WHY_COUNT };
+std::atomic<int> g_refused[WHY_COUNT]{}, g_kept_used{0};
 std::atomic<bool> g_failed{false};
 std::atomic<const char*> g_why{nullptr};
 
@@ -458,18 +466,33 @@ void draw(const Call& c, const Eye& last, const drawnpose::Entry* drawn_now, ID3
     // hand riding a slide, and it is read at another moment than the frame was posed): the two poses the arm solve
     // used for this eye's last real picture and for the frame being made up now give the carry exactly, straight
     // between the two views' own matrices (carry_math.h). The raw move stays as the fallback and as the yardstick.
-    const bool by_drawn = mode != 3 && g_carry.load() == 1 && last.drawn_ok && drawn_now != nullptr;
-    if (mode != 3 && g_carry.load() == 1 && !by_drawn) { drawnpose::note(false, -1.0f); drawnpose::note(false, -1.0f); }   // no record for one of the two frames
+    const bool by_drawn = mode != 3 && g_carry.load() >= 1 && last.drawn_ok && drawn_now != nullptr;
+    // a refused carry: the last good one again (the hand goes on as it went), not the raw controller's
+    auto refused = [&](int i, int why, const float* tv) {
+        drawnpose::note(false, -1.0f); g_refused[why].fetch_add(1);
+        Kept& k = g_kept[i];
+        if (g_carry.load() != 1 || !k.ok || k.age >= settings::HANDPASTE_KEEP_FRAMES) { k.ok = false; return; }
+        ++k.age; g_kept_used.fetch_add(1);
+        std::memcpy(move[i], k.rows, sizeof(k.rows));
+        if (tv != nullptr) { then_view[i][0] = tv[0]; then_view[i][1] = tv[1]; then_view[i][2] = tv[2]; }
+        float to[3], ua[2], ub[2];
+        carry_math::apply(k.rows, then_view[i], to);
+        if (to_uv(last.v2c, then_view[i], ua) && to_uv(last.v2c, to, ub)) { shift[i][0] = ub[0] - ua[0]; shift[i][1] = ub[1] - ua[1]; }
+    };
+    if (mode != 3 && g_carry.load() >= 1 && !by_drawn) { refused(0, WHY_NO_RECORD, nullptr); refused(1, WHY_NO_RECORD, nullptr); }   // no record for one of the two frames
     if (by_drawn) {
         const float* dest_w2v = c.camera + 0 * 16;   // the made-up eye's view now
         for (int i = 0; i < 2; ++i) {
             float rows[12], tv[3], a[3], b[3];
-            if (!carry_math::carry(last.w2v, dest_w2v, last.drawn.hand[i], drawn_now->hand[i], rows, tv)) { drawnpose::note(false, -1.0f); continue; }
+            if (!carry_math::carry(last.w2v, dest_w2v, last.drawn.hand[i], drawn_now->hand[i], rows, tv)) { refused(i, WHY_NO_CARRY, nullptr); continue; }
             carry_math::apply(rows, tv, a);
             const float step = std::sqrt((a[0] - tv[0]) * (a[0] - tv[0]) + (a[1] - tv[1]) * (a[1] - tv[1]) + (a[2] - tv[2]) * (a[2] - tv[2]));
             carry_math::apply(move[i], tv, b);   // where the raw controller's move would have put the same point
             const float differ = std::sqrt((a[0] - b[0]) * (a[0] - b[0]) + (a[1] - b[1]) * (a[1] - b[1]) + (a[2] - b[2]) * (a[2] - b[2]));
-            if (carry_math::turn_deg(rows) > settings::HANDPASTE_MAX_TURN_DEG || step > settings::HANDPASTE_MAX_STEP_M || (raw_ok[i] && differ > settings::HANDPASTE_CARRY_MAX_DIFFER_M)) { drawnpose::note(false, -1.0f); continue; }
+            if (carry_math::turn_deg(rows) > settings::HANDPASTE_MAX_TURN_DEG) { refused(i, WHY_TURN, tv); continue; }
+            if (step > settings::HANDPASTE_MAX_STEP_M) { refused(i, WHY_STEP, tv); continue; }
+            if (raw_ok[i] && differ > settings::HANDPASTE_CARRY_MAX_DIFFER_M) { refused(i, WHY_DIFFER, tv); continue; }
+            g_kept[i].ok = true; g_kept[i].age = 0; std::memcpy(g_kept[i].rows, rows, sizeof(rows));
             std::memcpy(move[i], rows, sizeof(rows));
             then_view[i][0] = tv[0]; then_view[i][1] = tv[1]; then_view[i][2] = tv[2];
             float ua[2], ub[2];
@@ -573,7 +596,7 @@ void after_warp(const Call& c) {
 
     // which frame of the game this drawn eye's picture is, and so where the game drew the hands in it
     drawnpose::Entry drawn_now;
-    const bool drawn_ok = g_carry.load() == 1 && drawnpose::find(c.camera + 5 * 16, drawn_now);   // the drawn eye's view-to-world
+    const bool drawn_ok = g_carry.load() >= 1 && drawnpose::find(c.camera + 5 * 16, drawn_now);   // the drawn eye's view-to-world
 
     // 1. the made-up eye: the warp has just written its picture where that eye's last real one was
     const Eye& last = g_eye[1 - c.eye];
@@ -607,6 +630,11 @@ void report() {
     if (g_failed.load() && !said_fail) { said_fail = true; LOGW("%s handpaste: switched itself off: %s", TAG, g_why.load() != nullptr ? g_why.load() : "?"); }
     const int d = g_draws.exchange(0), s = g_skips.exchange(0);
     if (d > 0 || s > 0) LOGI("%s handpaste: %d made-up pictures redrawn, %d left as the warp made them", TAG, d, s);
+    int why[WHY_COUNT], any = 0;
+    for (int i = 0; i < WHY_COUNT; ++i) { why[i] = g_refused[i].exchange(0); any += why[i]; }
+    const int kept = g_kept_used.exchange(0);
+    if (any > 0) LOGI("%s handpaste: %d hand carries refused (no record %d, no carry between the poses %d, turned too far %d, moved too far %d, too far from the raw controller's %d); %d kept the last good carry, %d fell back to the raw controller",
+                      TAG, any, why[WHY_NO_RECORD], why[WHY_NO_CARRY], why[WHY_TURN], why[WHY_STEP], why[WHY_DIFFER], kept, any - kept);
 }
 
 } // namespace sh2vr::handpaste

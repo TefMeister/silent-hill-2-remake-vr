@@ -18,6 +18,7 @@
 //     go of the left grip ends it (UEVR puts the gun back on the right hand by itself the next frame).
 // Every write aims at a target (the left hand, the hands' middle), never adds to our own last write, so running twice
 // in one frame (two eyes), or on a frame UEVR did not reset, gives the same answer.
+// (2026-11-19: that was true of where the gun POINTS, not of its turn about the hands' line; see on_view.)
 // [compile-verified 2026-10-31] until it has run.
 
 #include "twohand.h"
@@ -158,6 +159,7 @@ double g_slide_prev = 0;           // the pump slide the last target was pulled 
 // the proof (2026-11-06): the drawn left hand against the DRAWN gun's grip spot (what the eye sees) and against the target it was
 // solved toward last frame (the one-frame lag), summed between status lines
 double g_m_seen_sum = 0, g_m_seen_max = 0, g_m_lag_sum = 0, g_m_lag_max = 0; int g_m_n = 0;
+double g_m_turn_sum = 0, g_m_turn_max = 0; int g_m_turn_n = 0;   // the gun's turn out of its place in the hand, per view (2026-11-19)
 float g_report_in = 0.0f;
 
 bool is_long_gun(API::UObject* w) {
@@ -269,6 +271,11 @@ void tick(float delta) {
                          TAG, g_m_seen_sum / g_m_n, g_m_seen_max, g_m_lag_sum / g_m_n, g_m_lag_max, g_m_n);
                     g_m_seen_sum = g_m_seen_max = g_m_lag_sum = g_m_lag_max = 0; g_m_n = 0;
                 }
+                if (g_m_turn_n > 0) {
+                    LOGI("%s twohand: status: the gun turned out of its place in the right hand: mean %.1f deg, max %.1f (follows the hands; must not creep), each view from its place: %s",
+                         TAG, g_m_turn_sum / g_m_turn_n, g_m_turn_max, settings::TWO_HAND_FROM_ITS_PLACE ? "yes" : "NO");
+                    g_m_turn_sum = g_m_turn_max = 0; g_m_turn_n = 0;
+                }
             }
         }
         if (g_map_mesh != nullptr) LOGI("%s twohand: status: the map %s, %d writes", TAG, g_map_two ? "in both hands" : "in the left hand", g_map_writes);
@@ -280,7 +287,15 @@ void on_view() {
 
     if (g_gun && g_gun_mesh != nullptr) {
         Transform mw, r, l;
+        // 2026-11-19 (Tefa, b031: a two-handed gun "starts moving on its own like curving upwards and stays"): every view
+        // used to start from the gun as the LAST view left it. Where it points was re-aimed each time, but each view's two
+        // shortest-way turns left a small turn about the hands' line behind, and nothing took it out again: with the left
+        // hand circling it crept 0.6 deg a second for as long as the gun was held [verified-live 2026-11-19, simulator,
+        // n=1: 11.9 deg in 20 s]. So each view now starts from the gun's own place in the right hand (read at the grab),
+        // and the result depends on this view's hands alone.
+        if (settings::TWO_HAND_FROM_ITS_PLACE && g_gun_have_rel) ue::call(g_gun_mesh, L"K2_SetRelativeTransform", {g_gun_rel, false});
         if (world_of(g_gun_mesh, mw) && hand(controllers::RIGHT, r) && hand(controllers::LEFT, l)) {
+            const Quat place = mw.rot;   // the gun in its place in the hand, before this view's turns
             if (g_gun_capture) {   // the gun where UEVR put it, the hands now: remember the line and the grip in the gun's frame
                 const Vec3 drawn = front_hand(l);
                 g_barrel_local = norm(qrot(qconj(mw.rot), sub(drawn, r.pos)));
@@ -357,6 +372,13 @@ void on_view() {
                         }
                     }
                     g_slide_prev = g_front_cm - at;
+                    // the proof (2026-11-19): how far this view turned the gun out of its place in the hand; it follows the
+                    // hands and comes back, it must not grow while the hands hold still or go round
+                    if (g_gun_have_written) {
+                        const Quat d = qmul(g_gun_written.rot, qconj(place));
+                        const double deg = 2.0 * std::acos(std::fmin(1.0, std::fabs(d.w))) * 180.0 / 3.14159265358979323846;
+                        g_m_turn_sum += deg; if (deg > g_m_turn_max) g_m_turn_max = deg; ++g_m_turn_n;
+                    }
                 } else if (settings::TWO_HAND_LOCK_TURN) {
                     Transform ht;
                     ht.rot = qnorm(qmul(t.rot, g_left_rel));   // the gun's turn, then the hand's own turn against it from the grab

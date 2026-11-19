@@ -75,6 +75,7 @@ constexpr float HANDPASTE_WEAPON_RADIUS = 0.16f;  // hands and weapon = within t
 constexpr float HANDPASTE_ARM_RADIUS = 0.22f;     // ... or within this of the line from the controller to that shoulder
 constexpr float HANDPASTE_SHOULDER[3] = {0.20f, -0.25f, 0.05f};   // a shoulder against the head: out, down, back (metres)
 constexpr int HANDPASTE_CARRY = 1;                // how a made-up picture's hands are carried: 1 = by the hand THE GAME DREW in the two frames (drawnpose.cpp, 2026-11-18), 0 = by the raw controller (b020-b029); 7th number in the file
+constexpr int HANDPASTE_KEEP_FRAMES = 3;         // 2026-11-19: a refused carry repeats the hand's last good one for at most this many made-up pictures in a row (7th number 1); 7th number 2 = the raw controller at once, as b032
 constexpr float HANDPASTE_CARRY_MAX_DIFFER_M = 0.05f;   // the drawn hand's carry further than this from the raw controller's = something is wrong (a convention, a mismatched frame): the raw one is used and counted
 constexpr bool DRAWNPOSE_ON = true;               // drawnpose.cpp: every view's place and both drawn hands recorded for the render thread
 constexpr float DRAWNPOSE_KEY_TOL_M = 1e-6f;      // a view's place matches a record within this (times the coordinate's size: a few float steps; the two are built from the same numbers)
@@ -192,6 +193,9 @@ constexpr double TWO_HAND_PUMP_SLIDE_CM = 10.0;   // the pack's pump counts 8 cm
 // the drawn left hand (the bone as the game refreshed it this frame), and only the hand's NEXT target comes from the gun
 // aimed at the controller. The gun then lags the real hand by one frame like the hands already do, and the hand sits on it.
 constexpr bool TWO_HAND_DRAW_AT_DRAWN_HAND = true;
+// 2026-11-19: each view starts from the gun's own place in the right hand (read at the grab), not from the last view's
+// result, so no turn can build up (the gun that "curls up by itself"); false = the old way, for an A/B
+constexpr bool TWO_HAND_FROM_ITS_PLACE = true;
 constexpr bool RH_DRAW_WHERE_SOLVED = true;          // the locked rifle the same: drawn where the hands were solved for (one frame back)
 constexpr double MAP_TWO_HAND_TILT_DEG = 45.0; // praydog's tilt of the two-handed map
 // 2026-11-05 (frontgrip.cpp; Tefa: "use the games own grip independant of the wrist"): the left hand bone and fingers

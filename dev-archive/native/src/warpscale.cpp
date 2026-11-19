@@ -218,7 +218,7 @@ void read_file() {
         last_paste = paste; last_near = near_m; handpaste::set_mode(paste); handpaste::set_near(near_m);
     }
     if (ticks != last_ticks) { LOGI("%s warpscale: a view is paired with the hands of the record %d tick(s) later", TAG, ticks); last_ticks = ticks; drawnpose::set_hand_ticks(ticks); }
-    if (carry != last_carry) { LOGI("%s warpscale: a made-up picture's hands follow %s", TAG, carry == 1 ? "the hand the game drew (drawnpose)" : "the raw controller (as b020-b029)"); last_carry = carry; handpaste::set_carry(carry); }
+    if (carry != last_carry) { LOGI("%s warpscale: a made-up picture's hands follow %s", TAG, carry == 1 ? "the hand the game drew (drawnpose); a refused carry keeps the last good one" : carry == 2 ? "the hand the game drew (drawnpose); a refused carry falls back to the raw controller (as b032)" : "the raw controller (as b020-b029)"); last_carry = carry; handpaste::set_carry(carry); }
     if (h != g_hand_speed.load()) { LOGI("%s warpscale: mode 3 while a hand moves faster than %.2f m/s in the room (was %.2f; 0 = never)", TAG, h, g_hand_speed.load()); g_hand_speed.store(h); }
     if (v != g_scale.load()) { LOGI("%s warpscale: factor %.2f -> %.2f", TAG, g_scale.load(), v); g_scale.store(v); }
 }
