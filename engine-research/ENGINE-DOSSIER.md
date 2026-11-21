@@ -545,3 +545,8 @@ known to be wrong in ours; the first is the cheap check for any regular hitch Te
 - **The save slots on the Build PC** (the reader, from the files' strings): 0 and 1 the town start (one spot), 2 the first
   Lying Figure fight (live enemy saved: never unattended), 3, 4 and 6 the prison armory (one room), 5 the room after the
   garage, 8 m from slot 2's fight. Detail kept in `engine-research/2026-11-21-reader-save-slot-labels.md`.
+- **The start crash: very likely Window View's OpenXR layer** (2026-11-22, /lm, real headset, 31 menu starts with the
+  other OpenXR layers switched off one by one): with Window View's layer on, 8 start crashes in 19 and 4 starts where the
+  frame calls skipped the layers below it after the first frame; with it off, 12 of 12 clean `[measured, n small]`.
+  Tefa: a crash may have come when the game window was clicked out of focus (maybe a coincidence). Section 13's crash
+  reading still stands; this is what most likely sets it off. Table: the-optimizer `docs/first-run-silent-hill-2-2026-11-21.md`.

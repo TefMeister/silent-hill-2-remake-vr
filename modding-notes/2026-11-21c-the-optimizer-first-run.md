@@ -65,3 +65,10 @@ the card and the processor split the way the player sees.
    no frame (it saw the 72 Hz waits, no frame handed in); the tour stopped cleanly. Tries 1 and 2 recorded every frame.
    Tefa, watching the monitor: the game window stuck on "compiling shaders", flickering rapidly. Cause not found; kept
    in the logs folder `2026-11-21-2243-optimizer-headset-meter-empty/`. Next: find why, before any more tours.
+
+## After midnight: the cause of the empty meter, and very likely of the start crash
+
+The meter was taught to count its calls: the empty starts saw 1 wait and 0 frames for the whole run. Switching the
+other OpenXR layers off one at a time (registry list backed up, put back after): with Window View's layer on, 8 start
+crashes and 4 empty meters in 19 starts; with it off, 12 of 12 clean. Tefa: a crash may have come when the game window
+was clicked out of focus. The fix belongs in Window View; until then, run without its layer.
