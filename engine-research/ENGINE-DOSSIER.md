@@ -487,3 +487,31 @@ Full story: `modding-notes/2026-11-18-hands-at-the-headsets-rate-the-carry-by-th
 - DLSS Balanced from the start runs with the warp on (simulator, 3 runs); the close Tefa hit is the live change.
 - The occasional start crash (section 13): 2 of 5 starts on 2026-11-19; the injector's last line both times was `Scene
   state passed to FSceneView constructor is null`.
+- 2026-11-21: the same start crash again (1 of 1 VR start, simulator, b033, about 10 s after UEVR's entry, the same
+  last line), with Lanes' new frame meter loaded beside every other layer; the meter is very likely not the cause
+  (note `modding-notes/2026-11-21-tune-o-matic-first-run.md`) `[inferred, n=1]`.
+
+## 16. Settings changed live, and DLSS (2026-11-21, /lm reader, files only; note 2026-11-21b)
+
+- With DLSS on, `r.ScreenPercentage` is DLSS's inner size (Balanced 58, Quality 66.7 after a start)
+  `[verified-live 2026-11-10 and 2026-11-13, n=1 each]`, and **every live change of it tears DLSS down and builds it
+  again** (two creates, two releases in 50 ms) `[measured, n=5]`. Lowering it does make the frame cheaper (66.7 -> 50:
+  16.5 -> 14.1 ms, real headset, warp on, 2026-11-13).
+- DLSS rebuilds with the warp on: 5 of 5 survived before the hands' pass (b014/b016); 3 of 6 crashed since it (b028,
+  b032 twice) `[measured]`; the hands' pass keeping depth and velocity a frame longer without a size check is the lead
+  for `[ID SH2-019]` `[hypothesis, read in handpaste.cpp, untested]`.
+- So: **no live change of the DLSS size or level while the hands' pass is on.** `sg.*` groups are safe live and do
+  almost nothing here (within 0.15 ms, twelve changes); ray-traced reflections off (`r.Lumen.Reflections.HardwareRayTracing 0`,
+  -1.05 ms) changed live twice without a crash.
+- The real settings: `GameUserSettings.ini` `GFXSettings` (`Adv_Supersampling` 4 = DLSS, `Adv_DLSSQuality` 2 =
+  Balanced, 3 = Quality, the other `Adv_*`). `[ScalabilityGroups]` (all 3) has no measured effect; the game writes its
+  own values back over `user_script.txt`'s after UEVR runs it `[measured 2026-11-13 and 2026-11-19]`.
+
+## 17. Plugin traps to check ours against (2026-11-21, from /sr; phunkaeg's VR Modding Playbook ch. 18) `[reported]`
+
+An object lookup that misses scans the whole object array (~105 ms; a periodic miss = a regular hitch); UEVR places the
+hands by the view's yaw only; Blueprint-only functions never reach UEVR's function hook; VR controller input reaches
+only the lowest polled XInput slot; additive UI writes no alpha (vanishes in the headset) and an undepth-tested
+reticle shimmers under DLSS; a newer MSVC runtime than the game's can make the first `std::mutex` lock throw. None is
+known to be wrong in ours; the first is the cheap check for any regular hitch Tefa reports.
+<https://github.com/phunkaeg/vr-modding-playbook/blob/main/docs/18-beyond-the-native-injector.md>
