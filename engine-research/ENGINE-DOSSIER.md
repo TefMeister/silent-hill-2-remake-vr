@@ -515,3 +515,33 @@ only the lowest polled XInput slot; additive UI writes no alpha (vanishes in the
 reticle shimmers under DLSS; a newer MSVC runtime than the game's can make the first `std::mutex` lock throw. None is
 known to be wrong in ours; the first is the cheap check for any regular hitch Tefa reports.
 <https://github.com/phunkaeg/vr-modding-playbook/blob/main/docs/18-beyond-the-native-injector.md>
+
+## 18. The Optimizer's first run: frame times under the warp, the way into play, the saves (2026-11-21, /lm; note 2026-11-21c)
+
+- **Under the frame warp, one OpenXR frame per game frame.** An OpenXR frame meter's frame interval is the game's own
+  frame time: it matched the plugin's `alive: ... ms avg` within 0.1 ms (15.4 ms in the armory) and the warp-call count
+  within 0-4 per 10 s `[measured 2026-11-21, n=2 runs; the reader's 21 windows]`. UEVR waits and ends a frame on every
+  Present; the warp makes up the other eye inside that frame, it adds none `[inferred-static, the AFW fork's public
+  source]`. So "late" is judged on the meter's interval (mean rate and the slowest 1%); `stat unit` is not needed.
+  The simulator never pushes a late frame to the next slot, so a "late %" against 1.5 frames under-reports there; the
+  slowest-1% rule still catches it. Half-rate stretches to avoid measuring across: 90 frames after the warp comes on,
+  90 after any DLSS rebuild, and the flat cutscene mode `[inferred-static]`.
+- **Correction to section 6:** the profile's `VR_SynchronizationMode` is 2 (Very Late) and `VR_RenderingMethod` 3 now
+  `[measured 2026-11-21, config.txt]`, not Early (0). In mode 2 the meter's "work" column is the present thread's whole
+  cycle, not the game's work.
+- **Simulator numbers, b033, DLSS Balanced, connector in:** the armory 60-67 a second, slowest 1% at 43-50, the card
+  55-60% busy (7 measures of the same room: the spread is the noise) `[measured 2026-11-21, n=7]`; the town start
+  (outdoors, fog) 76-85 a second, the card 70-74% busy `[measured, n=1, 20 s]`. The armory is the hard spot and it is not
+  the card that limits it on the simulator.
+- **Into play with the connector alone:** Enter until `MainMenuWidget_BP_C /Engine/Transient` exists, ContinueGame on
+  it, wait for `SHCharacterPlay_BP_C`, Enter at PRESS ANY BUTTON TO PLAY (twice: the first is often early). No VR
+  trigger needed `[verified-live 2026-11-21, n=10 starts]`. The connector cannot pull a VR trigger.
+- **No god mode:** console `god` does nothing (no CheatManager; `EnableCheats` makes none) `[verified-live, n=1]`.
+- **The "Scene state passed to FSceneView constructor is null" line is not a crash sign** on its own: written in a start
+  that ran on. `[Exception Handler]` is.
+- **Continue follows the slot last used, not the newest file:** with the newest file replaced by slot 0, then slot 1,
+  Continue still loaded the prison armory; with slot 0 put over every slot, it loaded the town start
+  `[verified-live 2026-11-21, n=1 each way]`.
+- **The save slots on the Build PC** (the reader, from the files' strings): 0 and 1 the town start (one spot), 2 the first
+  Lying Figure fight (live enemy saved: never unattended), 3, 4 and 6 the prison armory (one room), 5 the room after the
+  garage, 8 m from slot 2's fight. Detail kept in `engine-research/2026-11-21-reader-save-slot-labels.md`.
