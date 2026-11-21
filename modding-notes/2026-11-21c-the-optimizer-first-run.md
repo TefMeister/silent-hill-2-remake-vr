@@ -53,3 +53,15 @@ the card and the processor split the way the player sees.
 - Whether the armory's limit in the headset is the processor or the card.
 - The connector plugin's own cost (not measured by this version; the installed copy is the throttled build).
 - Whether slot 5 stays calm for a minute (it stands 8 m from the fight).
+
+## Later the same evening: three tries with the real headset (on the table, sensor taped)
+
+1. 22:33: the occasional start crash, 12 s in. The headset was fine (valid poses, "headset on"); I first misread the normal
+   burst of ~60 "Failed to initialize Framework" lines at a headset start as a sleeping headset. Start crash count now
+   2 of 15 today.
+2. 22:38: the Enter presses also chose CONTINUE on the main menu; the AI never saw the menu and stopped cleanly. Fixed
+   in the pack (check for the character after each Enter).
+3. 22:43: into play at the town start in the headset (14.3 ms a frame by the plugin), but The Optimizer's meter counted
+   no frame (it saw the 72 Hz waits, no frame handed in); the tour stopped cleanly. Tries 1 and 2 recorded every frame.
+   Tefa, watching the monitor: the game window stuck on "compiling shaders", flickering rapidly. Cause not found; kept
+   in the logs folder `2026-11-21-2243-optimizer-headset-meter-empty/`. Next: find why, before any more tours.
