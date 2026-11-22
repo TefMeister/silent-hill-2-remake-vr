@@ -54,6 +54,7 @@ constexpr int TUNING_MAX_TRIES = 3;           // tries in a row before a value t
 constexpr float STALL_LOG_MS = 100.0f;        // plugin.cpp: a frame longer than this is logged with its time (Tefa's freezes)
 constexpr float TUNING_CHECK_S = 5.0f;        // how often they are looked at again (the game writes its own back)
 constexpr bool WARP_AUTO_ON = true;
+constexpr const char* WARP_MODE = "3";        // warp.cpp: the warp's mode, set with the switch (2 = Tefa's "dome" jitter near James; 3 since b041)
 constexpr float WARP_AFTER_S = 10.0f;         // seconds of the headset drawing before the switch (a start with 3 crashes)
 constexpr bool GHOSTFIX_AUTO_ON = true;       // ghostfix.cpp: the injector's ghosting fix switched on after the start (on from the start = the start crash)
 constexpr float GHOSTFIX_AFTER_S = 20.0f;     // seconds of the headset drawing before the switch (the crash came within ~2 s of the injector's first pick, at the start of drawing)

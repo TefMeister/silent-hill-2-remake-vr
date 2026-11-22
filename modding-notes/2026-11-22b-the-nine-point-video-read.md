@@ -119,3 +119,31 @@ than anything measured here, and it says the test need not be a sidestep: any mo
 things own a 1 m line: the warp's own programs, and our hand pass (`sh2vr_warpscale.txt`, "near 1 m"). Telling them
 apart, live, in the headset: our pass off (4th number 0): dome still there = the warp's own; then
 `uevr VR_AFW_IgnoreMotionThreshold 100`, then mode 1.
+
+## 19:33-20:10: Tefa in the headset on b040, the "dome" switches, mode 3, a crash, b041
+
+Town start, real headset, Tefa standing where he sees the dome jitter. One live switch at a time, each put back before the next.
+
+| switch | Tefa's words |
+| --- | --- |
+| plain b040 | "fog is better, but still kas like noticable curvy lines going through it, barely noticable but also once i see it, i cannot unsee them. brightness is correct." |
+| our hand pass off (4th number of `sh2vr_warpscale.txt` 0; log: "the hands' own pass off") | "same" |
+| `VR_AFW_IgnoreMotionThreshold` 100 (set accepted, cannot be read back) | "same" |
+| `VR_AFW_FramewarpMode` 1 (the other eye) | "dome jitter gone, i can clearly see the warp all around me though quick constant flicker, but the dome jitter is not there" |
+| `VR_AFW_FramewarpMode` 3 (both) | "this is unbelivably good! please save this as a milestone build! hands still have a clear outline ... there is still a little warp effect, but i think that is really nitpicking, as i can sometimes "sense" it, and not really see it flicker in the game world. dome jitter gone. if we can now leave things as they are, make the fog denser/more high quality and get hands to look as good as the game world then this is epic. but hands do need work" |
+
+- **Point 1 (the dome) is the warp's mode 2 itself** `[reported, Tefa, n=1 per switch]`: not our hand pass, not the motion threshold. It fits the reader's static finding (mode 2 gives pixels nearer than 1 m the head's turn only). Mode 3 cures it for his eyes.
+- **In modes 1 and 3 our hand pass draws nothing** `[measured]`: the log reads "0 made-up pictures redrawn, 7xx left as the warp made them" from the switch on (`after_warp` only draws when the call asked for mode 2). So in mode 3 the hands are the warp's own. The hand carry, `drawnpose` and the smoothing of b033 do not reach the picture there. This is the hands' open work now.
+- **A crash 12 minutes into mode 3** (19:42 switch, 19:54:22 crash; n=1, cause not known): Windows logged a graphics driver timeout (LiveKernelEvent 141) and then the game's fault in ucrtbase.dll, c0000005. Candidates, none tested: mode 3 itself, the card at 92-96% since b039's fog, or chance. The run's log: logs folder `2026-11-22-1933-tefa-dome-switches/log-b040-mode3-crash.txt`.
+- **A live injector setting gets saved into config.txt**: after the session config.txt held `VR_GhostingFix=true` and `VR_RenderingMethod=3` (both crash a start). Put back to false / 0 (copy kept beside it, `...after-mode3-crash`); `VR_AFW_FramewarpMode=3` stays. Check config.txt after every run that ended badly.
+
+### Tefa's second video, "sh2 getting better now.mp4" (486 frames, 8.1 s, mode 3), every frame measured, sheets read
+- Frames 0-283: a chain fence and a wet pavement at about 1-2 m, the view drifting. No hop between frames, no torn frame: the dome fault is not in it. One frame (5) has a blotchy, noisy ground.
+- Frames 296-380: both hands held up. On 30 of 85 frames (about every 2nd-3rd recorded frame) both hands and sleeves are drawn dark and speckled, as if filled with noise; on the frames between they are clean.
+- Frames 381-482: hands low over the road. On 66 frames the hands and sleeves are a flat bright green with a thin yellow rim: 4 of every 5 frames from 381 to 456, then 1 of every 5 to the end.
+- Ours drew nothing in mode 3, so the speckle and the green are made by the warp (its handling of the moving hands in "both" mode) or by the card on its way to the hang `[hypothesis; not known how long before the crash the clip was taken]`. Tefa wrote only "hands still have a clear outline": to ask whether he saw the dark or green flashes in the headset.
+
+### b041 (the milestone Tefa asked for)
+`warp.cpp` now sets `VR_AFW_FramewarpMode` to `settings::WARP_MODE` ("3") with the rendering-method switch and reads it back. Simulator start: "warp: read back: the warp's mode is 3" `[measured, n=1]`. That start stopped at the title screen (not walked into play; not looked into). Not yet worn as b041; what Tefa wore was b040 with mode 3 switched live.
+
+Open after this: the hands in mode 3 (speckle, green, outline); the crash (count runs in mode 3); the fog's "curvy lines" and "denser/more high quality".
