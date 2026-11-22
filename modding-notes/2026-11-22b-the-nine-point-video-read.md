@@ -153,3 +153,9 @@ Open after this: the hands in mode 3 (speckle, green, outline); the crash (count
 - **Correction to the section above:** the flat green hands (and, most likely, the dark speckled ones) are a DEBUG VIEW Tefa switched on himself to show the fault, not a fault. The fault is the fine lines just outside the hands' edge (the thin rim around hands and sleeves; in the green frames it shows as the thin yellow rim). Which debug option he used is not known: ask, or find it in the fork's menu.
 - The crash: not tied to the clip; the time of the clip against 19:54 is not known.
 - The next window's job is written as a Lanes hand-on: `20261122-202500-sh2-b041-hands-and-warp-lines`.
+
+### 20:4x: the grate by the fire hydrant (Tefa: "tell me if you see stuff moving on it"), b041, the game window, 3 s at 60 a second
+Logs folder `2026-11-22-1933-tefa-dome-switches/grate/` (clip.mkv, flick.png, grate8.png). The view was still.
+- The grate is the brightest patch of the whole flicker map: back-and-forth change 0.07 against 0.04 on plain pavement beside it `[measured, n=1 clip]`. Enlarged, the holes' shapes and the light band across its left part shift a little from frame to frame while nothing else there moves: a fine regular pattern shimmering (the upscaler rebuilding a pattern near its pixel size, most likely `[hypothesis]`). Subtle in the flat window; in the headset it will read stronger.
+- The same map shows the fog's "curvy lines": the fog over the road is drawn in curved bands, like contour lines, that change from frame to frame.
+- The window gave 109 new pictures in 180 (the window's own rate, not the headset's).
