@@ -83,3 +83,23 @@ Tefa: "headset connected all yours". The full write-up is in the-optimizer `docs
 - **The start after a crash failed twice** (the launcher sat 3 minutes, the game never started), the crash reporter
   window up both times.
 Kept: `D:\claude video game stuff\logs\silent-hill-2-remake-vr\2026-11-22-1253-optimizer-headset-tour\`.
+
+## 14:04 to 14:37: the test. Ghosting Fix off = 20 of 20 clean starts (build b034, simulator, Fable)
+
+`VR_GhostingFix=false` in the UEVR profile's config.txt (the old file kept beside it as
+`config.txt.bak-2026-11-22-before-ghostingfix-off`), everything else b033; numbered b034 ("Start crash" feature). The same
+counter, the same conditions as the morning (Window View's layer off, the meter on): **20 menu starts, 0 crashes**,
+the menu in 63-71 s, the meter full every time, against 3 of 11 the same morning with the fix on (about 1 in 600 by
+luck) `[verified-live 2026-11-22, simulator, n=20]`. With the fix off UEVR's log has no "Inserting new scene state",
+no "Setting scene state to" and no "Scene state passed ... is null" line at all, while the ~400 ms start stall is still
+there: the swap never runs, so nothing dead is handed to the render thread. **The start crash's cause is UEVR's Ghosting
+Fix** (in rendering method 3). Caveat: an f4decomp compile sweep loaded the processor in rounds through the day; it
+ran during both the morning's and this count.
+Left installed: b034 (Ghosting Fix off). NOT worn: the AFW notes say to keep the fix on, so ghosting may be back; that
+is for Tefa's eyes. The package's own `package/profile/config.txt` still says true, so a normal install (the launcher
+without `--no-install`) puts the fix back on: the lasting change belongs in the package once Tefa has judged the look.
+Not tested: the no-pictures start (real headset only), and whether crashes later in play (level loads, cutscenes) share
+this cause. If ghosting is bad: the gentler ways (inject later; the fix switched on live at the main menu; a guard in our
+plugin). Kept: logs folder `2026-11-22-1404-starts-ghostingfix-off-sim/`.
+The same f4decomp load also means today's Optimizer verdict "the processor is the limit" may be too harsh: rerun with the
+sweeps paused before believing it.
