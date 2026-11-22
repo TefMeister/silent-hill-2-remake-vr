@@ -545,7 +545,12 @@ known to be wrong in ours; the first is the cheap check for any regular hitch Te
 - **The save slots on the Build PC** (the reader, from the files' strings): 0 and 1 the town start (one spot), 2 the first
   Lying Figure fight (live enemy saved: never unattended), 3, 4 and 6 the prison armory (one room), 5 the room after the
   garage, 8 m from slot 2's fight. Detail kept in `engine-research/2026-11-21-reader-save-slot-labels.md`.
-- **The start crash: very likely Window View's OpenXR layer** (2026-11-22, /lm, real headset, 31 menu starts with the
+- **The start crash: UEVR's Ghosting Fix keeps a scene state the game frees** (2026-11-22 12:4x, /lm, simulator): with
+  Window View's layer OFF the crash still came 3 of 11, so the entry below is `[disproved]` for the crash. All six dumps
+  crash on the render thread through the object UEVR last logged as "Setting scene state to" (5 of 5 with a full log)
+  `[measured]`; UEVR's `VR_GhostingFix` borrows the game's scene state for eye 1 and never checks it is alive
+  `[inferred-static, the beta 6 dll]`. Next test `VR_GhostingFix=false`. Note `modding-notes/2026-11-22-start-crash-is-not-window-view.md`.
+- `[disproved 2026-11-22 for the crash]` **The start crash: very likely Window View's OpenXR layer** (2026-11-22, /lm, real headset, 31 menu starts with the
   other OpenXR layers switched off one by one): with Window View's layer on, 8 start crashes in 19 and 4 starts where the
   frame calls skipped the layers below it after the first frame; with it off, 12 of 12 clean `[measured, n small]`.
   Tefa: a crash may have come when the game window was clicked out of focus (maybe a coincidence). Section 13's crash

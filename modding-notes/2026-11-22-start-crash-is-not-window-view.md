@@ -1,0 +1,67 @@
+# 2026-11-22: the start crash is not Window View; it is UEVR's Ghosting Fix holding a dead scene state
+
+/lm, Build PC, OpenXR Simulator (the pretend headset), nobody at the PC. Build b033 as installed (unchanged).
+Hand-on job: firm up last night's "no start crash with Window View's OpenXR layer off", then The Optimizer's tour.
+
+## The count: Window View's layer off, 11 menu starts
+
+Window View's two OpenXR layer values set to 1 (off) in the registry list, backed up first, put back to 0 after. The
+other layers (OBS mirror, xrFPS, Hand Freeze, and the machine-wide ones) as they were. The Optimizer's frame meter on.
+Each start: the mod's launcher `SH2VR.exe play --sim --no-install`, Enter through the warning screen by the connector,
+stop at the main menu widget (`MainMenuWidget_BP_C /Engine/Transient`), 20 s at the menu, the meter read, the console
+`quit`.
+
+| start | time | result | to the menu | meter frames / waits |
+| --- | --- | --- | --- | --- |
+| 0 (probe, by hand) | 12:20 | clean | ~75 s | 5726 / 5726 |
+| 1 | 12:23 | clean | 68 s | 5139 / 5140 |
+| 2 | 12:24 | clean | 68 s | 5162 / 5163 |
+| 3 | 12:26 | clean | 72 s | 5762 / 5763 |
+| 4 | 12:28 | **crash** 26 s (`[Exception Handler] Exception address is null`, a 480 ms stall before it) | - | 149 / 150 |
+| 5 | 12:28 | **crash** 30 s (crash dump; the stall 399 ms and the scene-state line; the script missed the handler line, its log copy has only the last lines) | - | 166 / 167 |
+| 6 | 12:29 | clean | 71 s | 5774 / 5774 |
+| 7 | 12:30 | clean | 73 s | 5989 / 5989 |
+| 8 | 12:32 | clean | 67 s | 5335 / 5335 |
+| 9 | 12:34 | clean | 72 s | 5893 / 5894 |
+| 10 | 12:35 | **crash** 32 s (crash dump, a 433 ms stall and the scene-state line) | - | 170 / 171 |
+
+**3 crashes in 11 with Window View's layer off** `[measured 2026-11-22, simulator, n=11]`. So last night's
+"very likely Window View" is wrong for the crash: the 8-in-19 against 0-in-12 was luck, or Window View only shifts the
+timing. The simulator is not the same runtime as Virtual Desktop, but the dumps below show the same crash on both.
+No empty meter today: every start that reached the menu counted all its frames.
+Kept: `D:\claude video game stuff\logs\silent-hill-2-remake-vr\2026-11-22-1220-starts-window-view-off-sim\` (the
+table as starts.jsonl, the three crash logs and minidumps, the counter script `starts.py`).
+
+The pretend-headset tour was NOT run: the hand-on ran it only if the starts were clean.
+
+## What the crash is (the reader, three passes; inbox files of 2026-11-22)
+
+- All six dumps (11-18, 11-21 15:11, 21:47, 22:33 on the headset, today's starts 4 and 5) crash on the game's render
+  thread in the same call chain, calling through one object whose virtual table is gone (memory freed and reused)
+  `[measured in the dumps]`. Window View's layer was not loaded in today's two.
+- In the 5 dumps with a full log, that object is exactly the address UEVR last logged as "Setting scene state to"
+  `[measured]`. The log order (stall, "Inserting", "Setting", the null line) is the same in crashing and clean starts;
+  a crash follows the null line by 0-41 ms. It is a race, and the log cannot tell in advance which way it goes.
+- No UEVR source is on disk; the reader disassembled the UEVRBackend.dll in use (AFW beta 6). The lines belong to
+  UEVR's **Ghosting Fix** (`VR_GhostingFix=true`, our profile's config.txt line 80, with `VR_RenderingMethod=3`): for
+  the second eye it takes one of the game's own scene states, keeps the raw pointer and writes it into the view every
+  frame, never checking it is still alive; it picks again only when eye 0's state changes and more than 90 frames
+  passed. The game owns and frees the state; UEVR takes no reference `[inferred-static, strong]`.
+- Smallest changes on our side, in order: (1) `VR_GhostingFix=false` (the clean test; the AFW notes say to keep it on,
+  so expect ghosting to check in the headset); (2) inject UEVR later, past the start stall; (3) start with the fix off
+  and switch it on live at the main menu; (4) a guard in our plugin that clears a dead state pointer before eye 1
+  draws `[hypotheses]`. No upstream fix is known in our research notes (AFW still beta 6, nightly 01143).
+
+## The empty meter (last night), re-read
+
+In all 3 empty runs UEVR's log shows its eye pictures torn down at session start and the rebuild failing ("D3D12:
+Failed to create swapchain" 5, 77, 484 times), then "AFR swapchains not created" ~53 times a second: the game never
+handed the headset a frame, and the meter counted that correctly `[measured, logs]`. Window View's layer code cannot
+make frame calls skip another layer `[inferred-static]`; the link to Window View (3 of 19 on, 0 of 12 off) is weak.
+Why the rebuild failed is not known.
+
+## Next
+
+FLAT, a new numbered build: 10 menu starts with `VR_GhostingFix=false`. 0 crashes = cause confirmed. `MODEL: FABLE`.
+Then a headset look at what ghosting comes back, and the gentler fixes. The Optimizer's real-headset tour can run
+before that (it retries a start crash).
