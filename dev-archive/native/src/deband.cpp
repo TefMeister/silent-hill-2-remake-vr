@@ -19,7 +19,7 @@ namespace {
 const char* SHADER = R"(
 Texture2D tPic : register(t0);
 SamplerState sPt : register(s0);
-cbuffer C : register(b0) { float4 p; float4 q; }   // q.x: the test view (1 = the picture as it came, odd levels white and even black; 2 = the same of what this pass wrote)   // x: radius in pixels, y: threshold (of 1), z: grain (of 1), w: a number that changes every frame
+cbuffer C : register(b0) { float4 p; float4 q; }   // q.y: how much of the smoothing is taken (0 = grain only)   // q.x: the test view (1 = the picture as it came, odd levels white and even black; 2 = the same of what this pass wrote)   // x: radius in pixels, y: threshold (of 1), z: grain (of 1), w: a number that changes every frame
 struct V { float4 pos : SV_Position; float2 uv : TEXCOORD0; };
 V vs(uint id : SV_VertexID) {
     V o; o.uv = float2((id << 1) & 2, id & 2); o.pos = float4(o.uv * float2(2, -2) + float2(-1, 1), 0, 1); return o;
@@ -43,20 +43,24 @@ float4 ps(V i) : SV_Target {
     float3 off = abs(avg - c.rgb);
     float3 dev = max(max(abs(a - c.rgb), abs(b - c.rgb)), max(abs(e - c.rgb), abs(f - c.rgb)));
     bool keep = max(off.r, max(off.g, off.b)) > p.y || max(dev.r, max(dev.g, dev.b)) > p.y * 3.0;
-    if (q.x > 1.5) {   // what an 8-bit write of the result holds, odd levels white
-        float n2 = (hash(i.pos.xy, p.w + 13.0) + hash(i.pos.xy, p.w + 29.0) - 1.0) * p.z;
-        float g = keep ? c.g : saturate(avg.g + n2);
+    // b045 (Tefa, worn: with the smoothing on the fog read as thicker, and "the bottom part of the fog looks like
+    // colourful a little like rainbow colours"): the change is ONE amount of brightness added to all three colours,
+    // so a pixel keeps its own colour exactly; the smoothing is a share of it (q.y, 0 by default), the rest is grain.
+    float n = (hash(i.pos.xy, p.w + 13.0) + hash(i.pos.xy, p.w + 29.0) - 1.0) * p.z;   // triangular
+    float delta = dot(avg - c.rgb, float3(0.299, 0.587, 0.114)) * q.y + n;
+    if (q.x > 1.5) {   // the test view: what an 8-bit write of the result holds, odd levels white
+        float g = keep ? c.g : saturate(c.g + delta);
         float o = fmod(round(g * 255.0), 2.0); return float4(o, o, o, c.a);
     }
     if (keep) return c;
-    float n = (hash(i.pos.xy, p.w + 13.0) + hash(i.pos.xy, p.w + 29.0) - 1.0) * p.z;   // triangular, one level wide either way
-    return float4(saturate(avg + n), c.a);
+    return float4(saturate(c.rgb + delta), c.a);
 }
 )";
 
 std::atomic<bool> g_on{settings::DEBAND_ON};
 std::atomic<float> g_radius{settings::DEBAND_RADIUS_PX}, g_threshold{settings::DEBAND_THRESHOLD_LEVELS}, g_grain{settings::DEBAND_GRAIN_LEVELS};
 std::atomic<int> g_draws{0}, g_show{0};
+std::atomic<float> g_smooth{settings::DEBAND_SMOOTH};
 std::atomic<const char*> g_why{nullptr};
 std::atomic<bool> g_failed{false};
 bool fail(const char* why) { g_why.store(why); g_failed.store(true); return false; }
@@ -149,7 +153,7 @@ bool make_target(ID3D12Resource* color) {
 void one(ID3D12GraphicsCommandList* l, ID3D12Resource* pic, D3D12_RESOURCE_STATES rest, ID3D12Resource* out, D3D12_RESOURCE_STATES out_rest) {
     const D3D12_RESOURCE_DESC d = pic->GetDesc();
     if (d.Width != g_desc.Width || d.Height != g_desc.Height || d.Format != g_desc.Format) return;
-    const float numbers[8] = {g_radius.load(), g_threshold.load() / 255.0f, g_grain.load() / 255.0f, (float)(g_seed++ % 1024), (float)g_show.load(), 0.0f, 0.0f, 0.0f};
+    const float numbers[8] = {g_radius.load(), g_threshold.load() / 255.0f, g_grain.load() / 255.0f, (float)(g_seed++ % 1024), (float)g_show.load(), g_smooth.load(), 0.0f, 0.0f};
     uint8_t* slot = g_cb_map + (size_t)g_cb_next * CB_SLOT;
     std::memcpy(slot, numbers, sizeof(numbers));
     const D3D12_GPU_VIRTUAL_ADDRESS cb_at = g_cb->GetGPUVirtualAddress() + (UINT64)g_cb_next * CB_SLOT;
@@ -231,13 +235,14 @@ void tick(float delta) {
     file_timer += delta; report_timer += delta;
     if (file_timer >= 1.0f) {
         file_timer = 0.0f;
-        int show = 0;
+        int show = 0; float smooth = settings::DEBAND_SMOOTH;
         bool on = settings::DEBAND_ON; float r = settings::DEBAND_RADIUS_PX, t = settings::DEBAND_THRESHOLD_LEVELS, g = settings::DEBAND_GRAIN_LEVELS;
         const std::wstring p = appdata_dir() + L"\\" + settings::PROFILE_DIR + L"\\sh2vr_deband.txt";
         FILE* f = nullptr;
         if (_wfopen_s(&f, p.c_str(), L"r") == 0 && f != nullptr) {
-            float a = -1.0f, b = -1.0f, c = -1.0f, d = -1.0f, e = 0.0f;
-            const int n = fscanf_s(f, "%f %f %f %f %f", &a, &b, &c, &d, &e);
+            float a = -1.0f, b = -1.0f, c = -1.0f, d = -1.0f, e = 0.0f, sm = -1.0f;
+            const int n = fscanf_s(f, "%f %f %f %f %f %f", &a, &b, &c, &d, &e, &sm);
+            if (n >= 6 && sm >= 0.0f && sm <= 1.0f) smooth = sm;
             show = (n >= 5 && (e == 1.0f || e == 2.0f)) ? (int)e : 0;
             if (n >= 1 && (a == 0.0f || a == 1.0f)) on = a == 1.0f;
             if (n >= 2 && b >= 1.0f && b <= 64.0f) r = b;
@@ -247,10 +252,11 @@ void tick(float delta) {
         }
         static bool said = false;
         if (show != g_show.load()) { g_show.store(show); LOGI("%s deband: test view %d (0 none, 1 the picture as it came, 2 what the pass writes; odd levels white)", TAG, show); }
-        if (!said || on != g_on.load() || r != g_radius.load() || t != g_threshold.load() || g != g_grain.load()) {
+        if (!said || on != g_on.load() || r != g_radius.load() || t != g_threshold.load() || g != g_grain.load() || smooth != g_smooth.load()) {
             said = true;
+            g_smooth.store(smooth);
             g_on.store(on); g_radius.store(r); g_threshold.store(t); g_grain.store(g);
-            LOGI("%s deband: the fog's contour lines pass %s (radius %.0f pixels, threshold %.2f levels, grain %.2f levels)", TAG, on ? "on" : "off", r, t, g);
+            LOGI("%s deband: the fog's contour lines pass %s (radius %.0f pixels, threshold %.2f levels, grain %.2f levels, smoothing %.2f)", TAG, on ? "on" : "off", r, t, g, smooth);
         }
     }
     if (report_timer >= settings::WARP_REPORT_S) {

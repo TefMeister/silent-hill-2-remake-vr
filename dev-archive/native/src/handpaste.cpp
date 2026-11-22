@@ -43,6 +43,7 @@ cbuffer C : register(b0) {
     float4 oe0; float4 oe1; float4 oe2;     // a point in front of this eye now -> the other eye's picture now (rows x, y, w)
     float4 fl; float4 ul; float4 sl;        // left controller: where it points, its up, that shoulder (view space, then)
     float4 fr; float4 ur; float4 sr;        // right controller; fl.w: weapon reach radius, ul.w: arm radius
+    float4 rm0; float4 rm1; float4 rm2;     // a STILL point in front of this eye at its last real picture -> in front of it now (the camera's own move, rows of a 3x4)
 }
 
 struct V { float4 p : SV_Position; float2 uv : TEXCOORD0; };
@@ -127,6 +128,21 @@ bool pasted(float2 uv, out float2 src) {
     return false;
 }
 
+// where a STILL thing seen at uv now was in this eye's last real picture: the camera's own move, by depth (the reader, 2026-11-22)
+bool still_src(float2 uv, out float2 src) {
+    src = uv; float2 miss = float2(1, 1);
+    for (int k = 0; k < 4; k++) {
+        if (any(src < 0) || any(src > 1)) return false;
+        float d = tDepth.SampleLevel(sPt, src, 0).r;
+        if (abs(d * pj1.z - pj1.x) < 1e-7) d += h1.w * 1e-6;   // the sky: as far as makes no difference, but a number
+        float3 p = unproject(src, d);
+        float3 q = float3(dot(rm0.xyz, p) + rm0.w, dot(rm1.xyz, p) + rm1.w, dot(rm2.xyz, p) + rm2.w);
+        miss = uv - project(q);
+        if (k < 3) src += miss;
+    }
+    return dot(miss, miss) < 4e-6;
+}
+
 float4 ps(V i) : SV_Target {
     float2 uv = i.uv, src;
     if (h2.w > 1.5) {   // the diagnostic view: near pixels show red = the game's motion, green = a still thing's, blue = nothing written
@@ -141,7 +157,7 @@ float4 ps(V i) : SV_Target {
         if (uv.y > 0.5) return float4(saturate(0.5 + v.x * 25), saturate(0.5 + still.x * 25), e.r < 0.01 ? 1 : 0, 1);
         return float4(saturate(length(v) * 50), saturate(length(still) * 50), e.r < 0.01 ? 1 : 0, 1);
     }
-    if (pasted(uv, src)) {
+    if (cr.w < 0.5 && pasted(uv, src)) {
         float4 c = tPrev.SampleLevel(sLin, src, 0);
         if (h2.w > 0.5) c.rgb = lerp(c.rgb, float3(0, 1, 0), 0.4);
         return c;
@@ -149,42 +165,32 @@ float4 ps(V i) : SV_Target {
     bool ok; float2 s = source_of(uv, ok);
     float4 c = tWarp.SampleLevel(sLin, uv, 0);
     if (cr.w > 0.5) {
-        // MODE 3 ("both"): the warp builds the hands from the other eye and patches what that eye cannot see from the
-        // last picture: beside a moving hand it leaves black holes, pale slivers and dots. Our pasted hand covers the
-        // hand itself; here the few pixels around it, and every hole, are given clean picture again.
-        float tw, th; tWarp.GetDimensions(tw, th);
-        float2 px = float2(1.0 / tw, 1.0 / th);
-        const float2 offs[4] = { float2(1, 0), float2(-1, 0), float2(0, 1), float2(0, -1) };
-        float R = max(3.0, tw * 0.0034);   // a little wider than the warp's own edge band (1/390 of the width)
-        int n = 0; float2 away = float2(0, 0); float4 acc = float4(0, 0, 0, 0);
-        for (int q = 0; q < 4; q++) {
-            float2 ts;
-            if (pasted(uv + offs[q] * px * R, ts)) { n++; away -= offs[q]; acc += tPrev.SampleLevel(sLin, ts, 0); }
-        }
-        bool hole = max(c.r, max(c.g, c.b)) < 1e-4;
-        if (n >= 3) {   // a gap inside the pasted hand
-            c = acc / n;
-            if (h2.w > 0.5) c.rgb = lerp(c.rgb, float3(0, 0, 1), 0.5);
-            return c;
-        }
-        if (n > 0 || hole) {
-            float2 dirs3[5] = { away, float2(-1, 0), float2(1, 0), float2(0, -1), float2(0, 1) };
-            bool got = false;
-            [loop] for (int d3 = 0; d3 < 5 && !got; d3++) {
-                if (dot(dirs3[d3], dirs3[d3]) < 0.5) continue;
-                float2 dir = normalize(dirs3[d3]) * px * R;
-                [loop] for (int k3 = 2; k3 <= 9; k3++) {
-                    float2 t = uv + dir * k3; float2 o2;
-                    if (any(t < 0) || any(t > 1)) break;
-                    float4 w = tWarp.SampleLevel(sLin, t, 0);
-                    if (max(w.r, max(w.g, w.b)) < 1e-4) continue;
-                    if (pasted(t, o2) || pasted(t + dir, o2)) continue;
-                    c = w; got = true; break;
-                }
-            }
-            if (h2.w > 0.5) c.rgb = lerp(c.rgb, got ? float3(1, 1, 0) : float3(1, 0, 1), 0.5);
-            return c;
-        }
+        // MODE 3 ("both"), b045. Tefa, worn, 2026-11-22: "like a ghost hand is on both sides of my real James hand,
+        // barely seeable", right of the hand in the right eye, left of it in the left, flickering, whenever the hand,
+        // the head or James moves; the same dotted line stands beside a sign post. A near thing hides a patch of the
+        // world from the OTHER eye; for that patch the warp has no fresh picture on a made-up frame and takes this
+        // eye's old picture UNMOVED (the reader, from its programs). Here: a pixel whose spot the other eye cannot see
+        // (something nearer is in its way there) takes this eye's last real picture MOVED by the camera, by depth.
+        // The hands themselves are left as the warp made them: they are the smooth ones (ours, pasted, were "framey").
+        if (!ok || any(s < 0) || any(s > 1)) return c;
+        float d0 = tDepth.SampleLevel(sPt, s, 0).r;
+        if (abs(d0 * pj1.z - pj1.x) < 1e-7) d0 += h1.w * 1e-6;
+        float3 p0 = unproject(s, d0);
+        float4 pn = float4(dot(rm0.xyz, p0) + rm0.w, dot(rm1.xyz, p0) + rm1.w, dot(rm2.xyz, p0) + rm2.w, 1);
+        float3 qo = float3(dot(oe0, pn), dot(oe1, pn), dot(oe2, pn));
+        if (qo.z <= 1e-5) return c;
+        float2 on = qo.xy / qo.z; float2 ou = float2(on.x * 0.5 + 0.5, 0.5 - on.y * 0.5);
+        if (any(ou < 0) || any(ou > 1)) return c;
+        float od = tOtherDepth.SampleLevel(sPt, ou, 0).r;
+        float zo = (pj1.y - od * pj1.w) / (od * pj1.z - pj1.x);
+        float wo = pj1.z * zo + pj1.w;                       // how far the thing is that the other eye sees in that direction
+        if (wo > qo.z * misc.w) return c;                    // it sees the spot itself (nothing clearly nearer in the way)
+        float2 ss;
+        if (!still_src(uv, ss)) { if (h2.w > 0.5) c.rgb = lerp(c.rgb, float3(1, 0, 1), 0.5); return c; }
+        if (hand(ss)) { if (h2.w > 0.5) c.rgb = lerp(c.rgb, float3(0, 0, 1), 0.5); return c; }   // the old picture had the moving hand there: no better picture known
+        c = tPrev.SampleLevel(sLin, ss, 0);
+        if (h2.w > 0.5) c.rgb = lerp(c.rgb, float3(1, 0, 0), 0.5);
+        return c;
     }
     if (ok && hand(s)) {
         // where to look for the background beyond the warp's leftover copy. The way the room went (uv - s) works
@@ -603,7 +609,17 @@ void draw(const Call& c, const Eye& last, const drawnpose::Entry* drawn_now, ID3
         shoulder[i][0] = (i == 0 ? -1.0f : 1.0f) * settings::HANDPASTE_SHOULDER[0]; shoulder[i][1] = settings::HANDPASTE_SHOULDER[1]; shoulder[i][2] = settings::HANDPASTE_SHOULDER[2] * zs;
     }
     const float reach = (settings::HANDPASTE_REACH_ON && last.hands_ok) ? 1.0f : 0.0f;
-    const float constants[112] = {
+    // a still thing: in front of this eye at its last real picture -> in front of it now (the made-up view * the last view turned back)
+    float rm[12] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0};
+    {
+        const float* dw2v = c.camera + 0 * 16;
+        float v2w[16]{};
+        for (int r = 0; r < 3; ++r) for (int col = 0; col < 3; ++col) v2w[col * 4 + r] = at(last.w2v, col, r);
+        for (int r = 0; r < 3; ++r) v2w[3 * 4 + r] = -(at(last.w2v, 0, r) * at(last.w2v, 0, 3) + at(last.w2v, 1, r) * at(last.w2v, 1, 3) + at(last.w2v, 2, r) * at(last.w2v, 2, 3));
+        v2w[15] = 1.0f;
+        for (int r = 0; r < 3; ++r) for (int col = 0; col < 4; ++col) { float v = 0.0f; for (int k = 0; k < 4; ++k) v += at(dw2v, r, k) * v2w[col * 4 + k]; rm[r * 4 + col] = v; }
+    }
+    const float constants[124] = {
         h.m[0], h.m[1], h.m[2], line, h.m[3], h.m[4], h.m[5], sign, h.m[6], h.m[7], h.m[8], mode == 2 ? 1.0f : mode == 4 ? 2.0f : 0.0f,
         move[0][0], move[0][1], move[0][2], move[0][3], move[0][4], move[0][5], move[0][6], move[0][7], move[0][8], move[0][9], move[0][10], move[0][11],
         move[1][0], move[1][1], move[1][2], move[1][3], move[1][4], move[1][5], move[1][6], move[1][7], move[1][8], move[1][9], move[1][10], move[1][11],
@@ -612,10 +628,12 @@ void draw(const Call& c, const Eye& last, const drawnpose::Entry* drawn_now, ID3
         then_view[0][0], then_view[0][1], then_view[0][2], settings::HANDPASTE_BLEND_M,
         then_view[1][0], then_view[1][1], then_view[1][2], c.mode == 3 ? 1.0f : 0.0f,   // cr.w: 1 = the warp ran in mode 3
         cam[0], cam[1], cam[2], cam[3], cam[4], cam[5], cam[6], cam[7], cam[8], cam[9], cam[10], cam[11],
-        g_against.load(), against ? 1.0f : 0.0f, reach, settings::HANDPASTE_FILL_STEP,
+        g_against.load(), against ? 1.0f : 0.0f, reach, c.mode == 3 ? settings::HANDPASTE_BLOCKED_NEARER : settings::HANDPASTE_FILL_STEP,
         oe[0], oe[1], oe[2], oe[3], oe[4], oe[5], oe[6], oe[7], oe[8], oe[9], oe[10], oe[11],
         fwd[0][0], fwd[0][1], fwd[0][2], settings::HANDPASTE_WEAPON_RADIUS, up[0][0], up[0][1], up[0][2], settings::HANDPASTE_ARM_RADIUS, shoulder[0][0], shoulder[0][1], shoulder[0][2], 0.0f,
-        fwd[1][0], fwd[1][1], fwd[1][2], 0.0f, up[1][0], up[1][1], up[1][2], 0.0f, shoulder[1][0], shoulder[1][1], shoulder[1][2], 0.0f};
+        fwd[1][0], fwd[1][1], fwd[1][2], 0.0f, up[1][0], up[1][1], up[1][2], 0.0f, shoulder[1][0], shoulder[1][1], shoulder[1][2], 0.0f,
+        rm[0], rm[1], rm[2], rm[3], rm[4], rm[5], rm[6], rm[7], rm[8], rm[9], rm[10], rm[11]};
+    static_assert(sizeof(constants) <= CB_SLOT, "the pass's numbers must fit their slot");
     uint8_t* slot = g_cb_map + (size_t)g_cb_next * CB_SLOT;
     std::memcpy(slot, constants, sizeof(constants));
     const D3D12_GPU_VIRTUAL_ADDRESS cb_at = g_cb->GetGPUVirtualAddress() + (UINT64)g_cb_next * CB_SLOT;
@@ -634,7 +652,7 @@ void draw(const Call& c, const Eye& last, const drawnpose::Entry* drawn_now, ID3
     // point behind the eye = that bottom corner). A hand well outside the picture gets none; no box at all = nothing
     // drawn. The whole 2688 x 2880 picture cost 0.6 to 1.0 ms a frame on the real headset (72 -> 67 a second).
     D3D12_RECT boxes[2]; int box_count = 0;
-    if (settings::HANDPASTE_BOX_ON && last.hands_ok) {
+    if (settings::HANDPASTE_BOX_ON && last.hands_ok && c.mode != 3) {
         const float m = settings::HANDPASTE_BOX_MARGIN;
         for (int i = 0; i < 2; ++i) {
             float lo[2] = {1.0f, 1.0f}, hi[2] = {0.0f, 0.0f};

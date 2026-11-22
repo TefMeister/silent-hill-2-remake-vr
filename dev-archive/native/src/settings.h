@@ -77,6 +77,8 @@ constexpr bool HANDPASTE_BOX_ON = true;           // b044: the pass draws and co
 constexpr float HANDPASTE_BOX_MARGIN = 0.10f;     // the box is this much wider all round (share of the picture)
 constexpr float HANDPASTE_BOX_AHEAD_M = 0.9f;     // a weapon reaches this far along where the controller points, and
 constexpr float HANDPASTE_BOX_ASIDE_M = 0.3f;     // this far behind it, above and below it
+constexpr float HANDPASTE_BLOCKED_NEARER = 0.60f;  // b045, mode 3: the other eye "cannot see" a spot when what it sees in that direction is nearer than this share of the spot's distance
+constexpr float DEBAND_SMOOTH = 0.0f;             // deband.cpp (b045): how much of the four-pixel average is taken (0 = none, grain only: Tefa 2026-11-22, the smoothing read as more fog); 6th number in the file
 constexpr bool HANDPASTE_IN_MODE3 = true;         // b042, 2026-11-22: the hands' own pass also after a warp call in mode 3 (9th number in the file, 0 = off); there the warp's own hands are striped and speckled on made-up pictures and it leaves an edge band and holes beside them
 constexpr const wchar_t* HANDPASTE_SHADER_FILE = L"sh2vr_handpaste.hlsl";   // a file of this name in the profile replaces the built-in pixel program, re-read when it changes (development only)
 constexpr float HANDPASTE_MAX_SHIFT = 0.15f;      // the largest shift of a hand in one made-up picture (share of the picture: a tracking jump is not followed)
