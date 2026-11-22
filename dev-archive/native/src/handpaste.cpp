@@ -181,10 +181,29 @@ float4 ps(V i) : SV_Target {
         if (qo.z <= 1e-5) return c;
         float2 on = qo.xy / qo.z; float2 ou = float2(on.x * 0.5 + 0.5, 0.5 - on.y * 0.5);
         if (any(ou < 0) || any(ou > 1)) return c;
-        float od = tOtherDepth.SampleLevel(sPt, ou, 0).r;
-        float zo = (pj1.y - od * pj1.w) / (od * pj1.z - pj1.x);
-        float wo = pj1.z * zo + pj1.w;                       // how far the thing is that the other eye sees in that direction
-        if (wo > qo.z * misc.w) return c;                    // it sees the spot itself (nothing clearly nearer in the way)
+        // the patch a little wider than it measures (its rim stayed as a dotted outline beside the hand: Tefa's
+        // screenshots of b045): the nearest thing the other eye sees at the spot or a few pixels around it
+        float tw, th; tWarp.GetDimensions(tw, th);
+        float2 rr = float2(max(3.0, tw * 0.0015) / tw, max(3.0, tw * 0.0015) / th);   // 4 pixels at the headset's 2688
+        float wo = 1e30;
+        const float2 o5[5] = { float2(0, 0), float2(1, 0), float2(-1, 0), float2(0, 1), float2(0, -1) };
+        for (int k5 = 0; k5 < 5; k5++) {
+            float od = tOtherDepth.SampleLevel(sPt, ou + o5[k5] * rr, 0).r;
+            float zo = (pj1.y - od * pj1.w) / (od * pj1.z - pj1.x);
+            wo = min(wo, pj1.z * zo + pj1.w);
+        }
+        if (wo > qo.z * misc.w) {
+            // not hidden from the other eye. What is left here are single dark dots along the edges of near things
+            // (holes of the warp's throw): a pixel much darker than both its left and right neighbours takes their mean.
+            float3 l1 = tWarp.SampleLevel(sPt, uv - float2(1.0 / tw, 0), 0).rgb, r1 = tWarp.SampleLevel(sPt, uv + float2(1.0 / tw, 0), 0).rgb;
+            float lc = dot(c.rgb, float3(0.3, 0.6, 0.1)), ll = dot(l1, float3(0.3, 0.6, 0.1)), lr = dot(r1, float3(0.3, 0.6, 0.1));
+            if (lc < min(ll, lr) * 0.6) { c.rgb = (l1 + r1) * 0.5; if (h2.w > 0.5) c.rgb = float3(1, 1, 0); return c; }
+            // ... or than both the one above and the one below (a dotted line lying flat: Tefa's ring across the palm)
+            float3 u1 = tWarp.SampleLevel(sPt, uv - float2(0, 1.0 / th), 0).rgb, d1 = tWarp.SampleLevel(sPt, uv + float2(0, 1.0 / th), 0).rgb;
+            float lu = dot(u1, float3(0.3, 0.6, 0.1)), ld = dot(d1, float3(0.3, 0.6, 0.1));
+            if (lc < min(lu, ld) * 0.6) { c.rgb = (u1 + d1) * 0.5; if (h2.w > 0.5) c.rgb = float3(1, 1, 0); }
+            return c;
+        }
         float2 ss;
         if (!still_src(uv, ss)) { if (h2.w > 0.5) c.rgb = lerp(c.rgb, float3(1, 0, 1), 0.5); return c; }
         if (hand(ss)) { if (h2.w > 0.5) c.rgb = lerp(c.rgb, float3(0, 0, 1), 0.5); return c; }   // the old picture had the moving hand there: no better picture known

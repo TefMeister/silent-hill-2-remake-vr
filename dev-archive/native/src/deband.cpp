@@ -43,17 +43,22 @@ float4 ps(V i) : SV_Target {
     float3 off = abs(avg - c.rgb);
     float3 dev = max(max(abs(a - c.rgb), abs(b - c.rgb)), max(abs(e - c.rgb), abs(f - c.rgb)));
     bool keep = max(off.r, max(off.g, off.b)) > p.y || max(dev.r, max(dev.g, dev.b)) > p.y * 3.0;
-    // b045 (Tefa, worn: with the smoothing on the fog read as thicker, and "the bottom part of the fog looks like
-    // colourful a little like rainbow colours"): the change is ONE amount of brightness added to all three colours,
-    // so a pixel keeps its own colour exactly; the smoothing is a share of it (q.y, 0 by default), the rest is grain.
-    float n = (hash(i.pos.xy, p.w + 13.0) + hash(i.pos.xy, p.w + 29.0) - 1.0) * p.z;   // triangular
-    float delta = dot(avg - c.rgb, float3(0.299, 0.587, 0.114)) * q.y + n;
+    // b046. Tefa, worn, b045 (one brightness amount for all three colours): "lines are gone nearly ... but fog still
+    // looks colourful". The game's steps fall at different places for red, green and blue, so a grey gradient is
+    // faintly tinted in bands; one shared amount keeps those bands. Each colour is now smoothed by itself (q.y of
+    // the way to the four-pixel average) and gets its OWN grain: every colour is then right on average everywhere,
+    // and what is left is fine grain with no bands of tint. (The first version used one grain for all three on top
+    // of per-colour averages: where the colours' fractions differ, one of them rounds up more often: the "rainbow".)
+    float3 n3 = float3(hash(i.pos.xy, p.w + 13.0) + hash(i.pos.xy, p.w + 29.0),
+                       hash(i.pos.yx, p.w + 41.0) + hash(i.pos.yx, p.w + 57.0),
+                       hash(i.pos.xy + 91.0, p.w + 71.0) + hash(i.pos.xy + 91.0, p.w + 83.0)) - 1.0;   // triangular, each
+    float3 res = saturate(lerp(c.rgb, avg, q.y) + n3 * p.z);
     if (q.x > 1.5) {   // the test view: what an 8-bit write of the result holds, odd levels white
-        float g = keep ? c.g : saturate(c.g + delta);
+        float g = keep ? c.g : res.g;
         float o = fmod(round(g * 255.0), 2.0); return float4(o, o, o, c.a);
     }
     if (keep) return c;
-    return float4(saturate(c.rgb + delta), c.a);
+    return float4(res, c.a);
 }
 )";
 
