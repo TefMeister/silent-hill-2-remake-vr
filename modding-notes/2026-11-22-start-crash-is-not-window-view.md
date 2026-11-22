@@ -145,3 +145,38 @@ warp stays.
 20 s (10 s after the warp's own switch), off the game thread, and logs the value before and after
 (`sh2vr_noghostfix.txt` in the profile keeps it off). First start: "false -> true", "read back ... is true", one
 "Setting scene state" line, no null line, the menu reached, clean quit. The start count is in the next section.
+
+## 15:26 to 16:25: b036 counted, frame rates at three spots, ray tracing held off (b038)
+
+**b036, the start count (simulator, Window View's layer ON this time, the meter on):** 13 of 13 menu starts clean; in
+every one the plugin switched the ghosting fix on 20 s after the picture came up ("false -> true", read back true),
+one "Setting scene state" line, no null line `[verified-live 2026-11-22, simulator, n=13]`. Plus 7 real-headset starts
+into play the same hour (b036 and b038), all clean. Against 3 of 11 (simulator) and 2 of 9 (headset) with the fix on
+from the start. The crash zone is the start; a later switch has not crashed in 22 tries today.
+
+**Frame rates, real headset lying still at each save point, the frame meter, 2 x 30 s each** `[measured, n=2 per row]`:
+
+| build | spot | a second | slowest 1% | card | ray tracing read in play |
+| --- | --- | --- | --- | --- | --- |
+| b036 | town start | 72.0 | 66.4 | 87% | not read |
+| b036 | prison armory | 71.9 | 63-64 | 95% | not read |
+| b036 | room after the garage | 65.2 | 48-51 | 97% | not read (it was on, by the load) |
+| b036, a second start | room after the garage | 72.0 | 66.4 | 74% | 0 |
+| b038 | town start | 72.0 | 66.5 | 74% | 0 |
+| b038 | prison armory | 71.7 | 58.5 | 95% | 0 |
+| b038 | room after the garage | 72.0 | 66.4 | 86% | 0 |
+
+In b036 ray tracing off came from `sh2vr_devcvars.txt` alone (set once at the start) and did not hold in every run: the
+game puts its own `Raytracing=On` back (I set `Raytracing=Off` in GameUserSettings.ini with the game closed; the game
+wrote On again at its exit; the old file is kept beside it as `.bak-2026-11-22-before-rt-off`). **b038:** `tuning.cpp`
+holds `r.Lumen.HardwareRayTracing 0` and `r.Lumen.Reflections.HardwareRayTracing 0` (looked at again every 5 s); read
+0 in play at all three spots. b037 was never run: adding the two rows overran the file's 6-entry tries counter (my
+slip, caught before a start; the counter is now sized from the table).
+Open: the armory stays at 95% of the card with ray tracing off (58 on its slowest 1%), while Tefa's own armory view on
+b035 read 73-76% with the ghosting fix off: either the save point's view is heavier, or the ghosting fix (a second
+picture memory for DLSS) costs card time there. Not separated yet. The f4decomp compile loops were paused for all of
+these. `r.AOGlobalDistanceField 0` and `r.DistanceFieldAO 0` (in tuning.cpp since 2026-11-13) now matter more: with
+hardware ray tracing off Lumen traces in software and would use those; the look Tefa called "great" on b035 had them off.
+Not done: the weapon that is "not solid" and the hand trails were reported both with the fix off and (the weapon) on;
+nothing was measured on them this session; a Ghost Hand / VR Bench run with the hand moving is the next step there.
+Kept: logs folder `2026-11-22-1445-wear-and-b036-b038/` (the counts, the frame-rate rows, the scripts, the clips).
