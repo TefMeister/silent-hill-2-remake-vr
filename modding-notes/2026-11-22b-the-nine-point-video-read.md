@@ -159,3 +159,9 @@ Logs folder `2026-11-22-1933-tefa-dome-switches/grate/` (clip.mkv, flick.png, gr
 - The grate is the brightest patch of the whole flicker map: back-and-forth change 0.07 against 0.04 on plain pavement beside it `[measured, n=1 clip]`. Enlarged, the holes' shapes and the light band across its left part shift a little from frame to frame while nothing else there moves: a fine regular pattern shimmering (the upscaler rebuilding a pattern near its pixel size, most likely `[hypothesis]`). Subtle in the flat window; in the headset it will read stronger.
 - The same map shows the fog's "curvy lines": the fog over the road is drawn in curved bands, like contour lines, that change from frame to frame.
 - The window gave 109 new pictures in 180 (the window's own rate, not the headset's).
+
+### 20:50: Tefa on the grate and the fog, word for word; config.txt after a normal quit
+"2. that grate flicker is present in puddles as well and super distracting. 3. fog yes like contours on the map."
+- So the grate's shimmer and his points 7/8 (puddles) are one fault for his eyes `[reported]`; the fog's fault has its name: contour lines.
+- After the game (started by Tefa himself, b041) was closed by its own quit, config.txt held `VR_GhostingFix=true` and `VR_RenderingMethod=3` again `[measured, n=2 with the crash run]`: the plugin's live switches are saved at exit. Both crash a start. Put back by hand. What reset them on the earlier counted starts is not known (the pack's launcher?). Open.
+- The next window's job: Lanes hand-on `20261122-205500-sh2-b041-hands-lines-shimmer-fog` (supersedes the 20:25 one).
