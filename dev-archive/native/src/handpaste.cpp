@@ -234,6 +234,7 @@ std::atomic<int> g_mode{settings::HANDPASTE_MODE};
 std::atomic<float> g_near{settings::HANDPASTE_NEAR_M};
 std::atomic<int> g_carry{settings::HANDPASTE_CARRY};
 std::atomic<bool> g_in3{settings::HANDPASTE_IN_MODE3};
+std::atomic<float> g_box_share{1.0f};   // the share of the picture the pass last worked on
 std::atomic<bool> g_reload{false};   // the shader file changed (seen on the game thread): the render thread compiles it at its next call
 std::atomic<int> g_draws{0}, g_skips{0};
 // 2026-11-19: a carry by the drawn hand that is refused (Tefa, b032: the hands and gun "every now and then just jittery").
@@ -629,21 +630,61 @@ void draw(const Call& c, const Eye& last, const drawnpose::Entry* drawn_now, ID3
 
     auto* l = c.list;
     const D3D12_VIEWPORT vp{0.0f, 0.0f, (float)g_desc.Width, (float)g_desc.Height, 0.0f, 1.0f};
-    const D3D12_RECT sc{0, 0, (LONG)g_desc.Width, (LONG)g_desc.Height};
+    // THE BOXES (b044): one for each hand, around the controller then and now, the weapon's line and that shoulder (a
+    // point behind the eye = that bottom corner). A hand well outside the picture gets none; no box at all = nothing
+    // drawn. The whole 2688 x 2880 picture cost 0.6 to 1.0 ms a frame on the real headset (72 -> 67 a second).
+    D3D12_RECT boxes[2]; int box_count = 0;
+    if (settings::HANDPASTE_BOX_ON && last.hands_ok) {
+        const float m = settings::HANDPASTE_BOX_MARGIN;
+        for (int i = 0; i < 2; ++i) {
+            float lo[2] = {1.0f, 1.0f}, hi[2] = {0.0f, 0.0f};
+            auto add = [&](const float v[3]) {
+                float uv[2];
+                if (!to_uv(last.v2c, v, uv)) { uv[0] = i == 0 ? 0.0f : 1.0f; uv[1] = 1.0f; }
+                for (int k = 0; k < 2; ++k) { lo[k] = std::fmin(lo[k], uv[k]); hi[k] = std::fmax(hi[k], uv[k]); }
+            };
+            float now[3], ua[2], ub[2];
+            carry_math::apply(move[i], then_view[i], now);
+            const bool seen_a = to_uv(last.v2c, then_view[i], ua) && ua[0] > -0.25f && ua[0] < 1.25f && ua[1] > -0.25f && ua[1] < 1.25f;
+            const bool seen_b = to_uv(last.v2c, now, ub) && ub[0] > -0.25f && ub[0] < 1.25f && ub[1] > -0.25f && ub[1] < 1.25f;
+            if (!seen_a && !seen_b) continue;
+            add(then_view[i]); add(now); add(shoulder[i]);
+            const float along[4] = {settings::HANDPASTE_BOX_AHEAD_M, -settings::HANDPASTE_BOX_ASIDE_M, settings::HANDPASTE_BOX_ASIDE_M, -settings::HANDPASTE_BOX_ASIDE_M};
+            for (int k = 0; k < 4; ++k) {
+                const float* axis = k < 2 ? fwd[i] : up[i];
+                const float pt[3] = {now[0] + axis[0] * along[k], now[1] + axis[1] * along[k], now[2] + axis[2] * along[k]};
+                add(pt);
+            }
+            const LONG x0 = (LONG)(std::fmax(0.0f, lo[0] - m) * g_desc.Width), x1 = (LONG)(std::fmin(1.0f, hi[0] + m) * g_desc.Width);
+            const LONG y0 = (LONG)(std::fmax(0.0f, lo[1] - m) * g_desc.Height), y1 = (LONG)(std::fmin(1.0f, hi[1] + m) * g_desc.Height);
+            if (x1 > x0 && y1 > y0) boxes[box_count++] = D3D12_RECT{x0, y0, x1, y1};
+        }
+    } else {
+        boxes[box_count++] = D3D12_RECT{0, 0, (LONG)g_desc.Width, (LONG)g_desc.Height};
+    }
+    float share = 0.0f;
+    for (int b = 0; b < box_count; ++b) share += (float)(boxes[b].right - boxes[b].left) * (float)(boxes[b].bottom - boxes[b].top) / ((float)g_desc.Width * (float)g_desc.Height);
+    g_box_share.store(share);
+    if (box_count == 0) { g_draws.fetch_add(1); return; }   // no hand in the picture: the warp's picture is right as it is
     transition(l, warped, warped_state, SHADER_READ);
     l->OMSetRenderTargets(1, &rtv, FALSE, nullptr);
-    l->RSSetViewports(1, &vp); l->RSSetScissorRects(1, &sc);
+    l->RSSetViewports(1, &vp);
     l->SetPipelineState(g_pso); l->SetGraphicsRootSignature(g_root);
     l->SetDescriptorHeaps(1, &g_srv_heap);
     D3D12_GPU_DESCRIPTOR_HANDLE table = g_srv_heap->GetGPUDescriptorHandleForHeapStart(); table.ptr += (UINT64)base * g_srv_size;
     l->SetGraphicsRootDescriptorTable(0, table);
     l->SetGraphicsRootConstantBufferView(1, cb_at);
     l->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    l->DrawInstanced(3, 1, 0, 0);
+    for (int b = 0; b < box_count; ++b) { l->RSSetScissorRects(1, &boxes[b]); l->DrawInstanced(3, 1, 0, 0); }   // both read the warp's untouched picture
     // over the warp's picture
     transition(l, g_target, D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_COPY_SOURCE);
     transition(l, warped, SHADER_READ, D3D12_RESOURCE_STATE_COPY_DEST);
-    l->CopyResource(warped, g_target);
+    for (int b = 0; b < box_count; ++b) {
+        D3D12_TEXTURE_COPY_LOCATION dst{}; dst.pResource = warped; dst.Type = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
+        D3D12_TEXTURE_COPY_LOCATION srcl{}; srcl.pResource = g_target; srcl.Type = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
+        const D3D12_BOX box{(UINT)boxes[b].left, (UINT)boxes[b].top, 0, (UINT)boxes[b].right, (UINT)boxes[b].bottom, 1};
+        l->CopyTextureRegion(&dst, (UINT)boxes[b].left, (UINT)boxes[b].top, 0, &srcl, &box);
+    }
     transition(l, warped, D3D12_RESOURCE_STATE_COPY_DEST, warped_state);
     transition(l, g_target, D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12_RESOURCE_STATE_RENDER_TARGET);
     g_draws.fetch_add(1);
@@ -705,7 +746,7 @@ void report() {
         if (stamp != last_stamp) { last_stamp = stamp; g_reload.store(true); }
     }
     const int d = g_draws.exchange(0), s = g_skips.exchange(0);
-    if (d > 0 || s > 0) LOGI("%s handpaste: %d made-up pictures redrawn, %d left as the warp made them", TAG, d, s);
+    if (d > 0 || s > 0) LOGI("%s handpaste: %d made-up pictures redrawn (the hands' boxes: %.0f%% of the picture), %d left as the warp made them", TAG, d, g_box_share.load() * 100.0f, s);
     int why[WHY_COUNT], any = 0;
     for (int i = 0; i < WHY_COUNT; ++i) { why[i] = g_refused[i].exchange(0); any += why[i]; }
     const int kept = g_kept_used.exchange(0);

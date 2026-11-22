@@ -73,6 +73,10 @@ constexpr bool DEBAND_ON = false;                 // deband.cpp: the fog's conto
 constexpr float DEBAND_RADIUS_PX = 12.0f;         // how far around a pixel the four samples are taken (pixels of the eye's picture)
 constexpr float DEBAND_THRESHOLD_LEVELS = 1.0f;   // only where the four average out to within this many 8-bit levels of the pixel and none is more than three times that away (a slow gradient, not a texture)
 constexpr float DEBAND_GRAIN_LEVELS = 1.0f;       // the fine grain added there, in levels (triangular)
+constexpr bool HANDPASTE_BOX_ON = true;           // b044: the pass draws and copies only a box around the hands, arms and weapon (the whole 2688 x 2880 picture cost 0.8 ms a frame on the real headset, 72 -> 67 a second)
+constexpr float HANDPASTE_BOX_MARGIN = 0.10f;     // the box is this much wider all round (share of the picture)
+constexpr float HANDPASTE_BOX_AHEAD_M = 0.9f;     // a weapon reaches this far along where the controller points, and
+constexpr float HANDPASTE_BOX_ASIDE_M = 0.3f;     // this far behind it, above and below it
 constexpr bool HANDPASTE_IN_MODE3 = true;         // b042, 2026-11-22: the hands' own pass also after a warp call in mode 3 (9th number in the file, 0 = off); there the warp's own hands are striped and speckled on made-up pictures and it leaves an edge band and holes beside them
 constexpr const wchar_t* HANDPASTE_SHADER_FILE = L"sh2vr_handpaste.hlsl";   // a file of this name in the profile replaces the built-in pixel program, re-read when it changes (development only)
 constexpr float HANDPASTE_MAX_SHIFT = 0.15f;      // the largest shift of a hand in one made-up picture (share of the picture: a tracking jump is not followed)

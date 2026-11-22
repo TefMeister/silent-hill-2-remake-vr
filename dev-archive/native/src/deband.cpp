@@ -145,7 +145,8 @@ bool make_target(ID3D12Resource* color) {
     return true;
 }
 
-void one(ID3D12GraphicsCommandList* l, ID3D12Resource* pic, D3D12_RESOURCE_STATES rest) {
+// `pic` is read and smoothed; the result goes over `out` (pic itself, or the scene render target: its left, eye-sized part)
+void one(ID3D12GraphicsCommandList* l, ID3D12Resource* pic, D3D12_RESOURCE_STATES rest, ID3D12Resource* out, D3D12_RESOURCE_STATES out_rest) {
     const D3D12_RESOURCE_DESC d = pic->GetDesc();
     if (d.Width != g_desc.Width || d.Height != g_desc.Height || d.Format != g_desc.Format) return;
     const float numbers[8] = {g_radius.load(), g_threshold.load() / 255.0f, g_grain.load() / 255.0f, (float)(g_seed++ % 1024), (float)g_show.load(), 0.0f, 0.0f, 0.0f};
@@ -174,9 +175,19 @@ void one(ID3D12GraphicsCommandList* l, ID3D12Resource* pic, D3D12_RESOURCE_STATE
     l->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     l->DrawInstanced(3, 1, 0, 0);
     transition(l, g_target, D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_COPY_SOURCE);
-    transition(l, pic, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_COPY_DEST);
-    l->CopyResource(pic, g_target);
-    transition(l, pic, D3D12_RESOURCE_STATE_COPY_DEST, rest);
+    if (out == pic) {
+        transition(l, pic, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_COPY_DEST);
+        l->CopyResource(pic, g_target);
+        transition(l, pic, D3D12_RESOURCE_STATE_COPY_DEST, rest);
+    } else {
+        transition(l, pic, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, rest);
+        transition(l, out, out_rest, D3D12_RESOURCE_STATE_COPY_DEST);
+        D3D12_TEXTURE_COPY_LOCATION dst{}; dst.pResource = out; dst.Type = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
+        D3D12_TEXTURE_COPY_LOCATION src{}; src.pResource = g_target; src.Type = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
+        const D3D12_BOX box{0, 0, 0, (UINT)d.Width, d.Height, 1};
+        l->CopyTextureRegion(&dst, 0, 0, 0, &src, &box);
+        transition(l, out, D3D12_RESOURCE_STATE_COPY_DEST, out_rest);
+    }
     transition(l, g_target, D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12_RESOURCE_STATE_RENDER_TARGET);
     g_draws.fetch_add(1);
 }
@@ -195,8 +206,22 @@ void after_warp(ID3D12GraphicsCommandList* list, int eye, ID3D12Resource* color,
     const int other = 1 - eye;
     const bool made_up_ready = g_last[other] != nullptr && g_last_frame[other] + 1 == g_frame;
     if (g_on.load() && !g_failed.load() && make_basics(list) && make_target(color)) {
-        if (made_up_ready) one(list, g_last[other], (D3D12_RESOURCE_STATES)g_last_state[other]);   // the made-up eye: the warp (and the hands' pass) wrote it this call
-        one(list, color, (D3D12_RESOURCE_STATES)color_state);                                      // the drawn eye (the warp and the hands' pass took their copies of it before this)
+        if (made_up_ready) one(list, g_last[other], (D3D12_RESOURCE_STATES)g_last_state[other], g_last[other], (D3D12_RESOURCE_STATES)g_last_state[other]);   // the made-up eye: the warp (and the hands' pass) wrote it this call
+        // the drawn eye: `color` is only the warp's copy of it. What is shown is the engine's scene render target, its
+        // left, eye-sized part, copied to the headset right after this call (the reader, PureDark's public source,
+        // D3D12Component::on_frame; b043's test view: a pass on `color` never reached the headset).
+        ID3D12Resource* scene = nullptr;
+        if (auto* rt = API::StereoHook::get_scene_render_target()) scene = (ID3D12Resource*)rt->get_native_resource();
+        bool fits = false;
+        if (scene != nullptr) {
+            const D3D12_RESOURCE_DESC sd = scene->GetDesc();
+            const bool family = sd.Format == DXGI_FORMAT_B8G8R8A8_UNORM || sd.Format == DXGI_FORMAT_B8G8R8A8_TYPELESS || sd.Format == DXGI_FORMAT_B8G8R8A8_UNORM_SRGB;
+            fits = family && g_desc.Format == DXGI_FORMAT_B8G8R8A8_UNORM && sd.Dimension == D3D12_RESOURCE_DIMENSION_TEXTURE2D && sd.SampleDesc.Count == 1 &&
+                   sd.Height == g_desc.Height && (sd.Width == g_desc.Width || sd.Width == g_desc.Width * 2);
+            static bool said = false;
+            if (!said) { said = true; LOGI("%s deband: the scene render target is %llu x %u, format %d: %s", TAG, (unsigned long long)sd.Width, sd.Height, (int)sd.Format, fits ? "the drawn eye is smoothed there" : "NOT as expected, the drawn eye is left alone"); }
+        }
+        if (fits) one(list, color, (D3D12_RESOURCE_STATES)color_state, scene, D3D12_RESOURCE_STATE_RENDER_TARGET);
     }
     hold(g_last[eye], color); g_last_state[eye] = color_state; g_last_frame[eye] = g_frame;
 }
