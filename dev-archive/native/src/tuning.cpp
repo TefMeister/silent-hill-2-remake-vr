@@ -22,12 +22,16 @@ constexpr Row ROWS[] = {
     {L"r.AOGlobalDistanceField", 0.0f},                                       // game: 1
     {L"r.DistanceFieldAO", 0.0f},                                             // game: 1
     {L"r.Lumen.ScreenProbeGather.DownsampleFactor", 32.0f},                   // game: 16
+    // 2026-11-22 (Tefa: "ray tracing off for good yes, we build it around rt off"): the game puts these back to 1 from its
+    // own Raytracing setting (the file rewrote itself to On at exit), so they sit here, where they are looked at again
+    {L"r.Lumen.HardwareRayTracing", 0.0f},                                    // game: 1 (ray-traced light)
+    {L"r.Lumen.Reflections.HardwareRayTracing", 0.0f},                        // game: 1 (ray-traced reflections)
 };
 float g_since = 0.0f;
 int g_said = 0;
 // 2026-11-13: a value the engine does not keep (MaxRoughnessToTrace read back unchanged every time) was re-set every 5 s
 // all run, the suspect for Tefa's freeze every 4-5 s. Now each value gets TUNING_MAX_TRIES tries in a row, then is left.
-int g_tries[6] = {};
+int g_tries[sizeof(ROWS) / sizeof(ROWS[0])] = {};   // one counter per row (2026-11-22: was a bare 6)
 bool g_off_said = false;
 
 bool kept_off() {
