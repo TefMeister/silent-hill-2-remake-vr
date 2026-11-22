@@ -341,6 +341,7 @@ constexpr double GHOST_MAP_MIN_CM = 15.0;    // the hands this far apart give th
 constexpr bool SHADOWS_ON = true;
 constexpr float SHADOWS_EVERY_S = 1.0f;              // how often the three fixes are checked and re-applied
 constexpr bool SHADOWS_WEAPON_ON_TORCH = true;       // the weapon in hand on the torch's lighting channel (0), lit and shadowed by it
+constexpr bool SHADOWS_COPY_ON_TORCH = false;       // the hidden shadow body lit by the torch (channel 0): false since b040, its hair shadowed the walls from a torch at the eyes
 constexpr bool SHADOWS_HEAD_IN_SHADOW = true;        // the head hidden by material instead of by bone, so a hidden copy of the body casts a complete shadow
 constexpr const wchar_t* SHADOWS_HEAD_BONE = L"neck_02_bn";   // the bone the pack collapses to hide the head (main.lua hideHead)
 constexpr const wchar_t* SHADOWS_INVISIBLE_MATERIAL = L"MaterialInstanceConstant /Game/GBK/MaterialInstances/MI_Invisible.MI_Invisible";   // the game's own, on three of James's slots already

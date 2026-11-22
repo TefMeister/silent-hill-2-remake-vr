@@ -54,3 +54,25 @@ indoors (the armory). **b039** = tuning.cpp without that row; in play the value 
 `[verified-live 2026-11-22, simulator, n=1]`. Not measured: what it costs in frames (the 2026-11-10 waterfall put the
 global distance field at 1.7 ms of a 25 ms frame): real headset next. Not checked: whether puddle mirrors (point 7) gain
 anything from it (software tracing can use the field for off-screen hits).
+
+## 17:50: point 2, the hair shadow (b040), from the reader's static pass
+The reader's three inbox files of 2026-11-22 (`engine-research/inbox/2026-11-22-pd-*`). For point 2 `[inferred-static,
+each link read from a file; the chain not seen live]`: shadows.cpp hides the head's 14 material slots on the body and
+lets a hidden COPY of the body, holding those materials (eight are hair), cast the shadow; that copy was on lighting
+channels 0 and 1, the torch lights 0 and 2 and sits at the eyes (the pack's light type "Head"), so a light inside the
+hidden head shone through its hair. b038's log: "channels 110" `[measured]`.
+**b040:** the copy is on channel 1 only (`settings::SHADOWS_COPY_ON_TORCH = false`). Log on the simulator, armory:
+"channels 010", no crash `[verified-live 2026-11-22, simulator, n=1: the setting, NOT the look]`. The strands were not
+looked for on the simulator; Tefa's eyes decide. What goes with it: the torch no longer draws any shadow of James's
+body or head (as in the flat game; from a light at the eyes those fall behind what casts them); gun and arms unchanged.
+
+## Still open, from the reader (nothing of this tested)
+- Point 1: the frame warp (mode 2) places pixels nearer than 1 m by the TURN only and drops every sideways move of the
+  camera, by design `[inferred-static, the installed warp's programs]`; a door at arm's length while stepping sideways
+  would therefore step at 36 a second. A stick turn should not. Which it was in part 1: a question to Tefa. Live tries,
+  20 s each through `sh2vr_devcvars.txt`: `uevr VR_AFW_IgnoreMotionThreshold 100`, mode 1, the debug tint.
+- Point 3: the leading reading is "the hand is right, the wall is one tick old" (the same 1 m rule) `[hypothesis]`;
+  refused carries, wrong records and raw-controller carries are ruled out by the b038 log `[measured]`. Decides it:
+  the 7th number 0 / 2, the 4th number 0 and 2 (tint), walking.
+- With no velocity picture our hand pass treats everything nearer than 1 m as hand: likely b035's "things close by are
+  still tearing" `[inferred-static]`.

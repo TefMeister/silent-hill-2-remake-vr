@@ -175,7 +175,10 @@ void make_copy() {
     bool attached = false;
     ue::call_ret(c, L"K2_AttachTo", {g_body, ue::name(L""), (int32_t)0, false}, attached);
     ue::call(c, L"SetLeaderPoseComponent", {g_body, true, false});
-    ue::call(c, L"SetLightingChannels", {true, true, false});
+    // 2026-11-22 (b040): the copy is OFF the torch's channel (0). The pack's torch sits at the eyes, inside this hidden
+    // head, so its hair threw long strand shadows on the walls (Tefa's video of b038, point 2). Channel 1 stays: the
+    // lights that shadowed the game's own body still shadow the copy.
+    ue::call(c, L"SetLightingChannels", {settings::SHADOWS_COPY_ON_TORCH, true, false});
     ue::call(c, L"SetHiddenInGame", {true, false});
     ue::call(c, L"SetCastShadow", {true});
     const bool hidden_shadow = set_bool(c, L"bCastHiddenShadow", true);
