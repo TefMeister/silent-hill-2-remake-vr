@@ -1,8 +1,7 @@
 # Inside PureDark's frame warp (AFW): a first look, and a lead for the outline around the hands and the gun (2026-11-13 evening, PC1, Opus, no game launched)
 
-**Permission.** PureDark, 2026-11-13 19:49, to Tefa (Discord, Tefa's screenshot): *"the shimmer around hands and weapons
-isn't something easily tweaked. You can do a reverse engineering with claude and see if it can tweak it better just for
-this game. But it won't really apply to other games. 3rd person and 1st person games have very different issues"*.
+**Permission.** PureDark gave Tefa permission on 2026-11-13 to reverse engineer his frame warp with AI and tune it
+for this game only (reworded 2026-11-22 on Tefa's word: a private chat is not quoted here).
 Tefa: for Silent Hill 2 only. So: this study is for this game's build only; nothing from inside the plugin is published or
 reused elsewhere; the plugin is never redistributed by us (Tefa installs PureDark's own release). Kept in this repo's
 notes as findings, never as extracted code. The extracted shaders and their disassembly stay on the Developer PC
