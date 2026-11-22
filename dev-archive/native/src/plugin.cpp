@@ -39,6 +39,7 @@
 #include "warp.h"
 #include "ghostfix.h"
 #include "warpscale.h"
+#include "deband.h"
 #include "tuning.h"
 #include "torch.h"
 #include "roomscale.h"
@@ -92,7 +93,7 @@ public:
         { selfprof::Scope sp_(selfprof::RHBOLT); rhbolt::tick(delta); }     // 2026-11-01: LT locks the rifle in the left hand, RG works its bolt (RE8's right-hand bolt)
         { selfprof::Scope sp_(selfprof::CROSSHAIR); crosshair::find(delta); }
         { selfprof::Scope sp_(selfprof::SCREENFX); cornermask::tick(delta); }   // 2026-11-10: the eye-corner job's pieces on the headset (dev only: no file, nothing)
-        { selfprof::Scope sp_(selfprof::SCREENFX); devcvars::tick(delta); warp::tick(delta); ghostfix::tick(delta); warpscale::tick(delta); drawnpose::tick(delta); tuning::tick(delta); torch::tick(delta); roomscale::tick(delta); }   // 2026-11-10: the optimiser's settings file (dev only: no file, nothing)
+        { selfprof::Scope sp_(selfprof::SCREENFX); devcvars::tick(delta); warp::tick(delta); ghostfix::tick(delta); warpscale::tick(delta); deband::tick(delta); drawnpose::tick(delta); tuning::tick(delta); torch::tick(delta); roomscale::tick(delta); }   // 2026-11-10: the optimiser's settings file (dev only: no file, nothing)
         { selfprof::Scope sp_(selfprof::SCREENFX); cutscreen::tick(delta); realcam::tick(delta); }   // 2026-11-12: cutscenes on a flat screen
         { selfprof::Scope sp_(selfprof::SCREENFX); screenfx::tick(delta); }   // 2026-11-05: every blur and screen effect off in VR
         { selfprof::Scope sp_(selfprof::SCREENFX); shadows::tick(delta); }    // 2026-11-06: the weapon lit by the torch, the player's complete shadow (counted with the screen effects: both are once-a-second checks)

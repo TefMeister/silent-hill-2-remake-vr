@@ -9,6 +9,8 @@
 #include <atomic>
 #include <cmath>
 #include <cstring>
+#include <string>
+#include <sys/stat.h>
 
 #include "carry_math.h"
 #include "common.h"
@@ -146,6 +148,44 @@ float4 ps(V i) : SV_Target {
     }
     bool ok; float2 s = source_of(uv, ok);
     float4 c = tWarp.SampleLevel(sLin, uv, 0);
+    if (cr.w > 0.5) {
+        // MODE 3 ("both"): the warp builds the hands from the other eye and patches what that eye cannot see from the
+        // last picture: beside a moving hand it leaves black holes, pale slivers and dots. Our pasted hand covers the
+        // hand itself; here the few pixels around it, and every hole, are given clean picture again.
+        float tw, th; tWarp.GetDimensions(tw, th);
+        float2 px = float2(1.0 / tw, 1.0 / th);
+        const float2 offs[4] = { float2(1, 0), float2(-1, 0), float2(0, 1), float2(0, -1) };
+        float R = max(3.0, tw * 0.0034);   // a little wider than the warp's own edge band (1/390 of the width)
+        int n = 0; float2 away = float2(0, 0); float4 acc = float4(0, 0, 0, 0);
+        for (int q = 0; q < 4; q++) {
+            float2 ts;
+            if (pasted(uv + offs[q] * px * R, ts)) { n++; away -= offs[q]; acc += tPrev.SampleLevel(sLin, ts, 0); }
+        }
+        bool hole = max(c.r, max(c.g, c.b)) < 1e-4;
+        if (n >= 3) {   // a gap inside the pasted hand
+            c = acc / n;
+            if (h2.w > 0.5) c.rgb = lerp(c.rgb, float3(0, 0, 1), 0.5);
+            return c;
+        }
+        if (n > 0 || hole) {
+            float2 dirs3[5] = { away, float2(-1, 0), float2(1, 0), float2(0, -1), float2(0, 1) };
+            bool got = false;
+            [loop] for (int d3 = 0; d3 < 5 && !got; d3++) {
+                if (dot(dirs3[d3], dirs3[d3]) < 0.5) continue;
+                float2 dir = normalize(dirs3[d3]) * px * R;
+                [loop] for (int k3 = 2; k3 <= 9; k3++) {
+                    float2 t = uv + dir * k3; float2 o2;
+                    if (any(t < 0) || any(t > 1)) break;
+                    float4 w = tWarp.SampleLevel(sLin, t, 0);
+                    if (max(w.r, max(w.g, w.b)) < 1e-4) continue;
+                    if (pasted(t, o2) || pasted(t + dir, o2)) continue;
+                    c = w; got = true; break;
+                }
+            }
+            if (h2.w > 0.5) c.rgb = lerp(c.rgb, got ? float3(1, 1, 0) : float3(1, 0, 1), 0.5);
+            return c;
+        }
+    }
     if (ok && hand(s)) {
         // where to look for the background beyond the warp's leftover copy. The way the room went (uv - s) works
         // while the head turns; with the head still it is zero and the search never left the copy, so the old gun
@@ -193,6 +233,8 @@ float4 ps(V i) : SV_Target {
 std::atomic<int> g_mode{settings::HANDPASTE_MODE};
 std::atomic<float> g_near{settings::HANDPASTE_NEAR_M};
 std::atomic<int> g_carry{settings::HANDPASTE_CARRY};
+std::atomic<bool> g_in3{settings::HANDPASTE_IN_MODE3};
+std::atomic<bool> g_reload{false};   // the shader file changed (seen on the game thread): the render thread compiles it at its next call
 std::atomic<int> g_draws{0}, g_skips{0};
 // 2026-11-19: a carry by the drawn hand that is refused (Tefa, b032: the hands and gun "every now and then just jittery").
 // It used to fall back to the raw controller's move for that one picture, which is not where the smoothed, drawn hand
@@ -332,6 +374,32 @@ bool make_pso(DXGI_FORMAT format) {
     if (FAILED(g_dev->CreateGraphicsPipelineState(&d, IID_PPV_ARGS(&g_pso)))) return fail("the pipeline was refused");
     g_pso_format = format;
     return true;
+}
+
+// ---- the pixel program from a file in the profile (development): compiled on the render thread when the file changed
+std::wstring shader_file() { return appdata_dir() + L"\\" + settings::PROFILE_DIR + L"\\" + settings::HANDPASTE_SHADER_FILE; }
+void reload_ps() {
+    std::string text;
+    FILE* f = nullptr;
+    if (_wfopen_s(&f, shader_file().c_str(), L"rb") == 0 && f != nullptr) {
+        char buf[4096]; size_t n;
+        while ((n = std::fread(buf, 1, sizeof(buf), f)) > 0) text.append(buf, n);
+        std::fclose(f);
+    }
+    const bool own = text.empty();
+    const char* src = own ? SHADER : text.c_str();
+    ID3DBlob* ps = nullptr; ID3DBlob* err = nullptr;
+    if (FAILED(D3DCompile(src, std::strlen(src), "handpaste", nullptr, nullptr, "ps", "ps_5_0", 0, 0, &ps, &err))) {
+        std::string msg = err != nullptr ? std::string((const char*)err->GetBufferPointer(), err->GetBufferSize()) : "?";
+        for (char& ch : msg) if (ch == 10 || ch == 13) ch = ' ';
+        LOGW("%s handpaste: the shader file did not compile, the old program stays: %.400s", TAG, msg.c_str());
+        if (err != nullptr) err->Release();
+        return;
+    }
+    if (g_ps != nullptr) g_ps->Release();
+    g_ps = ps;
+    if (g_pso != nullptr) { g_pso->Release(); g_pso = nullptr; }   // made again by make_pso (the old one may still be in a recorded list: the device keeps it alive until that list has run)
+    LOGI("%s handpaste: pixel program %s (%zu bytes)", TAG, own ? "back to the built-in one" : "taken from the shader file", std::strlen(src));
 }
 
 bool make_pictures(ID3D12Resource* color) {
@@ -541,7 +609,7 @@ void draw(const Call& c, const Eye& last, const drawnpose::Entry* drawn_now, ID3
         at(p, 0, 0), at(p, 0, 2), at(p, 1, 1), at(p, 1, 2), at(p, 2, 2), at(p, 2, 3), at(p, 3, 2), at(p, 3, 3),
         shift[0][0], shift[0][1], shift[1][0], shift[1][1],
         then_view[0][0], then_view[0][1], then_view[0][2], settings::HANDPASTE_BLEND_M,
-        then_view[1][0], then_view[1][1], then_view[1][2], 0.0f,
+        then_view[1][0], then_view[1][1], then_view[1][2], c.mode == 3 ? 1.0f : 0.0f,   // cr.w: 1 = the warp ran in mode 3
         cam[0], cam[1], cam[2], cam[3], cam[4], cam[5], cam[6], cam[7], cam[8], cam[9], cam[10], cam[11],
         g_against.load(), against ? 1.0f : 0.0f, reach, settings::HANDPASTE_FILL_STEP,
         oe[0], oe[1], oe[2], oe[3], oe[4], oe[5], oe[6], oe[7], oe[8], oe[9], oe[10], oe[11],
@@ -585,6 +653,7 @@ void draw(const Call& c, const Eye& last, const drawnpose::Entry* drawn_now, ID3
 void set_mode(int mode) { g_mode.store(mode); }
 void set_near(float metres) { g_near.store(metres); }
 void set_carry(int how) { g_carry.store(how); }
+void set_in_mode3(bool on) { g_in3.store(on); }
 void set_against_room(float amount) { g_against.store(amount); }
 
 void after_warp(const Call& c) {
@@ -592,7 +661,9 @@ void after_warp(const Call& c) {
     if (g_failed.load() || c.list == nullptr || c.color == nullptr || c.depth == nullptr || c.camera == nullptr || c.eye < 0 || c.eye > 1) return;
     const int mode = g_mode.load();
     if (mode <= 0) { g_eye[0].have = g_eye[1].have = false; return; }
-    if (!make_basics(c.list) || !make_pictures(c.color) || !make_pso(view_format(g_desc.Format))) return;
+    if (!make_basics(c.list)) return;
+    if (g_reload.exchange(false)) reload_ps();
+    if (!make_pictures(c.color) || !make_pso(view_format(g_desc.Format))) return;
 
     // which frame of the game this drawn eye's picture is, and so where the game drew the hands in it
     drawnpose::Entry drawn_now;
@@ -600,7 +671,7 @@ void after_warp(const Call& c) {
 
     // 1. the made-up eye: the warp has just written its picture where that eye's last real one was
     const Eye& last = g_eye[1 - c.eye];
-    if (c.previous_frame_mode && last.have && last.frame + 1 == g_frame && last.color != nullptr && last.depth != nullptr) {
+    if ((c.previous_frame_mode || (c.mode == 3 && g_in3.load())) && last.have && last.frame + 1 == g_frame && last.color != nullptr && last.depth != nullptr) {
         const D3D12_RESOURCE_DESC wd = last.color->GetDesc();
         if (wd.Width == g_desc.Width && wd.Height == g_desc.Height && wd.Format == g_desc.Format) draw(c, last, drawn_ok ? &drawn_now : nullptr, last.color, (D3D12_RESOURCE_STATES)last.color_state);
         else g_skips.fetch_add(1);
@@ -628,6 +699,11 @@ void after_warp(const Call& c) {
 void report() {
     static bool said_fail = false;
     if (g_failed.load() && !said_fail) { said_fail = true; LOGW("%s handpaste: switched itself off: %s", TAG, g_why.load() != nullptr ? g_why.load() : "?"); }
+    {   // the development shader file: a change (or its going away) is handed to the render thread
+        static long long last_stamp = 0;
+        struct _stat64 st{}; const long long stamp = _wstat64(shader_file().c_str(), &st) == 0 ? (long long)st.st_mtime * 1000003LL + (long long)st.st_size + 1 : 0;
+        if (stamp != last_stamp) { last_stamp = stamp; g_reload.store(true); }
+    }
     const int d = g_draws.exchange(0), s = g_skips.exchange(0);
     if (d > 0 || s > 0) LOGI("%s handpaste: %d made-up pictures redrawn, %d left as the warp made them", TAG, d, s);
     int why[WHY_COUNT], any = 0;

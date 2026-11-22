@@ -12,6 +12,7 @@
 
 #include "common.h"
 #include "drawnpose.h"
+#include "deband.h"
 #include "handpaste.h"
 #include "settings.h"
 #include "uevr/API.hpp"
@@ -116,7 +117,8 @@ void __stdcall hooked(void* params) {
         *(float**)(bytes + OFF_CAMERA) = copy;
         g_scaled.fetch_add(1);
     }
-    const bool mode2 = *(int32_t*)(bytes + OFF_MODE) == MODE_PREVIOUS;
+    const int32_t made = *(int32_t*)(bytes + OFF_MODE);
+    const bool mode2 = made == MODE_PREVIOUS;
     g_real(params);
     *(float**)(bytes + OFF_CAMERA) = cam;
     *(int32_t*)(bytes + OFF_MODE) = asked;
@@ -134,7 +136,7 @@ void __stdcall hooked(void* params) {
             c.color_state = *(uint32_t*)(in + TEX_STATE);
             c.depth = *(ID3D12Resource**)(in + TEX_SIZE + TEX_RESOURCE);
             c.velocity = readable(vel, TEX_SIZE) ? *(ID3D12Resource**)(vel + TEX_RESOURCE) : nullptr;
-            c.previous_frame_mode = mode2;
+            c.previous_frame_mode = mode2; c.mode = made;
             static bool said = false;
             if (!said) { said = true; LOGI("%s warpscale: first call seen: eye %d, list %p, colour %p (state 0x%x), depth %p, velocity %p", TAG, c.eye, (void*)c.list, (void*)c.color, c.color_state, (void*)c.depth, (void*)c.velocity); }
             // 2026-11-14: is the game's velocity picture ever handed over? counted, and the call's tail shown once in play
@@ -147,6 +149,7 @@ void __stdcall hooked(void* params) {
                      (unsigned long long)q[15], (unsigned long long)q[16], (unsigned long long)q[17], (unsigned long long)q[18], (unsigned long long)q[19]);
             }
             handpaste::after_warp(c);
+            deband::after_warp(c.list, c.eye, c.color, c.color_state);   // last: the fog's contour lines, both eyes
         }
     }
 }
@@ -194,13 +197,15 @@ void read_file() {
     int paste = settings::HANDPASTE_MODE, carry = settings::HANDPASTE_CARRY;
     static int last_carry = -1;
     int ticks = settings::DRAWNPOSE_HAND_TICKS; static int last_ticks = -99;
+    int in3 = settings::HANDPASTE_IN_MODE3 ? 1 : 0; static int last_in3 = -1;
     float against = settings::HANDPASTE_AGAINST_ROOM;
     static float last_against = -1.0f;
     static int last_paste = -1; static float last_near = -1.0f;
     FILE* f = nullptr;
     if (_wfopen_s(&f, p.c_str(), L"r") == 0 && f != nullptr) {
-        float x = 0.0f, y = -1.0f, z = -1.0f, pm = -1.0f, pn = -1.0f, pa = -1.0f, pc = -1.0f, pt = 0.0f;
-        const int n = fscanf_s(f, "%f %f %f %f %f %f %f %f", &x, &y, &z, &pm, &pn, &pa, &pc, &pt);
+        float x = 0.0f, y = -1.0f, z = -1.0f, pm = -1.0f, pn = -1.0f, pa = -1.0f, pc = -1.0f, pt = 0.0f, p3 = -1.0f;
+        const int n = fscanf_s(f, "%f %f %f %f %f %f %f %f %f", &x, &y, &z, &pm, &pn, &pa, &pc, &pt, &p3);
+        if (n >= 9 && (p3 == 0.0f || p3 == 1.0f)) in3 = (int)p3;
         if (n >= 8 && pt >= -3.0f && pt <= 3.0f) ticks = (int)pt;
         if (n >= 7 && (pc == 0.0f || pc == 1.0f)) carry = (int)pc;
         if (n >= 6 && pa >= 0.0f && pa <= 1.0f) against = pa;
@@ -217,6 +222,7 @@ void read_file() {
         LOGI("%s warpscale: the hands' own pass %s, near line %.2f m", TAG, paste == 0 ? "off" : paste == 1 ? "on" : paste == 2 ? "on with the tint" : "on without the hands' own shift", near_m);
         last_paste = paste; last_near = near_m; handpaste::set_mode(paste); handpaste::set_near(near_m);
     }
+    if (in3 != last_in3) { LOGI("%s warpscale: the hands' own pass after a mode 3 call: %s", TAG, in3 == 1 ? "on" : "off"); last_in3 = in3; handpaste::set_in_mode3(in3 == 1); }
     if (ticks != last_ticks) { LOGI("%s warpscale: a view is paired with the hands of the record %d tick(s) later", TAG, ticks); last_ticks = ticks; drawnpose::set_hand_ticks(ticks); }
     if (carry != last_carry) { LOGI("%s warpscale: a made-up picture's hands follow %s", TAG, carry == 1 ? "the hand the game drew (drawnpose); a refused carry keeps the last good one" : carry == 2 ? "the hand the game drew (drawnpose); a refused carry falls back to the raw controller (as b032)" : "the raw controller (as b020-b029)"); last_carry = carry; handpaste::set_carry(carry); }
     if (h != g_hand_speed.load()) { LOGI("%s warpscale: mode 3 while a hand moves faster than %.2f m/s in the room (was %.2f; 0 = never)", TAG, h, g_hand_speed.load()); g_hand_speed.store(h); }

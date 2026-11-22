@@ -69,6 +69,12 @@ constexpr float WARP_HAND_SPEED_GLITCH = 15.0f;   // a "speed" above this is a t
 constexpr int WARP_TURN_HOLD_FRAMES = 12;         // how many frames mode 3 stays after the last fast frame
 constexpr float WARP_REPORT_S = 10.0f;
 constexpr int HANDPASTE_MODE = 0;                 // handpaste.cpp: 0 off, 1 on, 2 on with the tint (4th number in the file)
+constexpr bool DEBAND_ON = true;                  // deband.cpp (b042): the fog's contour lines (8-bit steps) smoothed and grained on both eyes' pictures; file sh2vr_deband.txt "on radius threshold grain"
+constexpr float DEBAND_RADIUS_PX = 12.0f;         // how far around a pixel the four samples are taken (pixels of the eye's picture)
+constexpr float DEBAND_THRESHOLD_LEVELS = 1.0f;   // only where the four average out to within this many 8-bit levels of the pixel and none is more than three times that away (a slow gradient, not a texture)
+constexpr float DEBAND_GRAIN_LEVELS = 1.0f;       // the fine grain added there, in levels (triangular)
+constexpr bool HANDPASTE_IN_MODE3 = true;         // b042, 2026-11-22: the hands' own pass also after a warp call in mode 3 (9th number in the file, 0 = off); there the warp's own hands are striped and speckled on made-up pictures and it leaves an edge band and holes beside them
+constexpr const wchar_t* HANDPASTE_SHADER_FILE = L"sh2vr_handpaste.hlsl";   // a file of this name in the profile replaces the built-in pixel program, re-read when it changes (development only)
 constexpr float HANDPASTE_MAX_SHIFT = 0.15f;      // the largest shift of a hand in one made-up picture (share of the picture: a tracking jump is not followed)
 constexpr float HANDPASTE_MAX_TURN_DEG = 25.0f;   // a hand that turned or moved more than this in one frame is a tracking jump: not followed
 constexpr float HANDPASTE_MAX_STEP_M = 0.25f;
