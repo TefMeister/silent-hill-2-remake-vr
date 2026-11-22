@@ -16,3 +16,5 @@ shell around the viewer that drifts slowly. Which one fits depends on what the s
 not yet looked at.
 
 Verbatim record: [`inbox/2026-11-13-sh2-re2-re3-cutscene-fades-fog-flat-screen.md`](../inbox/2026-11-13-sh2-re2-re3-cutscene-fades-fog-flat-screen.md)
+
+Chosen by Tefa: 2026-11-22

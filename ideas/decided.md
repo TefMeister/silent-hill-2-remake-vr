@@ -17,3 +17,8 @@ One line per idea, so nothing is offered twice.
 - 2026-10-29 chosen `all-games--left-and-right-handed-profiles` - Left- and right-handed profiles
 - 2026-10-29 chosen `all-games--bullet-casings-stay-on-the-floor-until-the-level-ends` - Bullet casings stay on the floor until the level ends
 - 2026-10-29 chosen `all-games--vr-comfort-options` - VR comfort options
+- 2026-11-22 chosen `silent-hill-2-remake--cutscenes-fade-in-and-out-instead-of-cutting-straight-to-the-screen` - Cutscenes fade in and out, instead of cutting straight to the screen
+- 2026-11-22 chosen `silent-hill-2-remake--the-cutscene-screen-floats-in-silent-hill-s-fog-not-in-empty-space` - The cutscene screen floats in Silent Hill's fog, not in empty space
+- 2026-11-22 dropped `silent-hill-2-remake--a-weapon-examine-that-plays-by-itself-when-you-pick-a-weapon-up` - A weapon examine that plays by itself when you pick a weapon up
+- 2026-11-22 chosen `silent-hill-2-remake--hand-smoothing-for-the-long-guns-with-each-arm-switched-on-or-off` - Hand smoothing for the long guns, with each arm switched on or off
+- 2026-11-22 chosen `silent-hill-2-remake--make-afw-work-perfectly-for-this-one-game-no-shimmer-around-hands-and` - Make AFW work perfectly for this one game: no shimmer around hands and objects

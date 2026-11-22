@@ -16,3 +16,5 @@ own camera fade. The one thing to watch: the fade must not delay the switch itse
 purpose (doing it in the tick crashed the game).
 
 Verbatim record: [`inbox/2026-11-13-sh2-re2-re3-cutscene-fades-fog-flat-screen.md`](../inbox/2026-11-13-sh2-re2-re3-cutscene-fades-fog-flat-screen.md)
+
+Chosen by Tefa: 2026-11-22

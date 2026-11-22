@@ -25,3 +25,5 @@ fix is what the game hands it. Three levers, cheapest first:
 The gaps uncovered behind a moving hand can be made smaller, never zero: frame warping always has to invent them.
 
 Verbatim record: [`inbox/2026-11-03-sh2-perfect-afw-no-shimmer.md`](../inbox/2026-11-03-sh2-perfect-afw-no-shimmer.md)
+
+Chosen by Tefa: 2026-11-22

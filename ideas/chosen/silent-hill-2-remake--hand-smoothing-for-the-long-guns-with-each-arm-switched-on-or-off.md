@@ -17,3 +17,5 @@ hands: the standing rule). For SH2 it would go into our C++ plugin, which alread
 menu entry with the three switches. The GitHub page Tefa remembers showing was not found in our notes on 2026-11-08.
 
 Verbatim record: [`inbox/2026-11-08-sh2-weapon-examine-and-per-hand-smoothing.md`](../inbox/2026-11-08-sh2-weapon-examine-and-per-hand-smoothing.md)
+
+Chosen by Tefa: 2026-11-22
