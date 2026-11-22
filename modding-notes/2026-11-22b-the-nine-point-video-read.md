@@ -31,3 +31,26 @@ logs folder `2026-11-22-1725-nine-point-video/`. Frame numbers below count from 
 (b) The warp and DLSS on thin moving things: 1 (the world held still on made-up frames for one kind of move), 4's post,
     5, 8, 9.
 (c) Ours: 2 (hair strands' shadow), 3 and 6 (the carried hand disagreeing between real and made-up frames).
+
+## 17:35 to 17:50: point 4 found and fixed (b039): one of our own switches removed the town's fog
+Simulator, town start save, the plugin's value-keeper paused (`sh2vr_notune.txt`), values set through the connector one
+at a time, 12 s to settle, 45 frames of the game window averaged (`dev-archive/recon/2026-11-22-light-ab/ab.py`,
+picture beside it) `[measured 2026-11-22, simulator, n=1 per row; b038 row repeated at the end, n=2]`:
+
+| what was set | brightness: whole / top third / bottom third | flicker |
+| --- | --- | --- |
+| b038 as worn | 52.5 / 51.4 / 57.6 | 0.17 |
+| + `r.AOGlobalDistanceField 1` (the game's own) | 57.5 / 82.9 / 47.8 | 0.18 |
+| + `r.DistanceFieldAO 1` | 57.0 / 81.3 / 47.7 | 0.15 |
+| + probes 16 | 57.6 / 82.7 / 47.5 | 0.15 |
+| + the three reflection values at the game's own | 57.1 / 82.2 / 47.0 | 0.15 |
+| + hardware ray tracing on (the game's full own look) | 54.0 / 77.6 / 46.3 | 0.13 |
+| b038 again | 53.5 / 51.7 / 59.3 | 0.18 |
+
+With `r.AOGlobalDistanceField 0` the dense fog over the street is simply not there and the wet road shines; with 1 the
+fog is back and the ground darker, within a few points of the game's own picture with ray tracing on. The other
+switches change almost nothing at this spot. The 2026-11-13 "Tefa could not tell" verdict on that switch was made
+indoors (the armory). **b039** = tuning.cpp without that row; in play the value reads 1, the other seven held
+`[verified-live 2026-11-22, simulator, n=1]`. Not measured: what it costs in frames (the 2026-11-10 waterfall put the
+global distance field at 1.7 ms of a 25 ms frame): real headset next. Not checked: whether puddle mirrors (point 7) gain
+anything from it (software tracing can use the field for off-screen hits).

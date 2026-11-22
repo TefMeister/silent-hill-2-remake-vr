@@ -19,7 +19,9 @@ constexpr Row ROWS[] = {
     {L"r.Lumen.Reflections.DownsampleFactor", 2.0f},                          // game: 1
     {L"r.Lumen.Reflections.ScreenSpaceReconstruction.NumSamples", 3.0f},      // game: 5
     {L"r.Lumen.Reflections.MaxRoughnessToTrace", 0.3f},                       // game: 0.4
-    {L"r.AOGlobalDistanceField", 0.0f},                                       // game: 1
+    // 2026-11-22 (b039): r.AOGlobalDistanceField 0 is OUT of this set. Outdoors it removes the town's dense fog and leaves
+    // the road too bright (Tefa on b038: "missing a layer of lighting ... fog is missing a layer that makes it dense");
+    // the 2026-11-13 judgement was made indoors. Pictures: modding-notes/2026-11-22b. The game's own 1 stays.
     {L"r.DistanceFieldAO", 0.0f},                                             // game: 1
     {L"r.Lumen.ScreenProbeGather.DownsampleFactor", 32.0f},                   // game: 16
     // 2026-11-22 (Tefa: "ray tracing off for good yes, we build it around rt off"): the game puts these back to 1 from its
