@@ -76,3 +76,36 @@ body or head (as in the flat game; from a light at the eyes those fall behind wh
   the 7th number 0 / 2, the 4th number 0 and 2 (tint), walking.
 - With no velocity picture our hand pass treats everything nearer than 1 m as hand: likely b035's "things close by are
   still tearing" `[inferred-static]`.
+
+## 18:05 to 18:50: b040 on the real headset (lying still), and the sidestep test that did not settle
+Tefa: headset connected; and to the question about part 1 of the video: "sidestepping" (in front of the prison door).
+That fits the reader's reading of the warp (pixels nearer than 1 m get the turn only) `[reported + inferred-static]`.
+
+**b040, real headset lying still, the f4decomp sweeps paused** `[measured 2026-11-22, n=1 per spot, 20 s of the card's
+load once a second (nvidia-smi) and the plugin's own "alive" frame average; NOT the frame meter, see below]`:
+
+| spot | frame average | card | b038 the same afternoon (the meter) |
+| --- | --- | --- | --- |
+| town start | 13.9 ms (72 a second) | 92% (top 96) | 72.0, card 74% |
+| prison armory | 14.0-14.1 ms (71) | 96% (top 97) | 71.7, card 95% |
+| room after the garage | 13.9 ms (72) | 95% (top 97) | 72.0, card 86% |
+
+So the fog (the global distance field back on) holds 72 lying still but takes the town start's spare card power: the
+card is at its limit at all three spots. The slowest 1% is NOT known for b040. Candidates to buy room back, each to be
+judged by Tefa's eyes: shadow size 1024, corner shadows off, local brightness balance off (the Optimizer's tour of the
+same morning, never made permanent).
+**The frame meter wrote nothing in three rounds** though its layer was registered, switched on for the game and loaded
+in the game (`lanes_tune_meter.dll` in the module list) and the game drew 72 a second: no new csv, the live file
+untouched since 16:16. It was "not registered" when this session began (round 1 = my miss: I did not check before
+measuring; round 2 = registered and still silent). Cause not found; on the fault list. Left as found (off).
+
+**Stick turn on the pretend headset (armory, mode 2, as built):** the picture moves on every frame, both eyes
+(every-other-frame ratio 0.91-0.97, twice) `[measured, simulator, n=2]`: a stick turn IS carried by the made-up frames.
+**Sidestep on the pretend headset: not settled.** `dev-archive/tools/warp-study/strafe.py` (new) pushes the stick
+sideways and compares each frame's whole-picture step. One run read uneven steps (ratio 0.55 and 0.70, right eye
+0.9 / 0.6 / 1.1 / 0.6 ...), which is what "near things held still on made-up frames" would give; the repeats read
+0.86-0.97, and later runs had no motion at all (James against a wall). The captures stayed 160 px wide although the
+simulator window was made 2560 x 1400, and each run started from a different place. Tries with
+`VR_AFW_IgnoreMotionThreshold 100` and modes 1 and 3 are therefore worth nothing `[not established]`. What the test
+needs: the same start place every run (a teleport or a reload), a wall at arm's length filling the view, and
+full-size captures. The settings were put back (mode 2, threshold 2.5; config.txt unchanged).
