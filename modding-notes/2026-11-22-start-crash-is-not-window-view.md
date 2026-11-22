@@ -180,3 +180,25 @@ hardware ray tracing off Lumen traces in software and would use those; the look 
 Not done: the weapon that is "not solid" and the hand trails were reported both with the fix off and (the weapon) on;
 nothing was measured on them this session; a Ghost Hand / VR Bench run with the hand moving is the next step there.
 Kept: logs folder `2026-11-22-1445-wear-and-b036-b038/` (the counts, the frame-rate rows, the scripts, the clips).
+
+## 16:38: Tefa wore b038 and sent a video (not analysed in this session)
+
+The start: clean, the ghosting fix switched on by the plugin. Tefa's video: `D:\Capcut export\SH2 stuff to fix.mp4`
+(71.5 s, 2880 x 1440, 60 a second). His list, in the video's order, word for word `[reported, Tefa, worn 2026-11-22, b038]`:
+1. "picture jittery/tearing"
+2. "James hair shadow visible"
+3. "gun and hands shaky and jittery"
+4. "things flickering - the wooden posts - and the outside is generally too bright, like missing a layer of lighting,
+   also fog is missing a layer that makes it dense"
+5. "leaves flickering"
+6. "hand shaky and jittery, left is the same, so are weapons in hand"
+7. "reflections in puddles dissapear when i look down"
+8. "reflections in puddles are constantly - i don't have a good word for it, like pixels are constantly shifting a
+   little bit inside the puddles"
+9. "flying leaves in the wind are leaving trails underneath"
+First thoughts, none checked `[hypothesis]`: 4 (too bright, thin fog) and 7 are what ray tracing off plus
+`r.AOGlobalDistanceField 0` / `r.DistanceFieldAO 0` would do (Lumen then has only screen traces: reflections vanish when
+their source leaves the screen; no distance-field light or fog shadowing); 8 and 9 are screen-space reflections and the
+frame warp / DLSS on thin moving things; 2 is the head's shadow pieces (shadows.cpp); 3 and 6 are the hands' carry
+(`[ID SH2-001]`), now with the game at a full 72. The run's injector log is kept in the logs folder
+`2026-11-22-1638-tefa-wear-b038/`.
