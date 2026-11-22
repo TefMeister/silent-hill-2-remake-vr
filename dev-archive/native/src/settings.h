@@ -55,6 +55,9 @@ constexpr float STALL_LOG_MS = 100.0f;        // plugin.cpp: a frame longer than
 constexpr float TUNING_CHECK_S = 5.0f;        // how often they are looked at again (the game writes its own back)
 constexpr bool WARP_AUTO_ON = true;
 constexpr float WARP_AFTER_S = 10.0f;         // seconds of the headset drawing before the switch (a start with 3 crashes)
+constexpr bool GHOSTFIX_AUTO_ON = true;       // ghostfix.cpp: the injector's ghosting fix switched on after the start (on from the start = the start crash)
+constexpr float GHOSTFIX_AFTER_S = 20.0f;     // seconds of the headset drawing before the switch (the crash came within ~2 s of the injector's first pick, at the start of drawing)
+constexpr unsigned GHOSTFIX_READBACK_MS = 1000; // how long after the switch the value is read back and logged
 constexpr bool WARP_NEAR_SCALE_ON = true;     // warpscale.cpp: stand in the injector's call to the frame warp
 constexpr float WARP_NEAR_SCALE = 1.0f;       // how many times larger the scene is described to the warp (1 = untouched; sh2vr_warpscale.txt overrides)
 constexpr float WARP_NEAR_SCALE_MIN = 0.1f;   // what the file may ask for

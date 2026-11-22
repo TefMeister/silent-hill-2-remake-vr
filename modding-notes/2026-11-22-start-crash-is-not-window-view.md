@@ -103,3 +103,45 @@ this cause. If ghosting is bad: the gentler ways (inject later; the fix switched
 plugin). Kept: logs folder `2026-11-22-1404-starts-ghostingfix-off-sim/`.
 The same f4decomp load also means today's Optimizer verdict "the processor is the limit" may be too harsh: rerun with the
 sweeps paused before believing it.
+
+## 14:45 to 15:30: Tefa in the headset (b034, then b035), and what the hour alone found; b036
+
+Tefa wore b034 (Ghosting Fix off). His words: "there is flickering shimmer around the little gap in the wall where i have
+to squeeze through ... on each side with each eye". Ghosting Fix switched on live in play (`VR_GhostingFix true` through
+the connector): "yep gone now" `[reported, Tefa, worn, n=1]`; no crash from the live switch (n=2 the same afternoon).
+Also from him: with the fix on, reflections in puddles and windows reset about every 10 s (earlier builds); "the weapon
+still flickers a lot in my hand, partly disappearing"; "RT is too costly to run in VR that's a fact", "ray tracing off
+for good yes, we build it around rt off"; "can you turn AFW off - it really looks to me that whatever we do, it can't
+be used". `VR_AFW_FramewarpMode 0` live: "it made the game all jittery" (the eyes still alternate, nothing fills in).
+
+**b035** = config.txt `VR_RenderingMethod=0` + ray tracing off (`sh2vr_devcvars.txt`: `r.Lumen.HardwareRayTracing 0`,
+`r.Lumen.Reflections.HardwareRayTracing 0`), Ghosting Fix off. **My mistake:** I told Tefa this drew both eyes every
+frame with no warp. It did not: `warp.cpp` switches the injector to rendering method 3 (the frame warp) 10 s after the
+headset starts drawing, by design since 2026-11-13, and the log said so ("rendering method 0 -> 3"). So b035 was the
+frame warp as before plus ray tracing off. Tefa on it: "game is running super smooth", "this looks great and
+performance is soooo good", "plays so well right now and feels great" (marked IMPORTANT in the builds list), and:
+"a lot of flickering going on, like afw was still on" (it was), everything shimmering (flora, roads), "hands are still
+leaving that trail", "the weapon is still not like a solid weapon but flickers and parts of it disappear when i move
+it", "things close by are still tearing the screen". 72 a second in the armory, ~70 at the town trees, card 76-80%.
+
+**Measured alone, real headset lying still in the armory** (a static view; 2 s of the game window at 30 a second,
+lossless; the measure is how much a pixel flips back and forth between frames, mean over the picture; repeat runs
+within 0.02-0.04) `[measured 2026-11-22, n=2-3 each]`:
+
+| what was on | flicker | frame |
+| --- | --- | --- |
+| warp mode 2, Ghosting Fix off (= b035 as played) | 0.37 | 13.9 ms |
+| warp mode 0, Ghosting Fix off | 0.27 | 14.5 ms |
+| warp mode 0, Ghosting Fix on | 0.16-0.18 | 14.7 ms |
+| warp mode 2, Ghosting Fix on | 0.20-0.24 | 14.5 ms |
+| rendering method 0 (really both eyes every frame), Ghosting Fix on | 0.41-0.49 on the window (it shows something else in this mode) | 17-20 ms and rising, card 91% |
+
+The flicker sits on every edge in the room. With the Ghosting Fix off it is about twice as strong: both eyes then share
+one picture memory (DLSS history), which also fits the hand trails, the weapon that is not solid and near things
+tearing `[inferred; the measure agrees]`. Both eyes every frame cannot hold 72 here even with ray tracing off, so the
+warp stays.
+
+**b036** = `ghostfix.cpp`: config.txt keeps `VR_GhostingFix=false`, the plugin switches it on once the headset has drawn
+20 s (10 s after the warp's own switch), off the game thread, and logs the value before and after
+(`sh2vr_noghostfix.txt` in the profile keeps it off). First start: "false -> true", "read back ... is true", one
+"Setting scene state" line, no null line, the menu reached, clean quit. The start count is in the next section.
