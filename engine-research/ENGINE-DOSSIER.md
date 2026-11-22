@@ -549,7 +549,8 @@ known to be wrong in ours; the first is the cheap check for any regular hitch Te
   Window View's layer OFF the crash still came 3 of 11, so the entry below is `[disproved]` for the crash. All six dumps
   crash on the render thread through the object UEVR last logged as "Setting scene state to" (5 of 5 with a full log)
   `[measured]`; UEVR's `VR_GhostingFix` borrows the game's scene state for eye 1 and never checks it is alive
-  `[inferred-static, the beta 6 dll]`. Next test `VR_GhostingFix=false`. Note `modding-notes/2026-11-22-start-crash-is-not-window-view.md`.
+  `[inferred-static, the beta 6 dll]`. **Tested 14:04-14:37: `VR_GhostingFix=false` (b034) = 20 of 20 clean simulator starts,
+  no scene-state lines in the log `[verified-live 2026-11-22, simulator, n=20]`.** The package's profile still ships true. Note `modding-notes/2026-11-22-start-crash-is-not-window-view.md`.
 - `[disproved 2026-11-22 for the crash]` **The start crash: very likely Window View's OpenXR layer** (2026-11-22, /lm, real headset, 31 menu starts with the
   other OpenXR layers switched off one by one): with Window View's layer on, 8 start crashes in 19 and 4 starts where the
   frame calls skipped the layers below it after the first frame; with it off, 12 of 12 clean `[measured, n small]`.
