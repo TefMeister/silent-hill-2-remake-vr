@@ -147,3 +147,9 @@ Town start, real headset, Tefa standing where he sees the dome jitter. One live 
 `warp.cpp` now sets `VR_AFW_FramewarpMode` to `settings::WARP_MODE` ("3") with the rendering-method switch and reads it back. Simulator start: "warp: read back: the warp's mode is 3" `[measured, n=1]`. That start stopped at the title screen (not walked into play; not looked into). Not yet worn as b041; what Tefa wore was b040 with mode 3 switched live.
 
 Open after this: the hands in mode 3 (speckle, green, outline); the crash (count runs in mode 3); the fog's "curvy lines" and "denser/more high quality".
+
+### 20:2x: Tefa on the second video and what comes next, word for word
+"7. fog needs to be great. this is why i said at the very beginning that i am asking for impossible with this game. we'll make it work. 8 is set it to debug mode to show you the lines outside hands, these are fine lines that we must defeat, if you can conquer this, then Silent Hill 2 will be one of the best VR experiences in the world. the clip was taken before the crash, but i am unsure when the game crashed."
+- **Correction to the section above:** the flat green hands (and, most likely, the dark speckled ones) are a DEBUG VIEW Tefa switched on himself to show the fault, not a fault. The fault is the fine lines just outside the hands' edge (the thin rim around hands and sleeves; in the green frames it shows as the thin yellow rim). Which debug option he used is not known: ask, or find it in the fork's menu.
+- The crash: not tied to the clip; the time of the clip against 19:54 is not known.
+- The next window's job is written as a Lanes hand-on: `20261122-202500-sh2-b041-hands-and-warp-lines`.
