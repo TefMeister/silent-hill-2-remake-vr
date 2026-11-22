@@ -109,3 +109,13 @@ simulator window was made 2560 x 1400, and each run started from a different pla
 `VR_AFW_IgnoreMotionThreshold 100` and modes 1 and 3 are therefore worth nothing `[not established]`. What the test
 needs: the same start place every run (a teleport or a reload), a wall at arm's length filling the view, and
 full-size captures. The settings were put back (mode 2, threshold 2.5; config.txt unchanged).
+
+## 18:55: Tefa on point 1, word for word
+"if you are doing this to measure the jitter and tearing around close objects, then i doesn't matter which way you
+move, ANY close thing does that, as if james has a dome around him and everything in that dome causes things to
+jitter" `[reported, Tefa, worn, b038 and before]`. That is the observation; it matches the reader's static reading
+(the warp's mode 2 treats pixels nearer than 1 m differently: the turn only, every move of the camera dropped) better
+than anything measured here, and it says the test need not be a sidestep: any move with something inside ~1 m. Two
+things own a 1 m line: the warp's own programs, and our hand pass (`sh2vr_warpscale.txt`, "near 1 m"). Telling them
+apart, live, in the headset: our pass off (4th number 0): dome still there = the warp's own; then
+`uevr VR_AFW_IgnoreMotionThreshold 100`, then mode 1.
