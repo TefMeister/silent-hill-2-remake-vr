@@ -556,3 +556,569 @@ known to be wrong in ours; the first is the cheap check for any regular hitch Te
   frame calls skipped the layers below it after the first frame; with it off, 12 of 12 clean `[measured, n small]`.
   Tefa: a crash may have come when the game window was clicked out of focus (maybe a coincidence). Section 13's crash
   reading still stands; this is what most likely sets it off. Table: the-optimizer `docs/first-run-silent-hill-2-2026-11-21.md`.
+
+## 19. The warp's mode 2 and near things: the 1 m rule (2026-11-22, /lm reader, files only)
+
+Live verdict the same day: Tefa's "dome" was mode 2 itself; mode 3 cures it for his eyes `[reported, Tefa, worn, n=1]`. Mode 3 is what b041 and later set.
+
+The reader's note, as written (folded from `inbox/2026-11-22-pd-warp-mode-2-and-game-driven-camera-motion.md`):
+
+From: the background reader of the 2026-11-22 live session. Nothing launched. Read: notes 2026-11-13c/d/e, the
+profile's `config.txt`, the b038 wear log, PureDark's PUBLIC fork (branch AFW, commit fc8de10, 2026-08-20, fetched
+fresh), and the warp's GPU programs in the installed beta 6 `PDAFWPlugin.dll` (PureDark's permission of 2026-11-13,
+this game only; findings in words only, nothing extracted is kept in git).
+
+The video measure this answers: with the view moved by the game (stick turn, walking sideways in front of a door) the
+world steps on every other headset frame (36 a second); when the head turns, every frame moves.
+
+### 1. Measured in the b038 log
+
+- 716-720 warp calls every 10 s in play = 72 a second, one made-up eye per call. So each eye is real 36 times and
+  made-up 36 times a second: "36 steps a second" is exactly "the made-up pictures do not move the world"
+  `[measured: the `drawnpose:` lines, 16:40-16:55]`.
+- The DRAWN eye's view in every warp call matched one of our per-tick records of the game's own view, with one fixed
+  shift per load: 0 unmatched in every 10 s window of play (33-35 only in the window around each load)
+  `[measured]`. So the views the injector hands the warp DO contain the stick turn and the walking, tick by tick. The
+  made-up eye's target view is not something our log sees.
+- The picture was 1.0 to 2.0 records behind the game thread, changing through the run (simulator, 2026-11-18: always
+  2) `[measured]`. Harmless for the matching; noted because it is new.
+
+### 2. Which code decides `[inferred-static]`
+
+**The open side (public August source; the installed beta 6 is newer, so this is "as far as the public source goes"):**
+
+- The made-up eye's target view is built in the SAME callback and from the SAME game camera place and turn as the
+  drawn eye's (`FFakeStereoRenderingHook.cpp`, `view_inv_matrix_other`). Nothing there leaves the stick or the walking
+  out.
+- `VR_AFW_UltraResponsive` only switches off the smoothing of things attached to the controllers; the fork's own menu
+  text says so ("This basically just disables lerping in UObjectHook Config tab"). It does not touch the warp.
+- `VR_GhostingFix` decides two things in the warp's call: the kind of motion vectors the warp is told it gets
+  ("this eye's last frame" when on, "the other eye's last frame" when off), and, together with
+  `VR_AFW_FixObjectMotionVector` and `VR_AFW_FixMovingObjectBrightnessFlickering`, whether the game's velocity picture
+  is handed over at all (`D3D12Component.cpp`, the lines around `EvaluateFrameWarp`).
+- `VR_AFW_FramewarpMode`: 0 none, 1 other eye, 2 previous frame, 3 both. `VR_AFW_FixObjectMotionRange` and
+  `VR_AFW_IgnoreMotionThreshold` (default 2.5, not in our config) are passed straight through.
+
+**The closed side, mode 2 (the four programs that place pixels; the same branch in each):**
+
+- A pixel of the eye's previous real picture is put back into the world with that eye's PREVIOUS view and projected
+  with its view NOW. Both turn and place are in those views, so stick turn and walking are carried, for every pixel
+  **further than 1 m**.
+- **Nearer than 1 m the previous view is first moved to the eye's place now: only the turn is applied, every
+  sideways or forward move of the camera is dropped.** This confirms the 2026-11-13e reading, and adds the condition:
+  it applies to every near pixel when the warp's "eye mask" is off, and only to near pixels the warp has marked as
+  MOVING when the mask is on. Near pixels marked still then get the full treatment.
+- A pixel is marked moving when its motion vector differs from the motion the camera alone would give (worked out
+  from the warp's own views) by more than `IgnoreMotionThreshold` / 2160 of the picture; nearer than 0.5 m the bar
+  rises toward 10 / 2160.
+- The warp's "previous view" is kept inside the closed file (the call only carries the views of now). Whether the
+  mask is in use is also set there. Neither can be read from the open side.
+- Two settings named `_IsMoving` and `_IsRotating` exist in the warp's settings block; none of the placing programs
+  reads them.
+
+### 3. Is "the world holds on made-up frames" expected for mode 2?
+
+- **Walking sideways close to a door or a wall: YES, by design, if it is nearer than 1 m** (and marked moving, or
+  the mask is off). The made-up picture turns it with the view but does not slide it. `[inferred-static]`
+- **A stick turn: NO.** By the program a turn is carried on every path, near and far, and on 2026-11-13 the simulator
+  showed the room moving evenly on every frame of a stick turn in mode 2 (`[verified-live 2026-11-13, simulator,
+  n=7]`, beta 6, before our hands' pass existed). If far things also stand still on made-up frames during a stick
+  turn in the b038 video, something outside what was read is wrong: the warp's kept "previous view", or the marking
+  (a whole view wrongly marked moving), or a difference between the real headset and the simulator.
+- Head turns looking smooth proves little: the headset's own last-moment turn correction smooths head turns on any
+  frame, made-up or not `[hypothesis]`.
+- What differs from 2026-11-13: the ghosting fix is now switched on 20 s after the start instead of from the start
+  (b036), ray tracing is off, the game holds a full 72, and our hands' pass runs. Tefa on b035 (fix OFF, otherwise
+  the same): "running super smooth"; on b038 (fix ON): "picture jittery/tearing" `[reported]`. That points at the
+  ghosting fix's side of the call before anything else `[hypothesis]`.
+- Our own pass does not touch anything further than 1 m (`handpaste.cpp`: every test starts with "nearer than the
+  near line") `[inferred-static]`.
+
+### 4. What the 46-setting sweep found about it
+
+Nothing: it could not. The sweep of 2026-11-13 (note 13c section 6) had the headset lying still in one view and
+measured frame time and a still-picture difference; all 46 settings were the game's own drawing settings. The warp's
+settings were only timed (same note, section 3): Ultra Responsive off: no change in frame time; mode 1 for 3: -0.4 ms;
+shading rate: -0.5 ms. No test has ever looked at how the world moves on made-up frames under stick or walking on the
+real headset. `[measured, from the note and the sweep's own list]`
+
+### 5. Cheapest live A/B (lines in `sh2vr_devcvars.txt`, 20 s each, same corridor, a steady stick turn, then a sideways walk)
+
+First, from the video, with no game: **is the thing that stands still nearer or further than about 1 m?** Far things
+standing still in a stick turn = the unexpected case. Only near things, only when walking = the 1 m rule.
+
+1. `uevr VR_AFW_IgnoreMotionThreshold 100` (now 2.5). Raises the "moving" bar forty times. World moves on every frame
+   now = the world was being marked as moving under game-driven motion. Put back to 2.5.
+2. `uevr VR_GhostingFix false` (b035's state). World moves on every frame = the fix's motion-vector side. ⚠️ With the
+   fix off no velocity picture reaches our hands' pass, and it then treats EVERYTHING nearer than 1 m as hand
+   (`handpaste.cpp` `hand()`: no velocity picture = closeness alone): near walls and tables get carried with the hands
+   and tear. That is very likely b035's "things close by are still tearing" `[inferred-static]`. For a clean look
+   also set the 4th number of `sh2vr_warpscale.txt` to 0 for this step.
+3. `uevr VR_AFW_FixMovingObjectBrightnessFlickering false`, then `uevr VR_AFW_FixObjectMotionVector false`: each takes
+   the velocity picture away from the warp (same caution as step 2).
+4. `sh2vr_warpscale.txt` 4th number 0 (`1.0 0 0 0 1.0 0.004 1 0`): our pass off. Expected: no change to the far
+   world. A change = ours.
+5. `uevr VR_AFW_FramewarpMode 1` for 20 s: the made-up eye is then built from the other eye's fresh picture, so the
+   world must move on every frame. If it does there and not in 2, the fault is in the previous-frame path alone.
+6. Mode 3 with the debug tint (Numpad 6 as a real key): green = marked moving. The whole world going green in a
+   stick turn or a sideways walk, and not in a head turn, is the marking fault seen directly.
+
+Each is undone by writing the old value back; none needs a restart.
+
+### 6. Side finding for the start-crash notes
+
+The "Inserting new scene state" / "Setting scene state to" lines are in the public fork
+(`FFakeStereoRenderingHook.cpp`, about lines 3190-3220), so that code can be read as source. The "Setting" line is a
+log-ONCE line: "one Setting line in the log" does not mean one swap. `[inferred-static, public August source]`
+
+### Tags
+
+- 72 warp calls a second, every drawn view matched `[measured, b038 log]`.
+- Mode 2 drops the camera's move for near (under 1 m) pixels, keeps the turn, carries both further out
+  `[inferred-static, beta 6's own programs]`.
+- Ultra Responsive is not involved `[inferred-static, public source]`.
+- Why far things would stand still in a stick turn `[not established]`; candidates `[hypothesis]`.
+
+## 20. The hand's hop between real and made-up frames (2026-11-22, /lm reader, files only)
+
+Written for mode 2. In mode 3 (b041 on) the hands are a different matter: section 22 and the note 2026-11-22c.
+
+The reader's note, as written (folded from `inbox/2026-11-22-pd-hand-hop-between-real-and-made-up-frames.md`):
+
+From: the background reader of the 2026-11-22 live session. Nothing launched. Read: `handpaste.cpp`, `drawnpose.cpp`,
+`carry_math.h`, `smooth.cpp`, `smooth_math.h`, `warpscale.cpp`, `ik.cpp`, `ghosthand.cpp`, note 2026-11-19, and the
+b038 wear log (`2026-11-22-1638-tefa-wear-b038/uevr-log.txt`, 16:38-16:55, 101 status windows of 10 s).
+The file in force: `sh2vr_warpscale.txt` = `1.0 0 0 1 1.0 0.004 1 0` = scale 1, no mode switching, the hands' pass
+on, near line 1 m, "moving against the room" 0.004, **7th = 1** (carry by the hand the game drew; a refused carry
+repeats the last good one), **8th = 0** (the hands of the view's own record). The log's start lines confirm all of it
+`[measured]`.
+
+The measure this answers: the gun hand hops back and forth against the wall by about 6 px of a 1440-wide picture
+(about 12 at full size) on alternate frames while moving; Ghost Hand: "the game's hand jumped 563 times while the
+controller was calm; left hand wanders 3.2 cm".
+
+### 1. How a made-up picture gets its hand (as the code stands)
+
+Call N draws eye E for real and makes up eye X. The hand pixels of X's last real picture (tick N-1) are carried by
+the hand's own rigid move from the record of tick N-1 to the record of tick N, between X's real view then and X's
+target view now. A whole step, never half; both records hold the hand AFTER smoothing (`ik.cpp`: the record is
+written after `smooth::apply`). So in one eye the hand should read: real N-1, carried to N, real N+1.
+
+### 2. The ways it can disagree, with the log's verdict
+
+| # | way | what the log says |
+| --- | --- | --- |
+| 1 | **The hand is right and the WALL is one tick old.** The carry puts the hand where it is at tick N; if the warp leaves the wall where it was at N-1 (the 1 m rule for near things, or the fault of the other inbox file), the hand hops against the wall by one tick of wall motion on every made-up frame, only while James moves. | Not something the log can see. Fits "while moving". Size by arithmetic: a sideways walk of 1.3 m a second, a wall 1.5 to 2.5 m away = 11 to 19 px a tick at full size. **Leading explanation** `[hypothesis]`. |
+| 2 | A carry refused (no record, turned or moved too far, over 5 cm from the raw controller's) = a one-picture jump. | In play 0 to 16 refusals in about 1,440 carries per 10 s, typically under 5, and every one kept the last good carry (none fell back to the raw controller) `[measured]`. Far too rare for a steady alternate-frame hop. **Ruled out as the steady hop.** |
+| 3 | No record for the picture, or the wrong one. | Every view matched in every window of play; unmatched only around the five loads (33-35 each) `[measured]`. **Ruled out.** |
+| 4 | The carry is by the raw controller, not the drawn hand (7th number 0, or a silent fallback). | 1,420-1,440 of 1,440 carries a window "by the drawn hand" `[measured]`. The 7th number is in force. **Ruled out.** |
+| 5 | The record is not the pose that was really drawn (so the "right" pair is the wrong pair). | Not seen by the log. The log's yardstick: the raw controller's carry differed from the drawn hand's by 1 to 7 mm on average per picture (0.5 mm in the calmest windows, up to the 50 mm cap) `[measured]`. 2 to 5 mm at arm's length is 6 to 15 px at full size: the same size as the hop. So IF the picture really follows the raw controller and not the record, this is the hop. Decided by one live flip (section 4, step 2). `[hypothesis]` |
+| 6 | Smoothing on one end and not the other. | Not in the code: both records are after smoothing, the left hand is never smoothed at either end `[inferred-static]`. The `smooth:` lines (35 of them, strength 4, "turn per frame raw / drawn") read 0.5 to 1.4: no evidence either way, because "held still" there means under 20 degrees a second, which includes slow steady moves a filter passes unchanged `[measured, not diagnostic]`. |
+| 7 | The record's tick is one off the picture's (the 8th number's subject). | Harmless at a steady speed: a constant offset cancels in the step between two records. It only shows under a change of speed, about 2 px for hand tremor or for James starting to walk (arithmetic). Cannot make 12 px. **Not the hop** `[inferred-static]`. The 8th number stays a test switch only. |
+| 8 | A sign or convention error in the carry. | Would give an error that grows with walking speed and with every hand move, and the raw-against-drawn yardstick would sit far above 1-7 mm. `tests/carry_test.cpp` agrees with Unreal's own matrices within 0.04 mm. **Unlikely** `[inferred-static]`. |
+| 9 | Half-step against full-step. | No half step exists in the code `[inferred-static]`. |
+| 10 | The pixel is not recognised as hand in that picture, so the warp's own (one tick old, turn-only) hand shows. A hand pixel counts only when its motion over two ticks differs from a still thing's by more than 0.004 of the picture (about 5 px). | By definition this can only cost up to that bar: about 3 px a tick at full size. A shimmer at slow moves, not 12 px `[inferred-static]`. |
+| 11 | The warp's leftover copy of the hand is not where our clean-up looks. `handpaste.cpp` `source_of()` assumes the warp lands EVERY near pixel by the turn alone. The warp's programs (read today, see the other file) do that only for near pixels it marked as moving; near pixels it marked still are landed with the camera's move as well. While walking, a hand the warp calls "still" is then left somewhere else (tens of px away) and not painted over. | Not in the log. Would look like a second faint hand or gun on alternate frames ("trails", "not solid"), not a hop of the one hand. The tint (4th number 2) shows it: a second gun with no red on it. `[hypothesis]` |
+| 12 | The search for the source pixel stops within 0.002 of the picture (about 5 px) instead of exactly. | A few px of wobble at depth edges at worst `[inferred-static]`. |
+| 13 | A long gun held in two hands turns about the grip toward the left hand at view time; the record holds the right HAND, not the gun (note 2026-11-19: the gun sits 15-16 degrees out of the drawn right hand while two-handed). The gun's pixels are carried by a blend of the two hands' moves. | Tefa carried the shotgun in this run (the log's weapon lines, 16:40 and 16:44). Affects the gun's far end, not a hand against a wall `[inferred-static]`. |
+
+### 3. The Ghost Hand line is not about made-up frames
+
+`ghosthand.cpp` writes, once a game tick, the real controllers (room) and the game's hand BONES (world, turned into
+the room). It never sees a made-up picture. So "the game's hand jumped 563 times while the controller was calm" is
+about the hands as the game itself draws them. Three things in the code produce such jumps with nothing wrong
+`[inferred-static]`:
+
+- the right hand is smoothed at strength 4 while a gun is held: it keeps moving after the controller has stopped;
+- the left hand's bone is put on the gun's front grip while two-handed (`frontgrip.cpp`), away from its controller;
+- the world-to-room turn is only refreshed while the hands are more than 15 cm apart, and it pairs the controller
+  components (the pose of the previous view) with the headset runtime's pose of now: a stick turn or a walk with the
+  hands together makes the game hand appear to jump in the room.
+
+"Left hand wanders 3.2 cm" fits the second. The reader could not open the 16:38 report through the sanctioned tool
+(the run name was not found; "latest" is a later, 114 s session with 4 jumps) and did not read the raw recording
+(locked). To make the count mean something: `begone.py ask ghost-hand <that run> ...` for which hand jumps, and
+whether the jumps sit in stretches where James walks or turns by stick.
+
+### 4. What settles it, cheapest first
+
+1. **From the video, no game:** measure the hand against the picture's own edge instead of against the wall, in a
+   stretch where James walks with the head fairly still. Steady in the picture while the wall steps = way 1 (it is
+   the world, the other inbox file). Hopping in the picture = the carry (ways 5, 11).
+2. **Live, 20 s each, the 7th number:** `... 1 0` (now), `... 0 0` (raw controller's carry), `... 2 0` (b032's way).
+   The hop smaller with 0 = the record is not what is drawn (way 5). Larger with 0 = the record is right.
+3. **Live, the 4th number 2 (tint) while walking:** green = carried hand, red = painted-over leftover, magenta = no
+   background found. A second gun or hand with no tint on it = way 11.
+4. **Live, the 4th number 0 for 20 s:** our pass off. The hand then shows the warp's own one-tick-old hand on made-up
+   frames; if the hop against the wall is the SAME size, our carry was adding nothing there and the wall is the one
+   that moves wrongly.
+
+### Tags
+
+- Counts of carries, refusals, matches and the raw-against-drawn difference `[measured, b038 log, 16:40-16:55]`.
+- Everything about what the code does `[inferred-static]`.
+- Which way is the real one `[not established]`; way 1 first, then 5 and 11 `[hypothesis]`.
+
+## 21. James's hair shadow was our shadow body in the head torch's light (2026-11-22, /lm reader, files only)
+
+Acted on in b040 (the shadow copy off the torch's channel); the setting read back on the simulator, the look not yet judged by Tefa.
+
+The reader's note, as written (folded from `inbox/2026-11-22-pd-hair-shadow-is-our-shadow-body-in-the-head-torch.md`):
+
+From: the background reader of the 2026-11-22 live session. Nothing was launched; source, notes and the b038 wear log
+(`2026-11-22-1638-tefa-wear-b038/uevr-log.txt` in the SH2 logs folder) only.
+Tefa, b038, worn: "James hair shadow visible" (video: thin strands fanning from the top of the view on a prison
+wall in the torch light, plus a small head-shaped blob).
+
+### What shadows.cpp really does (read in `dev-archive/native/src/shadows.cpp`)
+
+| piece | what is done to it | by what |
+| --- | --- | --- |
+| the body `CharacterMesh0`: 14 head material slots (0 1 6 8 9 11-18 22: lacrimal, teeth, eye shadow, face, facial hair, EIGHT hair slots, eyebrows) | set to the game's `MI_Invisible` | `SetMaterial` |
+| the body's eyeballs (slot 10 keeps its material) | hidden by bone (`eye_l`, `eye_r`, `eye_Lt`, `eye_Rt`) | `HideBoneByName` |
+| the body's own shadow | OFF in play | `SetCastShadow(false)` |
+| **the shadow body** (a second skeletal mesh we add, following the body's pose) | hidden from the camera, **casts a shadow anyway** (`bCastHiddenShadow`), **holds the head's 14 real materials, hair included**, on lighting channels **0 and 1** | `make_copy()` |
+
+So the head pieces are not "shadow off". The design is the opposite: the visible body casts nothing, and a hidden
+full copy WITH the head and the hair casts the whole shadow. `[inferred-static, the source]`
+
+The hair is eight material slots of the body mesh itself (`MI_JamesSunderland_Hair_LookDev_test` x8), not a separate
+component `[measured: the log's slot list, lines 5249-5272]`. No groom or separate hair mesh is named anywhere in our
+notes; nobody has listed the pawn's components for one `[not established]`.
+
+### Why the strands show `[inferred-static; every link below is read from a file, the chain itself was not seen live]`
+
+1. The torch's main light is on lighting channels 0 and 2; the game keeps James on channel 1 only, so his own torch
+   never lights or shadows him (dossier section 8, `[verified-live 2026-11-06, n=1]`).
+2. Our shadow body is put on channels **0 and 1** (`shadows.cpp`, `make_copy()`, the `SetLightingChannels(true, true,
+   false)` line). The log confirms it both times a pawn was made: "casts hidden shadow 1, channels 110", and "the shadow
+   body holds 14 of 14 head materials" `[measured: lines 5273-5274 and 6220-6221]`.
+3. The pack's light location is "Head" (`light_type` 1 in the profile's `data/sh2_config.json`): the torch's light is
+   attached to the headset with no offset (`main.lua` `attachLightToController`, hand 2). Note 2026-11-13c section 8 says
+   the same: "the pack's Head light sits at the eyes".
+4. So a light on channel 0 sits inside a hidden head whose hair is on channel 0 and casts shadows. The fringe hangs
+   in front of the light: long strand shadows from the top of the view, and a piece of the head as a blob. With
+   roomscale off the head model does not follow a lean, so leaning back or to the side puts more hair in front of
+   the light.
+
+Ruled out by the log `[measured]`: the game undoing our work in play. Body fixes are logged for the first three and
+then every 50th; the first pawn (16:39:37 to 16:46:04) logged exactly two, both at its start, so nothing was put back
+for six and a half minutes. The second pawn logged two at its start and a third only at the 16:54:59 cutscene (20
+things: the planned switch to "head shown"). The body's own hair slots are invisible and its shadow is off.
+Not ruled out: a hair piece we do not know of (see above); why this was not reported before b038 (the shadow body has
+held the head's materials since the black-eyes fix of 2026-11-12) `[not established]`.
+
+### The smallest fix
+
+`dev-archive/native/src/shadows.cpp`, `make_copy()`: the shadow body on channel 1 only, exactly where the game keeps
+the body it stands in for.
+
+```
+-    ue::call(c, L"SetLightingChannels", {true, true, false});
++    ue::call(c, L"SetLightingChannels", {settings::SHADOWS_COPY_ON_TORCH, true, false});   // 2026-11-22: off the torch's channel (the head torch sits inside the head: hair shadows on the wall)
+```
+
+plus `constexpr bool SHADOWS_COPY_ON_TORCH = false;` beside the other `SHADOWS_*` lines in `settings.h`.
+Not compiled by the reader.
+
+What it changes: the torch no longer draws any shadow of James's body or head (as in the flat game, which never
+did). Every light that shadowed the game's own body still shadows the copy, now with the head: that was the point of
+the copy. The weapon (channel 0 added by `weapon_channel()`) and our arms (channel 0) still shadow in the torch.
+Not checked: which channels the room lights use; a room light on channel 0 only would lose the player's shadow, as
+it does in the flat game.
+
+If Tefa later carries the torch in a hand (`light_type` 2 or 3) and wants his body's shadow from it: channel 0 on the
+copy only while the light is not on the head. Not needed for the fault.
+
+### How it proves itself
+
+- **In the log:** the existing line prints the copy's channels as read back from the game: it must say
+  `channels 010` where b038 says `channels 110`. Cheap addition: in `body_fix()`, read the copy's channels each second
+  and count a put-right if channel 0 is back.
+- **Before any build, live through the connector (reversible, one call):** `SetLightingChannels(false, true, false)` on
+  the component the log names ("the shadow body made on the pawn: ... (SkeletalMeshComponent ...)"), torch on, facing a
+  near wall in a dark room: the strands and the blob go; calling it with `true, true, false` brings them back. That is
+  the measure, act, re-measure for this change, and it also tests the whole chain above.
+- **Logging gap worth closing while there:** body fixes 4 to 49 are silent, so the return from a cutscene (head
+  hidden again) cannot be read in the log.
+
+### Tags
+
+- The copy is on channels 0 and 1 and holds the hair `[measured, b038 log]`.
+- The torch light sits at the headset `[inferred-static: profile setting + main.lua]`.
+- That this is what draws the strands `[inferred-static]`, to be confirmed by the one live call above.
+
+## 22. What the warp's mode 3 ("both") does, its edge band, its debug colours, its options (2026-11-22, /lm reader, files only)
+
+Live the same evening (note 2026-11-22c) `[measured, simulator, full-size pictures]`: with a hand moving, mode 3's made-up pictures show striped and speckled hands, a pale edge line and black holes beside them; none of FixObjectMotionVector, FixMovingObjectBrightnessFlickering, UltraResponsive, FixObjectMotionRange 1 / 8 changes that; our own hand pass run after the mode 3 call (b042 on) covers the hand and cleans the band and the holes. The reader's rim patch (staging) was NOT used: b042's clean-up takes the picture from beside the pasted hand instead.
+
+The reader's note, as written (folded from `inbox/2026-11-22-pd-warp-mode-3-what-it-does-and-the-rim.md`):
+
+From: the background reader of the 2026-11-22 evening session. Nothing launched, nothing attached. Read: the installed
+beta 6 `PDAFWPlugin.dll` (sha256 5f3cfc38903ac438, the tools copy; PureDark's permission of 2026-11-13, this game only;
+findings in words, nothing extracted is kept in git), its 12 warp programs (41-52) and the motion-vector program (30)
+followed line by line, the native code that orders them (`EvaluateFrameWarp` -> the worker at 0x18001cfc0, the settings
+writer at 0x18001a680, the pipeline table at 0x18001bae0), PureDark's public fork (branch AFW: `PDAFWPlugin.h`,
+`D3D12Component.cpp`, `VR.cpp`), our `handpaste.cpp` / `warpscale.cpp`, the b040 log of 19:33, one sheet of Tefa's
+debug clip (`2026-11-22-1933-tefa-dome-switches/video/sheet_18.jpg`).
+
+Tags: what was read from code is `[inferred-static]`; what a log or a file shows is `[measured]`; the rest says so.
+
+### 1. The answer first
+
+- **The yellow rim is the warp's "edge band" class, not a hole and not hand** `[inferred-static]`. In mode 3 the warp
+  throws away every pixel of this eye's last real picture that it calls "moving" (the old hand), which leaves a
+  hand-shaped hole in the previous-frame picture. Around every such hole it then distrusts the still scenery beside
+  it: a band about **1/390 of the picture's width (6-7 px at 2688) on the left and on the right of the hole, never
+  above or below**, is taken from the OTHER eye's warped picture instead (where that eye sees it), or from this eye's
+  old picture NOT moved at all (where it does not). Different eye, different fog and light, point-sampled: a fine line
+  of slightly wrong picture just outside the hands' and sleeves' edge. That is what the debug view paints yellow.
+- **The width is a fixed number inside the program (`RenderSizes.x * 0.0025641`). No setting changes it**
+  `[inferred-static]`. `VR_AFW_FixObjectMotionRange` is NOT a pixel radius (section 4).
+- **Lever most likely to remove it: our own pass, after the mode 3 call, putting this eye's own last picture back
+  into that band** (moved by the camera, by depth). Written and compile-checked in staging (section 6); not run.
+  `[hypothesis]` until seen in the headset.
+- **Cheapest proof, no build, 20 s:** mode 3, our pass off, `uevr VR_AFW_IgnoreMotionThreshold 100`. Nothing is then
+  called "moving", no hand-shaped hole, no band. Expected: the rim goes, and the hands go back to mode 2's one-frame
+  lag (doubling while walking or turning). Rim gone = this reading is right. Put back to 2.5 after: the same number
+  also feeds the motion vectors DLSS gets (section 4), so it is a test, not a setting to keep.
+- **The speckle inside the green hands** (visible in the sheet: the hands' skin is grainy, the real frames between are
+  smooth) `[measured, one sheet]` is most likely the "Fix Moving Object Brightness Flickering" path: each hand pixel's
+  colour is looked up, one point per pixel with no filtering, in this eye's last real picture at a place worked out
+  from the game's velocity picture `[inferred-static for the mechanism; hypothesis that it is the speckle]`. The live
+  session's `bright_off` clips test exactly this.
+
+### 2. Which programs run, per mode `[inferred-static]`
+
+The call's `UseUINT64` byte is 0 in our log (word 16 of the call = `9f345d100`: byte 0, shading rate 9 = 1x1)
+`[measured, b040 log]`, so the plain programs run, not the 64-bit ones (47/46/45 are the same logic).
+
+| mode | programs, in order | reads |
+| --- | --- | --- |
+| 1 other eye | 52 -> 51 -> 44 | the drawn eye's colour and depth. No motion vectors, no velocity, no masks. |
+| 2 previous frame | 52 -> 51 -> 44 | the warp's own kept copy of this eye's last real picture and depth ("Backup"). `UseEyeMask` 0, `UseMotionVectors` 0: no motion data at all, and every pixel nearer than 1 m gets the turn only. This is why no motion setting ever changed mode 2. |
+| 3 both | **42**, then previous frame: 52 -> 51 -> 44 -> **48**, then other eye: 52 -> **50** (51 when no velocity picture is handed over) -> 44 -> **48**, then **49** | everything: both pictures, both depths, the game's motion vectors (42), the game's velocity picture (50), the kept copy (50, 49). |
+
+What each does:
+- **42, who is moving:** per pixel of the drawn eye, the game's motion vector minus what the camera alone would give.
+  More than `IgnoreMotionThreshold / 2160` of the picture = "moving" (mask 10), else "still" (1). Nearer than 0.5 m
+  the bar rises toward 10 / 2160 (about 13 px at 2880) at zero distance, so a hand close to the face needs a faster
+  move to count, and parts of one hand can fall on both sides of the bar.
+- **52 / 51, the throw:** every source pixel is thrown forward to where it lands in the made-up view; the nearest one
+  wins; point to point, no filtering. In the previous-frame pass of mode 3 the mask is ON: **pixels marked moving in
+  this eye's last real picture are not thrown at all**, and still pixels get the full camera move with depth at every
+  distance. The 1 m "turn only" rule is dead in mode 3. That is why Tefa's "dome" is gone in mode 3.
+- **44:** fills one-pixel cracks from the nearest neighbour.
+- **48, the edge marks:** in the previous-frame result, a covered pixel with a hole 6 and 7 px to one side gets mark
+  1, to the other side mark 2; in the other-eye result the same gives mark 5. Left and right only.
+- **50, the moving things in the other-eye pass:** a moving pixel is PLACED by the other eye's fresh depth (so the
+  hand is where it is now), marked 10, and COLOURED from this eye's kept last picture at the spot the velocity picture
+  points back to (one point, unfiltered). Without the velocity picture (51): coloured straight from the other eye.
+- **49, the merge**, per pixel, first rule that fits (previous-frame result = P, other-eye result = O):
+  1. mark 10 (moving): take O (colour and depth). Nearer than 0.1 m: keep P.
+  2. hole in P, and O has something nearer or valid: mark 5 -> this eye's old picture, unmoved; else -> O.
+  3. mark 1 and O covers it -> O. Mark 2 -> O, or the old picture unmoved when O has nothing.
+  4. O nearer than 3 m where P is more than 10 m further -> O.
+  5. otherwise P.
+
+### 3. The debug view's colours `[inferred-static, program 49; the tints are added to the picture]`
+
+| colour | pixel class |
+| --- | --- |
+| **green** | marked moving (10): placed by the other eye's depth, coloured as 50 / 51 says |
+| magenta | moving and nearer than 0.1 m: the previous-frame picture kept (`[verified-live 2026-11-13]` in the notes) |
+| **yellow** | the edge band: mark 1 taken from the other eye; or mark 5 / mark 2 with nothing in the other eye, taken from this eye's old picture unmoved |
+| white-ish (all lighter) | mark 2 (the band's other side) taken from the other eye |
+| red | a hole in the previous-frame picture filled from the other eye (the pink bar at the picture's edge and the red lines top right in the sheet's last rows) |
+| blue | near thing in the other eye over far background |
+| cyan | only with a foveated area set |
+
+So: green hands = "the warp knows they move" (our arms' velocity is fine, as on 2026-11-13). Thin yellow rim = the
+band and the fallbacks of rules 2-3. From the code alone the band (other eye's colour) and the fallback (old hand
+sliver, unmoved) cannot be told apart; in the sheet the yellow sits mostly along one side of each hand and sleeve,
+which fits either `[measured, coarse]`. The small green dashes floating between the hands in the sheet are stray
+background pixels over the motion bar.
+
+With "Debug Framewarp" on, **Ctrl + Numpad-minus** steps through 6 raw pages instead of the picture (motion vectors,
+the moving mask, depth, the drawn picture, the kept copy, the other-eye result) `[inferred-static]`. The dark,
+speckled frames of the clip may simply be one of those pages or the untinted look of rule 1; not settled
+`[hypothesis]`: ask Tefa whether he pressed anything.
+
+### 4. What each option really changes `[inferred-static]`
+
+| option | where | what | the rim |
+| --- | --- | --- | --- |
+| `VR_AFW_IgnoreMotionThreshold` (2.5) | program 42 (mode 3 only) and program 30 | the bar for "moving", in 1/2160 of the picture; raised near the face | higher = fewer things moving = fewer holes and bands, but those things lag a frame. 100 = nothing moves (the proof test). It also changes program 30, see next row. |
+| `VR_AFW_FixObjectMotionVector` | open side, at the DLSS hook, only with the ghosting fix on | runs program 30: rewrites the game's motion vectors for moving things so they point two ticks back in the SAME eye (each eye's DLSS runs at half rate). The rewritten vectors go to DLSS and to program 42. Also one of three conditions for handing the velocity picture to the warp. | indirect only |
+| `VR_AFW_FixObjectMotionRange` (3.0) | program 30 | a DISTANCE IN METRES from the eye: nearer than this, the "is it moving" bar of program 30 is 2.5 times finer (threshold / 5400 instead of / 2160). Not a pixel radius, nothing is widened around anything. The header's own comment: "for first person view this is preferred to be set to 0.5". | none directly |
+| `VR_AFW_FixMovingObjectBrightnessFlickering` | the call (with ghosting fix and the option above) | hands the velocity picture over: program 50 instead of 51, so moving things are coloured from this eye's old picture instead of the other eye's. Mode 3 only. | none on the band; it is the suspected speckle. ⚠️ Off = no velocity picture reaches OUR pass, which then treats everything nearer than 1 m as hand. |
+| `VR_AFW_UltraResponsive` | open side | switches off the smoothing of things attached to controllers. Never reaches the warp. | none |
+| "Clear Before Framewarp" | the worker | clears the output picture before the passes. Pixels no rule writes show black instead of this eye's old picture. | a diagnostic: lines that turn black were "nobody wrote here" |
+| "Framewarp Shading Rate" | mode 3 only | above 1x1 the passes run on a smaller picture and 49 looks the colours up at full size | band and masks get blockier, not narrower |
+| sharpening | open side, before the call | sharpens the real picture (it uses the other eye's buffer as scratch; harmless, the warp reads its own kept copy) | none directly; off in the profile |
+
+### 5. A mode 3 call, for our pass
+
+- **Same layout, same textures** `[inferred-static, public header and call site; the log's call words agree]`. One
+  struct for every mode: list 0, in-buffers 8, out-buffer 16 (filled by the warp), mode 60, eye 64, camera 72, clear 80,
+  threshold 84, motion-vector type 92, debug 96, velocity 120, UINT64 128, shading rate 132. Mode arrives as 3.
+- **The output is the same picture** as in mode 2: the other eye's frame buffer colour; the open side sends that to
+  the headset whatever the mode `[inferred-static]`.
+- **The warp's "kept copy" is the same picture as our `g_keep`**: the made-up eye's last real one.
+- **No reason the pass cannot run** `[inferred-static]`. The live session has already switched it in (9th number,
+  `c.mode`, `cr.w`). Two things differ from mode 2 and are worth knowing:
+  1. Where our pass expects "the warp's leftover copy" (the turn alone), mode 3 has the hole of the dropped old hand
+     instead (filled by rule 2). Painting it over is harmless and replaces any old-hand sliver. But a hand OUR test
+     calls hand and the WARP calls still (a slow hand: our bar is about 5 px over two ticks, theirs about 3 px, more
+     near the face) is left by the warp at its old place moved with the full camera move, not the turn alone; while
+     the head moves sideways our paint-over then looks a few px beside it `[hypothesis]`.
+  2. The warp's own mode 3 hand is already at the right place (other eye's fresh depth). What ours adds is the
+     picture: this eye's own last real hand, carried rigidly and filtered, instead of point lookups.
+- **Which picture to take the hands from:** this eye's previous real picture, as now. The other eye's is newer but
+  seen from 6 cm to the side: at arm's length that is a shift of the order of 100-200 px with whole flanks of the hand
+  this eye sees and that eye does not. PureDark's own program 50 makes the same choice.
+
+### 6. The proposal, concrete (staging, not applied)
+
+`staging/silent-hill-2-remake-vr/2026-11-22-warp-mode-3-hands/`: `rim.patch` (162 lines, against the live session's
+working files as they stood at about 21:30: handpaste.cpp d148a65b, handpaste.h f4f5f425, settings.h 9c55693b,
+warpscale.cpp 6f301317; `git apply --check` passes), `src/` (the four files patched), `handpaste_with_rim.hlsl`,
+`check.bat`. `[compile-verified 2026-11-22]`: the pixel program with fxc ps_5_0 (1369 instruction slots, was 894),
+both .cpp with cl /W4 /Zs against the project's headers, no warning. NOT run.
+
+What it adds on top of the live session's mode 3 switch:
+- `settings.h`: `HANDPASTE_RIM` (0 = off). `warpscale.cpp` `read_file()`: a 10th number in `sh2vr_warpscale.txt` =
+  the band's half width as a share of the picture (try 0.0034; the warp's is 0.0026). `handpaste.h`: `set_rim()`.
+- `handpaste.cpp`, the numbers: 12 more floats `rm0..rm2` (a still point in front of this eye then -> now: the
+  made-up view times the last view turned back), and `fr.w` = the rim width (0 unless the call is mode 3). The array
+  grows 112 -> 124 floats, inside the 512-byte slot (a static_assert guards it).
+- `handpaste.cpp`, the program: `rim(uv)` = one of 8 points to the left and right within the width is the old hand's
+  place; `still_src(uv)` = where that still spot was in this eye's last real picture (4 steps, by depth, the sky
+  guarded); and in `ps`, after the paint-over block: `else if (cr.w > 0.5 && fr.w > 0 && rim(uv))` -> this eye's own
+  last picture from `still_src`, unless that spot is hand. Tint: blue.
+- Order of steps (the "which runs last" line): the warp writes its picture, then our pass; the band is decided inside
+  the warp (program 49) and ours runs after it on the same list, so ours has the last word on those pixels.
+- Not covered: bands beside holes that are not the hands (any edge while the head moves); up to 12 extra depth reads
+  per pixel over the whole picture when the rim is on (cost not measured).
+
+### 7. Live checks, cheapest first (20 s each, mode 3)
+
+1. `uevr VR_AFW_IgnoreMotionThreshold 100`, our pass off: rim gone and hands lagging = section 1 confirmed. Back to 2.5.
+2. "Clear Before Framewarp" on: any line that turns black is "nobody wrote here".
+3. Debug view, hand held still then moved sideways: yellow only left and right of the hand, never on a top or bottom
+   edge = the band of program 48.
+4. `uevr VR_AFW_FixMovingObjectBrightnessFlickering false` with our pass OFF (4th number 0): speckle inside the hands
+   gone = program 50's lookups (the live session's `bright_off`).
+5. The staging patch, tint on (4th number 2), 10th number 0.0034: blue where the yellow was; then tint off for Tefa.
+
+### Not established
+
+- Whether the rim Tefa sees is mostly the other-eye band or the unmoved old-picture fallback.
+- What the dark, speckled frames of the clip are.
+- Whether the descriptor blocks are laid out as assumed (colour, depth, motion, mask in a row); the reading of which
+  texture is which rests on it and on the offsets matching the public `TextureDesc`.
+- The crash 12 minutes into mode 3: nothing in this reading points at a cause.
+
+## 23. The drawn eye is shown from the engine's scene render target, not from the warp call's texture (2026-11-22, /lm reader, files only)
+
+Proven live in b044 `[verified-live 2026-11-22, simulator, n=1; real headset: it runs, the look not judged]`: a pass that writes into `StereoHook::get_scene_render_target()`'s left, eye-sized part from our stand-in reaches the drawn eye in every frame (test view of deband.cpp). The scene render target read 2560 x 1400 on the simulator and 5376 x 2880 on the real headset, format 90 (B8G8R8A8 typeless).
+
+The reader's note, as written (folded from `inbox/2026-11-22-pd-reaching-the-drawn-eye-it-is-the-scene-render-target.md`):
+
+From: the background reader of the 2026-11-22 evening session. Nothing launched. Read: PureDark's public fork, branch
+AFW (the August source, commit fc8de10: `src/mods/vr/D3D12Component.cpp`, `src/mods/VR.cpp`, `src/Mods.cpp`,
+`src/mods/pluginloader/FFakeStereoRenderingFunctions.cpp`, `FFakeStereoRenderingHook.cpp`), the plugin API headers in
+`dev-archive/native/include/uevr/`, the profile's `config.txt`.
+⚠️ The installed beta 6 injector is newer than the public source (dossier 14b). Line numbers are the public file's;
+the order below agrees with what the live test showed (pass (a) reaches the headset, pass (b) does not).
+
+### 1. The order of one frame in rendering method 3 `[inferred-static, D3D12Component.cpp `on_frame`]`
+
+Everything happens inside `D3D12Component::on_frame`, called from `VR::on_present` (VR.cpp 2734), on the thread that
+presents.
+
+1. **Line 54:** `backbuffer` = the engine's scene render target: `m_fake_stereo_hook->get_render_target_manager()->get_render_target()->get_native_resource()`.
+   This is the texture the game really drew the eye into: double wide, **the eye of this frame always in the LEFT half**
+   (both branches below copy `left = 0 .. width/2`). The injector forces it to 8-bit BGRA (section 3).
+2. **Line 511:** `cmdList = d3d12Renderer->BeginCommandList(index)`: the warp file's own command list.
+3. **Line 528:** `Crop(cmdList, eyeFrameBuffer.color, backbuffer, left half)`: a COPY of the drawn eye into the warp's
+   per-eye buffer (line 525-526 with sharpening on: crop into the other eye's buffer, sharpen into this one).
+   **This copy is the texture at offset 8 of the call. It is only the warp's input. Nothing ever shows it.**
+4. **Line 552:** `EvaluateFrameWarp(params)`: our stand-in, the real call, our passes. The list is still open.
+5. **Line 571:** `d3d12Renderer->EndCommandList(index)`: the list is closed and run (it must be: our hand pass, recorded
+   on it, reaches the headset through the copy of step 7).
+6. **Line 596 (left-eye frame) / 688 (right-eye frame):** `m_openxr.copy(AFR_LEFT_EYE or AFR_RIGHT_EYE, backbuffer.Get(), D3D12_RESOURCE_STATE_RENDER_TARGET, &src_box)`:
+   **the drawn eye goes to its OpenXR swapchain straight from the scene render target**, left half.
+7. **Line 603 / 733:** `m_openxr.copy(the other eye's swapchain, otherEyeFrameBuffer.color.pTexture, ALL_SHADER_RESOURCE, &src_box)`:
+   the made-up eye, from the warp's buffer (and its depth from the warp's depth).
+8. **Line 866:** `xrEndFrame`. One OpenXR frame per game frame, both eyes in it.
+
+`OpenXR::copy` (line 1886) is a plain `CopyTextureRegion` on the swapchain picture's own small command list, run at
+once on the same queue: no resample, no format change. So what the live test saw is exactly the code: (b) changed a
+copy nobody shows.
+
+### 2. The cheapest reliable way to change the drawn eye
+
+**Where:** the place we already stand in, after the real call, on the same open list (step 4). It is before step 5
+and 6 in the same function, so it is ahead of the swapchain copy on the queue: the same ordering that already carries
+pass (a). "Which step runs last": the drawn eye's swapchain copy is step 6; ours is step 4; nothing writes the scene
+render target in between.
+
+**What to write to:** the scene render target itself. The plugin API hands it out, and it is literally the same
+getter as line 54 `[inferred-static, FFakeStereoRenderingFunctions.cpp]`:
+`uevr::API::StereoHook::get_scene_render_target()` -> `->get_native_resource()` = `ID3D12Resource*`
+(API.hpp about lines 1187 and 1686). Only true while `VR_ExtremeCompatibilityMode` is false; it is false in the
+profile `[measured, config.txt line 78]`.
+
+**How, least risk:**
+- Read from the call's own colour texture (`c.color`: the same pixels, a 1:1 crop, sharpening is off in the profile),
+  whose state we already know and handle; draw the deband pass into our own target; then
+  `CopyTextureRegion(scene render target, 0, 0, 0, our target, box 0..eyeW x 0..eyeH)`.
+- The scene render target then needs one barrier pair only: `RENDER_TARGET -> COPY_DEST -> RENDER_TARGET`.
+  `RENDER_TARGET` is the state the injector itself names for it in step 6 (and the API header says the same of its
+  framework target). ⚠️ The injector is not consistent about it: for the crop of step 3 it tells the warp file the
+  same texture is in `PRESENT`. No debug layer runs, so both pass; we should copy the injector's step-6 claim, since
+  that is the transition recorded right after ours.
+- Checks before touching it, every call: pointer not null; its `GetDesc()` width is 2x (or 1x) the eye picture's
+  width and the height equal; format in the 8-bit BGRA family (copy needs the same family as our target). Get the
+  pointer fresh every call (the engine replaces the target at a size change or a load), on this thread, as line 54 does.
+- The warp's own kept copy of this picture was taken inside the real call, before us: the made-up pictures stay built
+  from the untouched picture and get the pass once on their way out, as now. Every shown picture gets it exactly once.
+
+**What does NOT work** `[inferred-static]`:
+- `on_present`: the mod order is FrameworkConfig, VR, UObjectHook, PluginLoader (Mods.cpp 14-29), and `Mods::on_present`
+  runs them in that order: the plugins' `on_present` comes after `VR::on_present`, that is after `xrEndFrame`. Too late.
+- `on_post_render_vr_framework_dx12`: that is the injector's own menu picture, not an eye.
+- Another import slot: the crop and the swapchain copy are not imports. The crop is a call through the warp file's
+  renderer object (the public header's `D3D12RendererAPI`, slot 27 `Crop` by the header's order); standing in that
+  would put a pass BEFORE the warp sees the picture. Possible, more invasive, and the made-up pictures would then be
+  warped grain. Second choice only.
+
+### 3. Where the dither goes: what the injector does, and a guess about the engine
+
+- **No resample and no conversion in the injector for the drawn eye**: scene render target -> `CopyTextureRegion` ->
+  swapchain (`B8G8R8A8_UNORM_SRGB`, line 1661). For the warp's input: a 1:1 crop. `[inferred-static]`
+- **The injector forces the game to 8 bits** `[inferred-static]`: at hook time it finds `r.DefaultBackBufferPixelFormat`
+  and writes 0 into it (FFakeStereoRenderingHook.cpp about 1307-1314, comment "8bit RGBA, which is what VR headsets
+  support"), and where there is no such setting it forces the render target's format to `PF_B8G8R8A8` (about 6481,
+  6831, 7014, 7037). Flat, this game most likely shows 10 bits.
+- **Guess, not checked against the engine's source or a capture** `[hypothesis]`: the tonemapper's "grain
+  quantization" is sized for the format the tonemapper itself writes. If it is not the last pass in this game (passes
+  after it, or an in-between target of 10 bits), the dither is a quarter of an 8-bit step and the last copy into the
+  8-bit target rounds it away: clean one-level contours, exactly what the parity view shows. What would settle it
+  without the game: an existing PIX / Nsight capture of one frame (the pass list after the tonemapper and the formats).
+- **A fix at the source, if that is the cause** `[hypothesis]`: a very small film grain (the engine adds it inside the
+  tonemapper, before the rounding; an amplitude of about one 8-bit step survives the 8-bit copy) set by our plugin on
+  the camera's post-process settings. It would be in every real picture and ride along into the made-up ones, no
+  pass at all. It is a screen effect by name, but at one level it is invisible as grain. Needs the game running to
+  try: `r.FilmGrain 1` plus the intensity.
+- Not ours, worth knowing `[hypothesis]`: Virtual Desktop's video stream is a second place where dark fog can band
+  (its 10-bit codec option). The parity view on the simulator proves the steps are already in the picture, so this
+  would only add to it.
+
+### Tags
+
+- The order of the frame, which texture each eye is copied from, the getter being the same object `[inferred-static,
+  public August source]`.
+- (a) reaches the headset, (b) does not `[measured, the coordinator's live test, b042]`: agrees with the order.
+- Why the dither is lost, and the film-grain fix `[hypothesis]`.
