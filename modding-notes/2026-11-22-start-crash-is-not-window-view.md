@@ -65,3 +65,21 @@ Why the rebuild failed is not known.
 FLAT, a new numbered build: 10 menu starts with `VR_GhostingFix=false`. 0 crashes = cause confirmed. `MODEL: FABLE`.
 Then a headset look at what ghosting comes back, and the gentler fixes. The Optimizer's real-headset tour can run
 before that (it retries a start crash).
+
+## Afternoon: The Optimizer's tour with the real headset (12:52 to 13:29, Window View's layer off)
+
+Tefa: "headset connected all yours". The full write-up is in the-optimizer `docs/first-run-silent-hill-2-2026-11-22-headset.md`.
+- **Performance:** as found, the town start 66.7 a second (slowest 1% 47) and the room after the garage 67.7 (53), the
+  graphics card the limit (96-97%). After four live changes (ray-traced reflections off, shadow size 1024, corner
+  shadows off, local brightness balance off): both 72.0 on average, 0 late frames, slowest 1% 66, the processor the
+  ceiling `[measured 2026-11-22, real headset, n=1 per step]`. The 90% headset picture bought nothing and was put back.
+  The four changes are forgotten at the next start; nothing sets them at each start yet (Tefa's call: keep them?).
+- **The crash on the real headset with Window View off:** 2 of 9 starts (12:57, 13:14), the same freeze and
+  scene-state line. So the Ghosting Fix reading holds on the real runtime too.
+- **No pictures to the headset with Window View off:** 2 of 9 starts (13:00, 13:14): "D3D12: Failed to create swapchain"
+  right after XR_SESSION_STATE_READY, then "AFR swapchains not created" every frame, the meter at 0 frames, the game
+  window stuck flickering on "compiling shaders" (what Tefa saw, as on 2026-11-21 try 3). Window View is cleared of this
+  one too `[measured, n=2]`. Cause unknown; the Ghosting Fix test may or may not touch it.
+- **The start after a crash failed twice** (the launcher sat 3 minutes, the game never started), the crash reporter
+  window up both times.
+Kept: `D:\claude video game stuff\logs\silent-hill-2-remake-vr\2026-11-22-1253-optimizer-headset-tour\`.
