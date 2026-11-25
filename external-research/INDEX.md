@@ -1,6 +1,8 @@
 # Research index
 
-**Last `/gr` pass: 2026-11-21 — CHECK-IN.** joeyhodge's UEVR fork stopped tearing UEVR down at process exit (2026-11-19, unreleased): destroying it then released graphics objects after the game's threads were gone, a plausible source for our quit crashes in no library; AFW beta.6, UEVR-nightly 01143 and both SH2 packs unchanged; one topic.
+**Last `/gr` pass: 2026-11-25 — CHECK-IN.** Inbox empty. UEVR quiet: no praydog/UEVR or joeyhodge fork commits since 11-20, newest nightly still 01143 (2026-08-30); praydog's SH2R-UEVR unchanged since 2024.
+
+_Previous: **Last `/gr` pass: 2026-11-21 — CHECK-IN.** joeyhodge's UEVR fork stopped tearing UEVR down at process exit (2026-11-19, unreleased): destroying it then released graphics objects after the game's threads were gone, a plausible source for our quit crashes in no library; AFW beta.6, UEVR-nightly 01143 and both SH2 packs unchanged; one topic._
 
 _Previous: **Last `/gr` pass: 2026-11-14 — FULL.** Nothing new for our open rows: PureDark's AFW is still v1.0-beta.6 (branches unchanged since 10-30), UEVR-nightly still 01143, praydog's and jbusfield's SH2 packs unchanged; joeyhodge's fork added opt-in OpenXR wait-only pacing for D3D12 native stereo and a world-locked movie layer for one other game (11-12/13), Virtual Desktop's newest is still 1.34.22 (10-22, nothing on frame warp), and no public report of a warp crash under Virtual Desktop or a dead A button at this game's main menu `[measured 2026-11-14, API; web searches n=3]`._
 
