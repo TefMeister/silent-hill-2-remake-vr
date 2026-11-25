@@ -1,6 +1,7 @@
 #include "inject.h"
 
 #include "settings.h"
+#include "config_lines.h"
 
 #include <windows.h>
 #include <shellapi.h>
@@ -65,18 +66,17 @@ bool call_nullifier(HANDLE proc, uint32_t pid, const fs::path& dll) {
 }
 
 // UEVR reads which runtime to start from the profile's config.txt; the frontend writes it just before the backend.
+// 2026-11-25 (SH2-032): the safe start values go in with it (settings.h START_SAFE), so a quit that saved the plugin's
+// live switches can no longer crash the next start.
 void set_runtime_line(const Places& pl, const wchar_t* runtime) {
     fs::path cfgfile = pl.profile_dir / L"config.txt";
-    std::wistringstream in(read_text_file(cfgfile));
-    std::wstring line, out;
-    bool found = false;
-    const std::wstring key = std::wstring(cfg::RUNTIME_KEY) + L"=";
-    while (std::getline(in, line)) {
-        if (!line.empty() && line.back() == L'\r') line.pop_back();
-        if (line.rfind(key, 0) == 0) { line = key + runtime; found = true; }
-        out += line + L"\n";
-    }
-    if (!found) out += key + runtime + L"\n";
+    std::vector<std::pair<std::wstring, std::wstring>> wanted = {{cfg::RUNTIME_KEY, runtime}};
+    for (auto& kv : cfg::START_SAFE) wanted.push_back({kv[0], kv[1]});
+    std::vector<config_lines::Change> changes;
+    const std::wstring out = config_lines::set(read_text_file(cfgfile), wanted, changes);
+    for (auto& c : changes)
+        if (c.key != cfg::RUNTIME_KEY) logf(L"config.txt: %s %s -> %s (a start with it would crash)", c.key.c_str(),
+                                            c.was.empty() ? L"(missing)" : c.was.c_str(), c.now.c_str());
     std::error_code ec;
     fs::create_directories(pl.profile_dir, ec);
     if (!write_text_file(cfgfile, out)) logf(L"! could not write %s", cfgfile.c_str());

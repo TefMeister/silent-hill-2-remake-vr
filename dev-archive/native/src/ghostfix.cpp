@@ -19,7 +19,7 @@ float g_drawing = 0.0f;   // seconds the headset has been drawing without a brea
 bool g_started = false;
 
 bool kept_off() {
-    const std::wstring p = appdata_dir() + L"\\" + settings::PROFILE_DIR + L"\sh2vr_noghostfix.txt";
+    const std::wstring p = appdata_dir() + L"\\" + settings::PROFILE_DIR + L"\\sh2vr_noghostfix.txt";
     return GetFileAttributesW(p.c_str()) != INVALID_FILE_ATTRIBUTES;
 }
 } // namespace

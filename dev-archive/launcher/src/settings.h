@@ -35,6 +35,11 @@ inline constexpr wchar_t UEVR_BACKEND[]      = L"UEVRBackend.dll";
 inline constexpr wchar_t UEVR_NULLIFIER[]    = L"UEVRPluginNullifier.dll";
 inline constexpr char    NULLIFIER_EXPORT[]  = "nullify";
 inline constexpr wchar_t RUNTIME_KEY[]       = L"Frontend_RequestedRuntime";
+// 2026-11-25 (SH2-032): the start values written with the runtime line before every inject. The plugin switches both on
+// a few seconds into the headset's drawing (ghostfix.cpp, warp.cpp); UEVR saves the live values at a normal quit, and a
+// start with either one crashes (the ghosting fix: the start crash of 2026-11-22; method 3: Virtual Desktop refuses the
+// per-eye pictures and the game dies about 10 s after the inject).
+inline constexpr const wchar_t* START_SAFE[][2] = {{L"VR_GhostingFix", L"false"}, {L"VR_RenderingMethod", L"0"}};
 
 // The OpenXR Simulator (the pretend headset), for runs with nobody's headset on
 inline constexpr wchar_t SIM_JSON_REL[]      = L"Programs\\OpenXR-Simulator\\openxr_simulator.json";  // in %LOCALAPPDATA%

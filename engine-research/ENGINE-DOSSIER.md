@@ -73,6 +73,7 @@ sockets `slide_joint`, `magazine_joint`, `FX_muzzle` (Lukas's, `[reported]` unti
 - The ghidrust connector's debug attach freezes the game for good (threads Suspended, detach does not resume them);
   stopping the connector's process frees it `[verified-live 2026-11-05, n=1]`. Sample waits with
   `dev-archive/tools/optimiser/waitstacks.py` instead.
+- **When UEVR reads and writes config.txt (SH2-032, 2026-11-25; note `modding-notes/2026-11-25-sh2-032-config-saved-switches-start-fix.md`).** Writes: once after its start-up (after the plugins' initialise) and at every menu open or close; no save at quit or on a plugin's `set_mod_value` found `[inferred-static 2026-11-25, praydog/UEVR master]`. Reads: before and again after the plugins' initialise (so a memory-only change at initialise is read back from the file); plugin DLLs are loaded before the first read `[inferred-static]`. So the live switches (ghosting fix, method 3) end up in the file and crash the next start `[measured 2026-11-22, n=2]`; since b047 the plugin puts both back into the FILE from a static initialiser while the DLL loads `[measured offline 2026-11-25, n=1; not yet in a game start]`.
 - **Crashes at quit (inbox drained 2026-11-15, from the /gd notes of 11-07 and 11-11 and the /gr and /sr answers).**
   Three kinds on the shelves `[measured from the dumps, 2026-11-07 and 11-11]`: (1) `UEVRBackend.dll+0x1503df`, a
   read of null+0x58 in PLAY, 2026-11-05 x4 and 2026-11-10 x2 (resolve against the exact AFW b6 dll in use: beta 6

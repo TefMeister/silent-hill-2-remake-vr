@@ -56,6 +56,8 @@ constexpr float TUNING_CHECK_S = 5.0f;        // how often they are looked at ag
 constexpr bool WARP_AUTO_ON = true;
 constexpr const char* WARP_MODE = "3";        // warp.cpp: the warp's mode, set with the switch (2 = Tefa's "dome" jitter near James; 3 since b041)
 constexpr float WARP_AFTER_S = 10.0f;         // seconds of the headset drawing before the switch (a start with 3 crashes)
+constexpr bool START_SAFE_ON = true;          // startsafe.cpp: the two settings below put back in config.txt as the DLL loads (SH2-032)
+constexpr const char* START_SAFE[][2] = {{"VR_GhostingFix", "false"}, {"VR_RenderingMethod", "0"}};   // a start with either crashes
 constexpr bool GHOSTFIX_AUTO_ON = true;       // ghostfix.cpp: the injector's ghosting fix switched on after the start (on from the start = the start crash)
 constexpr float GHOSTFIX_AFTER_S = 20.0f;     // seconds of the headset drawing before the switch (the crash came within ~2 s of the injector's first pick, at the start of drawing)
 constexpr unsigned GHOSTFIX_READBACK_MS = 1000; // how long after the switch the value is read back and logged

@@ -56,6 +56,7 @@
 #include "smooth.h"
 #include "params.h"
 #include "settings.h"
+#include "startsafe.h"
 #include "uevr/Plugin.hpp"
 
 using namespace sh2vr;
@@ -66,6 +67,7 @@ public:
     void on_initialize() override {
         LOGI("%s loaded: hands + IK arms + finger poses + no crosshair, API %d.%d.%d", TAG, UEVR_PLUGIN_VERSION_MAJOR, UEVR_PLUGIN_VERSION_MINOR, UEVR_PLUGIN_VERSION_PATCH);
         params::load_all();
+        startsafe::log_what_was_done();   // 2026-11-25 (SH2-032): config.txt was put back to safe values while this DLL loaded
     }
 
     void on_custom_event(const char* name, const char* data) override { bridge::on_custom_event(name, data); }
